@@ -1,0 +1,8 @@
+#This file was written by Impact Server.
+#Mon Aug 21 19:20:25 EDT 2006
+impact.datasrc.numdatasrc=0
+impact.policy.numpolicy=2
+impact.policy.1=exampleWS_Response
+impact.policy.0=wscTest
+impact.datatype.numdatatype=0
+impact.service.numservice=0

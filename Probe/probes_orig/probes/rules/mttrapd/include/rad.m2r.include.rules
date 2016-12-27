@@ -1,0 +1,1611 @@
+######
+# rad include file
+######
+case ".1.3.6.1.4.1.164.3.1.6.4": # - ds1Interface
+	switch($specific-trap) {
+		case "1": ### - ds1LocalMultiframeAlarmTrap
+			# SNMPv2
+			# This trap indicates near end (Local) Loss of 
+			# Multiframe Alignment, of the user E1 interface.
+				$alarmSeveritylook = "alarmSeverity." + $1
+				$alarmSeverity = lookup($alarmSeveritylook,VarbindValTable)
+				if(match($alarmSeverity,"UNKNOWN")) {
+					$alarmSeverity = $1
+				} else {
+					$alarmSeverity = $alarmSeverity + " ( " + $1 + " )"
+				}
+			$ifAlias = $2
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "ds1LocalMultiframeAlarmTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($alarmSeverity,$ifAlias)
+
+		case "2": ### - ds1RemoteMultiframeAlarmTrap
+			# SNMPv2
+			# This trap indicates that the far end (remote) unit, 
+			# connected to the user E1 interface, reports
+			# Loss of Multiframe Alignment.
+				$alarmSeveritylook = "alarmSeverity." + $1
+				$alarmSeverity = lookup($alarmSeveritylook,VarbindValTable)
+				if(match($alarmSeverity,"UNKNOWN")) {
+					$alarmSeverity = $1
+				} else {
+					$alarmSeverity = $alarmSeverity + " ( " + $1 + " )"
+				}
+			$ifAlias = $2
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "ds1RemoteMultiframeAlarmTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($alarmSeverity,$ifAlias)
+
+		case "3": ### - ds1LinkFrameSlipTrap
+			# SNMPv2
+			# This trap indicates that a Frame Slip occurred at the user 
+			# DS1 interface. This usually indicates timing problems 
+			# (incorrect selection of timing reference), 
+			# on the user DS1 link.
+				$alarmSeveritylook = "alarmSeverity." + $1
+				$alarmSeverity = lookup($alarmSeveritylook,VarbindValTable)
+				if(match($alarmSeverity,"UNKNOWN")) {
+					$alarmSeverity = $1
+				} else {
+					$alarmSeverity = $alarmSeverity + " ( " + $1 + " )"
+				}
+			$ifAlias = $2
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "ds1LinkFrameSlipTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($alarmSeverity,$ifAlias)
+
+		case "4": ### - ds1BpvErrorTrap
+			# SNMPv2
+			# This trap indicates a Bipolar Violation (BPV)
+			# error has been detected at the user DS1 interface.
+				$alarmSeveritylook = "alarmSeverity." + $1
+				$alarmSeverity = lookup($alarmSeveritylook,VarbindValTable)
+				if(match($alarmSeverity,"UNKNOWN")) {
+					$alarmSeverity = $1
+				} else {
+					$alarmSeverity = $alarmSeverity + " ( " + $1 + " )"
+				}
+			$ifAlias = $2
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "ds1BpvErrorTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($alarmSeverity,$ifAlias)
+
+		case "5": ### - ds1ExcessiveBpvTrap
+			# SNMPv2
+			# This trap indicates excessive number of 
+			# Bipolar Violation errors  (BPV)
+			# detected by the user DS1 interface
+				$alarmSeveritylook = "alarmSeverity." + $1
+				$alarmSeverity = lookup($alarmSeveritylook,VarbindValTable)
+				if(match($alarmSeverity,"UNKNOWN")) {
+					$alarmSeverity = $1
+				} else {
+					$alarmSeverity = $alarmSeverity + " ( " + $1 + " )"
+				}
+				$alarmStatelook = "alarmState." + $2
+				$alarmState = lookup($alarmStatelook,VarbindValTable)
+				if(match($alarmState,"UNKNOWN")) {
+					$alarmState = $2
+				} else {
+					$alarmState = $alarmState + " ( " + $2 + " )"
+				}
+			$ifAlias = $3
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "ds1ExcessiveBpvTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($alarmSeverity,$alarmState,$ifAlias)
+
+		case "6": ### - ds1Crc4ErrorTrap
+			# SNMPv2
+			# This trap indicates that a frame with CRC-4 error has been
+			# detected at the user DS1 interface.
+				$alarmSeveritylook = "alarmSeverity." + $1
+				$alarmSeverity = lookup($alarmSeveritylook,VarbindValTable)
+				if(match($alarmSeverity,"UNKNOWN")) {
+					$alarmSeverity = $1
+				} else {
+					$alarmSeverity = $alarmSeverity + " ( " + $1 + " )"
+				}
+			$ifAlias = $2
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "ds1Crc4ErrorTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($alarmSeverity,$ifAlias)
+
+		case "7": ### - ds1ExcessiveErrorRatioTrap
+			# SNMPv2
+			# This trap indicates that the error rate, detected 
+			# at the user DS1 interface, on the frame synchronization bits
+			# is high, as defined by ITU-T Rec. G.732.
+				$alarmSeveritylook = "alarmSeverity." + $1
+				$alarmSeverity = lookup($alarmSeveritylook,VarbindValTable)
+				if(match($alarmSeverity,"UNKNOWN")) {
+					$alarmSeverity = $1
+				} else {
+					$alarmSeverity = $alarmSeverity + " ( " + $1 + " )"
+				}
+				$alarmStatelook = "alarmState." + $2
+				$alarmState = lookup($alarmStatelook,VarbindValTable)
+				if(match($alarmState,"UNKNOWN")) {
+					$alarmState = $2
+				} else {
+					$alarmState = $alarmState + " ( " + $2 + " )"
+				}
+			$ifAlias = $3
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "ds1ExcessiveErrorRatioTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($alarmSeverity,$alarmState,$ifAlias)
+
+		case "8": ### - ds1RemoteSyncLossTrap
+			# SNMPv2
+			# This trap indicates that the far-end (remote)
+			# unit, connected to user DS1 interface,
+			# reports Loss of Frame Alignment (Sync Loss).
+				$alarmSeveritylook = "alarmSeverity." + $1
+				$alarmSeverity = lookup($alarmSeveritylook,VarbindValTable)
+				if(match($alarmSeverity,"UNKNOWN")) {
+					$alarmSeverity = $1
+				} else {
+					$alarmSeverity = $alarmSeverity + " ( " + $1 + " )"
+				}
+				$alarmStatelook = "alarmState." + $2
+				$alarmState = lookup($alarmStatelook,VarbindValTable)
+				if(match($alarmState,"UNKNOWN")) {
+					$alarmState = $2
+				} else {
+					$alarmState = $alarmState + " ( " + $2 + " )"
+				}
+			$ifAlias = $3
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "ds1RemoteSyncLossTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($alarmSeverity,$alarmState,$ifAlias)
+
+		case "9": ### - ds1LocalSyncLossTrap
+			# SNMPv2
+			# This trap indicates near end (Local) 
+			# Loss of Frame Alignment failure (Sync Loss), 
+			# of the user DS1 interface
+				$alarmSeveritylook = "alarmSeverity." + $1
+				$alarmSeverity = lookup($alarmSeveritylook,VarbindValTable)
+				if(match($alarmSeverity,"UNKNOWN")) {
+					$alarmSeverity = $1
+				} else {
+					$alarmSeverity = $alarmSeverity + " ( " + $1 + " )"
+				}
+				$alarmStatelook = "alarmState." + $2
+				$alarmState = lookup($alarmStatelook,VarbindValTable)
+				if(match($alarmState,"UNKNOWN")) {
+					$alarmState = $2
+				} else {
+					$alarmState = $alarmState + " ( " + $2 + " )"
+				}
+			$ifAlias = $3
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "ds1LocalSyncLossTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($alarmSeverity,$alarmState,$ifAlias)
+
+		case "10": ### - ds1AisSyncLossTrap
+			# SNMPv2
+			# This trap indicates near end (Local) 
+			# Loss of Frame Alignment (Sync Loss), caused by the reception
+			# of AIS at the user DS1 interface.
+				$alarmSeveritylook = "alarmSeverity." + $1
+				$alarmSeverity = lookup($alarmSeveritylook,VarbindValTable)
+				if(match($alarmSeverity,"UNKNOWN")) {
+					$alarmSeverity = $1
+				} else {
+					$alarmSeverity = $alarmSeverity + " ( " + $1 + " )"
+				}
+			$ifAlias = $2
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "ds1AisSyncLossTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($alarmSeverity,$ifAlias)
+
+		case "11": ### - ds1AisTrap
+			# SNMPv2
+			# This trap indicates AIS  being received
+			# at the user DS1 interface.
+				$alarmSeveritylook = "alarmSeverity." + $1
+				$alarmSeverity = lookup($alarmSeveritylook,VarbindValTable)
+				if(match($alarmSeverity,"UNKNOWN")) {
+					$alarmSeverity = $1
+				} else {
+					$alarmSeverity = $alarmSeverity + " ( " + $1 + " )"
+				}
+				$alarmStatelook = "alarmState." + $2
+				$alarmState = lookup($alarmStatelook,VarbindValTable)
+				if(match($alarmState,"UNKNOWN")) {
+					$alarmState = $2
+				} else {
+					$alarmState = $alarmState + " ( " + $2 + " )"
+				}
+			$ifAlias = $3
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "ds1AisTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($alarmSeverity,$alarmState,$ifAlias)
+
+		case "12": ### - ds1NetworkRemoteLoopTrap
+			# SNMPv2
+			# This trap indicates that a remote loopback
+			# has been activated, on the local uplink interface.
+				$alarmSeveritylook = "alarmSeverity." + $1
+				$alarmSeverity = lookup($alarmSeveritylook,VarbindValTable)
+				if(match($alarmSeverity,"UNKNOWN")) {
+					$alarmSeverity = $1
+				} else {
+					$alarmSeverity = $alarmSeverity + " ( " + $1 + " )"
+				}
+				$alarmStatelook = "alarmState." + $2
+				$alarmState = lookup($alarmStatelook,VarbindValTable)
+				if(match($alarmState,"UNKNOWN")) {
+					$alarmState = $2
+				} else {
+					$alarmState = $alarmState + " ( " + $2 + " )"
+				}
+			$ifAlias = $3
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "ds1NetworkRemoteLoopTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($alarmSeverity,$alarmState,$ifAlias)
+
+		case "13": ### - ds1RemoteLoopTrap
+			# SNMPv2
+			# This trap indicates that a remote loopback 
+			# has been activated, on the local user port.
+				$alarmSeveritylook = "alarmSeverity." + $1
+				$alarmSeverity = lookup($alarmSeveritylook,VarbindValTable)
+				if(match($alarmSeverity,"UNKNOWN")) {
+					$alarmSeverity = $1
+				} else {
+					$alarmSeverity = $alarmSeverity + " ( " + $1 + " )"
+				}
+				$alarmStatelook = "alarmState." + $2
+				$alarmState = lookup($alarmStatelook,VarbindValTable)
+				if(match($alarmState,"UNKNOWN")) {
+					$alarmState = $2
+				} else {
+					$alarmState = $alarmState + " ( " + $2 + " )"
+				}
+			$ifAlias = $3
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "ds1RemoteLoopTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($alarmSeverity,$alarmState,$ifAlias)
+
+		case "14": ### - ds1LocalLoopTrap
+			# SNMPv2
+			# This trap indicates that a local loopback 
+			# has been activated on the user port.
+				$alarmSeveritylook = "alarmSeverity." + $1
+				$alarmSeverity = lookup($alarmSeveritylook,VarbindValTable)
+				if(match($alarmSeverity,"UNKNOWN")) {
+					$alarmSeverity = $1
+				} else {
+					$alarmSeverity = $alarmSeverity + " ( " + $1 + " )"
+				}
+				$alarmStatelook = "alarmState." + $2
+				$alarmState = lookup($alarmStatelook,VarbindValTable)
+				if(match($alarmState,"UNKNOWN")) {
+					$alarmState = $2
+				} else {
+					$alarmState = $alarmState + " ( " + $2 + " )"
+				}
+			$ifAlias = $3
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "ds1LocalLoopTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($alarmSeverity,$alarmState,$ifAlias)
+
+		case "15": ### - ds1ExcessiveFrameSlipTrap
+			# SNMPv2
+			# This trap indicates that the number of Frame Slips
+			# detected at the user DS1 interface, during the last minute
+			# exceeds threshold. For LA-110, threshold value is 10.
+			# This usually indicates timing problems 
+			# (incorrect selection of timing reference) on the user DS1.
+				$alarmSeveritylook = "alarmSeverity." + $1
+				$alarmSeverity = lookup($alarmSeveritylook,VarbindValTable)
+				if(match($alarmSeverity,"UNKNOWN")) {
+					$alarmSeverity = $1
+				} else {
+					$alarmSeverity = $alarmSeverity + " ( " + $1 + " )"
+				}
+				$alarmStatelook = "alarmState." + $2
+				$alarmState = lookup($alarmStatelook,VarbindValTable)
+				if(match($alarmState,"UNKNOWN")) {
+					$alarmState = $2
+				} else {
+					$alarmState = $alarmState + " ( " + $2 + " )"
+				}
+			$ifAlias = $3
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "ds1ExcessiveFrameSlipTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($alarmSeverity,$alarmState,$ifAlias)
+
+		case "16": ### - ds1ExcessiveCrc4ErrorTrap
+			# SNMPv2
+			# This trap indicates that the error rate 
+			# detected on the CRC-4 bits at the
+			# user DS1 interface, is high.
+				$alarmSeveritylook = "alarmSeverity." + $1
+				$alarmSeverity = lookup($alarmSeveritylook,VarbindValTable)
+				if(match($alarmSeverity,"UNKNOWN")) {
+					$alarmSeverity = $1
+				} else {
+					$alarmSeverity = $alarmSeverity + " ( " + $1 + " )"
+				}
+				$alarmStatelook = "alarmState." + $2
+				$alarmState = lookup($alarmStatelook,VarbindValTable)
+				if(match($alarmState,"UNKNOWN")) {
+					$alarmState = $2
+				} else {
+					$alarmState = $alarmState + " ( " + $2 + " )"
+				}
+			$ifAlias = $3
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "ds1ExcessiveCrc4ErrorTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($alarmSeverity,$alarmState,$ifAlias)
+
+		case "17": ### - ds1ExcessiveLocalMfAlarmTrap
+			# SNMPv2
+			# This trap indicates that the number of local
+			# Loss of Multiframe Alignment events, detected at
+			# the user E1 interface during the last minute exceeds threshold. 
+			# For LA-110, threshold value is 10.
+				$alarmSeveritylook = "alarmSeverity." + $1
+				$alarmSeverity = lookup($alarmSeveritylook,VarbindValTable)
+				if(match($alarmSeverity,"UNKNOWN")) {
+					$alarmSeverity = $1
+				} else {
+					$alarmSeverity = $alarmSeverity + " ( " + $1 + " )"
+				}
+				$alarmStatelook = "alarmState." + $2
+				$alarmState = lookup($alarmStatelook,VarbindValTable)
+				if(match($alarmState,"UNKNOWN")) {
+					$alarmState = $2
+				} else {
+					$alarmState = $alarmState + " ( " + $2 + " )"
+				}
+			$ifAlias = $3
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "ds1ExcessiveLocalMfAlarmTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($alarmSeverity,$alarmState,$ifAlias)
+
+		case "18": ### - ds1ExcessiveRemoteMfAlarmTrap
+			# SNMPv2
+			# This trap indicates that the number of 
+			# Loss of multiframe alignment events reported
+			# by the remote unit connected to the user 
+			# E1 interface during the last minute exceeds threshold. 
+			# For LA-110, threshold value is 10.
+				$alarmSeveritylook = "alarmSeverity." + $1
+				$alarmSeverity = lookup($alarmSeveritylook,VarbindValTable)
+				if(match($alarmSeverity,"UNKNOWN")) {
+					$alarmSeverity = $1
+				} else {
+					$alarmSeverity = $alarmSeverity + " ( " + $1 + " )"
+				}
+				$alarmStatelook = "alarmState." + $2
+				$alarmState = lookup($alarmStatelook,VarbindValTable)
+				if(match($alarmState,"UNKNOWN")) {
+					$alarmState = $2
+				} else {
+					$alarmState = $alarmState + " ( " + $2 + " )"
+				}
+			$ifAlias = $3
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "ds1ExcessiveRemoteMfAlarmTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($alarmSeverity,$alarmState,$ifAlias)
+
+		case "19": ### - ds1ExcessiveRemoteSyncLossTrap
+			# SNMPv2
+			# This trap indicates that the number of far end 
+			# (remote) Loss of Synchronization alarms,
+			# reported by the user DS1 interface 
+			# during the last minute, exceeds threshold. 
+			# For LA-110, threshold value is 10.
+				$alarmSeveritylook = "alarmSeverity." + $1
+				$alarmSeverity = lookup($alarmSeveritylook,VarbindValTable)
+				if(match($alarmSeverity,"UNKNOWN")) {
+					$alarmSeverity = $1
+				} else {
+					$alarmSeverity = $alarmSeverity + " ( " + $1 + " )"
+				}
+				$alarmStatelook = "alarmState." + $2
+				$alarmState = lookup($alarmStatelook,VarbindValTable)
+				if(match($alarmState,"UNKNOWN")) {
+					$alarmState = $2
+				} else {
+					$alarmState = $alarmState + " ( " + $2 + " )"
+				}
+			$ifAlias = $3
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "ds1ExcessiveRemoteSyncLossTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($alarmSeverity,$alarmState,$ifAlias)
+
+		case "20": ### - ds1ExcessiveLocalSyncLossTrap
+			# SNMPv2
+			# This trap indicates that the number of 
+			# Loss of local Synchronization alarms  
+			# reported by the user DS1 interface 
+			# during the last minute, exceeds threshold. 
+			# For LA-110, threshold value is 10.
+				$alarmSeveritylook = "alarmSeverity." + $1
+				$alarmSeverity = lookup($alarmSeveritylook,VarbindValTable)
+				if(match($alarmSeverity,"UNKNOWN")) {
+					$alarmSeverity = $1
+				} else {
+					$alarmSeverity = $alarmSeverity + " ( " + $1 + " )"
+				}
+				$alarmStatelook = "alarmState." + $2
+				$alarmState = lookup($alarmStatelook,VarbindValTable)
+				if(match($alarmState,"UNKNOWN")) {
+					$alarmState = $2
+				} else {
+					$alarmState = $alarmState + " ( " + $2 + " )"
+				}
+			$ifAlias = $3
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "ds1ExcessiveLocalSyncLossTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($alarmSeverity,$alarmState,$ifAlias)
+
+		case "21": ### - ds1SignalLossTrap
+			# SNMPv2
+			# This trap indicates Signal Loss.
+			# (possible reason -  cable disconnection. etc.)
+				$alarmSeveritylook = "alarmSeverity." + $1
+				$alarmSeverity = lookup($alarmSeveritylook,VarbindValTable)
+				if(match($alarmSeverity,"UNKNOWN")) {
+					$alarmSeverity = $1
+				} else {
+					$alarmSeverity = $alarmSeverity + " ( " + $1 + " )"
+				}
+				$alarmStatelook = "alarmState." + $2
+				$alarmState = lookup($alarmStatelook,VarbindValTable)
+				if(match($alarmState,"UNKNOWN")) {
+					$alarmState = $2
+				} else {
+					$alarmState = $alarmState + " ( " + $2 + " )"
+				}
+			$ifAlias = $3
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "ds1SignalLossTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($alarmSeverity,$alarmState,$ifAlias)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.4.1.164.3.1.6.6": # - v51If
+	switch($specific-trap) {
+		case "1": ### - activeVariantTrap
+			# SNMPv2
+			# This trap is sent when the Active Variant of a Link is changed (that
+			# includes the case when a user performs Save to the Variant that is Active).
+			$v51MlCurrActiveVar = $1
+			@AlertGroup = ""
+			@Agent = "[[COMMENT.53403]]"
+			@Summary = "activeVariantTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($v51MlCurrActiveVar)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.4.1.164.3.1.6.12": # - shdslIf
+	switch($specific-trap) {
+		case "1": ### - radHdsl2ShdslLoopBackTrap
+			# SNMPv2
+			# This notification indicates that a remote loopback 
+			# has been activated on the Embedded Operations Channel (EOC) of the SHDSL
+			# link.
+				$alarmSeveritylook = "alarmSeverity." + $1
+				$alarmSeverity = lookup($alarmSeveritylook,VarbindValTable)
+				if(match($alarmSeverity,"UNKNOWN")) {
+					$alarmSeverity = $1
+				} else {
+					$alarmSeverity = $alarmSeverity + " ( " + $1 + " )"
+				}
+				$alarmStatelook = "alarmState." + $2
+				$alarmState = lookup($alarmStatelook,VarbindValTable)
+				if(match($alarmState,"UNKNOWN")) {
+					$alarmState = $2
+				} else {
+					$alarmState = $alarmState + " ( " + $2 + " )"
+				}
+			$ifAlias = $3
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "radHdsl2ShdslLoopBackTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($alarmSeverity,$alarmState,$ifAlias)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.4.1.164.3.2": # - muxHub
+	switch($specific-trap) {
+		case "1": ### - alarmsTrap
+			# SNMPv2
+			# This trap is sent whenever alarm occurs in the agent.
+			$alrBufDescription = $1
+			@AlertGroup = ""
+			@Agent = "[[COMMENT.53403]]"
+			@Summary = "alarmsTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($alrBufDescription)
+
+		case "2": ### - sanityTrap
+			# SNMPv2
+			# This trap is sent after a data base update.
+			# It returns the sanity result status and the configuration no.
+			# checked.
+			# If the result is of Flip DB Sanity Check, the configuration
+			# no. sent will be 0.
+			# If the result is of Variant Sanity Check, the configuration
+			# no. sent will be 100.
+				$agnSSanityCheckStatuslook = "agnSSanityCheckStatus." + $1
+				$agnSSanityCheckStatus = lookup($agnSSanityCheckStatuslook,VarbindValTable)
+				if(match($agnSSanityCheckStatus,"UNKNOWN")) {
+					$agnSSanityCheckStatus = $1
+				} else {
+					$agnSSanityCheckStatus = $agnSSanityCheckStatus + " ( " + $1 + " )"
+				}
+			$agnCSaveCnfgIdxCmd = $2
+			@AlertGroup = ""
+			@Agent = "[[COMMENT.53403]]"
+			@Summary = "sanityTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($agnSSanityCheckStatus,$agnCSaveCnfgIdxCmd)
+
+		case "3": ### - cnfgFlipTrap
+			# SNMPv2
+			# This trap is sent upon change of the active Configuration DB.
+			# Attached, is the new active Configuration no.
+			$agnSActiveCnfg = $1
+			@AlertGroup = ""
+			@Agent = "[[COMMENT.53403]]"
+			@Summary = "cnfgFlipTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($agnSActiveCnfg)
+
+		case "4": ### - flipDbChangeTrap
+			# SNMPv2
+			# This trap is sent upon change of the active Flip tables
+			# (Flip DB).
+			@AlertGroup = ""
+			@Agent = "[[COMMENT.53403]]"
+			@Summary = "flipDbChangeTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		case "5": ### - statusChangedTrap
+			# SNMPv2
+			# This trap is sent upon any change of the LEDs status.
+			$agnLed = $1
+			@AlertGroup = ""
+			@Agent = "[[COMMENT.53403]]"
+			@Summary = "statusChangedTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($agnLed)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.4.1.164.3.3": # - dacsMux
+	switch($specific-trap) {
+		case "1": ### - sanityCheckTrap
+			# SNMPv2
+			# This trap is sent after a data base download attempt. 
+			# It returns the sanity result status and the configuration
+			# no.checked.
+				$sysSSanityCheckStatuslook = "sysSSanityCheckStatus." + $1
+				$sysSSanityCheckStatus = lookup($sysSSanityCheckStatuslook,VarbindValTable)
+				if(match($sysSSanityCheckStatus,"UNKNOWN")) {
+					$sysSSanityCheckStatus = $1
+				} else {
+					$sysSSanityCheckStatus = $sysSSanityCheckStatus + " ( " + $1 + " )"
+				}
+			$sysDbaseDownloadCnfgIdxCmd = $2
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "sanityCheckTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($sysSSanityCheckStatus,$sysDbaseDownloadCnfgIdxCmd)
+
+		case "2": ### - dacsMuxAlarmsTrap
+			# SNMPv2
+			# This trap is sent when an alarm occurs.
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "dacsMuxAlarmsTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		case "3": ### - mdlConnectTrap
+			# SNMPv2
+			# This trap is sent when a card is removed.
+				$mdlSCardTypelook = "mdlSCardType." + $1
+				$mdlSCardType = lookup($mdlSCardTypelook,VarbindValTable)
+				if(match($mdlSCardType,"UNKNOWN")) {
+					$mdlSCardType = $1
+				} else {
+					$mdlSCardType = $mdlSCardType + " ( " + $1 + " )"
+				}
+				$mdlSActivitylook = "mdlSActivity." + $2
+				$mdlSActivity = lookup($mdlSActivitylook,VarbindValTable)
+				if(match($mdlSActivity,"UNKNOWN")) {
+					$mdlSActivity = $2
+				} else {
+					$mdlSActivity = $mdlSActivity + " ( " + $2 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "mdlConnectTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($mdlSCardType,$mdlSActivity)
+
+		case "4": ### - sysAlrStatusTrap
+			# SNMPv2
+			# This trap is sent upon any change in the value of any of 
+			# the variables.
+				$sysSAlrStatusAlllook = "sysSAlrStatusAll." + $1
+				$sysSAlrStatusAll = lookup($sysSAlrStatusAlllook,VarbindValTable)
+				if(match($sysSAlrStatusAll,"UNKNOWN")) {
+					$sysSAlrStatusAll = $1
+				} else {
+					$sysSAlrStatusAll = $sysSAlrStatusAll + " ( " + $1 + " )"
+				}
+				$sysSAlrStatuslook = "sysSAlrStatus." + $2
+				$sysSAlrStatus = lookup($sysSAlrStatuslook,VarbindValTable)
+				if(match($sysSAlrStatus,"UNKNOWN")) {
+					$sysSAlrStatus = $2
+				} else {
+					$sysSAlrStatus = $sysSAlrStatus + " ( " + $2 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "sysAlrStatusTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($sysSAlrStatusAll,$sysSAlrStatus)
+
+		case "5": ### - sysStatusChangedTrap
+			# SNMPv2
+			# This trap is sent when Leds status is changed.
+			$agnLed = $1
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "sysStatusChangedTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($agnLed)
+
+		case "6": ### - cnfgUpdateTrap
+			# SNMPv2
+			# This trap is sent upon change of the active Configuration DB.
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "cnfgUpdateTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		case "7": ### - sysRedundancyStatusTrap
+			# SNMPv2
+			# The trap is sent upon change in Redundancy Status.
+			$sysDclRedundancyStatus = $1
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "sysRedundancyStatusTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($sysDclRedundancyStatus)
+
+		case "8": ### - sysRedundancyActiveCardTrap
+			# SNMPv2
+			# The trap is sent upon change of Active Main/CL Card.
+				$sysDclOnlinelook = "sysDclOnline." + $1
+				$sysDclOnline = lookup($sysDclOnlinelook,VarbindValTable)
+				if(match($sysDclOnline,"UNKNOWN")) {
+					$sysDclOnline = $1
+				} else {
+					$sysDclOnline = $sysDclOnline + " ( " + $1 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "sysRedundancyActiveCardTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($sysDclOnline)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.4.1.164.3.4": # - modmSys
+	switch($specific-trap) {
+		case "3": ### - modmHubConfigChange
+			# SNMPv2
+			# The trap is sent when any card of the modems Hub is inserted
+			# or removed.
+				$mdlCardTypelook = "mdlCardType." + $1
+				$mdlCardType = lookup($mdlCardTypelook,VarbindValTable)
+				if(match($mdlCardType,"UNKNOWN")) {
+					$mdlCardType = $1
+				} else {
+					$mdlCardType = $mdlCardType + " ( " + $1 + " )"
+				}
+				$mdlSPanelTypelook = "mdlSPanelType." + $2
+				$mdlSPanelType = lookup($mdlSPanelTypelook,VarbindValTable)
+				if(match($mdlSPanelType,"UNKNOWN")) {
+					$mdlSPanelType = $2
+				} else {
+					$mdlSPanelType = $mdlSPanelType + " ( " + $2 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "modmHubConfigChange"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($mdlCardType,$mdlSPanelType)
+
+		case "4": ### - modemMasterSlaveComm
+			# SNMPv2
+			# This trap is applicable only for IMOD modems .
+			# The trap is sent when communication between a Master modem 
+			# and its Slave is stopped or resumed.
+			# 'modemMngLink' includes the modemIdx.
+				$modemMngLinklook = "modemMngLink." + $1
+				$modemMngLink = lookup($modemMngLinklook,VarbindValTable)
+				if(match($modemMngLink,"UNKNOWN")) {
+					$modemMngLink = $1
+				} else {
+					$modemMngLink = $modemMngLink + " ( " + $1 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "modemMasterSlaveComm"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($modemMngLink)
+
+		case "5": ### - modemMasterChange
+			# SNMPv2
+			# This trap is applicable only for IMOD modems .
+			# The trap is sent when a modem's permanent or temporary mode 
+			# is changed.
+			# 'modemConfigMode' and 'modemModeTemporary' include the 
+			# modemIdx.
+				$modemConfigModelook = "modemConfigMode." + $1
+				$modemConfigMode = lookup($modemConfigModelook,VarbindValTable)
+				if(match($modemConfigMode,"UNKNOWN")) {
+					$modemConfigMode = $1
+				} else {
+					$modemConfigMode = $modemConfigMode + " ( " + $1 + " )"
+				}
+				$modemModeTemporarylook = "modemModeTemporary." + $2
+				$modemModeTemporary = lookup($modemModeTemporarylook,VarbindValTable)
+				if(match($modemModeTemporary,"UNKNOWN")) {
+					$modemModeTemporary = $2
+				} else {
+					$modemModeTemporary = $modemModeTemporary + " ( " + $2 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "modemMasterChange"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($modemConfigMode,$modemModeTemporary)
+
+		case "6": ### - mngmntControlChange
+			# SNMPv2
+			# This trap is applicable only for LRS-12.
+			# The trap is sent when the Hub management controller is 
+			# changed (NMS<->Terminal).
+				$modmHubControllerlook = "modmHubController." + $1
+				$modmHubController = lookup($modmHubControllerlook,VarbindValTable)
+				if(match($modmHubController,"UNKNOWN")) {
+					$modmHubController = $1
+				} else {
+					$modmHubController = $modmHubController + " ( " + $1 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "mngmntControlChange"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($modmHubController)
+
+		case "7": ### - modemInvalidParameter
+			# SNMPv2
+			# This trap is applicable only for IMOD cards of a Hub.
+			# The trap is sent when an invalid parameter was Set to the 
+			# modem.
+			$modemIdx = $1
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "modemInvalidParameter"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($modemIdx)
+
+		case "8": ### - modemAlarm
+			# SNMPv2
+			# This trap is applicable only for IMOD modems .
+			# The trap is sent when the active alarms of an IMOD modem, 
+			# change.
+			$modemActiveAlarms = $1
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "modemAlarm"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($modemActiveAlarms)
+
+		case "9": ### - cardStatusChange
+			# SNMPv2
+			# The trap is sent upon any change of the Leds status in the 
+			# PS, CL or IMOD cards.
+			$mdlSLed = $1
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "cardStatusChange"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($mdlSLed)
+
+		case "10": ### - modemSignalingChange
+			# SNMPv2
+			# The trap is sent for any IMOD modem, when an unmasked
+			# signal change occured in the attached variable (see
+			# modemMaskSignaling object).
+			$modmPrtDteSignaling = $1
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "modemSignalingChange"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($modmPrtDteSignaling)
+
+		case "11": ### - modmHubPsFail
+			# SNMPv2
+			# The trap is sent when a PS card of the modems-Hub failed.
+			# 'mdlSLed' includes the mdlSIdx.
+			$mdlSLed = $1
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "modmHubPsFail"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($mdlSLed)
+
+		case "12": ### - modmHubIPModeChange
+			# SNMPv2
+			# The trap is sent upon any change of modmHubIpMode parameter.
+				$modmHubIpModelook = "modmHubIpMode." + $1
+				$modmHubIpMode = lookup($modmHubIpModelook,VarbindValTable)
+				if(match($modmHubIpMode,"UNKNOWN")) {
+					$modmHubIpMode = $1
+				} else {
+					$modmHubIpMode = $modmHubIpMode + " ( " + $1 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "modmHubIPModeChange"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($modmHubIpMode)
+
+		case "13": ### - modmInterfaceChange
+			# SNMPv2
+			# The trap is sent upon any change of interfaces for a modem that
+			# is a card of a Hub or part of it.
+			# In order to know what changed, for each product, specific variables will 
+			# be attached. These variables will be specified in the product's spec.
+			# 
+			# For FOMi-E3/T3 and Optimux-4E1/T1-C : the trap will be sent when
+			# the connectors card in LRS is removed/inserted.
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "modmInterfaceChange"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		case "14": ### - modmRackAlarms
+			# SNMPv2
+			# The trap is applicable for LRS-52.
+			# The trap is sent when an alarm occurs. 
+			# Attached variables are detailed in product specification.
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "modmRackAlarms"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.4.1.164.3.4.1.1": # - modmSa
+	switch($specific-trap) {
+		case "1": ### - modmSAlarmTrap
+			# SNMPv2
+			# The trap is sent every 5 seconds in which a change has 
+			# occurred in the status of the variables sent. 
+			# For modems containing a T1/E1 interface, dsx1LineStatus 
+			# will be sent as well in the variables, after modmSaStatAlarms.
+			# This trap is applicable for Stand-alone modems or Agents 
+			# that are cards of a Hub.
+			$modmSaStatAlarms = $1
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "modmSAlarmTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($modmSaStatAlarms)
+
+		case "2": ### - modmSLedTrap
+			# SNMPv2
+			# The trap is sent every 5 seconds in which a change has 
+			# occurred in the state of one of the LEDs.
+			# This trap is applicable for Stand-Alone modems or Agents 
+			# that are cards of a Hub.
+			# 'agnLed' - will include both central and remote modems: 
+			# first central, last remote.
+			$agnLed = $1
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "modmSLedTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($agnLed)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.4.1.164.3.5": # - optimux
+	switch($specific-trap) {
+		case "1": ### - optMxConfigChange
+			# SNMPv2
+			# The trap is sent every time there is a change in
+			# the state of one of the PS..
+				$optIndexlook = "optIndex." + $1
+				$optIndex = lookup($optIndexlook,VarbindValTable)
+				if(match($optIndex,"UNKNOWN")) {
+					$optIndex = $1
+				} else {
+					$optIndex = $optIndex + " ( " + $1 + " )"
+				}
+			$agnLed = $2
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "optMxConfigChange"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($optIndex,$agnLed)
+
+		case "2": ### - optMxAgentFault
+			# SNMPv2
+			# The trap is sent every time there is a change in
+			# the agnIndication variable.
+			# For Optimux XL family, from ver 4.1 and up, this trap should be sent 
+			# upon any change in the agnNearFarConnection variable
+				$agnIndicationlook = "agnIndication." + $1
+				$agnIndication = lookup($agnIndicationlook,VarbindValTable)
+				if(match($agnIndication,"UNKNOWN")) {
+					$agnIndication = $1
+				} else {
+					$agnIndication = $agnIndication + " ( " + $1 + " )"
+				}
+			$agnLed = $2
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "optMxAgentFault"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($agnIndication,$agnLed)
+
+		case "3": ### - optLineStatusChange
+			# SNMPv2
+			# optLineStatusChange trap is sent when the value of an instance 
+			# dsx1LineStatus changes. It can be utilized by an NMS to trigger polls.
+			# When the line status change results from a higher level line status 
+			# change (i.e. ds3), then no traps for the ds1 are sent.
+			$dsx1LineStatus = $1
+			$dsx1LineStatusLastChange = $2
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "optLineStatusChange"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($dsx1LineStatus,$dsx1LineStatusLastChange)
+
+		case "4": ### - optSlotChange
+			# SNMPv2
+			# This trap alerts the console if there is module
+			# enrollement/de-enrollement
+				$optMdIdxlook = "optMdIdx." + $1
+				$optMdIdx = lookup($optMdIdxlook,VarbindValTable)
+				if(match($optMdIdx,"UNKNOWN")) {
+					$optMdIdx = $1
+				} else {
+					$optMdIdx = $optMdIdx + " ( " + $1 + " )"
+				}
+			$optMdSltIdx = $2
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "optSlotChange"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($optMdIdx,$optMdSltIdx)
+
+		case "5": ### - optLoopbackStatusChange
+			# SNMPv2
+			# This trap alerts the console if there is changes in the
+			# loopback status of some of the line.
+			$ifIndex = $1
+			$dsx1LoopbackStatus = $2
+			$dsx3LoopbackStatus = $3
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "optLoopbackStatusChange"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($ifIndex,$dsx1LoopbackStatus,$dsx3LoopbackStatus)
+
+		case "6": ### - optXlLineStatusChange
+			# SNMPv2
+			# optXlLineStatusChange trap is sent when the value of an instance 
+			# dsx1LineStatus changes. It can be utilized by an NMS to trigger polls.
+			$ifIndex = $1
+			$optMdModLed = $2
+			$dsx1LineStatus = $3
+			$dsx3LineStatus = $4
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "optXlLineStatusChange"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($ifIndex,$optMdModLed,$dsx1LineStatus,$dsx3LineStatus)
+
+		case "7": ### - optRingActiveModeChange
+			# SNMPv2
+			# optRingActiveModeChange trap is sent when the value of  
+			# optRingActiveMode changes.
+				$optRingActiveModelook = "optRingActiveMode." + $1
+				$optRingActiveMode = lookup($optRingActiveModelook,VarbindValTable)
+				if(match($optRingActiveMode,"UNKNOWN")) {
+					$optRingActiveMode = $1
+				} else {
+					$optRingActiveMode = $optRingActiveMode + " ( " + $1 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "optRingActiveModeChange"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($optRingActiveMode)
+
+		case "8": ### - optActiveLinkFlipTrap
+			# SNMPv2
+			# The trap is sent upon change of Active link module.
+			$optLinkActive = $1
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "optActiveLinkFlipTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($optLinkActive)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.4.1.164.6.1": # - systems
+	switch($specific-trap) {
+		case "1": ### - tftpStatusChangeTrap
+			# SNMPv2
+			# This trap is sent whenever the status of tftp changed.
+				$tftpStatuslook = "tftpStatus." + $1
+				$tftpStatus = lookup($tftpStatuslook,VarbindValTable)
+				if(match($tftpStatus,"UNKNOWN")) {
+					$tftpStatus = $1
+				} else {
+					$tftpStatus = $tftpStatus + " ( " + $1 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "tftpStatusChangeTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($tftpStatus)
+
+		case "2": ### - agnStatusChangeTrap
+			# SNMPv2
+			# This trap is sent whenever the state of the entity the agent is
+			# responsible for changed.
+			# TDM devices will send agnTestStatus variable to indicate the current test status.
+				$agnIndicationlook = "agnIndication." + $1
+				$agnIndication = lookup($agnIndicationlook,VarbindValTable)
+				if(match($agnIndication,"UNKNOWN")) {
+					$agnIndication = $1
+				} else {
+					$agnIndication = $agnIndication + " ( " + $1 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "agnStatusChangeTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($agnIndication)
+
+		case "3": ### - prtStatusChangeTrap
+			# SNMPv2
+			# This trap is sent whenever the state of a port changed.
+			# Attached, will be parameter/s that indicate the new port status.
+			# The attached variables will be specified in the specifications
+			# of the products supporting this trap.
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "prtStatusChangeTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		case "4": ### - swdlStatusResult
+			# SNMPv2
+			# This notification is sent when Software Down Load is finished.
+			# The attached object indicates the File Name.
+			$swdlStatusFileName = $1
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "swdlStatusResult"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($swdlStatusFileName)
+
+		case "5": ### - intSwdlSlotFileMismatch
+			# SNMPv2
+			# This notification is sent when the card in the chosen slot doesn't match 
+			# the chosen file.
+			# The attached object indicates the File Name.
+			$intSwdlFileName = $1
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "intSwdlSlotFileMismatch"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($intSwdlFileName)
+
+		case "6": ### - agnCounterChange
+			# SNMPv2
+			# This notification is sent when the value of a specific Counter is changed.
+			# Agent can send as attached object the updated Counter.
+			# For details about this Counter and attached object, see spec of the relevant
+			# application.
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "agnCounterChange"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		case "7": ### - prtClkSrcChangeTrap
+			# SNMPv2
+			# This trap is sent upon any port clock change.
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "prtClkSrcChangeTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		case "8": ### - moduleFailTrap
+			# SNMPv2
+			# This trap is sent upon a module failure.
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "moduleFailTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		case "9": ### - moduleInitFailTrap
+			# SNMPv2
+			# This trap is sent upon a module initialization failure.
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "moduleInitFailTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		case "10": ### - clkSrcChangeTrap
+			# SNMPv2
+			# This trap is sent upon any change in Clock Source.
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "clkSrcChangeTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		case "11": ### - agnUploadDataTrap
+			# SNMPv2
+			# This trap is sent upon an upload data session termination.
+			# For more details see product specification.
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "agnUploadDataTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		case "12": ### - enrollmentTrap
+			# SNMPv2
+			# This trap is a periodically trap, which sent to manager 
+			# untill Agent get any response (Get or Set) from this manager.
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "enrollmentTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		case "13": ### - agnPowerFailureTrap
+			# SNMPv2
+			# This trap is sent upon power failure. It is applicable for 
+			# the following devices:
+			# 1. Devices having one PS unit, which sense the failure in advance,
+			# and still have time to send this trap before it goes off.
+			# 2. Devices having 2 PS units and send this trap in order to notify a
+			# failure in one of the units.
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "agnPowerFailureTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		case "14": ### - agnFanFailureTrap
+			# SNMPv2
+			# This trap is sent upon fan failure/recovery.
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "agnFanFailureTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		case "15": ### - agnSystemParameterChangeTrap
+			# SNMPv2
+			# This trap is sent upon any change of the systemParameter value.
+			$systemParameter = $1
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "agnSystemParameterChangeTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($systemParameter)
+
+		case "16": ### - agnConfigDBChecksumError
+			# SNMPv2
+			# This trap indicates that the database currently
+			# stored in the non-volatile memory of the device is corrupted
+				$alarmSeveritylook = "alarmSeverity." + $1
+				$alarmSeverity = lookup($alarmSeveritylook,VarbindValTable)
+				if(match($alarmSeverity,"UNKNOWN")) {
+					$alarmSeverity = $1
+				} else {
+					$alarmSeverity = $alarmSeverity + " ( " + $1 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "agnConfigDBChecksumError"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($alarmSeverity)
+
+		case "17": ### - agnAlarmBufferOverflow
+			# SNMPv2
+			# This trap indicates that the quantity of 
+			# alarm messages which have been written 
+			# in the alarm buffer, since the last clear command,
+			# exceeds predefined threshold. (Buffer size) 
+			# The new alarms are overwriting the oldest alarms 
+			# (the first alarms written in the buffer).
+			# For LA-110,threshold value is 200 alarms.
+				$alarmSeveritylook = "alarmSeverity." + $1
+				$alarmSeverity = lookup($alarmSeveritylook,VarbindValTable)
+				if(match($alarmSeverity,"UNKNOWN")) {
+					$alarmSeverity = $1
+				} else {
+					$alarmSeverity = $alarmSeverity + " ( " + $1 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "agnAlarmBufferOverflow"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($alarmSeverity)
+
+		case "18": ### - agnAlarmBufferClear
+			# SNMPv2
+			# This trap indicates that 
+			# alarm buffer has been cleared.
+				$alarmSeveritylook = "alarmSeverity." + $1
+				$alarmSeverity = lookup($alarmSeveritylook,VarbindValTable)
+				if(match($alarmSeverity,"UNKNOWN")) {
+					$alarmSeverity = $1
+				} else {
+					$alarmSeverity = $alarmSeverity + " ( " + $1 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "agnAlarmBufferClear"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($alarmSeverity)
+
+		case "19": ### - agnParametersValueChanged
+			# SNMPv2
+			# This trap indicates that due to software upgrade, 
+			# some of the parameters are assigned new values
+				$alarmSeveritylook = "alarmSeverity." + $1
+				$alarmSeverity = lookup($alarmSeveritylook,VarbindValTable)
+				if(match($alarmSeverity,"UNKNOWN")) {
+					$alarmSeverity = $1
+				} else {
+					$alarmSeverity = $alarmSeverity + " ( " + $1 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "agnParametersValueChanged"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($alarmSeverity)
+
+		case "20": ### - agnDriverSwMismatch
+			# SNMPv2
+			# There is mismatch between the SW driver and 
+			# the HW of the device uplink interface.
+				$alarmSeveritylook = "alarmSeverity." + $1
+				$alarmSeverity = lookup($alarmSeveritylook,VarbindValTable)
+				if(match($alarmSeverity,"UNKNOWN")) {
+					$alarmSeverity = $1
+				} else {
+					$alarmSeverity = $alarmSeverity + " ( " + $1 + " )"
+				}
+			$ifAlias = $2
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "agnDriverSwMismatch"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($alarmSeverity,$ifAlias)
+
+		case "21": ### - agnActualLowRate
+			# SNMPv2
+			# The main link is synchronized 
+			# at a rate lower than expected.
+				$alarmSeveritylook = "alarmSeverity." + $1
+				$alarmSeverity = lookup($alarmSeveritylook,VarbindValTable)
+				if(match($alarmSeverity,"UNKNOWN")) {
+					$alarmSeverity = $1
+				} else {
+					$alarmSeverity = $alarmSeverity + " ( " + $1 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "agnActualLowRate"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($alarmSeverity)
+
+		case "22": ### - xModemFileTransferStatusTrap
+			# SNMPv2
+			# This trap is sent in the following cases:
+			# - When an xModem File Transfer Session begins. In this case,
+			# the trapVal.1 string sent will be: 'Start'.
+			# - When an xModem File Transfer Session ends. In this case,
+			# the trapVal.1 string sent will be one of the following,
+			# according to the way the session ended :
+			# - 'End: OK'
+			# - 'End: Failed'   
+			$trapVal = $1
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "xModemFileTransferStatusTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($trapVal)
+
+		case "23": ### - agnStationClkFailureTrap
+			# SNMPv2
+			# This trap is sent upon Station Clock failure.
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "agnStationClkFailureTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		case "24": ### - successfulLogin
+			# SNMPv2
+			# This trap is sent when a user performed successful Login via 
+			# Terminal/Telnet/Web. This trap is used when the device is located
+			# at End-User's premises while management is at Service Provider's 
+			# premises.
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "successfulLogin"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		case "25": ### - failedLogin
+			# SNMPv2
+			# This trap is sent when a user tried to Login via Terminal/Telnet/Web
+			# and failed. This trap is used when the device is located
+			# at End-User's premises while management is at Service Provider's 
+			# premises.
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "failedLogin"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+

@@ -1,0 +1,14 @@
+#This file was written by server.
+#Wed Oct 26 23:10:43 EDT 2005
+impact.jmsmessagelistener.namingfactoryinitial=com.sun.appserv.naming.S1ASCtxFactory
+impact.jmsmessagelistener.namingurlpackage=com.sun.enterprise.naming
+impact.jmsmessagelistener.autostartup=false
+impact.jmsmessagelistener.classname=com.micromuse.response.service.JMSMessageListener
+impact.jmsmessagelistener.policyname=TestJMSListener
+impact.jmsmessagelistener.messageselector=
+impact.jmsmessagelistener.destination=jms/Queue
+impact.jmsmessagelistener.connectionfactory=jms/ConnectionFactory
+impact.jmsmessagelistener.namingproviderurl=iiop\://192.168.1.185\:3700
+impact.jmsmessagelistener.username=
+impact.jmsmessagelistener.logtofile=true
+impact.jmsmessagelistener.description=No description yet

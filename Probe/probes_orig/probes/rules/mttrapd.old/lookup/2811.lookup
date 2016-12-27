@@ -1,0 +1,13 @@
+Summary	Severity	SiteVisit	ServiceAffecting	ResilienceAffecting	Probable Cause
+IP SLAs(1): Threshold exceeded for packetLossSD	5	0	0	0	EF traffic, Packet drop outside the 99.99% specification 
+IP SLAs(1): Threshold below for packetLossSD	2	0	0	0	EF traffic, Packet drop inside the 99.99% specification 
+IP SLAs(3): Threshold exceeded for packetLossSD	5	0	0	0	AF traffic, Packet drop outside the 99.9% specification 
+IP SLAs(3): Threshold below for packetLossSD	2	0	0	0	AF traffic, Packet drop inside the 99.9% specification 
+IP SLAs(5): Threshold exceeded for packetLossSD	5	0	0	0	BE traffic, Packet drop outside the 99% specification 
+IP SLAs(5): Threshold below for packetLossSD	2	0	0	0	BE traffic, Packet drop inside the 99% specification 
+IP SLAs(2): Threshold exceeded for latencySDAvg	5	0	0	0	EF traffic, Latency outside the 15ms specification 
+IP SLAs(2): Threshold below for latencySDAvg	2	0	0	0	EF traffic, Latency inside the 15ms specification 
+IP SLAs(4): Threshold exceeded for latencySDAvg	5	0	0	0	AF traffic, Latency outside the 15ms specification 
+IP SLAs(4): Threshold below for latencySDAvg	2	0	0	0	AF traffic, Latency inside the 15ms specification 
+IP SLAs(6): Threshold exceeded for latencySDAvg	5	0	0	0	BE traffic, Latency outside the 200ms specification 
+IP SLAs(6): Threshold below for latencySDAvg	2	0	0	0	BE traffic, Latency inside the 200ms specification 

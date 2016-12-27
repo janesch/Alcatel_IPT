@@ -1,0 +1,7 @@
+log("Circee_Query_Test: start policy.");
+
+Filter = "(L2_SYSNAME='GEORPCX301') and (L2_IF_ID like 'BOARD 05%')";
+Test = GetByFilter('Circee_Interface_Table', Filter, false);
+
+log("Circee_Query_Test: end policy.");
+

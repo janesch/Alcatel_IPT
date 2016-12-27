@@ -1,0 +1,100 @@
+#######################################################################
+#
+#       Copyright (C) 2002 Micromuse Ltd. All rights reserved.
+#       All Rights Reserved
+#
+#       RESTRICTED RIGHTS:
+#
+#       This file may have been supplied under a license.
+#       It may be used, disclosed, and/or copied only as permitted
+#       under such license agreement.  Any copy must contain the
+#       above copyright notice and this restricted rights notice.
+#       Use, copying, and/or disclosure of the file is strictly
+#       prohibited unless otherwise provided in the license agreement.
+#
+#
+# Ident: $Id: mkprops 1.21 2003/08/20 15:29:09 csmith Development $
+#
+#######################################################################
+
+#######################################################################
+#
+# Property Name					Default
+#
+# Generic Properties
+#
+# AuthPassword          	: ''
+# AuthUserName          	: ''
+# AutoSAF               	: 0
+# Buffering             	: 0
+# BufferSize            	: 10
+# Help                  	: 0
+# LookupTableMode       	: 3
+# Manager               	: 'nnm6'
+# MaxLogFileSize        	: 1048576
+# MaxRawFileSize        	: -1
+# MaxSAFFileSize        	: 1048576
+# MessageLevel          	: 'warn'
+# MessageLog            	: '$OMNIHOME/log/nnm6.log'
+# MsgDailyLog           	: 0
+# MsgTimeLog            	: '0000'
+# Name                  	: 'nnm6'
+# NetworkTimeout        	: 0
+# PollServer            	: 0
+# PropsFile             	: '$OMNIHOME/probes/<arch>/nnm6.props'
+# RawCapture            	: 0
+# RawCaptureFile        	: '$OMNIHOME/var/nnm6.cap'
+# RawCaptureFileAppend  	: 0
+# RawCaptureFileBackup  	: 0
+# RetryConnectionCount  	: 15
+# RetryConnectionTimeOut	: 30
+# RulesFile             	: '$OMNIHOME/probes/<arch>/nnm6.rules'
+# SAFFileName           	: ''
+# Server                	: 'NCOMS'
+# ServerBackup          	: ''
+# StoreAndForward       	: 1
+# Version               	: 0
+#
+# Specific Properties
+#
+# Japanese              	: 0
+# NNMfilter             	: '{RAW}.*'
+# NNMhostname           	: '127.0.0.1'
+# NoNameResolution      	: 0
+# OVAPIDebug            	: 0
+# Props.CheckNames      	: TRUE
+# SeqNumFile            	: '$OMNIHOME/var/num_run_seq'
+# SNMPMode              	: 0
+#
+#######################################################################
+
+#######################################################################
+#
+# Add your settings here
+#
+#######################################################################
+Server                  : 'NCOMS_P'
+PropsFile             	: '$NCHOME/custom/probes/props/nnm6_HA.props'
+RulesFile             	: '$NCHOME/custom/probes/rules/nnm6/nnm6_HA.rules'
+NNMhostname           	: '10.0.110.33'
+
+# SAF Settings
+MaxSAFFileSize        	: 104857600
+SAFFileName           	: '$OMNIHOME/var/RADDSAF.store'
+StoreAndForward       	: 1
+AutoSAF               	: 1
+
+# Logfile settings
+MessageLog		: '$OMNIHOME/log/nnm6_HA.log'
+MessageLevel          	: 'debug'
+MaxLogFileSize        	: 10048576
+
+# Raw Capture Settings
+RawCapture            	: 1
+RawCaptureFile        	: '$OMNIHOME/var/nnm6.cap'
+RawCaptureFileAppend    : 1
+
+# Peer-to-peer failover
+#Mode                    : 'master'
+#PeerHost                : 'nv3d'
+#PeerPort                : 4602

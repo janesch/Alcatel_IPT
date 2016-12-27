@@ -1,0 +1,11 @@
+#This file was written by Impact Server.
+#Mon Aug 21 19:20:25 EDT 2006
+impact.datasrc.numdatasrc=1
+impact.datasrc.0=ITNM
+impact.datatype.0=ITNM
+impact.policy.numpolicy=2
+impact.service.0=ITNMEventListener
+impact.policy.1=ITNMSamplePolicy
+impact.policy.0=ITNMSampleListenerPolicy
+impact.datatype.numdatatype=1
+impact.service.numservice=1

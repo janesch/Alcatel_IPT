@@ -1,0 +1,261 @@
+/* //////////////////////////////////////////////////////////////////////////////
+  Policy Name: IPT Alarm Enrichment
+  Description: Policy to enrich new network device information
+   
+  Version   Date        Name        Description
+  1.0      20120216    Chris Janes Original 
+////////////////////////////////////////////////////////////////////////////// */
+log("IPT Alarm Enrichment: start policy.");
+log("IPT Alarm Enrichment: IQLOGSTART: ServerSerial=" + @ServerSerial + " EventId=" + @EventId);
+// Section to generate an event in the ObjectServer if we can't talk to Circee
+Handle java.lang.Exception
+{
+    if (ErrorMessage LIKE "JDBC Connection Pool could not connect to either data source")
+    {
+        MyErrorMessage = "JDBC Connection Pool could not connect to either data source";
+    }
+    elseif(ErrorMessage LIKE "Could not connect to databases") 
+    {
+        MyErrorMessage = "Could not connect to databases";
+    }
+    elseif((ErrorMessage LIKE "Could not connect to databases") OR (ErrorMessage LIKE "JDBC Connection Pool could not connect to either data source"))
+    {
+        Log("My error occured in policy: " + ErrorMessage);
+        objNewEvent = NewObject();
+        objNewEvent.ClearTime = 0;
+        objNewEvent.FirstRaiseTime = GetDate();
+        objNewEvent.LastRaiseTime = GetDate();
+        objNewEvent.Manager = 'Netcool Impact';
+        objNewEvent.Severity = 5;
+        objNewEvent.FirstOccurrence = GetDate();
+        objNewEvent.LastOccurrence = GetDate();
+        objNewEvent.Type = 1;
+        objNewEvent.ParentChildFlag = 8;
+        objNewEvent.ImpactFlag = 1;
+        objNewEvent.Flash = 1;
+        objNewEvent.Node = "Circee Database";
+        objNewEvent.OwnerUID = 65534;
+        objNewEvent.TTFlag = 1;
+        objNewEvent.ActionRequired = 1;
+        objNewEvent.ExpireTime = 259200;
+        objNewEvent.AlertGroup = "Database Unavailable";
+        objNewEvent.Identifier = "Circee_Database_Unavailable - error " + MyErrorMessage;
+        objNewEvent.Summary = "Circee Database unavailable from Impact " + ErrorMessage;
+        objMyEvent = AddDataItem('ha_ncoms_impact_events', objNewEvent);
+    }
+}
+//////////////////////////////////////
+//
+// this is where the real work starts
+//
+//////////////////////////////////////
+// Set Impact Flag to 4 to show 
+log("IPT Alarm Enrichment: Node: " + @Node + " ServerSerial: " + @ServerSerial + " EquipmentType: " + @EquipmentType);
+DataType = "ha_ncoms_impact_events";
+Filter = "ServerSerial = " + @ServerSerial;
+UpdateExpression = "ImpactFlag = 4";
+log("UpdateExpression = " + UpdateExpression);
+BatchUpdate(DataType,Filter,UpdateExpresssion);
+
+log("IPT Alarm Enrichment: Node: " + @Node + " ServerSerial: " + @ServerSerial + " EquipmentType: " + @EquipmentType);
+Filter = "(SYSNAME='"+@Node+"')";
+ 
+EndOrgNodes = GetByFilter('Circee_Host_Table', Filter, false);
+EndOrgNodesNum = length(EndOrgNodes);
+log("IPT Alarm Enrichment: GetByFilter successful. Found "+EndNum+" dataItem(s).");
+if (EndOrgNodesNum > 0) 
+{
+    if(EventContainer.NodeAlias = '')
+    {
+        EventContainer.NodeAlias = '' + EndOrgNodes[0].IP_ADDRESS;
+    }
+    if(EventContainer.AssetID = '')
+    {
+        EventContainer.AssetID = '' + EndOrgNodes[0].ASSET_ID;
+    }
+    if(EventContainer.EquipmentType = '' && EventContainer.Manager != 'Halogen')
+    {
+        EventContainer.EquipmentType = '' + EndOrgNodes[0].EQUIP_TYPE;
+    }
+    if(EventContainer.AssetElectronicAddress = '')
+    {
+        EventContainer.AssetElectronicAddress = '' + EndOrgNodes[0].ASSET_ELECTRONIC_ADDRESS;
+    }
+    if(EventContainer.AssetGeographicAddress = '')
+    {
+        EventContainer.AssetGeographicAddress = '' + EndOrgNodes[0].ASSET_GEOG_ADDRESS;
+    }
+    if(EventContainer.AssetMotorway = '')
+    {
+        EventContainer.AssetMotorway = '' + EndOrgNodes[0].MOTORWAY_REF;
+    }
+    if(EventContainer.RCCArea = '')
+    {
+        EventContainer.RCCArea = '' + EndOrgNodes[0].RCC_AREA_ABBR;
+    }
+    if(EventContainer.TSA = '')
+    {
+        EventContainer.TSA = '' + EndOrgNodes[0].TS_A;
+    }
+    if(EventContainer.TSA != '' && EventContainer.AssetMotorway != '')
+    {
+        // Now lookup TSA geographic address for the road extracted
+        tsaInfoFilter = "TRANSMISSION_STATION = '" + EventContainer.TSA + "' and MOTORWAY_REF = '" + EventContainer.AssetMotorway + "'";
+        tsaInfo = GetByFilter('Circee_TS_Table', tsaInfoFilter,false);
+        numTSAInfo = Length(tsaInfo);
+        if(numTSAInfo > 0)
+        {
+            EventContainer.TSA_Geo = tsaInfo[0].GEOG_ADDRESS;
+        }
+    }
+    if(EventContainer.TSB = '')
+    {
+        EventContainer.TSB = '' + EndOrgNodes[0].TS_B;
+    }
+    if(EventContainer.Cab = '')
+    {
+        EventContainer.Cab = '' + EndOrgNodes[0].CAB;
+    }
+    if(EventContainer.InServiceStatus = '')
+    {
+        EventContainer.InServiceStatus = EndOrgNodes[0].ASSET_STATUS_DESC;
+    }
+    if(EventContainer.InServiceStatus = 'In Service - Planned Outage')
+    {
+        if(EventContainer.PlannedOutageFlag = 0)
+        {
+            EventContainer.PlannedOutageFlag = 1;
+        }
+    }
+    if(EventContainer.ServiceType = '')
+    {
+        EventContainer.ServiceType = '' + EndOrgNodes[0].SERVICE_TYPE_ID;
+    }
+    if(EventContainer.ServiceCategory = '')
+    {
+        EventContainer.ServiceCategory = "Not found";
+    }
+    elseif ( @ServiceType like "^[0-9]+.*" )
+    {
+        @ServiceCategory = RExtract(@ServiceType, "^([0-9]+).*");
+    }
+    if(EventContainer.SDPLocation = '')
+    {
+        EventContainer.SDPLocation = '' + EndOrgNodes[0].SDP_LOCATION;
+    }
+    if(EventContainer.TPRLocation = '')
+    {
+        EventContainer.TPRLocation = '' + EndOrgNodes[0].TPR_LOCATION;
+    }
+    if(EventContainer.AssetType = '')
+    {
+        EventContainer.AssetType = '' + EndOrgNodes[0].TYPE_ABBR;
+    }
+    if(EventContainer.AssetBarCode = '')
+    {
+        EventContainer.AssetBarCode = '' + EndOrgNodes[0].ASSET_BARCODE_NO;
+    }
+    if(EventContainer.AssetCategory = '')
+    {
+        EventContainer.AssetCategory = '' + EndOrgNodes[0].CATEGORY_ABBR;
+    }
+    if(EventContainer.AssetVariant = '')
+    {
+        EventContainer.AssetVariant = '' + EndOrgNodes[0].VARIANT_ABBR;
+    }
+
+// Calculate    STINum
+// Calculeate   STI_HA_Impact from Calculated from STI_Impact
+ 
+
+    EventContainer.ImpactFlag = 2;
+    //EventContainer.ParentChildFlag =0;
+    ReturnEvent(EventContainer);
+
+    log("IPT Alarm Enrichment: ImpactFlag = 2");
+
+}
+else 
+{
+    log("IPT Alarm Enrichment: device not found in host table");
+    if(EventContainer.AssetID = '')
+    {
+        EventContainer.AssetID = 'Not found';
+    }
+    if(EventContainer.EquipmentType = '' && EventContainer.Manager != 'Halogen')
+    {
+        EventContainer.EquipmentType = '' + EndOrgNodes[0].EQUIP_TYPE;
+    }
+    if(EventContainer.AssetElectronicAddress = '')
+    {
+        EventContainer.AssetElectronicAddress = 'Not found';
+    }
+    if(EventContainer.AssetGeographicAddress = '')
+    {
+        EventContainer.AssetGeographicAddress = 'Not found';
+    }
+    if(EventContainer.RCCArea = '')
+    {
+        EventContainer.RCCArea = 'Not found';
+    }
+    if(EventContainer.TSA = '')
+    {
+        EventContainer.TSA = 'Not found';
+    }
+    if(EventContainer.TSA_Geo = '')
+    {
+        EventContainer.TSA_Geo = 'Not found';
+    }
+    if(EventContainer.TSB = '')
+    {
+        EventContainer.TSB = 'Not found';
+    }
+    if(EventContainer.Cab = '')
+    {
+        EventContainer.Cab = 'Not found';
+    }
+    if(EventContainer.InServiceStatus = '')
+    {
+        EventContainer.InServiceStatus = 'Not found';
+    }
+    if(EventContainer.ServiceType = '')
+    {
+        EventContainer.ServiceType = 'Not found';
+    }
+    if(EventContainer.ServiceCategory = '')
+    {
+        EventContainer.ServiceCategory = 'Not found';
+    }
+    if(EventContainer.SDPLocation = '')
+    {
+        EventContainer.SDPLocation = 'Not found';
+    }
+    if(EventContainer.TPRLocation = '')
+    {
+        EventContainer.TPRLocation = 'Not found';
+    }
+    if(EventContainer.AssetType = '')
+    {
+        EventContainer.AssetType = 'Not found';
+    }
+    if(EventContainer.AssetBarCode = '')
+    {
+        EventContainer.AssetBarCode = 'Not found';
+    }
+    if(EventContainer.AssetCategory = '')
+    {
+        EventContainer.AssetCategory = 'Not found';
+    }
+    if(EventContainer.AssetVariant = '')
+    {
+        EventContainer.AssetVariant = 'Not found';
+    }
+    // EventContainer.PlannedOutageFlag = 0;
+    EventContainer.ImpactFlag = 1;
+    ReturnEvent(EventContainer);
+    log("IPT Alarm Enrichment: ImpactFlag = 1");
+
+}
+
+
+

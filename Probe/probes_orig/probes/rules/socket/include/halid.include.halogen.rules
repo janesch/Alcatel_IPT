@@ -1,0 +1,79 @@
+if ( regmatch ( $line_00, "halID" ) ) { 
+$halID= extract($line_00, "halID=(.*)")
+} else if ( regmatch ( $line_01, "halID" ) ) { 
+$halID= extract($line_01, "halID=(.*)")
+} else if ( regmatch ( $line_02, "halID" ) ) { 
+$halID= extract($line_02, "halID=(.*)")
+} else if ( regmatch ( $line_03, "halID" ) ) { 
+$halID= extract($line_03, "halID=(.*)")
+} else if ( regmatch ( $line_04, "halID" ) ) { 
+$halID= extract($line_04, "halID=(.*)")
+} else if ( regmatch ( $line_05, "halID" ) ) { 
+$halID= extract($line_05, "halID=(.*)")
+} else if ( regmatch ( $line_06, "halID" ) ) { 
+$halID= extract($line_06, "halID=(.*)")
+} else if ( regmatch ( $line_07, "halID" ) ) { 
+$halID= extract($line_07, "halID=(.*)")
+} else if ( regmatch ( $line_08, "halID" ) ) { 
+$halID= extract($line_08, "halID=(.*)")
+} else if ( regmatch ( $line_09, "halID" ) ) { 
+$halID= extract($line_09, "halID=(.*)")
+} else if ( regmatch ( $line_10, "halID" ) ) { 
+$halID= extract($line_10, "halID=(.*)")
+} else if ( regmatch ( $line_11, "halID" ) ) { 
+$halID= extract($line_11, "halID=(.*)")
+} else if ( regmatch ( $line_12, "halID" ) ) { 
+$halID= extract($line_12, "halID=(.*)")
+} else if ( regmatch ( $line_13, "halID" ) ) { 
+$halID= extract($line_13, "halID=(.*)")
+} else if ( regmatch ( $line_14, "halID" ) ) { 
+$halID= extract($line_14, "halID=(.*)")
+} else if ( regmatch ( $line_15, "halID" ) ) { 
+$halID= extract($line_15, "halID=(.*)")
+} else if ( regmatch ( $line_16, "halID" ) ) { 
+$halID= extract($line_16, "halID=(.*)")
+} else if ( regmatch ( $line_17, "halID" ) ) { 
+$halID= extract($line_17, "halID=(.*)")
+} else if ( regmatch ( $line_18, "halID" ) ) { 
+$halID= extract($line_18, "halID=(.*)")
+} else if ( regmatch ( $line_19, "halID" ) ) { 
+$halID= extract($line_19, "halID=(.*)")
+} else if ( regmatch ( $line_20, "halID" ) ) { 
+$halID= extract($line_20, "halID=(.*)")
+} else if ( regmatch ( $line_21, "halID" ) ) { 
+$halID= extract($line_21, "halID=(.*)")
+} else if ( regmatch ( $line_22, "halID" ) ) { 
+$halID= extract($line_22, "halID=(.*)")
+} else if ( regmatch ( $line_23, "halID" ) ) { 
+$halID= extract($line_23, "halID=(.*)")
+} else if ( regmatch ( $line_24, "halID" ) ) { 
+$halID= extract($line_24, "halID=(.*)")
+} else if ( regmatch ( $line_25, "halID" ) ) { 
+$halID= extract($line_25, "halID=(.*)")
+} else if ( regmatch ( $line_26, "halID" ) ) {
+$halID= extract($line_26, "halID=(.*)")
+} else if ( regmatch ( $line_27, "halID" ) ) {
+$halID= extract($line_27, "halID=(.*)")
+} else if ( regmatch ( $line_28, "halID" ) ) {
+$halID= extract($line_28, "halID=(.*)")
+} else if ( regmatch ( $line_29, "halID" ) ) {
+$halID= extract($line_29, "halID=(.*)")
+} else if ( regmatch ( $line_30, "halID" ) ) {
+$halID= extract($line_30, "halID=(.*)")
+} else if ( regmatch ( $line_31, "halID" ) ) {
+$halID= extract($line_31, "halID=(.*)")
+} else if ( regmatch ( $line_32, "halID" ) ) {
+$halID= extract($line_32, "halID=(.*)")
+} else if ( regmatch ( $line_33, "halID" ) ) {
+$halID= extract($line_33, "halID=(.*)")
+} else if ( regmatch ( $line_34, "halID" ) ) {
+$halID= extract($line_34, "halID=(.*)")
+} else if ( regmatch ( $line_35, "halID" ) ) {
+$halID= extract($line_35, "halID=(.*)")
+} else if ( regmatch ( $line_36, "halID" ) ) {
+$halID= extract($line_36, "halID=(.*)")
+} else if ( regmatch ( $line_37, "halID" ) ) {
+$halID= extract($line_37, "halID=(.*)")
+} else if ( regmatch ( $line_38, "halID" ) ) {
+$halID= extract($line_38, "halID=(.*)")
+}   

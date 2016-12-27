@@ -1,0 +1,123 @@
+#######################################################################
+#
+#       Copyright (C) 2002 Micromuse Ltd. All rights reserved.
+
+#       All Rights Reserved
+#
+#       RESTRICTED RIGHTS:
+#
+#       This file may have been supplied under a license.
+#       It may be used, disclosed, and/or copied only as permitted
+#       under such license agreement.  Any copy must contain the
+#       above copyright notice and this restricted rights notice.
+#       Use, copying, and/or disclosure of the file is strictly
+#       prohibited unless otherwise provided in the license agreement.
+#
+#
+# Ident: $Id: mkprops 1.21 2003/08/20 15:29:09 csmith Development $
+#
+#######################################################################
+
+#######################################################################
+#
+# Property Name					Default
+#
+# Generic Properties
+#
+# AuthPassword          	: ''
+# AuthUserName          	: ''
+# AutoSAF               	: 0
+# Buffering             	: 0
+# BufferSize            	: 10
+# Help                  	: 0
+# LookupTableMode       	: 3
+# Manager               	: 'socket'
+# MaxLogFileSize        	: 1048576
+# MaxRawFileSize        	: -1
+# MaxSAFFileSize        	: 1048576
+# MessageLevel          	: 'warn'
+# MessageLog            	: '$OMNIHOME/log/socket.log'
+# MsgDailyLog           	: 0
+# MsgTimeLog            	: '0000'
+# Name                  	: 'socket'
+# NameToUpper           	: 0
+# NetworkTimeout        	: 0
+# PollServer            	: 0
+# PropsFile             	: '$OMNIHOME/probes/<arch>/socket.props'
+# RawCapture            	: 0
+# RawCaptureFile        	: '$OMNIHOME/var/socket.cap'
+# RawCaptureFileAppend  	: 0
+# RawCaptureFileBackup  	: 0
+# RetryConnectionCount  	: 15
+# RetryConnectionTimeOut	: 30
+# RulesFile             	: '$OMNIHOME/probes/<arch>/socket.rules'
+# SAFFileName           	: ''
+# Server                	: 'NCOMS'
+# ServerBackup          	: ''
+# StoreAndForward       	: 1
+# Version               	: 0
+#
+# Specific Properties
+#
+# Delimiter             	: ''
+# EventReadString       	: ''
+# EventTerminator       	: '\n\n'
+# Footer                	: ''
+# Header                	: ''
+# LineTerminator        	: '\\n'
+# LoginScript           	: ''
+# MaxEvents             	: 10
+# NoNameResolution      	: 0
+# NoTrim                	: 0
+# ParseAsLines          	: 0
+# PortNumber            	: 4567
+# Props.CheckNames      	: TRUE
+# ReadTimeOut           	: 1
+# ReportStatus          	: 1
+# SingleLines           	: 0
+# SocketBuffer          	: 1024
+# StreamCapture         	: 0
+# StreamCaptureFilename 	: '$OMNIHOME/var/socket.stream'
+# StripChars            	: ''
+#
+#######################################################################
+
+#######################################################################
+#
+# Add your settings here
+#
+#######################################################################
+
+# Probe Settings
+Server                  : 'NCOMS_V'
+PropsFile             	: '$NCHOME/custom/probes/props/socket_HA.props'
+RulesFile             	: '$NCHOME/custom/probes/rules/socket/socket_HA.rules'
+
+PollServer            	: 5
+MessageLog		: '$OMNIHOME/log/socket_HA.log'
+MessageLevel          	: 'debug'
+MaxLogFileSize        	: 100048576
+
+Header                	: 'begin'
+Footer                	: 'end'
+PortNumber            	: 4567
+SingleLines           	: 0
+ParseAsLines          	: 1
+Delimiter             	: ''
+EventTerminator       	: ''
+StreamCapture         	: 0 
+StreamCaptureFilename 	: '$OMNIHOME/var/socket.stream'
+
+# Raw Capture
+RawCapture            	: 1 
+RawCaptureFile        	: '$OMNIHOME/var/socket_0710.cap'
+
+# Store and Forward
+MaxSAFFileSize        	: 100048576
+AutoSAF               	: 1
+StoreAndForward       	: 1
+
+# Next three lines for peer-to-peer failover
+Mode                    : 'master'
+PeerHost                : 'nv3d'
+PeerPort                : 4601

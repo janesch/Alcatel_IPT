@@ -1,0 +1,5 @@
+#This file was written by Impact Server.
+#Tue May 20 11:00:46 EDT 2003
+Schedule.SCHEDULE.INCLUDE_ROOT=true
+Schedule.SCHEDULE.DYNAMICLINKINFOSET={}
+Schedule.SCHEDULE.USERPARAMETERS=\ WITHDEFAULTS{}

@@ -1,0 +1,79 @@
+if ( regmatch ( $line_00, "Subsystem" ) ) { 
+$Subsystem= extract($line_00, "Subsystem=(.*)")
+} else if ( regmatch ( $line_01, "Subsystem" ) ) { 
+$Subsystem= extract($line_01, "Subsystem=(.*)")
+} else if ( regmatch ( $line_02, "Subsystem" ) ) { 
+$Subsystem= extract($line_02, "Subsystem=(.*)")
+} else if ( regmatch ( $line_03, "Subsystem" ) ) { 
+$Subsystem= extract($line_03, "Subsystem=(.*)")
+} else if ( regmatch ( $line_04, "Subsystem" ) ) { 
+$Subsystem= extract($line_04, "Subsystem=(.*)")
+} else if ( regmatch ( $line_05, "Subsystem" ) ) { 
+$Subsystem= extract($line_05, "Subsystem=(.*)")
+} else if ( regmatch ( $line_06, "Subsystem" ) ) { 
+$Subsystem= extract($line_06, "Subsystem=(.*)")
+} else if ( regmatch ( $line_07, "Subsystem" ) ) { 
+$Subsystem= extract($line_07, "Subsystem=(.*)")
+} else if ( regmatch ( $line_08, "Subsystem" ) ) { 
+$Subsystem= extract($line_08, "Subsystem=(.*)")
+} else if ( regmatch ( $line_09, "Subsystem" ) ) { 
+$Subsystem= extract($line_09, "Subsystem=(.*)")
+} else if ( regmatch ( $line_10, "Subsystem" ) ) { 
+$Subsystem= extract($line_10, "Subsystem=(.*)")
+} else if ( regmatch ( $line_11, "Subsystem" ) ) { 
+$Subsystem= extract($line_11, "Subsystem=(.*)")
+} else if ( regmatch ( $line_12, "Subsystem" ) ) { 
+$Subsystem= extract($line_12, "Subsystem=(.*)")
+} else if ( regmatch ( $line_13, "Subsystem" ) ) { 
+$Subsystem= extract($line_13, "Subsystem=(.*)")
+} else if ( regmatch ( $line_14, "Subsystem" ) ) { 
+$Subsystem= extract($line_14, "Subsystem=(.*)")
+} else if ( regmatch ( $line_15, "Subsystem" ) ) { 
+$Subsystem= extract($line_15, "Subsystem=(.*)")
+} else if ( regmatch ( $line_16, "Subsystem" ) ) { 
+$Subsystem= extract($line_16, "Subsystem=(.*)")
+} else if ( regmatch ( $line_17, "Subsystem" ) ) { 
+$Subsystem= extract($line_17, "Subsystem=(.*)")
+} else if ( regmatch ( $line_18, "Subsystem" ) ) { 
+$Subsystem= extract($line_18, "Subsystem=(.*)")
+} else if ( regmatch ( $line_19, "Subsystem" ) ) { 
+$Subsystem= extract($line_19, "Subsystem=(.*)")
+} else if ( regmatch ( $line_20, "Subsystem" ) ) { 
+$Subsystem= extract($line_20, "Subsystem=(.*)")
+} else if ( regmatch ( $line_21, "Subsystem" ) ) { 
+$Subsystem= extract($line_21, "Subsystem=(.*)")
+} else if ( regmatch ( $line_22, "Subsystem" ) ) { 
+$Subsystem= extract($line_22, "Subsystem=(.*)")
+} else if ( regmatch ( $line_23, "Subsystem" ) ) { 
+$Subsystem= extract($line_23, "Subsystem=(.*)")
+} else if ( regmatch ( $line_24, "Subsystem" ) ) { 
+$Subsystem= extract($line_24, "Subsystem=(.*)")
+} else if ( regmatch ( $line_25, "Subsystem" ) ) { 
+$Subsystem= extract($line_25, "Subsystem=(.*)")
+} else if ( regmatch ( $line_26, "Subsystem" ) ) {
+$Subsystem= extract($line_26, "Subsystem=(.*)")
+} else if ( regmatch ( $line_27, "Subsystem" ) ) {
+$Subsystem= extract($line_27, "Subsystem=(.*)")
+} else if ( regmatch ( $line_28, "Subsystem" ) ) {
+$Subsystem= extract($line_28, "Subsystem=(.*)")
+} else if ( regmatch ( $line_29, "Subsystem" ) ) {
+$Subsystem= extract($line_29, "Subsystem=(.*)")
+} else if ( regmatch ( $line_30, "Subsystem" ) ) {
+$Subsystem= extract($line_30, "Subsystem=(.*)")
+} else if ( regmatch ( $line_31, "Subsystem" ) ) {
+$Subsystem= extract($line_31, "Subsystem=(.*)")
+} else if ( regmatch ( $line_32, "Subsystem" ) ) {
+$Subsystem= extract($line_32, "Subsystem=(.*)")
+} else if ( regmatch ( $line_33, "Subsystem" ) ) {
+$Subsystem= extract($line_33, "Subsystem=(.*)")
+} else if ( regmatch ( $line_34, "Subsystem" ) ) {
+$Subsystem= extract($line_34, "Subsystem=(.*)")
+} else if ( regmatch ( $line_35, "Subsystem" ) ) {
+$Subsystem= extract($line_35, "Subsystem=(.*)")
+} else if ( regmatch ( $line_36, "Subsystem" ) ) {
+$Subsystem= extract($line_36, "Subsystem=(.*)")
+} else if ( regmatch ( $line_37, "Subsystem" ) ) {
+$Subsystem= extract($line_37, "Subsystem=(.*)")
+} else if ( regmatch ( $line_38, "Subsystem" ) ) {
+$Subsystem= extract($line_38, "Subsystem=(.*)")
+}   

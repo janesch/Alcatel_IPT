@@ -1,0 +1,79 @@
+if ( regmatch ( $line_00, "Clearance_Method" ) ) { 
+$Clearance_Method= extract($line_00, "Clearance_Method=(.*)")
+} else if ( regmatch ( $line_01, "Clearance_Method" ) ) { 
+$Clearance_Method= extract($line_01, "Clearance_Method=(.*)")
+} else if ( regmatch ( $line_02, "Clearance_Method" ) ) { 
+$Clearance_Method= extract($line_02, "Clearance_Method=(.*)")
+} else if ( regmatch ( $line_03, "Clearance_Method" ) ) { 
+$Clearance_Method= extract($line_03, "Clearance_Method=(.*)")
+} else if ( regmatch ( $line_04, "Clearance_Method" ) ) { 
+$Clearance_Method= extract($line_04, "Clearance_Method=(.*)")
+} else if ( regmatch ( $line_05, "Clearance_Method" ) ) { 
+$Clearance_Method= extract($line_05, "Clearance_Method=(.*)")
+} else if ( regmatch ( $line_06, "Clearance_Method" ) ) { 
+$Clearance_Method= extract($line_06, "Clearance_Method=(.*)")
+} else if ( regmatch ( $line_07, "Clearance_Method" ) ) { 
+$Clearance_Method= extract($line_07, "Clearance_Method=(.*)")
+} else if ( regmatch ( $line_08, "Clearance_Method" ) ) { 
+$Clearance_Method= extract($line_08, "Clearance_Method=(.*)")
+} else if ( regmatch ( $line_09, "Clearance_Method" ) ) { 
+$Clearance_Method= extract($line_09, "Clearance_Method=(.*)")
+} else if ( regmatch ( $line_10, "Clearance_Method" ) ) { 
+$Clearance_Method= extract($line_10, "Clearance_Method=(.*)")
+} else if ( regmatch ( $line_11, "Clearance_Method" ) ) { 
+$Clearance_Method= extract($line_11, "Clearance_Method=(.*)")
+} else if ( regmatch ( $line_12, "Clearance_Method" ) ) { 
+$Clearance_Method= extract($line_12, "Clearance_Method=(.*)")
+} else if ( regmatch ( $line_13, "Clearance_Method" ) ) { 
+$Clearance_Method= extract($line_13, "Clearance_Method=(.*)")
+} else if ( regmatch ( $line_14, "Clearance_Method" ) ) { 
+$Clearance_Method= extract($line_14, "Clearance_Method=(.*)")
+} else if ( regmatch ( $line_15, "Clearance_Method" ) ) { 
+$Clearance_Method= extract($line_15, "Clearance_Method=(.*)")
+} else if ( regmatch ( $line_16, "Clearance_Method" ) ) { 
+$Clearance_Method= extract($line_16, "Clearance_Method=(.*)")
+} else if ( regmatch ( $line_17, "Clearance_Method" ) ) { 
+$Clearance_Method= extract($line_17, "Clearance_Method=(.*)")
+} else if ( regmatch ( $line_18, "Clearance_Method" ) ) { 
+$Clearance_Method= extract($line_18, "Clearance_Method=(.*)")
+} else if ( regmatch ( $line_19, "Clearance_Method" ) ) { 
+$Clearance_Method= extract($line_19, "Clearance_Method=(.*)")
+} else if ( regmatch ( $line_20, "Clearance_Method" ) ) { 
+$Clearance_Method= extract($line_20, "Clearance_Method=(.*)")
+} else if ( regmatch ( $line_21, "Clearance_Method" ) ) { 
+$Clearance_Method= extract($line_21, "Clearance_Method=(.*)")
+} else if ( regmatch ( $line_22, "Clearance_Method" ) ) { 
+$Clearance_Method= extract($line_22, "Clearance_Method=(.*)")
+} else if ( regmatch ( $line_23, "Clearance_Method" ) ) { 
+$Clearance_Method= extract($line_23, "Clearance_Method=(.*)")
+} else if ( regmatch ( $line_24, "Clearance_Method" ) ) { 
+$Clearance_Method= extract($line_24, "Clearance_Method=(.*)")
+} else if ( regmatch ( $line_25, "Clearance_Method" ) ) { 
+$Clearance_Method= extract($line_25, "Clearance_Method=(.*)")
+} else if ( regmatch ( $line_26, "Clearance_Method" ) ) {
+$Clearance_Method= extract($line_26, "Clearance_Method=(.*)")
+} else if ( regmatch ( $line_27, "Clearance_Method" ) ) {
+$Clearance_Method= extract($line_27, "Clearance_Method=(.*)")
+}  else if ( regmatch ( $line_28, "Clearance_Method" ) ) {
+$Clearance_Method= extract($line_28, "Clearance_Method=(.*)")
+}  else if ( regmatch ( $line_29, "Clearance_Method" ) ) {
+$Clearance_Method= extract($line_29, "Clearance_Method=(.*)")
+} else if ( regmatch ( $line_30, "Clearance_Method" ) ) {
+$Clearance_Method= extract($line_30, "Clearance_Method=(.*)")
+}  else if ( regmatch ( $line_31, "Clearance_Method" ) ) {
+$Clearance_Method= extract($line_31, "Clearance_Method=(.*)")
+}  else if ( regmatch ( $line_32, "Clearance_Method" ) ) {
+$Clearance_Method= extract($line_32, "Clearance_Method=(.*)")
+}  else if ( regmatch ( $line_33, "Clearance_Method" ) ) {
+$Clearance_Method= extract($line_33, "Clearance_Method=(.*)")
+}  else if ( regmatch ( $line_34, "Clearance_Method" ) ) {
+$Clearance_Method= extract($line_34, "Clearance_Method=(.*)")
+}  else if ( regmatch ( $line_35, "Clearance_Method" ) ) {
+$Clearance_Method= extract($line_35, "Clearance_Method=(.*)")
+}  else if ( regmatch ( $line_36, "Clearance_Method" ) ) {
+$Clearance_Method= extract($line_36, "Clearance_Method=(.*)")
+}  else if ( regmatch ( $line_37, "Clearance_Method" ) ) {
+$Clearance_Method= extract($line_37, "Clearance_Method=(.*)")
+}  else if ( regmatch ( $line_38, "Clearance_Method" ) ) {
+$Clearance_Method= extract($line_38, "Clearance_Method=(.*)")
+}  

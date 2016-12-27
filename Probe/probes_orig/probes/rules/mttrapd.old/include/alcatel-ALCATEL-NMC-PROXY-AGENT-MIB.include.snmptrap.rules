@@ -1,0 +1,213 @@
+###############################################################################
+# alcatel-ALCATEL-NMC-PROXY-AGENT-MIB
+# Automatically created by mib2rules (http://support.micromuse.com/toolsutils)
+# Tue Jun 13 13:02:22 2006
+###############################################################################
+case ".1.3.6.1.4.1.637.64.0.10.1.2":  ### - nmcProxyTraps (from ALCATEL-NMC-PROXY-AGENT-MIB)
+	switch($specific-trap) {
+		case "1": ### - packedCmipTrap
+			#######################
+			# Packed forwarded trap :
+			# contains a part (or all) of the arguments of the CMIP notification inside one variable binding.
+			# The arguments are selected with the NMC. This form suits well to a simple display of informations
+			#######################
+			$openViewSeverity = $1
+			$packedForm = $2
+
+			$OS_EventId = "SNMPTRAP-nmcProxyTraps-ALCATEL-NMC-PROXY-AGENT-MIB-packedCmipTrap"
+
+			@Agent = "ALCATEL-NMC-PROXY-AGENT-MIB"
+			@AlertGroup = "packedCmipTrap"
+			@AlertKey = $openViewSeverity+$packedForm
+			@Summary = "packedCmipTrap (see details)"
+
+			$DEFAULT_Severity = 1
+			$DEFAULT_Type = 0
+			$DEFAULT_ExpireTime = 0
+			@Identifier = @Node + " " + @AlertKey + " " + @AlertGroup + " " + $DEFAULT_Type + " " + @Agent + " " + @Manager + " " + $specific-trap
+			#details($openViewSeverity,$packedForm)
+
+
+		case "2": ### - startOfResyncTrap
+			#######################
+			# Start of resynchronization :
+			# this trap announces the beginning of the reemission of all
+			# the traps corresponding to the active alarms of
+			# the managed nodes
+			#######################
+
+			$OS_EventId = "SNMPTRAP-nmcProxyTraps-ALCATEL-NMC-PROXY-AGENT-MIB-startOfResyncTrap"
+
+			@Agent = "ALCATEL-NMC-PROXY-AGENT-MIB"
+			@AlertGroup = "startOfResyncTrap"
+			@Summary = "startOfResyncTrap (see details)"
+
+			$DEFAULT_Severity = 1
+			$DEFAULT_Type = 0
+			$DEFAULT_ExpireTime = 0
+			@Identifier = @Node + " " + @AlertKey + " " + @AlertGroup + " " + $DEFAULT_Type + " " + @Agent + " " + @Manager + " " + $specific-trap
+
+
+		case "3": ### - omniPCXTrap
+			#######################
+			# Trap coming from an element of an OmniPCX. topClass identifies the system sending the trap (89 is 
+			# for a4400 PBX), baseClass identifies the impacted element in the system. rdnDepth is the depth 
+			# between topClass and baseClass. classIdN and rndValueN describes the hierarchy from topClass
+			# to baseClass : a4400, shelf, board and terminal. The other parameters describe the trap by
+			# itself : severity, type, cause ...
+			#######################
+			$topClass = lookup($1,alcatel-ALCATEL-NMC-PROXY-AGENT-MIB-topClass)
+			$baseClass = lookup($2,alcatel-ALCATEL-NMC-PROXY-AGENT-MIB-baseClass)
+			$rdnDepth = $3
+			$classId1 = lookup($4,alcatel-ALCATEL-NMC-PROXY-AGENT-MIB-classId1)
+			$rdnValue1 = $5
+			$classId2 = lookup($6,alcatel-ALCATEL-NMC-PROXY-AGENT-MIB-classId2)
+			$rdnValue2 = $7
+			$classId3 = lookup($8,alcatel-ALCATEL-NMC-PROXY-AGENT-MIB-classId3)
+			$rdnValue3 = $9
+			$classId4 = lookup($10,alcatel-ALCATEL-NMC-PROXY-AGENT-MIB-classId4)
+			$rdnValue4 = $11
+			$classId5 = lookup($12,alcatel-ALCATEL-NMC-PROXY-AGENT-MIB-classId5)
+			$rdnValue5 = $13
+			$eventTime = $14
+			$eventType = lookup($15,alcatel-ALCATEL-NMC-PROXY-AGENT-MIB-eventType)
+			$severity = lookup($16,alcatel-ALCATEL-NMC-PROXY-AGENT-MIB-severity)
+			$probableCause = lookup($17,alcatel-ALCATEL-NMC-PROXY-AGENT-MIB-probableCause)
+			$notificationId = $18
+			$additionnalText = $19
+
+			$OS_EventId = "SNMPTRAP-nmcProxyTraps-ALCATEL-NMC-PROXY-AGENT-MIB-omniPCXTrap"
+
+			@Agent = "ALCATEL-NMC-PROXY-AGENT-MIB"
+			@AlertGroup = "omniPCXTrap"
+			@AlertKey = $topClass+$baseClass+$rdnDepth+$classId1+$rdnValue1+$classId2+$rdnValue2+$classId3+$rdnValue3+$classId4+$rdnValue4+$classId5+$rdnValue5+$eventTime+$eventType+$severity+$probableCause+$notificationId+$additionnalText
+			@Summary = "omniPCXTrap (see details)"
+
+			$DEFAULT_Severity = 1
+			$DEFAULT_Type = 0
+			$DEFAULT_ExpireTime = 0
+			@Identifier = @Node + " " + @AlertKey + " " + @AlertGroup + " " + $DEFAULT_Type + " " + @Agent + " " + @Manager + " " + $specific-trap
+			#details($topClass,$baseClass,$rdnDepth,$classId1,$rdnValue1,$classId2,$rdnValue2,$classId3,$rdnValue3,$classId4,$rdnValue4,$classId5,$rdnValue5,$eventTime,$eventType,$severity,$probableCause,$notificationId,$additionnalText)
+
+
+		case "4": ### - startProxyTrap
+			#######################
+			# Proxy started :
+			# this trap announces that a proxy has just been started
+			#######################
+
+			$OS_EventId = "SNMPTRAP-nmcProxyTraps-ALCATEL-NMC-PROXY-AGENT-MIB-startProxyTrap"
+
+			@Agent = "ALCATEL-NMC-PROXY-AGENT-MIB"
+			@AlertGroup = "startProxyTrap"
+			@Summary = "startProxyTrap (see details)"
+
+			$DEFAULT_Severity = 1
+			$DEFAULT_Type = 0
+			$DEFAULT_ExpireTime = 0
+			@Identifier = @Node + " " + @AlertKey + " " + @AlertGroup + " " + $DEFAULT_Type + " " + @Agent + " " + @Manager + " " + $specific-trap
+
+
+		case "5": ### - stopProxyTrap
+			#######################
+			# Proxy stopped :
+			# this trap announces that a proxy has just been stopped
+			#######################
+
+			$OS_EventId = "SNMPTRAP-nmcProxyTraps-ALCATEL-NMC-PROXY-AGENT-MIB-stopProxyTrap"
+
+			@Agent = "ALCATEL-NMC-PROXY-AGENT-MIB"
+			@AlertGroup = "stopProxyTrap"
+			@Summary = "stopProxyTrap (see details)"
+
+			$DEFAULT_Severity = 1
+			$DEFAULT_Type = 0
+			$DEFAULT_ExpireTime = 0
+			@Identifier = @Node + " " + @AlertKey + " " + @AlertGroup + " " + $DEFAULT_Type + " " + @Agent + " " + @Manager + " " + $specific-trap
+
+
+		case "6": ### - eventLostTrap
+			#######################
+			# Event lost :
+			# this trap announces that a proxy didn’t succeed to send all
+			# events and that the operator should perform a resynchronization
+			#######################
+
+			$OS_EventId = "SNMPTRAP-nmcProxyTraps-ALCATEL-NMC-PROXY-AGENT-MIB-eventLostTrap"
+
+			@Agent = "ALCATEL-NMC-PROXY-AGENT-MIB"
+			@AlertGroup = "eventLostTrap"
+			@Summary = "eventLostTrap (see details)"
+
+			$DEFAULT_Severity = 1
+			$DEFAULT_Type = 0
+			$DEFAULT_ExpireTime = 0
+			@Identifier = @Node + " " + @AlertKey + " " + @AlertGroup + " " + $DEFAULT_Type + " " + @Agent + " " + @Manager + " " + $specific-trap
+
+
+		case "7": ### - topClassStateTrap
+			#######################
+			# State trap :
+			# contains arguments that describe the current state of a top class        object
+			#######################
+			$classId1 = lookup($1,alcatel-ALCATEL-NMC-PROXY-AGENT-MIB-classId1)
+			$rdnValue1 = $2
+			$severity = lookup($3,alcatel-ALCATEL-NMC-PROXY-AGENT-MIB-severity)
+			$objectNumber = $4
+			$parentNumber = $5
+
+			$OS_EventId = "SNMPTRAP-nmcProxyTraps-ALCATEL-NMC-PROXY-AGENT-MIB-topClassStateTrap"
+
+			@Agent = "ALCATEL-NMC-PROXY-AGENT-MIB"
+			@AlertGroup = "topClassStateTrap"
+			@AlertKey = $classId1+$rdnValue1+$severity+$objectNumber+$parentNumber
+			@Summary = "topClassStateTrap (see details)"
+
+			$DEFAULT_Severity = 1
+			$DEFAULT_Type = 0
+			$DEFAULT_ExpireTime = 0
+			@Identifier = @Node + " " + @AlertKey + " " + @AlertGroup + " " + $DEFAULT_Type + " " + @Agent + " " + @Manager + " " + $specific-trap
+			#details($classId1,$rdnValue1,$severity,$objectNumber,$parentNumber)
+
+
+		default:
+			@Summary = "Unknown Specific Trap Number (" + $specific-trap + ") Received for Enterprise " + $enterprise
+			@Severity = 1
+			@Identifier = @Node + " " + @Agent + " " + @Manager + " " + $enterprise + " " + $generic-trap + " " + $specific-trap
+			#details($*)
+	}
+
+##########
+# Handle Severity via Lookup.
+##########
+
+if(exists($SEV_KEY))
+{
+    [$OS_Severity,$OS_Type,$OS_ExpireTime] = lookup($SEV_KEY, alcatel-ALCATEL-NMC-PROXY-AGENT-MIB_sev)
+}
+else
+{
+    [$OS_Severity,$OS_Type,$OS_ExpireTime] = lookup($OS_EventId, alcatel-ALCATEL-NMC-PROXY-AGENT-MIB_sev)
+}
+#include "/opt/netcool/etc/rules/include-common/AssignSev.include.common.rules"
+
+##########
+# End of Severity via Lookup.
+##########
+
+##########
+# Enter "Advanced" and "User" includes.
+##########
+
+#include "/opt/netcool/etc/rules/include-snmptrap/ALCATEL-NMC-PROXY-AGENT-MIB.adv.include.snmptrap.rules"
+#include "/opt/netcool/etc/rules/include-snmptrap/ALCATEL-NMC-PROXY-AGENT-MIB.user.include.snmptrap.rules"
+
+##########
+# End of "Advanced" and "User" includes.
+##########
+
+log(DEBUG, "<<<<< Leaving... alcatel-ALCATEL-NMC-PROXY-AGENT-MIB.include.snmptrap.rules >>>>>")
+
+{
+#details($*)
+}

@@ -1,0 +1,585 @@
+#######################################################################
+#
+#       Copyright (C) 2005 Micromuse Ltd.
+#       All Rights Reserved
+#
+#       RESTRICTED RIGHTS:
+#
+#       This file may have been supplied under a license.
+#       It may be used, disclosed, and/or copied only as permitted
+#       under such license agreement.  Any copy must contain the
+#       above copyright notice and this restricted rights notice.
+#       Use, copying, and/or disclosure of the file is strictly
+#       prohibited unless otherwise provided in the license agreement.
+#
+#
+#
+#######################################################################
+# Node+AlertKey Array definition to stores Type value
+array node_alertkey_arr;
+# Array to store problem's first and last raise timestamp
+array problem_first_raise_timestamp_arr;
+array problem_last_raise_timestamp_arr;
+if( match( @Manager, "ProbeWatch" ) )
+
+{
+
+        switch(@Summary)
+        {
+
+        case "Running ...":
+                @Severity = 1
+                @AlertGroup = "probestat"
+                @Type = 2
+
+        case "Going Down ...":
+                @Severity = 5
+                @AlertGroup = "probestat"
+                @Type = 1
+
+	  case "Log file truncated: reopening":
+		    @Severity = 1
+		    @AlertGroup = "probestat"
+	
+	  case "Reopened file to release lock":
+		    discard
+
+	  case "Failed to close/reopen file to release lock":
+		    @ExpireTime = 259200
+
+        default:
+
+                @Severity = 1
+
+        }
+
+        @AlertKey = @Agent
+        @Summary = @Agent + " probe on " + @Node + ": " + @Summary
+}
+else
+{
+
+#default settings:
+
+@Class = 7955
+@Agent = "GLF_Probe@" + hostname()
+@Manager = "Kenton"
+@Type = 0
+@Severity = 1
+
+
+## Log file format
+
+## <Date1> <Loc> <Date2> <SlotNo> <SysType> <FuncUnit> <Inst> <Params> <Params2> <Paramas3>
+## <Params2> and <Paramas3> may not exist
+
+## e.g.
+
+## 2007-10-11 12:34:44  OneWayRd   2007-10-11 12:34:44 11 PCM12-HA SYS 0 Reset
+
+
+
+## Field values
+
+$Date1_yyyy-mm-dd = $FieldVal01
+$Date1_hh-mm-ss   = $FieldVal02
+$Loc              = $FieldVal03
+$Date2_yyyy-mm-dd = $FieldVal04
+$Date2_hh-mm-ss   = $FieldVal05
+$SlotNo           = $FieldVal06
+$SysType          = $FieldVal07
+$FuncUnit         = $FieldVal08
+$Inst             = $FieldVal09
+$Params1          = $FieldVal10
+
+if(exists($FieldVal11))
+{
+	$Params2    = $FieldVal11
+	if(exists($FieldVal12))
+	{
+		$Params3    = $FieldVal12
+	}
+}
+
+## Change to allow for the possibility of spaces in the node name
+## if the operator has left the name as the default value "New NEM location"
+## Giles Blake, 20/05/2010
+
+if(match($Date2_yyyy-mm-dd, "NEM"))
+{
+## This means that the name has been left as default value
+	$Loc			= $FieldVal03 + "_" + $FieldVal04 + "_" + $FieldVal05
+	$Date2_yyyy-mm-dd = $FieldVal06
+	$Date2_hh-mm-ss   = $FieldVal07
+	$SlotNo           = $FieldVal08
+	$SysType          = $FieldVal09
+	$FuncUnit         = $FieldVal10
+	$Inst             = $FieldVal11
+	$Params1          = $FieldVal12
+
+	if(exists($FieldVal13))
+	{
+		$Params2    = $FieldVal13
+		if(exists($FieldVal14))
+		{
+			$Params3    = $FieldVal14
+		}
+	}
+
+}
+## End of change
+## Giles Blake, 20/05/2010
+
+# Remove 1.5 from the AlertGroup and Summary
+@AlertGroup = $SysType
+if(match($SysType, "NEM-HA-1.5"))
+{
+	@AlertGroup = "NEM-HA"	
+}
+@Node = $Loc
+@AlertKey = $FuncUnit + "_" + $SlotNo + "_" + $Inst 
+@ServiceAffecting = 2
+@ResilienceAffecting = 2
+@ActionRequired = 0
+
+###########################################################
+#
+# Changed for correct time handling
+# Giles Blake, 18/05/2010
+#
+###########################################################
+
+switch(@AlertGroup)
+	{
+	case "NEM-HA":
+		$FirstRaiseTime = $Date2_hh-mm-ss + " " + $Date2_yyyy-mm-dd 
+		@FirstRaiseTime = datetotime($FirstRaiseTime, "HH:mm:ss yyyy-MM-dd")
+		$LastRaiseTime = $Date2_hh-mm-ss + " " + $Date2_yyyy-mm-dd
+		@LastRaiseTime = datetotime($LastRaiseTime, "HH:mm:ss yyyy-MM-dd")
+
+	default:
+		$FirstRaiseTime = $Date1_hh-mm-ss + " " + $Date1_yyyy-mm-dd 
+		@FirstRaiseTime = datetotime($FirstRaiseTime, "HH:mm:ss yyyy-MM-dd")
+		$LastRaiseTime = $Date1_hh-mm-ss + " " + $Date1_yyyy-mm-dd
+		@LastRaiseTime = datetotime($LastRaiseTime, "HH:mm:ss yyyy-MM-dd")
+	}
+
+###########################################################
+#
+# End of amendment
+# Changed for correct time handling
+# Giles Blake, 18/05/2010
+#
+###########################################################
+
+if (match($FuncUnit,"SHDSL") or match($FuncUnit,"SDSL"))
+{
+	@AlertGroup="SHDSL"
+}
+
+# Setting PhysicalCard default value
+@PhysicalCard = $SlotNo + " " + $Inst
+
+# Non- POTS Summary
+@Summary = "Card: " + $SlotNo + " - " + @AlertGroup  + " - " + $Params1
+
+# Set AlarmClass to be used in the OS Table
+switch($FuncUnit)
+{
+
+	case "SYS":
+		# Set AlarmClass field to be used as key field in the Object Server Table
+		@AlarmClass = $FuncUnit + $SysType + $Params1
+		
+		switch(@AlarmClass)
+                {
+			# SYS Problem Events
+			case "SYSPCM12-HANotReachable":
+				@Type = 1		# It will be overwritten by OS trigger
+				@Severity = 5		# It will be overwritten by OS trigger
+				@PhysicalCard = $SlotNo + " 01 RU"
+				
+
+			case "SYSNEM-HA-1.5NotReachable":
+				@Type = 1		# It will be overwritten by OS trigger
+				@Severity = 5		# It will be overwritten by OS trigger
+
+			case "SYSNEM-HANotReachable":
+				@Type = 1		# It will be overwritten by OS trigger
+				@Severity = 5		# It will be overwritten by OS trigger
+				@FirstRaiseTime = @LastRaiseTime
+
+			# SYS Resolution Events
+			case "SYSPCM12-HAReachable" | "SYSPCM12-HAReset": 
+				@Type = 2		# It will be overwritten by OS trigger
+				@Severity = 1		# It will be overwritten by OS trigger
+				@SuppressEscl = 4	# The real clear events will be Unsuppressed by generic clear trigger
+				@HistoryFlag = 1	# Generic clear trigger will set it to zero if it's a real clear
+				@PhysicalCard = $SlotNo + " 01 RU"
+
+			# SYS Resolution Events
+			case "SYSNEM-HA-1.5Reachable" | "SYSNEM-HA-1.5Reset": 
+				@Type = 2		# It will be overwritten by OS trigger
+				@Severity = 1		# It will be overwritten by OS trigger
+				@SuppressEscl = 4	# The real clear events will be Unsuppressed by generic clear trigger
+				@HistoryFlag = 1	# Generic clear trigger will set it to zero if it's a real clear
+
+			case "SYSNEM-HAReset" | "SYSNEM-HAReachable":
+				@Type = 2		# It will be overwritten by OS trigger
+				@Severity = 1		# It will be overwritten by OS trigger
+				@SuppressEscl = 4	# The real clear events will be Unsuppressed by generic clear trigger
+				@HistoryFlag = 1	# Generic clear trigger will set it to zero if it's a real clear
+				@FirstRaiseTime = @LastRaiseTime
+
+			default:
+				# New/Unknown SYS Event
+				@Type = 1     
+                                @Severity = 1
+				@AlarmClass = "Unknown"
+				@Summary = "Unknown Event Type: " + @Summary + " Please Notify The System Administrator" 
+		}
+		@Identifier = @Node + "_" + @Manager + "_" + @Agent + "_" + @AlertGroup + "_" + @AlertKey + "_" + @AlarmClass + "_" + @Type
+
+
+	case "RPS" | "RPF" | "SHDSL" | "SDSL":
+		@AlarmClass = $FuncUnit + $Params1
+
+		switch(@AlarmClass)
+		{
+			# NON Sync Events
+			case "SDSLSYNC" | "SHDSLSYNC":
+				@Type = 1               # It will be overwritten by OS trigger
+                                @Severity = 1           # It will be overwritten by OS trigger
+				@PhysicalCard = $SlotNo + " 01 RU"
+
+			# NON POTS Problem Events
+			case "SDSLOFF" | "SHDSLOFF":
+				@Type = 1		# It will be overwritten by OS trigger
+				@Severity = 4		# It will be overwritten by OS trigger
+				@PhysicalCard = $SlotNo + " 01 RU"
+
+			# NON POTS Problem Events
+			case "RPSOFF_OverLoad" | "RPSOFF_OpenLoop" | "RPSOFF_UndefLoad" | "RPSOFF_Asym" | "RPSOFF_OverCurrent" | "RPSOFF_OverVoltage" | "RPFOFF_OverLoad" | "RPFOFF_OpenLoop" | "RPFOFF_UndefLoad" | "RPFOFF_Asym" | "RPFOFF_OverCurrent" | "RPFOFF_OverVoltage":
+				@Type = 1		# It will be overwritten by OS trigger
+				@Severity = 4		# It will be overwritten by OS trigger
+				@PhysicalCard = $SlotNo + " 01 RU"
+				@Summary = "Card: " + $SlotNo + " - Power - " + $Params1
+				
+
+			# NON POTS Resolution Events
+			case "RPSON" | "RPFON":
+				@Type = 2		# It will be overwritten by OS trigger
+				@Severity = 1		# It will be overwritten by OS trigger
+				@SuppressEscl = 4	# The real clear events will be Unsuppressed by generic clear trigger
+				@HistoryFlag = 1	# Generic clear trigger will set it to zero if it's a real clear
+				@PhysicalCard = $SlotNo + " 01 RU"
+				@Summary = "Card: " + $SlotNo + " - Power - " + $Params1
+
+			# NON POTS Resolution Events
+			case "SDSLON" | "SHDSLON":
+				@Type = 2		# It will be overwritten by OS trigger
+				@Severity = 1		# It will be overwritten by OS trigger
+				@SuppressEscl = 4	# The real clear events will be Unsuppressed by generic clear trigger
+				@HistoryFlag = 1	# Generic clear trigger will set it to zero if it's a real clear
+				@PhysicalCard = $SlotNo + " 01 RU"
+
+			
+
+			default:
+				# New/Unknown NON POTS Event
+				@Type = 1     
+                                @Severity = 1
+				@AlarmClass = "Unknown"
+				@Summary = "Unknown Event Type: " + @Summary + " Please Notify The System Administrator" 
+		}
+		@Identifier = @Node + "_" + @Manager + "_" + @Agent + "_" + @AlertGroup + "_" + @AlertKey + "_" + @AlarmClass + "_" + @Type
+
+
+
+	case "POTS":
+		@AlertGroup = $FuncUnit
+		@Summary="Card: " + $SlotNo + " - " + @AlertGroup + ", Port: " + $Inst + " - " + "EU: "
+		@AlarmClass = $FuncUnit
+
+		if(exists($Params2))
+
+		{
+			@Summary = @Summary + $Params2
+			@AlarmClass = $FuncUnit + $Params2
+
+			if(exists($Params3))
+			{
+				@Summary = @Summary + ", RU: " + $Params3
+				@AlarmClass = $FuncUnit + $Params2 + $Params3
+			}
+		}
+
+
+
+		switch(@AlarmClass)
+		{
+				# POTS Events to be discarded
+			case "POTSTerminatedRinging"  | "POTSTerminatedNotAvail":
+				discard
+
+				# POTS Events to be suppressed
+			case "POTSTerminatedOffHk":
+				@SuppressEscl = 4
+                                @Type = 1               # It will be overwritten by OS trigger
+                                @Severity = 4           # It will be overwritten by OS trigger
+                                @SuppressCause = "Off Hook and Ringing Automation"
+					  @Summary = @Summary + "/Short Circuit"
+					  @PhysicalCard = $SlotNo + " " + $Inst + " RU"
+
+					  @ImpactFlag = 0
+					  @RemoteNode = ""
+					  @RemoteCard = ""
+					  # Update Summary field to shown status change
+					  update(@Summary)
+					  update(@Severity)
+                			  update(@LastRaiseTime)
+					  update(@ImpactFlag)	# force event re-enrichment
+					  update(@RemoteCard)	# force event re-enrichment
+					  update(@RemoteNode)	# force event re-enrichment
+
+                                # Store the Type value of this specific problem
+                                $array_key=@Node + @AlertKey
+                                node_alertkey_arr[$array_key] = @Type
+
+                                # @Identifier = @Node + "_" + @Manager + "_" + @Agent + "_" + @AlertGroup + "_" + @AlertKey + "_" + @AlarmClass + "_" + @Type
+                                @Identifier = @Node + "_" + @Manager + "_" + @Agent + "_" + @AlertGroup + "_" + @AlertKey + "_" + @Type
+
+
+				# POTS Events to be suppressed
+			case "POTSNotTerminatedOffHk":
+                                @Type = 1               # It will be overwritten by OS trigger
+                                @Severity = 4           # It will be overwritten by OS trigger
+					  @Summary = @Summary + "/Short Circuit"
+
+					  @ImpactFlag = 0
+					  @RemoteNode = ""
+					  @RemoteCard = ""
+					  # Update Summary field to shown status change
+					  update(@Summary)
+					  update(@Severity)
+                			  update(@LastRaiseTime)
+					  update(@ImpactFlag)	# force event re-enrichment
+					  update(@RemoteCard)	# force event re-enrichment
+				  	  update(@RemoteNode)	# force event re-enrichment
+
+
+                                # Store the Type value of this specific problem
+                                $array_key=@Node + @AlertKey
+                                node_alertkey_arr[$array_key] = @Type
+
+                                @Identifier = @Node + "_" + @Manager + "_" + @Agent + "_" + @AlertGroup + "_" + @AlertKey + "_" + @Type
+
+				# POTS Event to be suppressed
+			case "POTSNotTerminatedRinging":
+					  @Type = 1			# It will be overwritten by OS trigger
+					  @Severity = 4		# It will be overwritten by OS trigger
+
+					  @ImpactFlag = 0
+					  @RemoteNode = ""
+					  @RemoteCard = ""
+					  # Update Summary field to shown status change
+					  update(@Summary)
+					  update(@Severity)
+                			  update(@LastRaiseTime)
+					  update(@ImpactFlag)	# force event re-enrichment
+					  update(@RemoteCard)	# force event re-enrichment
+				  	  update(@RemoteNode)	# force event re-enrichment
+
+					  # Store the Type value of this specific problem
+					  $array_key=@Node + @AlertKey
+					  node_alertkey_arr[$array_key] = @Type
+
+					  @Identifier = @Node + "_" + @Manager + "_" + @Agent + "_" + @AlertGroup + "_" + @AlertKey + "_" + @Type
+
+				# POTS Problem Events
+			case "POTSTerminatedNotTerminated":
+					  @Type = 1			# It will be overwritten by OS trigger
+					  #@Severity = 5		# It will be overwritten by OS trigger
+					  @Severity = 4		# TN Made this change HERE Defect 464
+					  @PhysicalCard = $SlotNo + " " + $Inst + " RU"
+
+					  @ImpactFlag = 0
+					  @RemoteNode = ""
+					  @RemoteCard = ""
+					  # Update Summary field to shown status change
+					  update(@Summary)
+					  update(@Severity)
+                			  update(@LastRaiseTime)
+					  update(@ImpactFlag)	# force event re-enrichment
+					  update(@RemoteCard)	# force event re-enrichment
+				  	  update(@RemoteNode)	# force event re-enrichment
+
+					  # Store the Type value of this specific problem
+					  $array_key=@Node + @AlertKey
+					  node_alertkey_arr[$array_key] = @Type
+
+					  # @Identifier = @Node + "_" + @Manager + "_" + @Agent + "_" + @AlertGroup + "_" + @AlertKey + "_" + @AlarmClass + "_" + @Type
+					  @Identifier = @Node + "_" + @Manager + "_" + @Agent + "_" + @AlertGroup + "_" + @AlertKey + "_" + @Type
+
+
+				# POTS Problem Events
+			case "POTSNotTerminatedTerminated" | "POTSNotTerminatedNotTerminated" | "POTSNotTerminatedNotAvail":
+					  @Type = 1			# It will be overwritten by OS trigger
+					  @Severity = 5		# It will be overwritten by OS trigger
+
+					  @ImpactFlag = 0
+					  @RemoteNode = ""
+					  @RemoteCard = ""
+					  # Update Summary field to shown status change
+					  update(@Summary)
+					  update(@Severity)
+                			  update(@LastRaiseTime)
+					  update(@ImpactFlag)	# force event re-enrichment
+					  update(@RemoteCard)	# force event re-enrichment
+				  	  update(@RemoteNode)	# force event re-enrichment
+
+					  # Store the Type value of this specific problem
+					  $array_key=@Node + @AlertKey
+					  node_alertkey_arr[$array_key] = @Type
+
+					  @Identifier = @Node + "_" + @Manager + "_" + @Agent + "_" + @AlertGroup + "_" + @AlertKey + "_" + @Type
+
+			case "POTSTerminatedTerminated" :
+					  @Type = 2		# It will be overwritten by OS trigger
+					  @Severity = 1		# It will be overwritten by OS trigger
+					  @SuppressEscl = 4	# The real clear events will be Unsuppressed by generic clear trigger
+					  @HistoryFlag = 1	# Generic clear trigger will set it to zero if it's a real clear
+
+					  $array_key=@Node + @AlertKey
+					  if (int(node_alertkey_arr[$array_key]) == int(@Type))
+						{
+						# This is an orphan clear event, so discard
+						discard
+						}
+
+					  # Store the current Type value of this specific problem
+					  node_alertkey_arr[$array_key] = @Type
+					  @Identifier = @Node + "_" + @Manager + "_" + @Agent + "_" + @AlertGroup + "_" + @AlertKey + "_" +  @AlarmClass + "_" + @Type
+				
+				
+			default:
+					  # New/Unknown POTS Event
+					  @Type = 1     
+                                @Severity = 1
+					  @AlarmClass = "Unknown"
+					  @Summary = "Unknown Event Type: " + @Summary + " Please Notify The System Administrator" 
+					  @Identifier = @Node + "_" + @Manager + "_" + @Agent + "_" + @AlertGroup + "_" + @AlertKey + "_" +  @AlarmClass + "_" + @Type
+		}
+		
+
+
+	default:
+
+		# Checking if Something is wrong with the event
+
+		if (exists($Overflow)) 
+		{
+
+			@Summary = "Data Corruption Detected"
+			@Type = 1
+			@Severity = 5
+		} 
+		else
+		{
+			# New/Unknown Event Type 
+			@Summary = "Unknown Event Type: " + @AlertGroup + ", Please Notify The System Administrator"
+			@Type = 0
+			@Severity = 1
+		}
+		@AlarmClass = "Unknown"
+		@Identifier = @Node + "_" + @Manager + "_" + @Agent + "_" + @Type + "_" + @AlertGroup + "_" + @AlertKey
+
+		details($*)
+
+}
+
+
+update(@PhysicalCard)
+
+# Discard events with same first and last raise time and older events
+$problem_timestamp_array_key=@Node + @AlertKey + @AlarmClass
+$previous_first_raise_timestamp=problem_first_raise_timestamp_arr[$problem_timestamp_array_key]
+$previous_last_raise_timestamp=problem_last_raise_timestamp_arr[$problem_timestamp_array_key]
+
+if(int($previous_first_raise_timestamp) <= int(@FirstRaiseTime) && (int($previous_last_raise_timestamp) < int(@LastRaiseTime)) && (int(@FirstRaiseTime) <= int(@LastRaiseTime)))
+{
+	problem_first_raise_timestamp_arr[$problem_timestamp_array_key]=int(@FirstRaiseTime)
+	problem_last_raise_timestamp_arr[$problem_timestamp_array_key]=int(@LastRaiseTime)
+}
+else 
+{
+	discard
+}
+}
+#Discarding Events with Blank SysType during Kenting Manager Restarting
+if(match($FuncUnit,"00"))
+{
+        discard
+}
+
+# Uncomment the next line to get more debug information
+#details($*)
+
+####added the logic to set the lastraisetime and first raise time
+#################for the events who got nul value or 01/01/1979 00:00:00 as First and Last Raise time #######
+
+
+
+if(exists($ReceivedTime) && match(@LastRaiseTime, "0"))
+{
+@LastRaiseTime = $ReceivedTime
+}
+if(!exists($ReceivedTime) && match(@LastRaiseTime, "0"))
+{
+@LastRaiseTime = getdate
+}
+if(exists($ReceivedTime) && match(@FirstRaiseTime, "0"))
+{
+@FirstRaiseTime = $ReceivedTime
+}
+if(!exists($ReceivedTime) && match(@FirstRaiseTime, "0")){
+@FirstRaiseTime = getdate
+}
+if(match(@DateGenerated, "0")){
+@DateGenerated = @FirstOccurrence
+}if(match(@DateReceived, "0")){
+@DateReceived = @FirstOccurrence
+}if(match(@HalDateTime, "0")){
+@HalDateTime = @FirstOccurrence
+}if(match(@InterTime, "0")){
+@InterTime = @FirstOccurrence
+}if(match(@provisoViolationTime, "0")){
+@provisoViolationTime = @FirstOccurrence
+}if(match(@InternalLast, "0")){
+@InternalLast = @FirstOccurrence
+}if(match(@ParentChildTime, "0")){
+@ParentChildTime = @FirstOccurrence
+}if(match(@ClearTime, "0")){
+@ClearTime = @FirstOccurrence
+}
+if(!exists(@DateGenerated)){
+@DateGenerated = @FirstOccurrence
+ }if(!exists(@DateReceived)){
+ @DateReceived = @FirstOccurrence
+ }if(!exists(@HalDateTime)){
+ @HalDateTime = @FirstOccurrence
+ }if(!exists(@InterTime)){
+ @InterTime = @FirstOccurrence
+ }if(!exists(@provisoViolationTime)){
+ @provisoViolationTime = @FirstOccurrence
+  }if(!exists(@InternalLast)){
+ @InternalLast = @FirstOccurrence
+  }if(!exists(@ParentChildTime)){
+ @ParentChildTime = @FirstOccurrence
+  }if(!exists(@ClearTime)){
+ @ClearTime = @FirstOccurrence
+  }
+
+
+##################GauravTyagi-19Oct2011###########################
+

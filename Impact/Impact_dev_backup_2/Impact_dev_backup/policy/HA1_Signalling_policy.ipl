@@ -1,0 +1,478 @@
+// Policy Name: Signalling_policy
+//
+// Policy to meet the following requirements ...
+// Req A: If the signal is of type 1B, and therefore NMCS1, 
+// the connection from the parent device outbound 
+// is not in scope of the NRTS project, (with some possible exceptions).
+// Req B: If there are 5 signalling devices at a location
+// and less than 5 report a fault then the probable cause is local device fault.
+// Req C: If all signalling devices at a location are reporting faults 
+// and there are other signalling devices further away from the transponder on the cable 
+// that are not faulty then the probable cause is the local cable.
+// Req D: If all sub-devices on a transponder are down & the transponder reports ok, 
+// then the probable cause is a fault at the transponder.
+// Req E: If all the devices on cable connected to port 0 on a transponder are down, 
+// then the suspected fault lies with the cable connected to port 0 of the transponder
+//
+// Version    Date        Name        Description
+// 1.0        14-09-10    -        Baseline
+// 1.1        14-09-10    Tony Nisbet    Capture ServerSerial with logging (patch 4.22)
+
+log ("Signalling_policy : Start. Serial = " + @Serial + " EndDeviceNum = " + @EndDeviceNum + " LocalChain = " +  @LocalChain + " Node = " + @Node);
+log("Signalling_policy: IQLOGSTART: ServerSerial=" + @ServerSerial + " EventId=" + @EventId);
+
+if (EventContainer.ServiceType = "1B") 
+
+{
+
+// Req A ....NMCS 1 sig device ...
+
+// therefore non-nrts issue.
+
+log("Signalling_policy: NMCS1 sig => non-NRTS");
+
+    EventContainer.Summary = @Summary + " NMCS1 (non-NRTS?)";
+
+    EventContainer.SuppressEscl = 4;
+
+// add in Suppress cause and journal entry....
+
+    EventContainer.SuppressCause = "Suppressed by Signalling_policy Impact policy";
+
+} else
+
+{
+
+log("Signalling_policy: must be not serv cat 1B  service type is " + @ServiceType );
+
+// Set the ImpactFlag to processing
+//@ImpactFlag = 4;
+//ReturnEvent(EventContainer);
+DataType = "ha_ncoms_impact_events";
+Filter = "ServerSerial = " +  @ServerSerial;
+UpdateExpression = "ImpactFlag = 4";
+BatchUpdate(DataType, Filter, UpdateExpression);
+
+// Req B ...
+
+log("Signalling_policy: end device num " + @EndDeviceNum);
+
+if(int(EventContainer.EndDeviceNum) > 0)
+
+{
+    if ((EventContainer.Type = 1) and (EventContainer.Severity > 3))
+
+    {
+
+        log("Signalling_policy: ServiceType is " + @ServiceType + " and SDPLocation is " + @SDPLocation );
+
+// get  devices down at location ....
+
+        //EndDevDown = GetByFilter('ha_ncoms_impact_events',"(Type = 1) and (Severity > 3) and (ServiceType =  '"+ @ServiceType + "') and   (SDPLocation = '"+ @SDPLocation +"') and (AlertKey <> 'MSS_SIG event')",false);
+
+	          // Change the filter condition by below 2 lines by SK on 27082008, patch 3.38.1
+              
+        AssetElectronicAddressGroup= rextract(@AssetElectronicAddress,"(.*)..$");
+
+        // Below filter condition changed under patch 3.106 by Tarun
+              //EndDevDown = GetByFilter('ha_ncoms_impact_events',"(Type = 1) and (Severity > 3) and (ServiceType = '"+  @ServiceType + "') and  (SDPLocation =  '"+ @SDPLocation +"') and (AssetElectronicAddress like '" +  AssetElectronicAddressGroup + "') and  (AlertKey <> 'MSS_SIG event')",false);
+
+        EndDevDown = GetByFilter('ha_ncoms_impact_events',"(Type = 1) and (Severity > 3) and (ServiceType = '"+ @ServiceType +  "') and  (SDPLocation = '"+  @SDPLocation +"') and (AssetElectronicAddress like '" + AssetElectronicAddressGroup + "')  and  (Manager='Halogen')",false);
+
+        numDown=Length(EndDevDown);
+
+        log("Signalling_policy: numdown is " + numDown);
+
+// compare numdown with end device num -
+
+        if (int(@EndDeviceNum) = numDown)
+
+        {
+
+// number of devices down equals number of devices therefore generate synthetic prob cable down event
+
+// get AssetElectronicAddress value
+
+            //ElectAddr=GetByFilter('Circee_Host_Table', "SDP_Location = '"+@SDPLocation+"'",false);
+                    // Change the filter condition by SK on 27082008, patch 3.38.1
+                    ElectAddr=GetByFilter('Circee_Host_Table', "(SDP_Location = '"+@SDPLocation+"') and   (ASSET_ELECTRONIC_ADDRESS like '" +  AssetElectronicAddressGroup + "%')",false);
+
+            numElectAddr=Length(ElectAddr);
+
+            log("Signalling_policy: Number of matching sites for halElectAddr = " + numElectAddr);
+
+            if(numElectAddr>0)
+
+                {
+
+                halElectAddr=rextract(ElectAddr[0].Asset_Electronic_Address,"(.*)..$");
+
+                halElectAddr=halElectAddr + '00';
+
+                tsa = '' + ElectAddr[0].TS_A;
+
+                } else {
+
+                halElectAddr='';
+
+                tsa = '';
+
+                }
+
+            //synthIdentifier = 'Impact signal event ' + @TSA + @TSB + @SDPLocation;
+                     // Change synthIdentifier by SK on 27082008, patch - 3.38.1
+                     //synthIdentifier = 'Impact signal event ' + @TSA + @TSB + ' '+ @SDPLocation + ' ' +  halElectAddr;
+            synthIdentifier = 'Impact signal event ' + @TSA + ' ' + @SDPLocation + ' ' + halElectAddr;
+
+            // Below line changed under patch 3.106 by Tarun
+            //existSynthEvent=GetByFilter('ha_ncoms_impact_events',"(Identifier='"+synthIdentifier+"') and  (Severity > 0)",false);
+            existSynthEvent=GetByFilter('ha_ncoms_impact_events',"(Identifier='"+synthIdentifier+"') and  (Severity = 5)",false);
+
+            numSynthEvent = Length(existSynthEvent);
+
+            if(numSynthEvent=0)
+
+                {
+
+                NewEvent = NewObject();
+
+                NewEvent.Identifier = synthIdentifier;
+
+                           //Change OwnerUID by sk on 24022009, patch - 3.50.1
+                           NewEvent.OwnerUID = 65534;
+
+                //NewEvent.Node = @SDPLocation;
+                           // Change Node by SK on 27082008, Patch - 3.38.1
+                // Change Node by TA Patch 3.106
+                         //NewEvent.Node = @SDPLocation + " " + halElectAddr;
+                NewEvent.Node = halElectAddr + " " + @SDPLocation;
+                NewEvent.NodeAlias = @SDPLocation;
+                NewEvent.AlertGroup = "Impact Signal Event";
+                NewEvent.AlertKey = "MSS_SIG event";
+
+                //NewEvent.Summary = "All devices at " + @SDPLocation + " UNOBTAINABLE ";
+                           // Change Summary by SK on 27082008, Patch - 3.38.1
+                           NewEvent.Summary = "All " + @EndDeviceNum + " devices at SDP Location " + @SDPLocation + "  on transponder port " + halElectAddr +  " are UNOBTAINABLE";
+
+                NewEvent.Severity = 5;
+                NewEvent.Type = 1;
+                NewEvent.ServiceType = @ServiceType;
+                NewEvent.EventId = "IMP_005";
+
+            // DB 100807 - Set ActionRequired to 1 for TT creation
+                      NewEvent.ActionRequired = 1;
+                NewEvent.ServiceAffecting = 1;
+                NewEvent.Manager = "Netcool Impact";
+                NewEvent.Agent = "Halogen";
+                NewEvent.AssetElectronicAddress= halElectAddr;
+                NewEvent.ImpactFlag=2;
+                NewEvent.TSA = tsa;
+                NewEvent.LocalChain = @LocalChain;
+                NewEvent.SDPLocation = @SDPLocation;
+                NewEvent.LocalRootObj = @LocalRootObj;
+
+                //TA 100907 - Start
+                NewEvent.InServiceStatus = @InServiceStatus;
+                NewEvent.FirstOccurrence=getdate();
+                NewEvent.FirstRaiseTime=getdate();
+
+                           //Added following 2 lines by SK on 16102008, Vega#200808003498
+                           NewEvent.LastOccurrence = getdate();
+                           NewEvent.LastRaiseTime=getdate();
+                NewEvent.DateGenerated = getdate();
+
+                //NewEvent.STINum = @STINum;
+                //NewEvent.STIRef = @STI_Ref;
+
+                NewEvent.RCCArea = @RCCArea;
+                NewEvent.EquipmentType = @EquipmentType;
+                //TA 100907 - End
+
+                //TA Start 221107 
+                //Set HalStatus for SLT Reports (TTID in APM)
+
+                NewEvent.HalStatus = @HalStatus;
+                //TA END 221107
+
+                //Set TTFlag to pick the event by Service Impact policy
+                 // Turn-off under patch 3.39.1
+                // NewEvent.TTFlag = 4;
+
+            // TA under patch 3.52.1 - start
+                NewEvent.ParentChildFlag = 8;
+                NewEvent.EndDeviceNum = @EndDeviceNum;
+                NewEvent.AssetMotorway=@AssetMotorway;
+                NewEvent.AssetGeographicAddress=@AssetGeographicAddress;
+            // TA under patch 3.52.1 - end
+                NewEvent.TPRLocation = @TPRLocation;
+            
+    // Use the AddDataItem function to add the event to the Object Server. 
+
+                Type = 'ha_ncoms_impact_events';
+                AddDataItem(Type,NewEvent);
+
+                }
+            else
+            {
+                Count = existSynthEvent[0].Tally;
+                Count = Count + 1;
+                DataType = "spanview";
+                Filter = "(Identifier='" + synthIdentifier + "' and Severity=5)";
+                UpdateExpression = "LastOccurrence = " + getdate() + ", LastRaiseTime = " +  getdate()  + ", Tally = " + Count;
+                BatchUpdate(DataType, Filter, UpdateExpression);
+            }
+
+                // DB 100907 - read the synthetic event as we'll need its ServerName and ServerSerial
+                //        to put into each child event
+
+                 theSynthEvent=GetByFilter('ha_ncoms_impact_events',"(Identifier='"+synthIdentifier+"')",false);
+
+                childId = '';    // starts blank
+
+                // DB 100907 - end
+
+                // ... and suppress the  unobtainables ...
+
+                // loop through array.
+
+                counter = 0;
+
+                NumDev = length(EndDevDown);
+                //TotalSTIRef = {};
+                TotalSTIRef = "";
+                while ( counter < NumDev )
+                {
+                // DB 100907 - build list of comma separated child serial numbers
+                if (counter > 0) {
+
+                    //childId = childId + ',' + EndDevDown[counter].Serial;
+                    childId = childId + ',' + EndDevDown[counter].ServerSerial;
+                    //TotalSTIRef = TotalSTIRef + EndDevDown[counter].STIRef;
+                    TotalSTIRef = TotalSTIRef + ',' + EndDevDown[counter].STIRef;
+
+                } else {
+
+                    //childId = EndDevDown[0].Serial;
+                                  // Change data type of childId by SK on 27082008, Patch - 3.38.1
+                                      //childId = string(EndDevDown[0].Serial);
+                    childId = string(EndDevDown[0].ServerSerial);
+                    TotalSTIRef = TotalSTIRef + EndDevDown[0].STIRef;
+                }
+                // DB 100907 - end
+
+                // DB 100907 - set ParentServerName and ParentServerSerial from synthetic event
+
+                //EndDevDown[counter].ParentServerName = theSynthEvent[0].ServerName;
+
+                //EndDevDown[counter].ParentServerSerial = theSynthEvent[0].ServerSerial;
+                           // Change data type of ParentServerSerial by SK on 27082008, Patch - 3.38.1
+                           //EndDevDown[counter].ParentServerSerial = string(theSynthEvent[0].ServerSerial);
+
+                // DB 100907 - end
+
+                //EndDevDown[counter].SuppressEscl = 4;
+
+                //EndDevDown[counter].SuppressCause = "Suppressed by Signalling_policy Impact policy";
+
+                counter = counter + 1;
+
+                }
+
+                DataType = "spanview";
+                Filter = "(Type = 1) and (Severity > 3) and  (ServiceType = '"+ @ServiceType + "') and   (SDPLocation = '"+ @SDPLocation +"')  and  (AssetElectronicAddress like '" + AssetElectronicAddressGroup + "') and   (Manager='Halogen')";
+                UpdateExpression = "ParentServerName = '" + theSynthEvent[0].ServerName + "',  ParentServerSerial = '" +  string(theSynthEvent[0].ServerSerial) + "', SuppressEscl = 4, SuppressCause = 'Suppressed  by Signalling_policy Impact policy'";
+                BatchUpdate(DataType, Filter, UpdateExpression);
+                
+                theSynthEvent[0].ChildID = childId;
+                
+                InterfaceSTIArray = Split(TotalSTIRef, ",");
+                DistinctSTIs = distinct(InterfaceSTIArray);
+                NumDistinct = Length(DistinctSTIs);
+                theSynthEvent[0].STINum = NumDistinct;
+                theSynthEvent[0].STIRef = '' + DistinctSTIs[0];
+
+                if(theSynthEvent[0].STIRef = '')
+                {
+                    theSynthEvent[0].STIRef = '' + DistinctSTIs[0];
+                    a = 1;
+                    while (a < NumDistinct)
+                    {
+                        theSynthEvent[0].STIRef = theSynthEvent[0].STIRef + "," +  DistinctSTIs[a];
+                        a = a + 1;
+                    }
+                }        
+        }
+
+    } else
+
+    {
+
+// check if it is a resolution event that would potentially clear a synthetic prob cable down event
+
+        if (EventContainer.Type = 2)
+
+            {
+            //DataType = "spanview";
+            //Filter = "(Node = '" + @Node + "') and (Severity > 0) and (Manager = 'Halogen') and  (AlertGroup = '"+ @AlertGroup + "') and (Type = 1)";
+            //UpdateExpression = "Severity = 0, ClearTime = " + @LastRaiseTime;
+            //BatchUpdate(DataType, Filter, UpdateExpression);
+
+// check for existence of prob cable down event
+
+            //synthProbCableDowns=GetByFilter('ha_ncoms_impact_events', "(Type = 1) and (Severity > 1) and  (Agent = 'Halogen') and  (Manager='Netcool Impact') and (Node = '"+@SDPLocation+"') and (ServiceType =  '"+@ServiceType+"') and (AlertGroup = 'Impact Signal Event') and (AlertKey =  'MSS_SIG event')",false);
+                    // Change the filter condition by below 3 lines by SK on 27082008, Patch - 3.38.1
+                    AssetElectronicAddressGroup= rextract(@AssetElectronicAddress,"(.*)..$");
+                 AssetElectronicAddressGroup1=AssetElectronicAddressGroup + '00';
+            log("AssetElectronicAddressGroup1 = " + AssetElectronicAddressGroup1);
+            myNode = AssetElectronicAddressGroup1 + " " + @SDPLocation; 
+            log("myNode = " + myNode);
+                    //synthProbCableDowns=GetByFilter('ha_ncoms_impact_events', "(Type = 1) and (Severity > 1) and  (Manager='Netcool Impact') and  (AssetElectronicAddress = '" + AssetElectronicAddressGroup1 + "') and (AlertKey =  'MSS_SIG event')",false);
+            synthProbCableDowns=GetByFilter('ha_ncoms_impact_events', "(Type = 1) and (Severity > 1) and  (Manager='Netcool Impact') and  (Node = '" + myNode + "') and (ServiceType = '"+ @ServiceType + "') and (AlertKey =  'MSS_SIG event')",false);
+
+            numSynthEvents=Length(synthProbCableDowns);
+
+            //log("Signalling_policy: Num Synthetic events = " + numSythEvents);
+            log("Signalling_policy: Num Synthetic events = " + numSynthEvents);
+
+            if(numSynthEvents>0)
+                {
+
+                           // Commented the Severity by SK on 27082008, Patch - 3.38.1
+                //synthProbCableDowns[0].Severity = 1;
+
+// get AssetElectronicAddress value
+
+                //ElectAddr=GetByFilter('Circee_Host_Table', "SDP_Location =  '"+@SDPLocation+"'",false);
+                           // Change the filter condition by SK on 27082008, Patch - 3.38.1
+                           ElectAddr=GetByFilter('Circee_Host_Table', "(SDP_Location = '"+@SDPLocation+"') and   (ASSET_ELECTRONIC_ADDRESS like '" +  AssetElectronicAddressGroup + "%')",false);
+
+                numElectAddr=Length(ElectAddr);
+
+                log("Signalling_policy: Number of matching sites for halElectAddr = " + numElectAddr);
+
+                if(numElectAddr>0)
+                    {
+                    halElectAddr=rextract(ElectAddr[0].Asset_Electronic_Address,"(.*)..$");
+
+                    halElectAddr=halElectAddr + '00';
+                                  // Added tsa by SK on 27082008, Patch - 3.38.1
+                                  tsa = '' + ElectAddr[0].TS_A;
+
+                    } else {
+
+                    halElectAddr='';
+                                  // Added by tsa SK on 27082008, Patch - 3.38.1
+                                   tsa = '';
+                    }
+
+// found a matching synthetic event for which we should raise a clearing event.
+
+                NewEvent = NewObject();
+
+                //NewEvent.Identifier = "Clear - Impact signal event " + @TSA + @TSB + @SDPLocation;
+                           //Change Identifier by SK on 27082008, Patch - 3.38.1
+                          // NewEvent.Identifier = "Clear - Impact signal event " + @TSA + @TSB + ' ' + @SDPLocation +  ' '  + halElectAddr;
+                //NewEvent.Identifier = "Clear - Impact signal event " + @TSA + @TSB + ' ' +  @SDPLocation + ' '  + halElectAddr;
+                NewEvent.Identifier = "Clear - Impact signal event " + @TSA + ' ' + @SDPLocation + ' '   + halElectAddr;
+                          
+                          //Change OwnerUID by sk on 24022009, patch - 3.50.1
+                           NewEvent.OwnerUID = 65534;
+
+                //NewEvent.Node = @SDPLocation;
+
+                           // Change Node by SK on 27082008, Patch - 3.38.1
+                          //NewEvent.Node = @SDPLocation + " " + halElectAddr;
+                NewEvent.Node = halElectAddr + " " + @SDPLocation;
+
+                NewEvent.AlertGroup = "Impact Signal Event";
+                NewEvent.AlertKey = "MSS_SIG event";
+
+                           //Added following 4 lines by SK on 16102008, Vega#200808003498
+                            NewEvent.FirstOccurrence=getdate();
+                NewEvent.FirstRaiseTime=getdate();
+                NewEvent.LastRaiseTime=getdate();
+                           NewEvent.DateGenerated = getdate();
+                NewEvent.LastOccurrence = getdate();
+                //Cleartime added by TA on 10Feb09, Patch 3.88
+                NewEvent.ClearTime = getdate();
+
+                //NewEvent.Summary = "Some devices at " + @SDPLocation + " OBTAINABLE ";
+                           // Change Summary by SK on 27082008, Patch - 3.38.1
+                           NewEvent.Summary = "Some devices at SDP Location " + @SDPLocation + " on transponder port "  + halElectAddr + " are OBTAINABLE";
+
+                NewEvent.Severity = 2;
+                NewEvent.Type = 2;
+                NewEvent.ServiceType = @ServiceType;
+                NewEvent.Manager = "Netcool Impact";
+                NewEvent.Agent = "Halogen";
+                NewEvent.ImpactFlag = 2;
+
+                           // Added TSA by SK on 27082008, Patch - 3.38.1
+                           NewEvent.TSA = tsa;
+
+                           // Added LocalChain by SK on 27082008, Patch - 3.38.1
+                           NewEvent.LocalChain = @LocalChain;
+                NewEvent.SDPLocation = @SDPLocation;
+                NewEvent.LocalRootObj = @LocalRootObj;
+
+                NewEvent.AssetElectronicAddress= halElectAddr;
+
+// Use the AddDataItem function to add the event to the Object Server. 
+                //under patch 3.39.1
+                NewEvent.EventId = 'IMP_005';
+                NewEvent. LocalChain = @LocalChain;
+                NewEvent. Supresscause = '';
+
+                Type = 'ha_ncoms_impact_events';
+
+                AddDataItem(Type,NewEvent);
+
+// We must now unsupress any suppressed events
+
+                //EndDevDown = GetByFilter('ha_ncoms_impact_events',"(SuppressEscl = 4) and (Type = 1)  and (Manager <> 'Netcool Impact') and  (Severity > 1) and (ServiceType = '"+ @ServiceType + "') and  (SDPLocation =  '"+ @SDPLocation +"')",false);
+                           // Change the filter condition by SK on 27082008, Patch - 3.38.1
+                           //EndDevDown = GetByFilter('ha_ncoms_impact_events',"(SuppressEscl = 4) and (Type = 1) and   (Manager <> 'Netcool Impact') and  (Severity > 1) and (ServiceType = '"+ @ServiceType + "') and  (SDPLocation = '"+   @SDPLocation +"') and (AssetElectronicAddress like '" +  AssetElectronicAddressGroup + "')",false);
+//EndDevDown = GetByFilter('ha_ncoms_impact_events',"(SuppressEscl = 4) and (Type = 1) and  (Manager = 'Halogen') and  (ServiceType = '"+ @ServiceType + "')  and  (SDPLocation = '"+  @SDPLocation +"') and (AssetElectronicAddress like '"  + AssetElectronicAddressGroup + "')",false);
+
+                //numDown=Length(EndDevDown);    
+
+                //counter = 0;
+
+                //while ( counter < numDown )
+
+                    //{
+
+                    // Added SuppressCause by SK on 27082008, 
+                    //EndDevDown[counter].ParentServerSerial = "";
+                    //EndDevDown[counter].SuppressEscl = 0;
+                                      //EndDevDown[counter].SuppressCause = "";
+
+                    //counter = counter + 1;
+
+                    ////}                        
+                DataType = "spanview";
+                Filter = "(SuppressEscl = 4) and (Type = 1) and  (Manager = 'Halogen') and  (ServiceType = '"+ @ServiceType + "')  and  (SDPLocation = '"+  @SDPLocation +"') and (AssetElectronicAddress like '"  + AssetElectronicAddressGroup + "')";
+                UpdateExpression = "SuppressEscl = 0, SuppressCause = '', ParentServerSerial = ''";
+                BatchUpdate(DataType, Filter, UpdateExpression);
+                }
+            }        
+    }
+}
+
+else
+
+{
+
+}
+
+}
+
+// Set impact flag = 3
+
+EventContainer.ImpactFlag = 3;
+ReturnEvent(EventContainer);
+
+log("Signalling_policy: IQLOGFINISH: ServerSerial=" + @ServerSerial + " EventId=" + @EventId);
+log("Signalling_policy: Stop. ReturnEvent successful");
+
+

@@ -1,0 +1,93 @@
+#######################################################################
+#
+#       Copyright (C) 2001 Micromuse Inc.
+#       All Rights Reserved
+#
+#    RESTRICTED RIGHTS:
+#
+#    This file may have been supplied under a license.
+#    It may be used, disclosed, and/or copied only as permitted
+#    under such license agreement.  Any copy must contain the
+#    above copyright notice and this restricted rights notice.
+#    Use, copying, and/or disclosure of the file is strictly
+#    prohibited unless otherwise provided in the license agreement.
+#
+#    IETF-OSPF-TRAP-MIB.include.lookup 1.0 2000/08/11 Robert Cowart
+#
+#######################################################################
+# 1.0 - Initial Release
+#
+# Ident $Id: IETF-OSPF-TRAP-MIB.include.lookup 1.1 2003/03/17 16:08:24 csmith Development $
+#######################################################################
+
+table ospfVirtIfState = ### OSPF virtual interface states.
+{
+    {"1","down"},
+    {"4","pointToPoint"}
+}
+default = "Unknown"
+
+table ospfNbrState = ### The State of the relationship with this Neighbor (includes Virtual Neighbors).
+{
+    {"1","down"},
+    {"2","attempt"},
+    {"3","init"},
+    {"4","twoWay"},
+    {"5","exchangeStart"},
+    {"6","exchange"},
+    {"7","loading"},
+    {"8","full"}
+}
+default = "Unknown"
+
+table ospfConfigErrorType = ### Potential types of configuration conflicts. Used by the ospfConfigError and ospfConfigVirtError traps.
+{
+    {"1","badVersion"},
+    {"2","areaMismatch"},
+    {"3","unknownNbmaNbr"}, ### Router is Dr eligible
+    {"4","unknownVirtualNbr"},
+    {"5","authTypeMismatch"},
+    {"6","authFailure"},
+    {"7","netMaskMismatch"},
+    {"8","helloIntervalMismatch"},
+    {"9","deadIntervalMismatch"},
+    {"10","optionMismatch"}
+}
+default = "Unknown"
+
+table ospfPacketType = ### OSPF packet types.
+{
+    {"1","hello"},
+    {"2","dbDescript"},
+    {"3","lsReq"},
+    {"4","lsUpdate"},
+    {"5","lsAck"}
+}
+default = "Unknown"
+
+table ospfLsdbType = ### The type of the link state advertisement. Each link state type has a separate advertisement format.
+{
+    {"1","routerLink"},
+    {"2","networkLink"},
+    {"3","summaryLink"},
+    {"4","asSummaryLink"},
+    {"5","asExternalLink"}, ### but see ospfExtLsdbTable
+    {"6","multicastLink"},
+    {"7","nssaExternalLink"}
+}
+default = "Unknown"
+
+table ospfIfState = ### The OSPF Interface State.
+{
+    {"1","down"},
+    {"2","loopback"},
+    {"3","waiting"},
+    {"4","pointToPoint"},
+    {"5","designatedRouter"},
+    {"6","backupDesignatedRouter"},
+    {"7","otherDesignatedRouter"}
+}
+default = "Unknown"
+
+
+

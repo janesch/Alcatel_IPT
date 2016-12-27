@@ -1,0 +1,79 @@
+if ( regmatch ( $line_00, "Fault_Id" ) ) { 
+$Fault_Id= extract($line_00, "Fault_Id=(.*)")
+} else if ( regmatch ( $line_01, "Fault_Id" ) ) { 
+$Fault_Id= extract($line_01, "Fault_Id=(.*)")
+} else if ( regmatch ( $line_02, "Fault_Id" ) ) { 
+$Fault_Id= extract($line_02, "Fault_Id=(.*)")
+} else if ( regmatch ( $line_03, "Fault_Id" ) ) { 
+$Fault_Id= extract($line_03, "Fault_Id=(.*)")
+} else if ( regmatch ( $line_04, "Fault_Id" ) ) { 
+$Fault_Id= extract($line_04, "Fault_Id=(.*)")
+} else if ( regmatch ( $line_05, "Fault_Id" ) ) { 
+$Fault_Id= extract($line_05, "Fault_Id=(.*)")
+} else if ( regmatch ( $line_06, "Fault_Id" ) ) { 
+$Fault_Id= extract($line_06, "Fault_Id=(.*)")
+} else if ( regmatch ( $line_07, "Fault_Id" ) ) { 
+$Fault_Id= extract($line_07, "Fault_Id=(.*)")
+} else if ( regmatch ( $line_08, "Fault_Id" ) ) { 
+$Fault_Id= extract($line_08, "Fault_Id=(.*)")
+} else if ( regmatch ( $line_09, "Fault_Id" ) ) { 
+$Fault_Id= extract($line_09, "Fault_Id=(.*)")
+} else if ( regmatch ( $line_10, "Fault_Id" ) ) { 
+$Fault_Id= extract($line_10, "Fault_Id=(.*)")
+} else if ( regmatch ( $line_11, "Fault_Id" ) ) { 
+$Fault_Id= extract($line_11, "Fault_Id=(.*)")
+} else if ( regmatch ( $line_12, "Fault_Id" ) ) { 
+$Fault_Id= extract($line_12, "Fault_Id=(.*)")
+} else if ( regmatch ( $line_13, "Fault_Id" ) ) { 
+$Fault_Id= extract($line_13, "Fault_Id=(.*)")
+} else if ( regmatch ( $line_14, "Fault_Id" ) ) { 
+$Fault_Id= extract($line_14, "Fault_Id=(.*)")
+} else if ( regmatch ( $line_15, "Fault_Id" ) ) { 
+$Fault_Id= extract($line_15, "Fault_Id=(.*)")
+} else if ( regmatch ( $line_16, "Fault_Id" ) ) { 
+$Fault_Id= extract($line_16, "Fault_Id=(.*)")
+} else if ( regmatch ( $line_17, "Fault_Id" ) ) { 
+$Fault_Id= extract($line_17, "Fault_Id=(.*)")
+} else if ( regmatch ( $line_18, "Fault_Id" ) ) { 
+$Fault_Id= extract($line_18, "Fault_Id=(.*)")
+} else if ( regmatch ( $line_19, "Fault_Id" ) ) { 
+$Fault_Id= extract($line_19, "Fault_Id=(.*)")
+} else if ( regmatch ( $line_20, "Fault_Id" ) ) { 
+$Fault_Id= extract($line_20, "Fault_Id=(.*)")
+} else if ( regmatch ( $line_21, "Fault_Id" ) ) { 
+$Fault_Id= extract($line_21, "Fault_Id=(.*)")
+} else if ( regmatch ( $line_22, "Fault_Id" ) ) { 
+$Fault_Id= extract($line_22, "Fault_Id=(.*)")
+} else if ( regmatch ( $line_23, "Fault_Id" ) ) { 
+$Fault_Id= extract($line_23, "Fault_Id=(.*)")
+} else if ( regmatch ( $line_24, "Fault_Id" ) ) { 
+$Fault_Id= extract($line_24, "Fault_Id=(.*)")
+} else if ( regmatch ( $line_25, "Fault_Id" ) ) { 
+$Fault_Id= extract($line_25, "Fault_Id=(.*)")
+}  else if ( regmatch ( $line_26, "Fault_Id" ) ) {
+$Fault_Id= extract($line_26, "Fault_Id=(.*)")
+}  else if ( regmatch ( $line_27, "Fault_Id" ) ) {
+$Fault_Id= extract($line_27, "Fault_Id=(.*)")
+}  else if ( regmatch ( $line_28, "Fault_Id" ) ) {
+$Fault_Id= extract($line_28, "Fault_Id=(.*)")
+}  else if ( regmatch ( $line_29, "Fault_Id" ) ) {
+$Fault_Id= extract($line_29, "Fault_Id=(.*)")
+} else if ( regmatch ( $line_30, "Fault_Id" ) ) {
+$Fault_Id= extract($line_30, "Fault_Id=(.*)")
+}  else if ( regmatch ( $line_31, "Fault_Id" ) ) {
+$Fault_Id= extract($line_31, "Fault_Id=(.*)")
+}  else if ( regmatch ( $line_32, "Fault_Id" ) ) {
+$Fault_Id= extract($line_32, "Fault_Id=(.*)")
+}  else if ( regmatch ( $line_33, "Fault_Id" ) ) {
+$Fault_Id= extract($line_33, "Fault_Id=(.*)")
+}  else if ( regmatch ( $line_34, "Fault_Id" ) ) {
+$Fault_Id= extract($line_34, "Fault_Id=(.*)")
+}  else if ( regmatch ( $line_35, "Fault_Id" ) ) {
+$Fault_Id= extract($line_35, "Fault_Id=(.*)")
+}  else if ( regmatch ( $line_36, "Fault_Id" ) ) {
+$Fault_Id= extract($line_36, "Fault_Id=(.*)")
+}  else if ( regmatch ( $line_37, "Fault_Id" ) ) {
+$Fault_Id= extract($line_37, "Fault_Id=(.*)")
+}  else if ( regmatch ( $line_38, "Fault_Id" ) ) {
+$Fault_Id= extract($line_38, "Fault_Id=(.*)")
+}    

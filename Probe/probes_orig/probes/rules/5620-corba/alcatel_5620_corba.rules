@@ -1,0 +1,310 @@
+#######################################################################
+#
+#       Copyright (C) 2002 Micromuse Ltd 
+#       All Rights Reserved
+#
+#       RESTRICTED RIGHTS:
+#
+#       This file may have been supplied under a license.
+#       It may be used, disclosed, and/or copied only as permitted
+#       under such license agreement.  Any copy must contain the
+#       above copyright notice and this restricted rights notice.
+#       Use, copying, and/or disclosure of the file is strictly
+#       prohibited unless otherwise provided in the license agreement.
+#
+#
+# Ident: $Id: alcatel_5620_corba.rules 3.3 2002/12/12 17:09:39 dlanctin Development $
+#
+# This version modified by Wim Harthoorn, Tech Services, 2002/11/06 on site at Alcatel, Newport, UK
+#
+# This version modified by Nick Evans, Development, 2011/01/07 on site at Alcatel, Maidenhead, UK
+#######################################################################
+# Available Elements :
+#
+#       $managedObjectClass   
+#       $managedObjectInstance
+#       $eventTime
+#      	$eventType
+#       $perceivedSeverity
+#	$probableCause
+#	$sourceIndicator
+#	$attributeValueChange00...<nn>
+#	$stateChange00...<nn>
+#	$unknownAttribute00...<nn>	
+#	$logRecordId
+#	$additionalText
+#	$additionalInformation00...<nn>
+#	$monitoredAttributes00...<nn>
+#	$thresholdInfo
+#
+#	Note : the tokens mentioned here are the main ones.
+#	The attributes mentioned in the OidTableFile may be created as 
+#	tokens as well.
+#
+#######################################################################
+
+
+if( match( @Manager, "ProbeWatch" ) )
+{
+	switch(@Summary)
+	{
+	case "Running ...":
+		@Severity = 1
+		@AlertGroup = "probestat"
+		@Type = 2
+	case "Going Down ...":
+		@Severity = 5
+		@AlertGroup = "probestat"
+		@Type = 1
+	default:
+		@Severity = 1
+	}
+	@AlertKey = @Agent
+	@Summary = @Agent + " probe on " + @Node + ": " + @Summary
+}
+else
+{
+
+	# set general properties
+
+	@Manager = "Alcatel 5620 Corba"
+	@Class = 3800
+#	WH 6 Nov 2002 - Change @EventType for @AlertGroup. @EventType must be in Object Server sql
+	@EventType = $eventType
+#	WH 6 Nov 2002 - Set Alert Key to Problem Code and extract reporting Agent name from AdditionalInformation
+	if (exists($additionalInformation00))
+	{
+	@AlertKey = extract($additionalInformation00,".*_([0-9]+)")
+	@Node = extract($additionalInformation00,"(.+)_.*")
+	}
+#	WH 19 Nov 2002 - Set NodeAlias to ManagedObjectInstance
+	@NodeAlias = $managedObjectInstance
+
+	@Identifier = $eventType + " " + $managedObjectInstance + " " + $managedObjectClass + " " + $probableCause
+
+	
+	# start of main switch statement
+	# WH 6 Nov 2002 - main switch changed to select on managedObjectClass
+
+	switch ($managedObjectClass)
+	{
+		case "1.2.124.360501.3.78":
+			@Agent = "bMFacility"
+			@Summary = $additionalText
+
+		case "1.2.124.360501.3.77":
+			@Agent = "bMGroomedCircuit"
+			@Summary = $additionalText
+
+		case "2.9.3.2.3.6":
+			@Agent = "log"
+			@Summary = "Log event"
+
+		case "0.0.13.3100.0.3.3":
+			@Agent = "managedElement"
+			@Summary = $additionalText
+
+		case "1.2.124.113537.1.1.3":
+			@Agent = "managedFacilityTP"
+			@Summary = $additionalText
+
+		case "1.2.124.113537.1.1.1":
+			@Agent = "managedPack"
+			@Summary = $additionalText
+
+		case "2.9.3.2.3.4":
+			@Agent = "eventForwarderDiscriminator"
+			@Summary = $additionalText
+
+		default:
+			@Agent = "Unidentified Managed Object: " + $managedObjectClass
+			@Summary = $additionalText
+		}
+
+	if (exists($eventType))
+	{
+	
+       			switch ($eventType)
+       			{
+			case "2.9.3.2.10.2":
+				@AlertGroup = "Communications"
+				@Summary = "CommunicationsAlarm: " + @Summary
+				
+			case "2.9.3.2.10.3":
+				@AlertGroup = "Environental"
+				@Summary = "EnvironmentalAlarm: " + @Summary
+			
+			case "2.9.3.2.10.4" :
+				@AlertGroup = "Equipment"
+				@Summary = "EquipmentAlarm: " + @Summary
+			
+			case "2.9.3.2.10.10" :
+				@AlertGroup = "Processing Error"
+				@Summary = "ProcessingErrorAlarm: " + @Summary
+				
+			case "2.9.3.2.10.1" :
+				@AlertGroup = "AttributeValueChange"
+				@Summary = "AttributeValueChange on " + $managedObjectInstance
+			
+			case "2.9.3.2.10.6" :
+				@AlertGroup = "ObjectCreation"
+				@Summary = "ObjectCreation on " + $managedObjectInstance
+			
+			case "2.9.3.2.10.7" :
+                                @AlertGroup = "ObjectDeletion"
+				@Summary = "ObjectDeletion on " + $managedObjectInstance
+				
+			case "2.9.3.2.10.14" :
+				@AlertGroup = "StateChange"
+				@Summary = "StateChange on " + $managedObjectInstance			    
+				
+			default:
+				@Node = $additionalInformation00
+				@Identifier = @Identifier + $Text01 + $Text02 +$Text03
+			}
+      }
+
+	if (exists($perceivedSeverity))
+	{
+		switch ($perceivedSeverity)
+		{
+			case "cleared" :
+				@Severity = 0
+				@Type = 2
+
+			case "indeterminate" :
+				@Severity = 1
+
+			case "warning" :
+				@Severity = 2
+				@Type = 1
+
+			case "minor" :
+				@Severity = 3
+				@Type = 1
+
+			case "major" :
+				@Severity = 4
+				@Type = 1
+
+			case "critical" :
+				@Severity = 5
+				@Type = 1
+
+			default :
+				@Severity = 1
+		}
+	}
+
+#	The following section requires @ProbableCause to be in the Object Server sql - WH 081102
+
+	if(exists($probableCause))
+	{
+		switch ($probableCause)
+		{
+			case "2.9.3.2.0.0.6":
+				@ProbableCause = "communicationsSubsystemFailure"
+
+			case "2.9.3.2.0.0.15":
+				@ProbableCause = "equipmentMalfunction"
+
+			case "2.9.3.2.0.0.28":
+				@ProbableCause = "lossOfFrame"
+
+			case "2.9.3.2.0.0.29":
+				@ProbableCause = "lossOfSignal"
+
+			case "2.9.3.2.0.0.39":
+				@ProbableCause = "queueSizeExceeded"
+
+			case "2.9.3.2.0.0.46":
+				@ProbableCause = "softwareError"
+
+			case "2.9.3.2.0.0.47":
+				@ProbableCause = "softwareProgramAbnormallyTerminated"
+
+			case "2.9.3.2.0.0.49":
+				@ProbableCause = "storageCapacityProblem"
+
+			case "2.9.3.2.0.0.56":
+				@ProbableCause = "underlyingResourceUnavailable"
+
+			case "2.9.3.2.0.1.9":
+				@ProbableCause = "InformationOutOfSequence"
+
+			default:
+				@ProbableCause = "Unrecognised Probable Cause Code: " + $ProbableCause
+			}
+
+		}
+#### Check $additionalText token length if missing data import text from $additionalInformation00
+#### Nick Evans Jan 2011
+
+if(length($additionalText) == 0){
+			
+				@Summary = $additionalInformation00
+				}
+if(match($additionalText, "^\s+")){
+				
+				@Summary = $additionalInformation00
+				}
+}
+# details ($*)
+####added the logic to set the lastraisetime and first raise time
+#################for the events who got nul value or 01/01/1979 00:00:00 as First and Last Raise time #######
+
+
+
+if(exists($ReceivedTime) && match(@LastRaiseTime, "0"))
+{
+@LastRaiseTime = $ReceivedTime
+}
+if(!exists($ReceivedTime) && match(@LastRaiseTime, "0"))
+{
+@LastRaiseTime = getdate
+}
+if(exists($ReceivedTime) && match(@FirstRaiseTime, "0"))
+{
+@FirstRaiseTime = $ReceivedTime
+}
+if(!exists($ReceivedTime) && match(@FirstRaiseTime, "0")){
+@FirstRaiseTime = getdate
+}
+if(match(@DateGenerated, "0")){
+@DateGenerated = @FirstOccurrence
+}if(match(@DateReceived, "0")){
+@DateReceived = @FirstOccurrence
+}if(match(@HalDateTime, "0")){
+@HalDateTime = @FirstOccurrence
+}if(match(@InterTime, "0")){
+@InterTime = @FirstOccurrence
+}if(match(@provisoViolationTime, "0")){
+@provisoViolationTime = @FirstOccurrence
+}if(match(@InternalLast, "0")){
+@InternalLast = @FirstOccurrence
+}if(match(@ParentChildTime, "0")){
+@ParentChildTime = @FirstOccurrence
+}if(match(@ClearTime, "0")){
+@ClearTime = @FirstOccurrence
+}
+if(!exists(@DateGenerated)){
+@DateGenerated = @FirstOccurrence
+ }if(!exists(@DateReceived)){
+ @DateReceived = @FirstOccurrence
+ }if(!exists(@HalDateTime)){
+ @HalDateTime = @FirstOccurrence
+ }if(!exists(@InterTime)){
+ @InterTime = @FirstOccurrence
+ }if(!exists(@provisoViolationTime)){
+ @provisoViolationTime = @FirstOccurrence
+  }if(!exists(@InternalLast)){
+ @InternalLast = @FirstOccurrence
+  }if(!exists(@ParentChildTime)){
+ @ParentChildTime = @FirstOccurrence
+  }if(!exists(@ClearTime)){
+ @ClearTime = @FirstOccurrence
+  }
+
+
+##################GauravTyagi-19Oct2011###########################
+

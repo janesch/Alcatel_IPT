@@ -1,0 +1,14 @@
+#This file was written by server.
+#Thu Mar 10 09:53:34 GMT 2011
+defaultobjectserver.ObjectServer.JDBCDRIVER=com.sybase.jdbc3.jdbc.SybDriver
+defaultobjectserver.ObjectServer.USESSLPRIMARY=FALSE
+defaultobjectserver.ObjectServer.DBUSERNAME=root
+defaultobjectserver.ObjectServer.FAILOVERPOLICY=FAILOVER
+defaultobjectserver.ObjectServer.PRIMARYPORT=4100
+defaultobjectserver.ObjectServer.DBPASSWORD={aes}58B3B30B4F03EBADACFDEF6E6475AFBC
+defaultobjectserver.ObjectServer.DISABLEFAILOVER=false
+defaultobjectserver.ObjectServer.BACKUPHOST=172.20.174.158
+defaultobjectserver.ObjectServer.BACKUPPORT=4101
+defaultobjectserver.ObjectServer.PRIMARYHOST=172.20.174.58
+defaultobjectserver.ObjectServer.USESSLBACKUP=FALSE
+defaultobjectserver.ObjectServer.MAXSQLCONNECTION=30

@@ -1,0 +1,19 @@
+#This file was written by Impact Server.
+#Thu Feb 24 10:34:24 GMT 2011
+OS_Parent_Child_Filters.SQL.RESTRICTWHERECLAUSE=
+OS_Parent_Child_Filters.SQL.ENABLED=true
+OS_Parent_Child_Filters.SQL.ORDERBY=
+OS_Parent_Child_Filters.SQL.KEYFIELDS.1=FilterName
+OS_Parent_Child_Filters.SQL.USERPARAMETERS=\ WITHDEFAULTS{{'FilterName', LONG_STRING, 'FilterName', 'FilterName', 'FilterName', 'true', '', '', FALSE, FALSE}, {'Definition', LONG_STRING, 'Definition', 'Definition', 'Definition', 'true', '', '', FALSE, FALSE}}
+OS_Parent_Child_Filters.SQL.TIMEINTERVLAFORDATATYPESTATS=0
+OS_Parent_Child_Filters.SQL.DATASOURCENUM=9
+OS_Parent_Child_Filters.SQL.INCLUDE_ROOT=true
+OS_Parent_Child_Filters.SQL.QUERYCACHEINVALIDATION=0
+OS_Parent_Child_Filters.SQL.QUERYCACHESIZE=0
+OS_Parent_Child_Filters.SQL.DYNAMICLINKINFOSET={}
+OS_Parent_Child_Filters.SQL.CACHESIZE=0
+OS_Parent_Child_Filters.SQL.TABLENAME=custom.parent_child_filters
+OS_Parent_Child_Filters.SQL.CACHEINVALIDATION=0
+OS_Parent_Child_Filters.SQL.QUERYINTERVALFORDATATYPESTATS=0
+OS_Parent_Child_Filters.SQL.DISPLAYNAMEFIELD=FilterName
+OS_Parent_Child_Filters.SQL.COUNTCACHEINVALIDATION=0

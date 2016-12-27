@@ -1,0 +1,13 @@
+#This file was written by Impact Server.
+#Wed Dec 14 09:30:32 GMT 2011
+impact.selfmonitoring.memorystatus.enable=true
+impact.selfmonitoring.clusterstatus.enable=true
+impact.selfmonitoring.queuestatus.enable=true
+impact.selfmonitoring.logtofile=true
+impact.selfmonitoring.memorydeduplication=false
+impact.selfmonitoring.datasource=ha_ncoms_datasource
+impact.selfmonitoring.datasourcestatus.enable=true
+impact.selfmonitoring.autostartup=false
+impact.selfmonitoring.memoryinterval=60
+impact.selfmonitoring.queuededuplication=true
+impact.selfmonitoring.queueinterval=60

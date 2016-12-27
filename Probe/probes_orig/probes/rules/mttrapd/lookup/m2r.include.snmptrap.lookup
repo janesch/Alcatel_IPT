@@ -1,0 +1,3 @@
+# Created by mib2rules on Tue Jun 13 13:02:22 2006
+include "$NCHOME/custom/probes/rules/mttrapd/lookup/alcatel-ALCATEL-NMC-PROXY-AGENT-MIB.include.snmptrap.lookup"
+include "$NCHOME/custom/probes/rules/mttrapd/lookup/alcatel-NMC50-MIB.include.snmptrap.lookup"

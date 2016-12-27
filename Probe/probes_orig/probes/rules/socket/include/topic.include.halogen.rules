@@ -1,0 +1,79 @@
+if ( regmatch ( $line_00, "topic" ) ) { 
+$topic= extract($line_00, "topic=(.*)")
+} else if ( regmatch ( $line_01, "topic" ) ) { 
+$topic= extract($line_01, "topic=(.*)")
+} else if ( regmatch ( $line_02, "topic" ) ) { 
+$topic= extract($line_02, "topic=(.*)")
+} else if ( regmatch ( $line_03, "topic" ) ) { 
+$topic= extract($line_03, "topic=(.*)")
+} else if ( regmatch ( $line_04, "topic" ) ) { 
+$topic= extract($line_04, "topic=(.*)")
+} else if ( regmatch ( $line_05, "topic" ) ) { 
+$topic= extract($line_05, "topic=(.*)")
+} else if ( regmatch ( $line_06, "topic" ) ) { 
+$topic= extract($line_06, "topic=(.*)")
+} else if ( regmatch ( $line_07, "topic" ) ) { 
+$topic= extract($line_07, "topic=(.*)")
+} else if ( regmatch ( $line_08, "topic" ) ) { 
+$topic= extract($line_08, "topic=(.*)")
+} else if ( regmatch ( $line_09, "topic" ) ) { 
+$topic= extract($line_09, "topic=(.*)")
+} else if ( regmatch ( $line_10, "topic" ) ) { 
+$topic= extract($line_10, "topic=(.*)")
+} else if ( regmatch ( $line_11, "topic" ) ) { 
+$topic= extract($line_11, "topic=(.*)")
+} else if ( regmatch ( $line_12, "topic" ) ) { 
+$topic= extract($line_12, "topic=(.*)")
+} else if ( regmatch ( $line_13, "topic" ) ) { 
+$topic= extract($line_13, "topic=(.*)")
+} else if ( regmatch ( $line_14, "topic" ) ) { 
+$topic= extract($line_14, "topic=(.*)")
+} else if ( regmatch ( $line_15, "topic" ) ) { 
+$topic= extract($line_15, "topic=(.*)")
+} else if ( regmatch ( $line_16, "topic" ) ) { 
+$topic= extract($line_16, "topic=(.*)")
+} else if ( regmatch ( $line_17, "topic" ) ) { 
+$topic= extract($line_17, "topic=(.*)")
+} else if ( regmatch ( $line_18, "topic" ) ) { 
+$topic= extract($line_18, "topic=(.*)")
+} else if ( regmatch ( $line_19, "topic" ) ) { 
+$topic= extract($line_19, "topic=(.*)")
+} else if ( regmatch ( $line_20, "topic" ) ) { 
+$topic= extract($line_20, "topic=(.*)")
+} else if ( regmatch ( $line_21, "topic" ) ) { 
+$topic= extract($line_21, "topic=(.*)")
+} else if ( regmatch ( $line_22, "topic" ) ) { 
+$topic= extract($line_22, "topic=(.*)")
+} else if ( regmatch ( $line_23, "topic" ) ) { 
+$topic= extract($line_23, "topic=(.*)")
+} else if ( regmatch ( $line_24, "topic" ) ) { 
+$topic= extract($line_24, "topic=(.*)")
+} else if ( regmatch ( $line_25, "topic" ) ) { 
+$topic= extract($line_25, "topic=(.*)")
+} else if ( regmatch ( $line_26, "topic" ) ) {
+$topic= extract($line_26, "topic=(.*)")
+} else if ( regmatch ( $line_27, "topic" ) ) {
+$topic= extract($line_27, "topic=(.*)")
+} else if ( regmatch ( $line_28, "topic" ) ) {
+$topic= extract($line_28, "topic=(.*)")
+} else if ( regmatch ( $line_29, "topic" ) ) {
+$topic= extract($line_29, "topic=(.*)")
+} else if ( regmatch ( $line_30, "topic" ) ) {
+$topic= extract($line_30, "topic=(.*)")
+} else if ( regmatch ( $line_31, "topic" ) ) {
+$topic= extract($line_31, "topic=(.*)")
+} else if ( regmatch ( $line_32, "topic" ) ) {
+$topic= extract($line_32, "topic=(.*)")
+} else if ( regmatch ( $line_33, "topic" ) ) {
+$topic= extract($line_33, "topic=(.*)")
+} else if ( regmatch ( $line_34, "topic" ) ) {
+$topic= extract($line_34, "topic=(.*)")
+} else if ( regmatch ( $line_35, "topic" ) ) {
+$topic= extract($line_35, "topic=(.*)")
+} else if ( regmatch ( $line_36, "topic" ) ) {
+$topic= extract($line_36, "topic=(.*)")
+} else if ( regmatch ( $line_37, "topic" ) ) {
+$topic= extract($line_37, "topic=(.*)")
+} else if ( regmatch ( $line_38, "topic" ) ) {
+$topic= extract($line_38, "topic=(.*)")
+}   

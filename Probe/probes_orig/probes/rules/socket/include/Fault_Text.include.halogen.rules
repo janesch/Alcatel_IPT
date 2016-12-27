@@ -1,0 +1,79 @@
+if ( regmatch ( $line_00, "Fault_Text" ) ) { 
+$Fault_Text= extract($line_00, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_01, "Fault_Text" ) ) { 
+$Fault_Text= extract($line_01, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_02, "Fault_Text" ) ) { 
+$Fault_Text= extract($line_02, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_03, "Fault_Text" ) ) { 
+$Fault_Text= extract($line_03, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_04, "Fault_Text" ) ) { 
+$Fault_Text= extract($line_04, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_05, "Fault_Text" ) ) { 
+$Fault_Text= extract($line_05, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_06, "Fault_Text" ) ) { 
+$Fault_Text= extract($line_06, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_07, "Fault_Text" ) ) { 
+$Fault_Text= extract($line_07, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_08, "Fault_Text" ) ) { 
+$Fault_Text= extract($line_08, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_09, "Fault_Text" ) ) { 
+$Fault_Text= extract($line_09, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_10, "Fault_Text" ) ) { 
+$Fault_Text= extract($line_10, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_11, "Fault_Text" ) ) { 
+$Fault_Text= extract($line_11, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_12, "Fault_Text" ) ) { 
+$Fault_Text= extract($line_12, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_13, "Fault_Text" ) ) { 
+$Fault_Text= extract($line_13, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_14, "Fault_Text" ) ) { 
+$Fault_Text= extract($line_14, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_15, "Fault_Text" ) ) { 
+$Fault_Text= extract($line_15, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_16, "Fault_Text" ) ) { 
+$Fault_Text= extract($line_16, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_17, "Fault_Text" ) ) { 
+$Fault_Text= extract($line_17, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_18, "Fault_Text" ) ) { 
+$Fault_Text= extract($line_18, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_19, "Fault_Text" ) ) { 
+$Fault_Text= extract($line_19, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_20, "Fault_Text" ) ) { 
+$Fault_Text= extract($line_20, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_21, "Fault_Text" ) ) { 
+$Fault_Text= extract($line_21, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_22, "Fault_Text" ) ) { 
+$Fault_Text= extract($line_22, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_23, "Fault_Text" ) ) { 
+$Fault_Text= extract($line_23, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_24, "Fault_Text" ) ) { 
+$Fault_Text= extract($line_24, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_25, "Fault_Text" ) ) { 
+$Fault_Text= extract($line_25, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_26, "Fault_Text" ) ) {
+$Fault_Text= extract($line_26, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_27, "Fault_Text" ) ) {
+$Fault_Text= extract($line_27, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_28, "Fault_Text" ) ) {
+$Fault_Text= extract($line_28, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_29, "Fault_Text" ) ) {
+$Fault_Text= extract($line_29, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_30, "Fault_Text" ) ) {
+$Fault_Text= extract($line_30, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_31, "Fault_Text" ) ) {
+$Fault_Text= extract($line_31, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_32, "Fault_Text" ) ) {
+$Fault_Text= extract($line_32, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_33, "Fault_Text" ) ) {
+$Fault_Text= extract($line_33, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_34, "Fault_Text" ) ) {
+$Fault_Text= extract($line_34, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_35, "Fault_Text" ) ) {
+$Fault_Text= extract($line_35, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_36, "Fault_Text" ) ) {
+$Fault_Text= extract($line_36, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_37, "Fault_Text" ) ) {
+$Fault_Text= extract($line_37, "Fault_Text=(.*)")
+} else if ( regmatch ( $line_38, "Fault_Text" ) ) {
+$Fault_Text= extract($line_38, "Fault_Text=(.*)")
+}   

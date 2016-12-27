@@ -1,0 +1,154 @@
+switch($switch-val) {
+
+  case ".1.3.6.1.4.1.11.2.17.1|6|59179058":
+    # OV_AppUngracefulExit
+    # Silas Lane changed AlertKey and Node to $IPAddress as $4 is not always populated
+    
+    [$Sev, $Alm, $AlmCl, $SiteVisEvnt, $SrvAffEvnt, $ResAffEvnt, $CorEvnt] = lookup ($switch-val, "hpov")
+    
+    @AlertGroup = "OV_Application_Down"
+    @AlertKey = $IPAddress
+    @Node = $IPAddress
+    @Summary = "pmd lost contact with " + $4 + ": pid " + $7 + " ungracefully disconnected from pmd with " + $6 + " pending events: " + $8
+    @Severity = $Sev
+    @X733ProbableCause = $Alm
+    @AlarmClass = $AlmCl
+    @ActionRequired = $SiteVisEvnt
+    @ServiceAffecting = $SrvAffEvnt
+    @ResilienceAffecting = $ResAffEvnt
+    @CorrelationFlag = $CorEvnt
+    @Type = $Type
+    
+    case ".1.3.6.1.4.1.11.2.17.1|6|59180100":
+    # OV_DaemonTerminated
+    
+    [$Sev, $Alm, $AlmCl, $SiteVisEvnt, $SrvAffEvnt, $ResAffEvent, $CorEvnt] = lookup ($switch-val, "hpov")
+    
+    @AlertKey = $4
+    @AlertGroup = "OV_DaemonTerminated"
+    @Summary = "ovspmd managed process (" + $4 + ") has terminated unexpectedly"
+    @Node = $IPAddress
+    @Severity = $Sev
+    @X733ProbableCause = $Alm
+    @AlarmClass = $AlmCl
+    @ActionRequired = $SiteVisEvnt
+    @ServiceAffecting = $SrvAffEvnt
+    @ResilienceAffecting = $ResAffEvnt
+    @CorrelationFlag = $CorEvnt
+    @Type = $Type
+    
+    case ".1.3.6.1.4.1.11.2.17.1|6|59180101":
+    # OV_ovspmdAutoResume
+    
+    [$Sev, $Alm, $AlmCl, $SiteVisEvnt, $SrvAffEvnt, $ResAffEvent, $CorEvnt] = lookup ($switch-val, "hpov")
+    
+    @AlertKey = $4
+    @AlertGroup = "OV_ovspmdAutoResume"
+    @Summary = "ovspmd resumed process (" + $4 + ") outside of the control of ovresume"
+    @Node = $IPAddress
+    @Severity = $Sev
+    @X733ProbableCause = $Alm
+    @AlarmClass = $AlmCl
+    @ActionRequired = $SiteVisEvnt
+    @ServiceAffecting = $SrvAffEvnt
+    @ResilienceAffecting = $ResAffEvnt
+    @CorrelationFlag = $CorEvnt
+    @Type = $Type    
+    
+    case ".1.3.6.1.4.1.11.2.17.1|6|59180102":
+    # OV_ovspmdPostTimeoutRes
+    
+    [$Sev, $Alm, $AlmCl, $SiteVisEvnt, $SrvAffEvnt, $ResAffEvent, $CorEvnt] = lookup ($switch-val, "hpov")
+    
+    @AlertKey = $4
+    @AlertGroup = "OV_ovspmdPostTimeoutRes"
+    @Summary = "Process (" + $4 + ") resumed itself after timing out and after ovpause/ovresume has completed."
+    @Node = $IPAddress
+    @Severity = $Sev
+    @X733ProbableCause = $Alm
+    @AlarmClass = $AlmCl
+    @ActionRequired = $SiteVisEvnt
+    @ServiceAffecting = $SrvAffEvnt
+    @ResilienceAffecting = $ResAffEvnt
+    @CorrelationFlag = $CorEvnt
+    @Type = $Type   
+    
+    case ".1.3.6.1.4.1.11.2.17.1|6|59179225":
+    # OV_LicNodeViolation
+    
+    [$Sev, $Alm, $AlmCl, $SiteVisEvnt, $SrvAffEvnt, $ResAffEvent, $CorEvnt] = lookup ($switch-val, "hpov")
+    
+    @AlertKey = $4
+    @AlertGroup = "OV_LicNodeViolation"
+    @Summary = "Network Node Manager licensed maximum number of managed nodes reached (" + $4 + ")"
+    @Node = $IPAddress
+    @Severity = $Sev
+    @X733ProbableCause = $Alm
+    @AlarmClass = $AlmCl
+    @ActionRequired = $SiteVisEvnt
+    @ServiceAffecting = $SrvAffEvnt
+    @ResilienceAffecting = $ResAffEvnt
+    @CorrelationFlag = $CorEvnt
+    @Type = $Type   
+    
+    case ".1.3.6.1.4.1.11.2.17.1|6|59179226":
+    # OV_LicNodeWarn
+    
+    [$Sev, $Alm, $AlmCl, $SiteVisEvnt, $SrvAffEvnt, $ResAffEvent, $CorEvnt] = lookup ($switch-val, "hpov")
+    
+    @AlertKey = $5 + $4
+    @AlertGroup = "OV_LicNodeWarn"
+    @Summary = "Network Node Manager licensed maximum number of managed nodes nearly reached (" + $5 + " of " + $4 + ")"
+    @Node = $IPAddress
+    @Severity = $Sev
+    @X733ProbableCause = $Alm
+    @AlarmClass = $AlmCl
+    @ActionRequired = $SiteVisEvnt
+    @ServiceAffecting = $SrvAffEvnt
+    @ResilienceAffecting = $ResAffEvnt
+    @CorrelationFlag = $CorEvnt
+    @Type = $Type
+    
+    case ".1.3.6.1.4.1.11.2.17.1|6|59179227":
+    # OV_LicExpire
+    
+    [$Sev, $Alm, $AlmCl, $SiteVisEvnt, $SrvAffEvnt, $ResAffEvent, $CorEvnt] = lookup ($switch-val, "hpov")
+    
+    @AlertKey = $4
+    @AlertGroup = "OV_LicExpire"
+    @Summary = "Network Node Manager license expired on " + $4
+    @Node = $IPAddress
+    @Severity = $Sev
+    @X733ProbableCause = $Alm
+    @AlarmClass = $AlmCl
+    @ActionRequired = $SiteVisEvnt
+    @ServiceAffecting = $SrvAffEvnt
+    @ResilienceAffecting = $ResAffEvnt
+    @CorrelationFlag = $CorEvnt
+    @Type = $Type
+    
+    case ".1.3.6.1.4.1.11.2.17.1|6|59179228":
+    # OV_LicExpireWarn
+    
+    [$Sev, $Alm, $AlmCl, $SiteVisEvnt, $SrvAffEvnt, $ResAffEvent, $CorEvnt] = lookup ($switch-val, "hpov")
+    
+    @AlertKey = $4
+    @AlertGroup = "OV_LicExpireWarn"
+    @Summary = "Network Node Manager license expires on " + $4
+    @Node = $IPAddress
+    @Severity = $Sev
+    @X733ProbableCause = $Alm
+    @AlarmClass = $AlmCl
+    @ActionRequired = $SiteVisEvnt
+    @ServiceAffecting = $SrvAffEvnt
+    @ResilienceAffecting = $ResAffEvnt
+    @CorrelationFlag = $CorEvnt
+    @Type = $Type  
+    
+   default:
+   
+   discard
+   
+   }
+   
+   

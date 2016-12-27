@@ -1,0 +1,5 @@
+#This file was written by Impact Server.
+#Sat Aug 13 17:04:58 BST 2011
+impact.commandexecutionmanager.classname=com.micromuse.response.service.ExecuteQueueService
+impact.commandexecutionmanager.description=No description yet
+impact.commandexecutionmanager.logtofile=true

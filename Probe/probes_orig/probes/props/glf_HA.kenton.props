@@ -1,0 +1,127 @@
+########################################################################
+#
+#       Licensed Materials - Property of IBM
+#       
+#       5724-P09 
+#       
+#       (C) Copyright IBM Corp. 2005, 2006. All Rights Reserved
+#       
+#       US Government Users Restricted Rights - Use, duplication
+#       or disclosure restricted by GSA ADP Schedule Contract
+#       with IBM Corp.
+#
+#######################################################################
+
+#######################################################################
+#
+# Property Name					Default
+#
+# Generic Properties
+#
+# AuthPassword          	:	""
+# AuthUserName          	:	""
+# AutoSAF               	:	0
+# BufferSize            	:	10
+# BeatInterval                  :       2
+# Buffering             	:	0
+# Help                  	:	0
+# LookupTableMode       	:	3
+# Manager               	:	"Generic Log File"
+# MaxLogFileSize        	:	1048576
+# MaxRawFileSize        	:	-1
+# MaxSAFFileSize        	:	1048576
+# MessageLevel          	:	"warn"
+# MessageLog            	:	"$OMNIHOME/log/glf.log"
+# Mode				:	"standard"
+# MsgDailyLog           	:	0
+# MsgTimeLog            	:	"0000"
+# Name                  	:	"glf"
+# NetworkTimeout        	:	0
+# PeerHost                      :       'localhost'
+# PeerPort                      :       9999
+# PollServer            	:	0
+# PropsFile             	:	"$OMNIHOME/probes/<arch>/glf.props"
+# RawCapture            	:	0
+# RawCaptureFile        	:	"$OMNIHOME/var/glf.cap"
+# RawCaptureFileAppend  	:	0
+# RawCaptureFileBackup  	:	0
+# RetryConnectionCount  	:	15
+# RetryConnectionTimeOut	:	30
+# RulesFile             	:	"$OMNIHOME/probes/<arch>/glf.rules"
+# SAFFileName           	:	""
+# Server                	:	"NCOMS"
+# ServerBackup          	:	""
+# StoreAndForward       	:	1
+# Version               	:	0
+#
+# Specific Properties
+#
+# CleanStart            	:	0
+# IgnoreNullFields      	:	1
+# LineSeparator         	:	"\n"
+# LogFileName           	:	""
+# MaxBufferSize         	:	4098
+# MaxNumTokens          	:	0
+# MaxTerminators        	:	2
+# QuoteCharacter        	:	34
+# RecoveryFile          	:	"$OMNIHOME/var/glf.reco"
+# ReplayFile            	:	0
+# StripCharacter        	:	"\""
+# StripCharacterFormat  	:	0
+# ValueSeparator        	:	" "
+# RetryPeriod(Unix only)	:	60 
+#
+#######################################################################
+
+#######################################################################
+#
+# Add your settings here
+#
+#######################################################################
+
+#######################################################################
+#
+# Properties found when installing patch probe-nco-p-glf-7 (rev 0)
+#
+#######################################################################
+#
+# BeatThreshold               : 1
+# ConfigCryptoAlg             : 'AES'
+# ConfigKeyFile               : ''
+# KeepLastBrokenSAF           : 0
+# LogFilePoolSize             : 10
+# LogFileUsePool              : 0
+# LogFileUseStdErr            : 0
+# OplDetailsTableName         : 'alerts.details'
+# OplDumpProps                : 0
+# OplPacketSize               : 512
+# OplPaID                     : 0
+# OplPaName                   : ''
+# OplStatusTableName          : 'alerts.status'
+# Peerport                    : 9999
+# PidFile                     : '$OMNIHOME/var/glf'
+# Props.CheckNames            : TRUE
+# RegexpLibrary               : 'TRE'
+# SecureLogin                 : 0
+# SSLServerCommonName         : ''
+# StoreSAFRejects             : 0
+#
+#######################################################################
+Server                		: "NCOMS_P"
+LogFileName			: "/opt/netcool/omnibus/probes/solaris2/syslog"
+ValueSeparator			: " "
+LineSeparator			: "\n" # or "\r" for windows
+QuoteCharacter			: 34 # default value (")
+IgnoreNullFields		: 1
+#Run the probe in recovery mode
+ReplayFile			: 0
+CleanStart			: 0
+RecoveryFile			: "/opt/netcool/omnibus/var/glf.reco"
+#MaxNumTokens			: 12
+MessageLevel          	:	"debug"
+
+###for testing only
+#RawCapture              : 1
+#RawCaptureFile         : '/data/omnibus/Nick/OmniVista.cap'
+RulesFile             	: "/opt/netcool/omnibus/probes/solaris2/glf.kenton.rules"
+#RulesFile             	: "/opt/netcool/omnibus/probes/solaris2/glf-db-gb-fixed-time-issues.rules"

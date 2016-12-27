@@ -1,0 +1,1005 @@
+########################################################################
+#
+#       Licensed Materials - Property of IBM
+#       
+#       
+#       
+#       (C) Copyright IBM Corp. 2006, 2009. All Rights Reserved
+#       
+#       US Government Users Restricted Rights - Use, duplication
+#       or disclosure restricted by GSA ADP Schedule Contract
+#       with IBM Corp.
+#
+#
+#
+#
+#######################################################################
+#
+#######################################################################
+#
+#
+# This lookup will only work if the probe is run from $OMNIHOME/probes
+# If the probe is run elsewhere this path will need to be customised.
+#
+
+include "../includes/alcatel_5620_sam_v7.lookup"
+include "../includes/alcatel_5620_sam-preclass.snmptrap.lookup"
+
+
+table AlarmCategory_JMS =
+{
+ {"0","general"},
+ {"1","fault"},
+ {"2","statistics"},
+ {"3","accounting"},
+ {"4","database"},
+ {"5","service"},
+ {"6","equipment"},
+ {"7","software"}
+}
+default = "Unknown Alarm Category"
+
+
+#Define arrays:
+array objects;
+
+
+if( match( @Manager, "ProbeWatch" ) )
+{
+        switch(@Summary)
+        {
+        case "Running ...":
+                @Severity = 1
+                @AlertGroup = "probestat"
+                @Type = 2
+                
+        case "Unable to get events":
+		@Severity = 5
+		@AlertGroup = "probestat"
+		@Type = 1
+		
+        case "Going Down ...":
+                @Severity = 5
+                @AlertGroup = "probestat"
+                @Type = 1
+		
+        case "START SYNCHRONIZATION":
+		@Severity = 3
+		@Type = 1
+		@AlertGroup = "Resync"                      
+	
+	case "END SYNCHRONIZATION":
+		@Severity = 1
+		@Type = 2
+		@AlertGroup = "Resync"
+		            
+        default:
+                @Severity = 1
+        }
+	
+        @AlertKey = @Agent
+        @Summary = @Agent + " probe on " + @Node + ": " + @Summary
+}
+
+else
+{
+
+	@Manager = @Manager + " probe running on " + hostname()
+	@Agent = "Alcatel 5620 SAM"
+	@Class = 4961
+	
+
+	#Set Severity:
+	if (exists($MTOSI_perceivedSeverity))
+	{
+		$severity = $MTOSI_perceivedSeverity
+	}
+	
+	if (exists($alarmStatus))
+	{
+      		$severity = lookup($alarmStatus, Severity_JMS)
+     	}
+  	else if (exists($aggregatedAlarmStatus))
+    	{
+      		$severity = lookup($aggregatedAlarmStatus, Severity_JMS)
+  	}
+	     
+        switch($severity)
+        {
+            case "critical":
+                 @Severity = 5
+                 @Type = 1
+            case "major":
+                 @Severity = 4
+                 @Type = 1
+            case "minor":
+                 @Severity = 3
+                 @Type = 1
+            case "warning" :
+	 	 @Severity = 2
+	 	 @Type = 1
+	    case "condition" :
+                 @Severity = 2
+                 @Type = 1
+	    case "info":
+	 	 @Severity = 2
+	 	 @Type = 13
+            case "indeterminate":
+                 @Severity = 1
+                 @Type = 1
+            case "cleared":
+	 	 @Severity = 1
+	 	 @Type = 2
+	    case "unspecified":
+                 @Severity = 1
+                 @Type = 1
+      	    case "noalarm":
+                 @Severity = 1
+                 @Type = 2
+            default:
+                 @Severity = 2
+                 @Type = 1       
+        }
+     
+  	if (exists($MTOSI_perceivedSeverity))
+	{
+		update(@Severity,true)
+	}
+	 
+  	
+	if (exists($objectFullName) && !exists($MTOSI_objectName))
+    	{
+      		$MTOSI_objectName = $objectFullName
+    	}        
+ 	
+
+	#Setting Node and NodeAlias:
+	#Also swapping Node and NodeAlias for generic clear
+	if (!exists($nodeId))
+	{	
+      		if (exists($MTOSI_objectName))
+        	{  
+          		if( regmatch($MTOSI_objectName, "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+.*"))
+            		{       
+		                $nodeip = extract($MTOSI_objectName, "([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+).*")            
+              		}
+            		else
+              		{ 
+                		$nodeip = "Unknown Node"
+            		}
+        	}
+      		else if (exists($AlarmPropagationEvent_alarmedObject))
+		{
+			if( regmatch($AlarmPropagationEvent_alarmedObject, "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+.*"))
+            		{       
+		                $nodeip = extract($AlarmPropagationEvent_alarmedObject, "([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+).*")            
+              		}
+            		else
+              		{ 
+                		$nodeip = "Unknown Node"
+            		}
+		}
+		else
+          	{
+            		$nodeip = hostname()
+          	}        
+    	}
+            
+     		 
+	if (exists($nodeName))
+	{
+        	@NodeAlias = $nodeName
+      	}
+     	else
+      	{
+        	@Node = $nodeip
+    	}
+     
+  	if (exists($nodeId))
+    	{
+          	@Node = $nodeId
+      	}
+	else
+	{
+        	@NodeAlias = $nodeip
+
+    	}
+
+
+	#Setting the vale for LocalNodeAlias
+	@LocalNodeAlias = @NodeAlias
+	
+
+  	#Extract AlarmName, Type, ProbCause and assign AlertKey:
+    
+  	if (exists($MTOSI_objectName) && regmatch($MTOSI_objectName, ".*\|alarm\-[0-9]+\-[0-9]+\-[0-9]+"))
+    	{       
+    		$type = extract($MTOSI_objectName, ".*\|alarm\-[0-9]+\-([0-9]+)\-[0-9]+")
+		$probableCause = extract($MTOSI_objectName, ".*\|alarm\-[0-9]+\-[0-9]+\-([0-9]+)")
+		$alarmName = extract($MTOSI_objectName, ".*\|alarm\-([0-9]+)\-[0-9]+\-[0-9]+")
+    	}     
+		
+		
+  	if (exists($affectedObjectFullName))
+  	{
+		$NumElm = split($affectedObjectFullName, objects, ":")
+		$alertkey = objects[1] + " " + objects[2] +  " " + objects[3] + " " + objects[4] + " " + objects[5] + " " + objects[6] + " " + objects[7] + " " + objects[8] + " " + objects[9] + " " + objects[10]
+	}
+  	else if(regmatch($objectFullName, "faultManager.*@.*\|alarm\-[0-9]+\-[0-9]+\-[0-9]+"))
+	{
+		$ObjDet = extract($objectFullName, "faultManager:(.*)\|alarm\-[0-9]+\-[0-9]+\-[0-9]+")
+		$NumElm = split($ObjDet, objects, "@")
+		$alertkey = objects[1] + " " + objects[2] +  " " + objects[3] + " " + objects[4] + " " + objects[5] + " " + objects[6] + " " + objects[7] + " " + objects[8] + " " + objects[9] + " " + objects[10]
+  	}
+  	else if(regmatch($MTOSI_objectName, "faultManager.*@.*\|alarm\-[0-9]+\-[0-9]+\-[0-9]+"))
+	{
+		$ObjDet = extract($MTOSI_objectName, "faultManager:(.*)\|alarm\-[0-9]+\-[0-9]+\-[0-9]+")
+		$NumElm = split($ObjDet, objects, "@")
+		$alertkey = objects[1] + " " + objects[2] +  " " + objects[3] + " " + objects[4] + " " + objects[5] + " " + objects[6] + " " + objects[7] + " " + objects[8] + " " + objects[9] + " " + objects[10]
+	}
+  	else if(regmatch($objectFullName, "faultManager.*\|alarm\-[0-9]+\-[0-9]+\-[0-9]+"))
+	{
+		$ObjDet = extract($objectFullName, "faultManager:(.*)\|alarm\-[0-9]+\-[0-9]+\-[0-9]+")
+		$NumElm = split($ObjDet, objects, ":")
+		$alertkey = objects[1] + " " + objects[2] +  " " + objects[3] + " " + objects[4] + " " + objects[5] + " " + objects[6] + " " + objects[7] + " " + objects[8] + " " + objects[9] + " " + objects[10]
+  	}
+  	else if(regmatch($objectFullName, ".*:.*"))
+	{
+		$NumElm = split($objectFullName, objects, ":")
+		$alertkey = objects[1] + " " + objects[2] +  " " + objects[3] + " " + objects[4] + " " + objects[5] + " " + objects[6] + " " + objects[7] + " " + objects[8] + " " + objects[9] + " " + objects[10]
+	}
+  	else if(regmatch($MTOSI_objectName, ".*:.*"))
+	{
+		$NumElm = split($MTOSI_objectName, objects, ":")
+		$alertkey = objects[1] + " " + objects[2] +  " " + objects[3] + " " + objects[4] + " " + objects[5] + " " + objects[6] + " " + objects[7] + " " + objects[8] + " " + objects[9] + " " + objects[10]
+  	} 
+		
+  
+  
+	#Set value for EventId
+	if(exists ($alarmName))
+	{
+               if ( match ( %SAMVersion,"V7" ) )
+		{
+			if (match($alarmName,"145"))
+			{
+				if(match($affectedObjectClassName,"FanTray"))
+				{
+					$EventId = "FanFailure"
+				}
+				else
+				{
+					if(match($affectedObjectClassName,"PowerSupplyTray"))
+					{
+						$EventId = "PowerSupplyFailure"
+					}
+				}
+			}
+			else
+			{
+				$EventId = lookup($alarmName, AlarmName_t_v7)
+			}
+		}
+		else
+		{
+			$EventId = lookup($alarmName, AlarmName_t_v6)
+		}
+		$EventId = "alcatel-5620-sam-" + $EventId
+	}
+
+
+	#Set AlertGroup and AlertKey:
+	
+	if (exists($ALA_alarmType))
+	{
+        	$AlarmType = $ALA_alarmType
+       	}
+     	else if (exists($type))
+        {
+        	$AlarmType = lookup($type, AlarmType_t)
+        }
+  
+  
+  	if (exists($AlarmType))
+  	{
+        	@AlertGroup = $AlarmType  	 
+      	}
+    	else if (exists($ALA_category))
+      	{
+        	@AlertGroup = $ALA_category
+      	}
+    	else if (exists($MTOSI_objectType))
+      	{
+       		@AlertGroup = $MTOSI_objectType
+      	}
+    	else if (exists($objectClassName))
+      	{
+        	@AlertGroup = $objectClassName
+      	}
+    	else if (exists($intendedClass))
+      	{
+        	@AlertGroup = $intendedClass
+  	}
+  
+  
+  	if (match($alertkey, ""))
+  	{
+    		if(exists($objectFullName))
+     		{
+  			@AlertKey = $objectFullName
+     		}
+    		else if(exists($MTOSI_objectType))
+     		{
+     			@AlertKey = $MTOSI_objectType
+     		}
+    		else if(exists($intendedClass))
+     		{
+     			@AlertKey = $intendedClass
+     		}
+    		else
+     		{
+     			@AlertKey = "Unknown AlertKey"
+     		}						 
+  	}
+  	else
+  	{
+   		if (exists($type) && exists($probableCause) && exists($alarmName))
+    		{
+    			@AlertKey = rtrim($alertkey) + "  [alarm-" + $alarmName + "-" + $type + "-" + $probableCause + "]"
+    		}
+    		else
+    		{
+  			@AlertKey = $alertkey
+    		}
+  	}
+  
+  
+  	if (exists($probableCause))
+    	{  
+        	$ProbableCause_T = lookup($probableCause, ProbableCause_t)     
+    	}
+
+
+	#Discard those unwanted events:
+  	if (regmatch($MTOSI_objectName, "logger:"))
+	{
+		log(DEBUG,"discarding event on " + $MTOSI_objectName)
+		discard	
+	}
+
+
+	#Handling alarms:
+	
+	#XML alarms:	 
+  	if (exists($alarmName)) 
+	{
+		if (match(%SAMVersion,"V7"))
+		{
+			if (match($alarmName,"145"))
+			{
+				if(match($affectedObjectClassName,"FanTray"))
+				{
+					$AlarmName_T = "FanFailure"
+				}
+				else
+				{
+					if(match($affectedObjectClassName,"PowerSupplyTray"))
+					{
+						$AlarmName_T = "PowerSupplyFailure"
+					}
+				}
+			}
+			else
+			{
+				$AlarmName_T = lookup($alarmName, AlarmName_t_v7)
+			}
+		}
+		else
+		{
+			$AlarmName_T = lookup($alarmName, AlarmName_t_v6)
+		}
+		@FirstOccurrence = real($firstTimeDetected)/1000
+		@LastOccurrence = real($lastTimeDetected)/1000
+	}
+		 
+		 
+  	#JMS alarms:
+	if (exists($eventName)) 
+	{	
+		$objectName = $MTOSI_objectName
+		$intendedClass = $MTOSI_objectType
+		$timeIssued = $MTOSI_osTime
+			
+		switch($eventName)
+		{
+			case "AttributeValueChange":
+			        
+                                $EventId = $eventName
+                                $EventId = "alcatel-5620-sam-" + $EventId
+ 
+				if(exists ($Attribute4) && regmatch($Attribute4, "severity.*"))
+				{
+					$var = extract($Attribute4, ".*New value\(([0-9]+)\)$")
+					$Sev = lookup($var,Severity_JMS)
+					@Severity = lookup($Sev,Severity_OS)	
+				}
+				if(match($isAlarm, "true"))
+				{
+					[$name] = scanformat($objectName, "faultManager:%s")
+					@AlertKey = $name
+				}
+				if(match($AlarmType, "NT_ATTRIBUTE_VALUE_CHANGE"))
+				{
+					@Type = 13
+					@ExpireTime = 1500
+				}
+				
+				@Summary = $intendedClass + " on ( " + $objectName + " ) "
+				
+	
+							
+			case "ObjectCreation":
+
+                                $EventId = $eventName
+                                $EventId = "alcatel-5620-sam-" + $EventId
+			   	if (!exists($AlarmName_T))
+			   	{
+			     		@Summary = "ObjectCreation on " + $MTOSI_objectType + " ( " + $objectName + " ) "
+			   	}
+			     	@Type = 1
+					
+			case "ObjectDeletion":
+
+                                $EventId = $eventName
+                                $EventId = "alcatel-5620-sam-" + $EventId 
+				if (match($isAlarm, "true"))
+				{
+					[$name] = scanformat($objectName, "faultManager:%s")
+					@Summary = "ObjectDeletion on " + $MTOSI_objectType + " ( " + $name + " )"
+					
+					if (exists($previousSeverity))
+					{
+						@Severity = lookup($previousSeverity, Severity_OS)
+					}
+					else if (exists($severity))
+					{
+                  				@Severity = lookup($severity, Severity_OS)
+                			}
+              				else if (exists($originalSeverity))
+                			{
+                  				@Severity = lookup($originalSeverity, Severity_OS)
+              				}
+					@Type = 2
+				}
+				else
+				{
+					@Summary = "ObjectDeletion on " + $MTOSI_objectType + " ( " + $objectName + " ) "
+										 
+            				if (exists($previousSeverity) && !match($previousSeverity,"indeterminate"))
+					{
+						@Severity = lookup($previousSeverity, Severity_OS)
+					}
+					else if (exists($severity))
+					{
+                  				@Severity = lookup($severity, Severity_OS)
+                			}
+              				else if (exists($originalSeverity))
+                			{
+                  				@Severity = lookup($originalSeverity, Severity_OS)
+              				}
+              
+					@Type = 2
+				}
+   			
+			case "generic.ObjectDeletion":
+
+                                $EventId = $eventName
+                                $EventId = "alcatel-5620-sam-" + $EventId
+				if (match($isAlarm, "true"))
+				{
+					[$name] = scanformat($objectName, "faultManager:%s")
+					@Summary = "ObjectDeletion on " + $MTOSI_objectType + " ( " + $name + " )"
+					
+					if (exists($previousSeverity))
+					{
+					       	@Severity = lookup($previousSeverity, Severity_OS)
+					}
+					else if (exists($severity))
+					{
+                  				@Severity = lookup($severity, Severity_OS)
+                			}
+              				else if (exists($originalSeverity))
+                			{
+                  				@Severity = lookup($originalSeverity, Severity_OS)
+              				}
+			
+					@Type = 2
+						
+				}
+				else
+				{
+				  	if (exists($type) && exists($probableCause) && exists($alarmName))
+				    	{
+                				@Summary = $AlarmType + " :  " + $AlarmName_T + " -  " + $ProbableCause_T + " on ( " + $displayedName + " ) "
+              				}
+            				else
+              				{
+					      	@Summary = "ObjectDeletion on " + $MTOSI_objectType + " ( " + $objectName + " ) "
+					}
+										 
+            				if (exists($previousSeverity) && !match($previousSeverity,"indeterminate"))
+					{
+					       	@Severity = lookup($previousSeverity, Severity_OS)
+					}
+					else if (exists($severity))
+					{
+                  				@Severity = lookup($severity, Severity_OS)
+                			}
+              				else if (exists($originalSeverity))
+                			{
+                  				@Severity = lookup($originalSeverity, Severity_OS)
+              				}
+
+						@Type = 2
+						
+				}
+     
+				
+			case "AlarmPropagationChange":
+
+                                $EventId = $eventName
+                                $EventId = "alcatel-5620-sam-" + $EventId
+				if (exists($AlarmPropagationEvent_type))
+				{
+					$eventName = $eventName + "." + $AlarmPropagationEvent_type
+				}
+				
+				if (exists($AlarmPropagationEvent_alarmedObject))
+				{	
+				  	if (exists($ProbableCause_T) && exists($AlarmName_T))
+				  	{       
+						@Summary = $eventName + " :  " + $AlarmName_T + " ( " + $ProbableCause_T + " ) on [ " + $AlarmPropagationEvent_alarmedObject + " ]"       
+		                  	}
+				  	else
+				  	{
+				  		@Summary = $eventName + " on ( " + $AlarmPropagationEvent_alarmedObject + " )"
+				  	}
+				}
+				else if (exists($objectFullName) && exists($nodeName))
+				{
+					@NodeAlias = $nodeName
+					@Node = $nodeId
+					@Summary = $eventName + " on ( " + $objectFullName + " )"
+				}		  
+           			else if (exists($MTOSI_objectName))
+                		{
+					@Summary = $eventName + " on ( " + $MTOSI_objectName + " )"
+				}
+				  
+				if (exists($ProbableCause_T) && exists($AlarmName_T))
+				{       
+					@Summary = $eventName + " :  " + $AlarmName_T + " ( " + $ProbableCause_T + " ) on [ " +	@Summary + " ]"       
+		                }
+				else
+				{
+				  	@Summary = $eventName + " on ( " + @Summary + " )"
+				}				
+
+			
+				
+				@Type = 13
+				@ExpireTime = 1500
+				
+			case "KeepAlive":	
+
+                                $EventId = $eventName
+                                $EventId = "alcatel-5620-sam-" + $EventId
+				@Summary = $eventName + " (" + $AlarmType + ")"
+				@Severity = 1
+				@Type = 13
+			  	@AlertKey = $intendedClass
+			  	@ExpireTime = 10	
+			
+			case "DBErrorEvent":
+
+                                $EventId = $eventName
+                                $EventId = "alcatel-5620-sam-" + $EventId
+				@AlertGroup = $eventName
+				@Node = "PrimarySAMServer"
+				
+				if(exists($state) && !match($state, ""))
+				{
+					@Summary = "DB Connection State is " + $state + " , error : " + $error
+				}
+				else
+				{
+					@Summary = "DB Error (see details)"
+					details($*)
+				}
+				
+			case "DBActivityChange":
+                              $EventId = $eventName
+                              $EventId = "alcatel-5620-sam-" + $EventId
+
+			case "DBProxyStateChange":
+
+                                $EventId = $eventName
+                                $EventId = "alcatel-5620-sam-" + $EventId
+				@AlertGroup = $eventName
+				@Node = "PrimarySAMServer"
+				
+				if(exists($state) && !match($state, ""))
+				{
+					@Summary = "DB Connection State is " + $state
+				}
+				else
+				{
+					@Summary = "DB Connection State has changed (see details)"
+					details($*)
+				}
+				
+			case "JmsMissedEvents":	
+
+                                $EventId = $eventName
+                                $EventId = "alcatel-5620-sam-" + $EventId
+				@AlertGroup = $eventName
+				@Node = $ALA_clientId
+				@Summary = "Client : " + $ALA_clientId + " has missed some JMS events (see details)"
+				details($*)
+					
+			case "DBConnectionStateChange":	
+
+                                $EventId = $eventName
+                                $EventId = "alcatel-5620-sam-" + $EventId
+				@AlertGroup = "DBConnectionStateChange"
+				@Node = "PrimarySAMServer"
+				
+				if(exists($state) && !match($state, ""))
+				{
+					@Summary = "DB Connection State is " + $state
+				}
+				else
+				{
+					switch ($DBConnectionState)
+					{
+					  case "1":
+						$State = "Up"
+						@Type = 2
+					  case "2":
+						$State = "Down"
+						@Type = 1
+					  case "3":
+						$State = "Partially Down"
+						@Type = 1
+					  default:
+						$State = "Unknown"
+						@Type = 1
+					}
+						
+					@Summary = "DB Connection State is " + $State
+				}
+				
+					
+			case "RelationshipChange":
+
+                                $EventId = $eventName
+                                $EventId = "alcatel-5620-sam-" + $EventId 
+				if (exists($changeType) && exists($fromObjectClass) && exists($fromObjectName) && exists($toObjectClass) &&
+				exists($toObjectName))
+				{
+					@Summary = $eventName + "(" + $changeType + ") from [ " + $fromObjectClass + " ( " +
+					$fromObjectName + " ) ] to [ " + $toObjectClass + " ( " + $toObjectName + " ) ]"
+				}
+				else
+				{
+					@Summary = $eventName + " on " + $objectClass + " ( " + $objectName + " ) "
+				}
+				
+				@Type = 13
+				@ExpireTime = 1500
+				
+			case "termination":
+
+                                $EventId = $eventName
+                                $EventId = "alcatel-5620-sam-" + $EventId
+				@Summary = $eventName + " on ClientId: " + $clientId + " ( Instruction received from Alcatel SAM )"
+				@Type = 1
+				@Severity = 5
+				@AlertKey = $intendedClass
+			
+			case "TerminateClientSession":
+
+                                $EventId = $eventName
+                                $EventId = "alcatel-5620-sam-" + $EventId
+                        	@Summary = $eventName + " on ClientId: " + $clientId + " ( Instruction received from Alcatel SAM )"
+				@Type = 1
+				@Severity = 5
+				@AlertKey = $intendedClass
+
+			case "SystemInfoEvent":
+
+                                $EventId = $eventName
+                                $EventId = "alcatel-5620-sam-" + $EventId
+				@Summary = $eventName + " : start time (" + $sysStartTime + "), type (" + $sysType + ")"
+            			@Node = $sysPrimaryIp
+				@NodeAlias = $sysPrimaryIp
+                		@AlertKey = $intendedClass
+                		@Severity = 1
+                		@Type = 13
+          	
+			case "AlarmCountChanged":
+
+                                $EventId = $eventName
+                                $EventId = "alcatel-5620-sam-" + $EventId
+				@Summary = "Alarm Count Changed " + $objectName	+ ": " + $state
+		            	@AlertKey = $intendedClass	
+          
+			default:
+				@Summary = "Unknown eventName (see details) " + $eventName
+				@Type = 1
+				details($*)	
+		}
+			
+			
+		# The JMS sends time values in ms (13 digits), so divide by 1000 to have the time in s (10 digits).
+		@LastOccurrence = real($timeIssued)/1000
+		@FirstOccurrence = real($timeIssued)/1000
+		
+	 		
+	}
+	
+	#Build Summary:
+	if(!match ($eventName, "AttributeValueChange"))
+	{
+	if (exists($displayedName))
+	{
+		if (exists($AlarmName_T) && exists($eventName)) 
+	       	{
+	        	@Summary = $eventName + " :  " + $AlarmName_T + " ( " + $ProbableCause_T + " ) on [ " + $displayedName + " ] "
+               	}
+           	else if (exists($AlarmName_T))
+	       	{
+	        	@Summary = $AlarmName_T + " ( " + $ProbableCause_T + " ) on [ " + $displayedName + " ] "
+               	}
+      	}
+  	else if (exists($objectFullName))
+      	{
+     	   	if (exists($AlarmName_T) && exists($eventName)) 
+	       	{
+	        	@Summary = $eventName + " :  " + $AlarmName_T + " ( " + $ProbableCause_T + " ) on [ " + $objectFullName + " ] "
+               	}
+           	else if (exists($AlarmName_T))
+	       	{
+	        	@Summary =  $AlarmName_T + " ( " + $ProbableCause_T + " ) on [ " + $objectFullName + " ] "
+               	}
+        }
+	else if (exists($MTOSI_objectName))
+      	{
+     	   	if (exists($AlarmName_T) && exists($eventName)) 
+	       	{
+	        	@Summary = $eventName + " :  " + $AlarmName_T + " ( " + $ProbableCause_T + " ) on [ " + $MTOSI_objectName + " ] "
+               	}
+           	else if (exists($AlarmName_T))
+	       	{
+	        	@Summary =  $AlarmName_T + " ( " + $ProbableCause_T + " ) on [ " + $MTOSI_objectName + " ] "
+               	}
+        }
+    	else
+        {
+            	@Summary = @Summary
+    	}
+	}
+	else
+        {
+            	@Summary = @Summary
+    	}
+		
+ 
+
+	#Extract acknowledgement details from alarm:   
+ 	if (match( $eventName,"AttributeValueChange" ))
+  	{
+		if (regmatch( $Attribute1, "isAcknowledged.*"))
+		{
+			$isAcknowledged = extract($Attribute1,"^isAcknowledged.*New value\((.*)\)")
+		}
+		else if (regmatch( $Attribute2, "isAcknowledged.*"))
+		{
+		    	$isAcknowledged = extract($Attribute2,"^isAcknowledged.*New value\((.*)\)")
+		}
+				
+		if (regmatch( $Attribute2, "wasAcknowledged.*"))
+		{
+		    	$wasAcknowledged = extract($Attribute2,"^wasAcknowledged.*New value\((.*)\)")
+		}
+		else if (regmatch( $Attribute3, "wasAcknowledged.*"))
+		{
+		    	$wasAcknowledged = extract($Attribute3,"^wasAcknowledged.*New value\((.*)\)")
+		}
+		
+		if (regmatch( $Attribute3, "acknowldegedBy.*"))
+		{
+			$acknowledgedBy = extract($Attribute3,"^acknowldegedBy.*New value\((.*)\)")
+		}
+		else if (regmatch( $Attribute4, "acknowldegedBy.*"))
+		{
+			$acknowledgedBy = extract($Attribute4,"^acknowldegedBy.*New value\((.*)\)")
+		}
+	}
+
+  
+	#Set acknowledgement status from SAM: 
+  	if( exists( $wasAcknowledged))
+	{
+		switch($wasAcknowledged)
+		{
+         		case "false":
+		             	@Acknowledged = 0
+         		case "true":
+		             	@Acknowledged = 1
+         		default:
+         			@Acknowledged = 0         
+		}
+		update(@Acknowledged)
+    	}
+  
+	if( exists( $isAcknowledged))
+	{
+		switch($isAcknowledged)
+		{
+          		case "false":
+		             	@Acknowledged = 0
+          		case "true":
+		             	@Acknowledged = 1
+          		default:
+          			@Acknowledged = 0         
+		}
+		update(@Acknowledged)
+	}  
+
+	if(match (@Severity,"0"))
+	{
+		@Severity = 1
+		@Type = 2
+	}		
+
+
+	#Setting of LocalPriObj  	
+	@LocalPriObj = @AlertKey
+        @LocalRootObj = @LocalPriObj
+        $VAR_RelateLRO2LPO = 1
+
+        
+        #Setting of LocalRootObj
+        if(regmatch($correlatingAlarm, "faultManager.*@.*\|alarm\-[0-9]+\-[0-9]+\-[0-9]+"))
+        {
+                $ObjExt = extract($correlatingAlarm, "faultManager:(.*)\|alarm\-[0-9]+\-[0-9]+\-[0-9]+")
+                $ElmCount = split($ObjExt, objects, "@")
+                $corrAlarm = objects[1] + " " + objects[2] +  " " + objects[3] + " " + objects[4] + " " + objects[5] + " " + objects[6] + " " + objects[7] + " " + objects[8] + " " + objects[9] + " " + objects[10]
+        }
+        else if(regmatch($correlatingAlarm, "faultManager.*\|alarm\-[0-9]+\-[0-9]+\-[0-9]+"))
+        {
+                $ObjExt = extract($correlatingAlarm, "faultManager:(.*)\|alarm\-[0-9]+\-[0-9]+\-[0-9]+")
+                $ElmCount = split($ObjExt, objects, ":")
+                $corrAlarm = objects[1] + " " + objects[2] +  " " + objects[3] + " " + objects[4] + " " + objects[5] + " " + objects[6] + " " + objects[7] + " " + objects[8] + " " + objects[9] + " " + objects[10]
+        }
+        else if(regmatch($correlatingAlarm, ".*:.*"))
+        {
+                $ElmCount = split($correlatingAlarm, objects, ":")
+                $corrAlarm = objects[1] + " " + objects[2] +  " " + objects[3] + " " + objects[4] + " " + objects[5] + " " + objects[6] + " " + objects[7] + " " + objects[8] + " " + objects[9] + " " + objects[10]
+        }
+       
+ 
+        if (match($corrAlarm, ""))
+        {
+                if(exists($correlatingAlarm) && !match($correlatingAlarm, "N/A"))
+                {
+                        @LocalRootObj = $correlatingAlarm
+			$VAR_RelateLRO2LPO = 3
+                }
+        }
+        else
+        {
+
+	        if (exists($correlatingAlarm) && !match($correlatingAlarm, "N/A") && regmatch($correlatingAlarm, ".*\|alarm\-[0-9]+\-[0-9]+\-[0-9]+"))
+	        {
+        	        $type = extract($correlatingAlarm, ".*\|alarm\-[0-9]+\-([0-9]+)\-[0-9]+")
+        	        $probableCause = extract($correlatingAlarm, ".*\|alarm\-[0-9]+\-[0-9]+\-([0-9]+)")
+        	        $alarmName = extract($correlatingAlarm, ".*\|alarm\-([0-9]+)\-[0-9]+\-[0-9]+")
+		}
+
+                if (exists ($corrAlarm) && exists($type) && exists($probableCause) && exists($alarmName))
+                {
+                        @LocalRootObj = rtrim($corrAlarm) + "  [alarm-" + $alarmName + "-" + $type + "-" + $probableCause + "]"
+			$VAR_RelateLRO2LPO = 3
+                }
+                else if (exists ($corrAlarm))
+                {
+                        @LocalRootObj = $corrAlarm
+			$VAR_RelateLRO2LPO = 3
+                }
+	}
+               
+
+	if(exists ($eventName) && match ($eventName, "AttributeValueChange") && (!exists ($Attribute4) || (exists ($Attribute4) && !regmatch($Attribute4, "severity.*"))))
+	{
+		# NOP - Do not update @Severity when AttributeValueChange alarm doen't bring any update to severity field.
+	}
+	else
+	{
+	update(@Severity)
+	}
+  
+	#Set Identifier for dedup:
+	if (exists($AlarmPropagationEvent_alarmedObject))
+	{
+		# Putting the AlarmedObject in the front of the Identifier, so that it doesn't get truncated.
+		@Identifier = $AlarmPropagationEvent_alarmedObject + " "
+	}
+        
+	@Identifier = @Identifier + @Node + " " + @AlertKey + " " + @Type + " " + @AlertGroup + " " + @Agent + " " + @Manager
+
+        @EventId = $EventId	
+}
+
+#include "../includes/alcatel_5620_sam-preclass.include.snmptrap.rules"
+#include "../includes/AdvCorr36.include.compat.rules"
+#Remove hash below for alarm debugging:
+####added the logic to set the lastraisetime and first raise time
+#################for the events who got nul value or 01/01/1979 00:00:00 as First and Last Raise time #######
+
+
+
+if(exists($ReceivedTime) && match(@LastRaiseTime, "0"))
+{
+@LastRaiseTime = $ReceivedTime
+}
+if(!exists($ReceivedTime) && match(@LastRaiseTime, "0"))
+{
+@LastRaiseTime = getdate
+}
+if(exists($ReceivedTime) && match(@FirstRaiseTime, "0"))
+{
+@FirstRaiseTime = $ReceivedTime
+}
+if(!exists($ReceivedTime) && match(@FirstRaiseTime, "0")){
+@FirstRaiseTime = getdate
+}
+if(match(@DateGenerated, "0")){
+@DateGenerated = @FirstOccurrence
+}if(match(@DateReceived, "0")){
+@DateReceived = @FirstOccurrence
+}if(match(@HalDateTime, "0")){
+@HalDateTime = @FirstOccurrence
+}if(match(@InterTime, "0")){
+@InterTime = @FirstOccurrence
+}if(match(@provisoViolationTime, "0")){
+@provisoViolationTime = @FirstOccurrence
+}if(match(@InternalLast, "0")){
+@InternalLast = @FirstOccurrence
+}if(match(@ParentChildTime, "0")){
+@ParentChildTime = @FirstOccurrence
+}if(match(@ClearTime, "0")){
+@ClearTime = @FirstOccurrence
+}
+if(!exists(@DateGenerated)){
+@DateGenerated = @FirstOccurrence
+ }if(!exists(@DateReceived)){
+ @DateReceived = @FirstOccurrence
+ }if(!exists(@HalDateTime)){
+ @HalDateTime = @FirstOccurrence
+ }if(!exists(@InterTime)){
+ @InterTime = @FirstOccurrence
+ }if(!exists(@provisoViolationTime)){
+ @provisoViolationTime = @FirstOccurrence
+  }if(!exists(@InternalLast)){
+ @InternalLast = @FirstOccurrence
+  }if(!exists(@ParentChildTime)){
+ @ParentChildTime = @FirstOccurrence
+  }if(!exists(@ClearTime)){
+ @ClearTime = @FirstOccurrence
+  }
+
+
+##################GauravTyagi-19Oct2011###########################
+

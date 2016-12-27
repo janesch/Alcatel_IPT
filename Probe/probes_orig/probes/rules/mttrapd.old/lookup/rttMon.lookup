@@ -1,0 +1,114 @@
+###############################################################################
+#
+#    Copyright (C) 1994 - 2002 Micromuse, Inc.
+#    All Rights Reserved
+#
+#    RESTRICTED RIGHTS:
+#
+#    This file may have been supplied under a license.  It may be used,
+#    disclosed, and/or copied only as permitted under such license agreement.
+#    Any copy must contain the above copyright notice and this restricted
+#    rights notice.  Use, copying, and/or disclosure of the file is strictly
+#    prohibited unless otherwise provided in the license agreement.
+#
+#    cisco.include.snmp.lookup 2.7 2003/06/17 Robert Cowart
+#
+###############################################################################
+table rttMonReactVar = ### Reaction Variable
+{
+	{"1","rtt"},
+	{"2","jitterSDAvg"},
+	{"3","jitterDSAvg"},
+	{"4","packetLossSD"},
+	{"5","packetLossDS"},
+	{"6","mos"},
+	{"7","timeout"},
+	{"8","connectionLoss"},
+	{"9","verifyError"},
+	{"10","jitterAvg"},
+	{"11","icpif"},
+	{"12","packetMIA"},
+	{"13","packetLateArrival"},
+	{"14","packetOutOfSequence"},
+	{"15","maxOfPositiveSD"},
+	{"16","maxOfNegativeSD"},
+	{"17","maxOfPositiveDS"},
+	{"18","maxOfNegativeDS"},
+	{"19","iaJitterDS"},
+	{"20","frameLossDS"},
+	{"21","mosLQDS"},
+	{"22","mosCQDS"},
+	{"23","rFactorDS"},
+	{"24","successivePacketLoss"},
+	{"25","maxOfLatencyDS"},
+	{"26","maxOfLatencySD"},
+	{"27","latencyDSAvg"},
+	{"28","latencySDAvg"},
+	{"29","packetLoss"},
+	{"30","iaJitterSD"},
+	{"31","mosCQSD"},
+	{"32","rFactorSD"}
+}
+default = "Unknown"
+
+table rttMonReactThresholdRising = ### Reaction Rising Threshold
+{
+        {"5000","rtt"},
+        {"100","jitterSDAvg"},
+        {"100","jitterDSAvg"},
+        {"10000","packetLossSD"},
+        {"10000","packetLossDS"},
+        {"500","mos"},
+        {"100","jitterAvg"},
+        {"93","icpif"},
+        {"10000","packetMIA"},
+        {"10000","packetLateArrival"},
+        {"10000","packetOutOfSequence"},
+        {"10000","maxOfPositiveSD"},
+        {"10000","maxOfNegativeSD"},
+        {"10000","maxOfPositiveDS"},
+        {"10000","maxOfNegativeDS"},
+        {"20","iaJitterDS"},
+        {"10000","frameLossDS"},
+        {"400","mosLQDS"},
+        {"400","mosCQDS"},
+        {"80","rFactorDS"},
+        {"1000","successivePacketLoss"},
+        {"5000","maxOfLatencyDS"},
+        {"5000","maxOfLatencySD"},
+        {"5000","latencyDSAvg"},
+        {"5000","latencySDAvg"},
+        {"10000","packetLoss"}
+}
+default = "Unknown"
+
+table rttMonReactThresholdFalling = ### Reaction Falling Threshold
+{
+        {"3000","rtt"},
+        {"100","jitterSDAvg"},
+        {"100","jitterDSAvg"},
+        {"10000","packetLossSD"},
+        {"10000","packetLossDS"},
+        {"500","mos"},
+        {"100","jitterAvg"},
+        {"93","icpif"},
+        {"10000","packetMIA"},
+        {"10000","packetLateArrival"},
+        {"10000","packetOutOfSequence"},
+        {"10000","maxOfPositiveSD"},
+        {"10000","maxOfNegativeSD"},
+        {"10000","maxOfPositiveDS"},
+        {"10000","maxOfNegativeDS"},
+        {"20","iaJitterDS"},
+        {"10000","frameLossDS"},
+        {"310","mosLQDS"},
+        {"310","mosCQDS"},
+        {"60","rFactorDS"},
+        {"1000","successivePacketLoss"},
+        {"3000","maxOfLatencyDS"},
+        {"3000","maxOfLatencySD"},
+        {"3000","latencyDSAvg"},
+        {"3000","latencySDAvg"},
+        {"10000","packetLoss"}
+}
+default = "Unknown"

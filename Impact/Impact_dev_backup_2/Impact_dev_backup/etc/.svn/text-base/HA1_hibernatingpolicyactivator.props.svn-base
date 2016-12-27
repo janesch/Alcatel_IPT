@@ -1,0 +1,4 @@
+impact.hibernatingpolicyactivator.logtofile=false
+impact.hibernatingpolicyactivator.autostartup=false
+impact.hibernatingpolicyactivator.classname=com.micromuse.response.server.EscalationRooster
+impact.hibernatingpolicyactivator.description=No description yet

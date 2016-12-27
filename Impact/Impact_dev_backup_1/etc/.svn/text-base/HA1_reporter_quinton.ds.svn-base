@@ -1,0 +1,19 @@
+#This file was written by server.
+#Wed Feb 01 16:14:11 GMT 2012
+reporter_quinton.Oracle.BACKUPSID=HIGHWAYS
+reporter_quinton.Oracle.DBPASSWORD={aes}C3F20308C3CB44B5239D94A34304A4F4
+reporter_quinton.Oracle.BACKUPHOST=stqn01ncs01ne0
+reporter_quinton.Oracle.FAILOVERPOLICY=DISABLED
+reporter_quinton.Oracle.CONNECTIONOPTION=GeneralSettings
+reporter_quinton.Oracle.BACKUPPORT=1521
+reporter_quinton.Oracle.PRIMARYHOST=nv1
+reporter_quinton.Oracle.PROVIDERURL=
+reporter_quinton.Oracle.JDBCDRIVER=oracle.jdbc.driver.OracleDriver
+reporter_quinton.Oracle.CUSTOMURL=
+reporter_quinton.Oracle.PRIMARYSID=NTCLDB
+reporter_quinton.Oracle.DBUSERNAME=reporter
+reporter_quinton.Oracle.CONTEXTFACTORY=
+reporter_quinton.Oracle.PRIMARYPORT=1521
+reporter_quinton.Oracle.MAXSQLCONNECTION=5
+reporter_quinton.Oracle.DISABLEFAILOVER=false
+reporter_quinton.Oracle.BINDINGNAME=

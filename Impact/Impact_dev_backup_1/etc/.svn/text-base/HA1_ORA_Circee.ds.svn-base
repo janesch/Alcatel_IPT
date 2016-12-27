@@ -1,0 +1,19 @@
+#This file was written by server.
+#Mon Oct 24 14:59:20 BST 2011
+ORA_Circee.Oracle.CONTEXTFACTORY=
+ORA_Circee.Oracle.PRIMARYSID=INVHA
+ORA_Circee.Oracle.DBUSERNAME=circee
+ORA_Circee.Oracle.PRIMARYHOST=172.20.174.56
+ORA_Circee.Oracle.CUSTOMURL=
+ORA_Circee.Oracle.DBPASSWORD={aes}C1E44B793C62EDCC2E583A519C7119E6
+ORA_Circee.Oracle.PRIMARYPORT=1521
+ORA_Circee.Oracle.PROVIDERURL=
+ORA_Circee.Oracle.CONNECTIONOPTION=GeneralSettings
+ORA_Circee.Oracle.BACKUPHOST=172.20.174.56
+ORA_Circee.Oracle.MAXSQLCONNECTION=5
+ORA_Circee.Oracle.DISABLEFAILOVER=false
+ORA_Circee.Oracle.BINDINGNAME=
+ORA_Circee.Oracle.BACKUPSID=INVHA
+ORA_Circee.Oracle.JDBCDRIVER=oracle.jdbc.driver.OracleDriver
+ORA_Circee.Oracle.FAILOVERPOLICY=DISABLED
+ORA_Circee.Oracle.BACKUPPORT=1521

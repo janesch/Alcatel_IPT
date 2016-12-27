@@ -1,0 +1,104 @@
+AlmName 	Sev	PrbCau	AlmClss	ActReq	ServAff	ResAff	CorEvt
+csNmsTrapVideoInFail	2	The CellStack node has lost video input.  This may be due to a hardware or software fault on the node, or a fault with the video source.	Unknown	3	1	2	2
+csNmsTrapLossOfConnection	2	The CellStack node is unavailable.  This may be due to a hardware or software fault on the node, or a loss of network connectivity.	Unknown	3	3	2	2
+csNmsTrapCellFrameLost	2	The CellStack node has lost the cell framing.	Unknown	3	1	2	2
+csNmsTrapLossOfSignal	2	The CellStack node has lost the ATM signal.	Unknown	3	1	2	2
+csNmsTrapOutOfFrame	2	The CellStack node has lost ATM framing.	Unknown	3	1	2	2
+csNmsTrapTXRefOutOfLock	2	The CellStack node has a problem with the transmission reference clock.	Unknown	0	0	0	0
+csNmsTrapRXRefOutOfLock	2	The CellStack node has a problem with the receive reference clock.	Unknown	0	0	0	0
+csNmsTrapRPOPLOP	2	The CellStack node has a receive path overhead pointer loss of pointer error.	Unknown	3	3	2	2
+csNmsTrapPAIS	2	The CellStack node has received a path alarm indication signal.	Unknown	2	4	2	2
+csNmsTrapPRDI	2	The CellStack node has received a path remote defect indication error.	Unknown	2	4	2	2
+csNmsTrapLAIS	2	The CellStack node has received a receive path overhead pointer line alarm indication signal.	Unknown	2	3	2	2
+csNmsTrapLRDI	2	The CellStack node has received a line remote defect indication error.	Unknown	2	4	2	2
+csNmsTrapPowerUp	2	The CellStack node has just powered up.	Unknown	3	1	2	2
+csNmsTrapUserConnectionOK	2	The CellStack node has started a new user connection or session.	Unknown	2	2	2	2
+csNmsTrapUserConnectionFail	2	The user session on the CellStack node has failed.	Unknown	2	2	2	2
+csNmsTrapUserConnectionTimeout	2	A user session on a CellStack node has timed out.	Unknown	2	2	2	2
+csNmsTrapUserConnectionClose	2	A user session has ben closed on a CellStack node.	Unknown	2	2	2	2
+csNmsTrapNetworkFail	2	The Network link to a CellStack node has been lost.	Unknown	3	1	2	1
+csNmsTrapNetworkRegister	2	The CellStack node has registered its network address.	Unknown	2	2	2	2
+csNmsTrapNetworkRestart	2	The Network link to a CellStack node has been restarted.	Unknown	3	1	2	1
+csNmsTrapPSUOK	2	The PSU on the CellStack node is OK.	Unknown	2	2	2	2
+csNmsTrapPSUFailure	2	The CellStack node PSU has failed.	Unknown	1	2	2	2
+csNmsTrapPSUTemperature	2	The CellStack node PSU has exceeded its operating temperature range.	Unknown	3	2	2	2
+csNmsTrapPSUInserted	2	A new CellStack node PSU has been inserted.	Unknown	1	2	2	2
+csNmsTrapPSURemoved	2	A CellStack node PSU has been removed.	Unknown	1	2	2	2
+csNmsTrapBoardTemperature	2	A temperature event has been received from a CellStack node. This will usually signify that a threshold level has been crossed and the node is overheating.	Unknown	3	2	2	2
+csNmsTrapConnectionSuccess	2	The CellStack node connection has succeeded.	Unknown	2	2	2	2
+csNmsTrapConnectionFailure	2	The CellStack node connection has failed.	Unknown	2	3	2	2
+csNmsTrapConnectionClosed	2	The CellStack node connection has closed.	Unknown	2	3	2	2
+csNmsTrapConnectionLeaf	2	The CellStack node connection leaf has been added.	Unknown	0	0	0	0
+csNmsTrapConnectionLeafDrop	2	The CellStack node connection leaf has been removed.	Unknown	0	0	0	0
+csNmsTrapBoardInserted	2	The CellStack node card has been inserted.	Unknown	2	2	2	2
+csNmsTrapBoardReset	2	The CellStack node card has been reset.	Unknown	2	3	2	2
+csNmsTrapBoardRemoved	2	The CellStack node card has been removed.	Unknown	1	3	2	2
+csNmsTrapBoardNoConfig	2	The CellStack node card has not been configured.	Unknown	2	2	2	2
+csNmsTrapBoardConfigured	2	The CellStack node card has been configured.	Unknown	2	2	2	2
+csNmsTrapBoardSystemFault	2	The CellStack node card has a system fault.	Unknown	3	3	2	2
+csNmsTrapBoardUpgradeOK	2	The CellStack node card has had its software upgraded successfully.	Unknown	2	2	2	2
+csNmsTrapBoardUpgradeFail	2	The CellStack node card SW upgrade failed.	Unknown	2	2	2	2
+csNmsTrapBoardHardwareFail	2	The CellStack node card hardware has failed.	Unknown	1	3	2	2
+csNmsTrapBoardNoVideoSync	2	The CellStack node has lost video synchronisation.	Unknown	3	1	2	2
+csNmsTrapBoardLowLuminance	2	The CellStack node has detected a low light (Luminance) situation.	Unknown	2	2	2	2
+csNmsTrapBoardModeConflict	2	The CellStack node card has a conflict with its configuration.	Unknown	0	2	2	2
+csNmsTrapBoardPicType	2	The CellStack node has detected a bad picture type.	Unknown	3	1	2	2
+csNmsTrapBoardConnFail	2	The CellStack node card has failed to setup the connection requested.	Unknown	3	1	2	2
+csNmsTrapBoardCtrlMoved	2	The CellStack node control card has been moved.	Unknown	1	3	2	2
+csNmsTrapBoardStatusOK	2	The CellStack node card has nominal status.	Unknown	2	2	2	2
+csNmsTrapNoTSDetected	2	The CellStack node cannot detect a transport signal.	Unknown	0	0	0	0
+csNmsTrapBoardEncodingError	2	The CellStack node has experienced an error in the MPEG2 encoding engine.	Unknown	3	3	2	2
+csNmsTrapBoardDecodingError	2	The CellStack node  has experienced an error attempting to decode the MPEG2 data stream. This may be due to an unsupported format in the stream.	Unknown	2	2	2	2
+csNmsTrapNoATMStream	2	The CellStack node has lost its ATM stream.	Unknown	0	0	0	0
+csNmsTrapBoardOutOfTSSync	2	The CellStack node has lost synchronisation on its ATM transport stream.	Unknown	0	0	0	0
+csNmsTrapIOPortStatusChange	2	The CellStack node has detected an IO Port status change.	Unknown	3	3	2	2
+csNmsTrapIOPortMgmtConnEst	2	An IO Port management connection has been established with the CellStack node.	Unknown	2	2	2	2
+csNmsTrapIOPortMgmtConnClosed	2	An IO Port management connection with the CellStack node has been closed.	Unknown	3	3	2	2
+csNmsTrapIOExBoxAttached	2	The CellStack node has detected that an IO Expansion Box has been attached.	Unknown	2	2	2	2
+csNmsTrapIOExBoxRemoved	2	The CellStack node has detected that an IO Expansion Box has been removed.	Unknown	0	0	0	0
+csNmsTrapCentinal	2	A Cellstack Centinal has raised an alarm.	Unknown	0	0	0	0
+csNmsTrapNASRAIDWarning	2	The NAS is reporting RAID warnings	Unknown	2	3	2	2
+csNmsTrapMountDisabled	2	The Mount is disabled by the user	Unknown	0	0	0	0
+csNmsTrapIndexNotReady	2	Index Not Ready	Unknown	0	0	0	0
+csNmsTrapNASUnapproved	2	The NAS is not Approved. Cannot mount	Unknown	2	2	2	2
+csNmsTrapMountPermission	2	Permission error on mount	Unknown	2	2	2	2
+csNmsTrapStorageNotReady	2	Storage Not Ready	Unknown	3	1	2	2
+csNmsTrapNewerJournal	2	A newer journal file was detected on disk. Cannot read it. View syslog for more detail.	Unknown	0	0	0	0
+csNmsTrapSystem2KFrames	2	The System is out of 2K frames	Unknown	0	0	0	0
+csNmsTrapSystem8KFrames	2	The System is out of 8K frames	Unknown	0	0	0	0
+csNmsTrapNFSReadDir	2	The NFS Readdir is Greater than 255	Unknown	0	0	0	0
+csNmsTrapHardError	2	A Hard Error detected on Mount	Unknown	0	0	0	0
+csNmsTrapLinkDown	2	Link Down	Unknown	1	1	2	2
+csNmsTrapCommsDown	2	Comms down to NAS	Unknown	1	1	2	2
+csNmsTrapIndexFull	2	The index tag table is full	Unknown	0	0	0	0
+csNmsTrapCreateTest	2	Create Test Fail	Unknown	0	0	0	0
+csNmsTrapWriteError	2	Write error. Verify MTUs are 9000	Unknown	2	2	2	2
+csNmsTrapReadError	2	Read error. Verify MTUs are 9000	Unknown	2	2	2	2
+csNmsTrapNASLicense	2	NAS not licensed. Cannot use	Unknown	2	3	2	2
+csNmsTrapCannotMount	2	Cannot Mount	Unknown	3	3	2	2
+csNmsTrapMountOverrun	2	The Mount is being overrun	Unknown	0	0	0	0
+csNmsTrapStorageWrite	2	Cannot write to storage	Unknown	3	3	2	2
+csNmsTrapATMUNI	2	ATM: UNI Failure	Unknown	0	0	0	0
+csNmsTrapATMILMI	2	ATM: ILMI Failure	Unknown	0	0	0	0
+csNmsTrapATMPDUSize	2	ATM: Oversize PDU discarded	Unknown	0	0	0	0
+csNmsTrapATMPDUReassembly	2	ATM: PDU reassembly. Out of resources	Unknown	0	0	0	0
+csNmsTrapATMIFC	2	ATM: IFC Failure	Unknown	0	0	0	0
+csNmsTrapTransportResources	2	TP: Transport out of resources	Unknown	0	0	0	0
+csNmsTrapUMPAlloc	2	UMP: Alloc Failed	Unknown	0	0	0	0
+csNmsTrapUMPServerOpen	2	UMP: Server Open Failed	Unknown	0	0	0	0
+csNmsTrapUMPServer	2	UMP: Server Failed	Unknown	0	0	0	0
+csNmsTrapIFCColdstart	2	IFC: transmit coldstart Trap	Unknown	3	1	2	2
+csNmsTrapIFCSSCOP	2	IFC: No SSCOP activity - Restart ILMI	Unknown	0	0	0	0
+csNmsTrapSTSResources	2	STS: Out of Resources	Unknown	0	0	0	0
+csNmsTrapRTPAssignment	2	RTP: Local port assignment failed	Unknown	0	0	0	0
+csNmsTrapCPULevel	2	Cannot start Playback. CPU above limits	Unknown	0	0	0	0
+csNmsTrapPlayback	2	Playback Failed	Unknown	3	1	2	2
+csNmsTrapActiveRecording	2	Active recording has stopped	Unknown	3	1	2	2
+csNmsTrapRecording	2	Recording failed	Unknown	3	1	2	2
+csNmsTrapRecordingNoData	2	The active recording is not receiving data	Unknown	3	1	2	2
+csNmsTrapLicense1Day	2	The System license has less than one day remaining	Unknown	2	3	2	2
+csNmsTrapLicenseNone	2	The System is not licensed	Unknown	0	0	0	0
+csNmsTrapLicenseDays	2	The System license has a limited number of days remaining	Unknown	0	0	0	0
+csNmsTrapActiveRestart	2	The active data has not received data for 20 Seconds. Forcing restart.	Unknown	0	0	0	0
+csNmsTrapStorageUsage	2	Storage usage has crossed level	Unknown	0	0	0	0
+csNmsTrapCardMismatch	2	Rack Card is Unknown State.	Unknown	0	0	0	0

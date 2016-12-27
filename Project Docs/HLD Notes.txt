@@ -1,0 +1,12 @@
+3.2.1.1 Alarm capture and Handling
+	Table 4 - Key Netcool Field Mapping 
+		AlertKey 		extract from Managed Object
+		AlertGroup		Should say alarm Name or Alarm Classification - dependent on if it is involved oin correllation
+		Alarm Class 		Should say Alarm Name + text looked up Against Reason Code
+		Severity		Netcool Equivalent Severity or if clear then Severity 0 
+		???			TCP/UDP Port looked up from Electronic Address 
+		Service Affecting	From Lookup
+		Resilience Affecting	From Lookup
+		
+	Alarms Clearance methods - should this not include a resolution event
+	

@@ -1,0 +1,19 @@
+#This file was written by Impact Server.
+#Tue Nov 01 14:19:47 GMT 2011
+OS_Parent_Child.SQL.DYNAMICLINKINFOSET={}
+OS_Parent_Child.SQL.DATASOURCENUM=9
+OS_Parent_Child.SQL.DISPLAYNAMEFIELD=Source_Event_ID
+OS_Parent_Child.SQL.TIMEINTERVLAFORDATATYPESTATS=0
+OS_Parent_Child.SQL.QUERYCACHEINVALIDATION=0
+OS_Parent_Child.SQL.ORDERBY=
+OS_Parent_Child.SQL.INCLUDE_ROOT=true
+OS_Parent_Child.SQL.ENABLED=true
+OS_Parent_Child.SQL.QUERYINTERVALFORDATATYPESTATS=0
+OS_Parent_Child.SQL.KEYFIELDS.1=Source_Event_ID
+OS_Parent_Child.SQL.USERPARAMETERS=\ WITHDEFAULTS{{'Source_Event_ID', LONG_STRING, 'Source_Event_ID', 'Source_Event_ID', 'Source_Event_ID', 'true', '', '', FALSE, FALSE}, {'AlarmClass', LONG_STRING, 'AlarmClass', 'AlarmClass', 'AlarmClass', 'true', '', '', FALSE, FALSE}, {'CableBreakFlag', INTEGER, 'CableBreakFlag', 'CableBreakFlag', 'CableBreakFlag', 'true', '', '', FALSE, FALSE}, {'Child_Event_IDs', LONG_STRING, 'Child_Event_IDs', 'Child_Event_IDs', 'Child_Event_IDs', 'true', '', '', FALSE, FALSE}, {'Child_Filters', LONG_STRING, 'Child_Filters', 'Child_Filters', 'Child_Filters', 'true', '', '', FALSE, FALSE}, {'Enrichment_Source', LONG_STRING, 'Enrichment_Source', 'Enrichment_Source', 'Enrichment_Source', 'true', '', '', FALSE, FALSE}, {'Manager', LONG_STRING, 'Manager', 'Manager', 'Manager', 'true', '', '', FALSE, FALSE}, {'Parent_Event_IDs', LONG_STRING, 'Parent_Event_IDs', 'Parent_Event_IDs', 'Parent_Event_IDs', 'true', '', '', FALSE, FALSE}, {'Parent_Filters', LONG_STRING, 'Parent_Filters', 'Parent_Filters', 'Parent_Filters', 'true', '', '', FALSE, FALSE}}
+OS_Parent_Child.SQL.COUNTCACHEINVALIDATION=0
+OS_Parent_Child.SQL.QUERYCACHESIZE=0
+OS_Parent_Child.SQL.CACHESIZE=0
+OS_Parent_Child.SQL.CACHEINVALIDATION=0
+OS_Parent_Child.SQL.TABLENAME=custom.parent_child
+OS_Parent_Child.SQL.RESTRICTWHERECLAUSE=

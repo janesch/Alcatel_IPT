@@ -1,0 +1,19 @@
+#This file was written by Impact Server.
+#Thu Feb 24 10:34:24 GMT 2011
+Flat_Source_Event_Id.SQL.DYNAMICLINKINFOSET={}
+Flat_Source_Event_Id.SQL.CACHESIZE=0
+Flat_Source_Event_Id.SQL.TABLENAME=parent_child.txt
+Flat_Source_Event_Id.SQL.USERPARAMETERS=\ WITHDEFAULTS{{'Source_Event_Id', STRING, 'Source_Event_Id', 'Source_Event_Id', 'Source_Event_Id', 'true', '', '', FALSE, FALSE}}
+Flat_Source_Event_Id.SQL.QUERYCACHESIZE=0
+Flat_Source_Event_Id.SQL.COUNTCACHEINVALIDATION=0
+Flat_Source_Event_Id.SQL.KEYFIELDS.1=Source_Event_Id
+Flat_Source_Event_Id.SQL.ENABLED=true
+Flat_Source_Event_Id.SQL.ORDERBY=
+Flat_Source_Event_Id.SQL.DISPLAYNAMEFIELD=Source_Event_Id
+Flat_Source_Event_Id.SQL.DATASOURCENUM=8
+Flat_Source_Event_Id.SQL.QUERYINTERVALFORDATATYPESTATS=0
+Flat_Source_Event_Id.SQL.QUERYCACHEINVALIDATION=0
+Flat_Source_Event_Id.SQL.CACHEINVALIDATION=0
+Flat_Source_Event_Id.SQL.INCLUDE_ROOT=true
+Flat_Source_Event_Id.SQL.TIMEINTERVLAFORDATATYPESTATS=0
+Flat_Source_Event_Id.SQL.RESTRICTWHERECLAUSE=

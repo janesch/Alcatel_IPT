@@ -1,0 +1,16 @@
+#This file was written by Impact Server.
+#Mon Oct 24 13:17:25 BST 2011
+impact.policylogger.logtofile.includepolicyname=true
+impact.policylogger.description=No description yet
+impact.policylogger.actionparameters.debug.preexecution=true
+impact.policylogger.errorhandlingpolicyname=AddPolicyProcessMapping
+impact.policylogger.loglevel=3
+impact.policylogger.logtofile=true
+impact.policylogger.actionparameters.debug.postexecution=true
+impact.policylogger.collectreports=false
+impact.policylogger.sqldebug=true
+impact.policylogger.logtofile.includethreadname=false
+impact.policylogger.autostartup=false
+impact.policylogger.profiling=false
+impact.policylogger.actionparameters.debug.printallparameters=false
+impact.policylogger.classname=com.micromuse.response.service.ActionTreeLogger

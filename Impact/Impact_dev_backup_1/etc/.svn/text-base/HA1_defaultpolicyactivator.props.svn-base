@@ -1,0 +1,4 @@
+impact.defaultpolicyactivator.logtofile=false
+impact.defaultpolicyactivator.autostartup=false
+impact.defaultpolicyactivator.classname=com.micromuse.response.service.PolicyActivator
+impact.defaultpolicyactivator.description=No description yet

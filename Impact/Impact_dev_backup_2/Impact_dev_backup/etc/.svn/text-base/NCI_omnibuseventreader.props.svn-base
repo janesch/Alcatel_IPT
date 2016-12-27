@@ -1,0 +1,7 @@
+## Default properties
+impact.omnibuseventreader.classname=com.micromuse.response.broker.EventBroker
+impact.omnibuseventreader.objectserver.getupdates=true
+impact.omnibuseventreader.objectserver.collectreports=false
+impact.omnibuseventreader.objectserver.datasource=defaultobjectserver
+impact.omnibuseventreader.isfilteractive.1=false
+impact.omnibuseventreader.executeallmatchingpolicies=true

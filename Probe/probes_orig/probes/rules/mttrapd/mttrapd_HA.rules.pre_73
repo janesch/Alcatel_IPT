@@ -1,0 +1,895 @@
+###############################################################################
+
+#    Copyright (C) 1994 - 2002 Micromuse, Inc.
+#    All Rights Reserved
+#
+#    RESTRICTED RIGHTS:
+#
+#    This file may have been supplied under a license.  It may be used,
+#    disclosed, and/or copied only as permitted under such license agreement.
+#    Any copy must contain the above copyright notice and this restricted
+#    rights notice.  Use, copying, and/or disclosure of the file is strictly
+#    prohibited unless otherwise provided in the license agreement.
+#
+#    snmp.rules 2.0 2002/05/22 Robert Cowart
+#    Modified for use with m2r  2002/06/13 Victor Havard
+#
+###############################################################################
+#
+# 2.0 - Based on version 1.7.  Includes enhancements which comply with the
+#       Micromuse Rules File Standards (MUSE-STD-RF-01, May 2002)
+#
+#     - Modified the conversion of SNMPv2 trap OIDs to SNMPv1 enterprises in
+#       order to ensure compliancy with RFC2576 - "Coexistence between Version
+#       1, Version 2, and Version 3 of the Internet-standard Network Management
+#       Framework"
+#     
+#     - Modified setting of NodeAlias to properly handle tokens from NNM/NV
+#       and Trapd/MTTrapd Probes.
+#
+#     - Completely rewrote the handling of generic traps (again!).
+#
+###############################################################################
+#
+#	V 2.1	20100211	Changes by Chris Janes of Innovise ESM
+#				Modifications for SC11B OmniVista 4760 Events
+#
+#
+#
+###############################################################################
+
+table VarbindValTable = "/opt/netcool/omnibus/probes/lookup/m2r.varbind.lookup"
+default="UNKNOWN"
+table SixtyEightFiftyTable = "/opt/netcool/omnibus/probes/lookup/alcatel.6800.m2r.lookup"
+default= {"UNKNOWN", "1", "UNKNOWN", "UNKNOWN", "UNKNOWN", "UNKNOWN", "UNKNOWN", "UNKNOWN"}
+table CellStackTable = "/opt/netcool/omnibus/probes/lookup/cellstack.lookup"
+default= {"UNKNOWN", "UNKNOWN", "UNKNOWN", "UNKNOWN", "UNKNOWN", "UNKNOWN", "UNKNOWN"}
+table ThirteenFiftyThreeNM  = "/opt/netcool/omnibus/probes/lookup/1353NM.lookup"
+default= {"UNKNOWN", "UNKNOWN", "UNKNOWN", "UNKNOWN", "UNKNOWN", "UNKNOWN", "UNKNOWN"}
+table OmniPcx  = "/opt/netcool/omnibus/probes/lookup/omnipcx.lookup"
+default= {"UNKNOWN", "UNKNOWN", "UNKNOWN", "UNKNOWN", "UNKNOWN", "UNKNOWN"}
+table TwoEightEleven  = "/opt/netcool/omnibus/probes/lookup/2811.lookup"
+default= {"UNKNOWN", "UNKNOWN", "UNKNOWN", "UNKNOWN", "UNKNOWN"}
+table ProvisoTable  = "/opt/netcool/omnibus/probes/lookup/proviso.lookup"
+default= {"UNKNOWN", "UNKNOWN", "UNKNOWN"}
+
+# YES or No Lookup table
+#table FlagKey =  "/opt/netcool/omnibus/probes/includes/OmniVista.lookup"
+#default = "UNKNOWN"
+include "/opt/netcool/omnibus/probes/lookup/SC11B_W.lookup"
+
+#####################################################################
+# Enter lookup table Includes below with the following syntax:
+#
+# include "$OMNIHOME/probes/<arch>/include-snmp/<lookuptable>.include.lookup"
+#####################################################################
+include "/opt/netcool/omnibus/probes/lookup/IANA.include.lookup"
+include "/opt/netcool/omnibus/probes/lookup/IETF-IF-MIB.include.lookup"
+include "/opt/netcool/omnibus/probes/lookup/IETF-OSPF-TRAP-MIB.include.lookup"
+### these are for alcatel nmc50 and nmc50 proxy
+include "/opt/netcool/omnibus/probes/lookup/m2r.include.snmptrap.lookup"
+include "/opt/netcool/omnibus/probes/lookup/m2r.sev.include.snmptrap.lookup"
+## added for cisco IPSLA
+include "/opt/netcool/omnibus/probes/lookup/cisco.include.lookup"
+include "/opt/netcool/omnibus/probes/lookup/rttMon.lookup"
+
+#####################################################################
+# End of lookup table Includes
+#####################################################################
+
+#Define arrays for proviso include rule files:
+#array ProvisoSubElementLabel;
+
+if( match( @Manager, "ProbeWatch" ) )
+{
+        switch(@Summary)
+        {
+        case "Running ...":
+                @Severity = 1
+                @AlertGroup = "probestat"
+                @Type = 2
+        case "Going Down ...":
+                @Severity = 5
+                @AlertGroup = "probestat"
+                @Type = 1
+		log(DEBUG,' mttrapd probe going down')
+        default:
+                @Severity = 1
+        }
+        @AlertKey = @Agent
+        @Summary = @Agent + " probe on " + @Node + ": " + @Summary
+}
+else
+{
+	#######################################################################
+	# Set default Manager, Agent, and Class by uncommenting one of each of
+	# the following choices
+	#######################################################################
+
+	# @Manager = "Trapd Probe on " + hostname()
+	# @Agent = "trapd"
+	# @Class = "300"
+	@Agent = "MTTrapd Probe on " + hostname()
+	### defaulting to OmniVista2540 for generic snmp
+	@Manager = "OmniVista2540"
+	@Class = "300"
+	@Summary = "Default"
+	# @Manager = "HP OpenView NNM on " + hostname()
+	# @Agent = "nnm"
+	# @Class = "400"
+	# @Manager = "IBM NetView on " + hostname()
+	# @Agent = "nv5"
+	# @Class = "700"
+
+	#######################################################################
+	# End of default Manager, Agent, and Class
+	#######################################################################
+
+	##########
+	# Check if an SNMPv2 trap and convert to SNMPv1 style tokens
+	##########
+    
+    if (exists($notify)) ### if $notify exists then this is an SNMPv2 trap
+    {
+### added by Toby
+		@Node = $IPaddress
+
+#		@Node = $PeerAddress
+		@NodeAlias = $PeerIPaddress
+
+		##########
+		# Remove the artifacts of ucd_snmp library being 'helpful'. We'll only remove
+		# the first .iso., everything else should be just plain numbers. With the
+		# mttrapd probe, this has to be done by specifying /dev/null as the mib file.
+		##########
+
+		if (regmatch($notify, "\.iso\." ))
+		{
+			$notify = ".1." + extract($notify, "\.iso\.(.*)")
+		}
+		### added by toby for testing with m2r output
+		###
+		if (regmatch($notify, "\.0$"))
+		{
+			$notify = extract($notify, "(.*)\.0$")
+		}
+		### end of section added by toby
+
+		if (nmatch($notify, ".1.3.6.1.6.3.1.1.5")) ### Trap is an SNMPv2 Generic Trap
+		{
+			$enterprise = extract($notify, "(.*)\.[0-9]+$")
+			$specific-trap = "0"
+			$generic-trap = int(extract($notify, ".*\.([0-9]+)$"))-1
+		}
+		else ### Trap is Enterprise Specific
+		{
+			log(DEBUG,'enterprise sepcific trap with enterprise' + $enterprise + 'and notify ' + $notify)
+			if(match(extract($notify, "\.([0-9]+)\.[0-9]+$"), "0"))
+			{
+				log(DEBUG,'it had a 0 second last')
+				$enterprise = extract($notify, "(.*)\.[0-9]+\.[0-9]+$")
+			}
+			else
+			{
+				log(DEBUG,'set enterprise by loosing last number')
+				$enterprise = extract($notify, "(.*)\.[0-9]+$")
+			}
+			$specific-trap = extract($notify, ".*\.([0-9]+)$")
+			$generic-trap = "6"
+		}
+		log(DEBUG,'and now the enterprise is' + $enterprise)
+    }
+    else ### This is an SNMPv1 Trap
+    {
+	# JL 19072007 Need to deal with Omnivista traps with odd format
+	# (v2 but no enterprise)
+
+	if (regmatch($2,'.1.3.6.1.4.1.6486.800.1.3.2.19.1.1.2.*'))
+	{
+		$enterprise = ".1.3.6.1.4.1.6486.800.1.3.2.19.1.1.2" 
+		$generic-trap = "6"
+		log (DEBUG,' TEST set enterprise to ' + $enterprise)
+	}
+	
+
+       	if(!match($Node,'')) 
+        {
+        	@Node = $Node
+        } else
+        {
+		# for 2811 alarms
+        	@Node = $IPaddress
+        }
+
+        if(exists($IPAddress)) ### Trap is from NNM or NV Probe
+        {
+            @NodeAlias = $IPAddress
+        }
+        else
+        {
+            @NodeAlias = $IPaddress
+        }
+    }
+    log(DEBUG,'enterprise sepcific trap with enterprise' + $enterprise + 'and notify ' + $notify)
+    ##########
+    # End of SNMPv2 to SNMPv1 conversion
+    ##########
+    
+    #######################################################################
+    # If you are using Cisco InfoCenter uncomment the following two lines.
+    #######################################################################
+    
+    # @NEName = @Node
+    # @NEAddress = @NodeAlias
+    
+    #######################################################################
+    # End of Cisco InfoCenter specific rules.
+    #######################################################################
+
+    if (match($generic-trap, "6")) ### (Enterprise Specific Trap)
+    {
+        switch($enterprise)
+        {
+			case "dummy case statement": ### This will prevent syntax errors in case no includes are added below.
+				###################################################################
+				# Enter rules file Includes below with the following syntax:
+				#
+				# include "$OMNIHOME/probes/<arch>/include-snmp/
+				# <rulesfile>.include.rules"
+				###################################################################
+
+### OSPF-TRAP-MIB
+				include "/opt/netcool/omnibus/probes/includes/IETF-OSPF-TRAP-MIB.include.rules"
+### 1353NM manages 1692 optical layer
+				include "/opt/netcool/omnibus/probes/includes/alcatel.1353NM.m2r.include.rules"
+### 68xx switches
+			include "/opt/netcool/omnibus/probes/includes/alcatel.6800.m2r.include.rules"
+### Tellindus Cellstack manges cctv
+				include "/opt/netcool/omnibus/probes/includes/cellstack.m2r.include.rules"
+#### radview manages mp2100 but alarms should arrive via nnm....
+## this section redundant, but some samples arrived.
+				include "/opt/netcool/omnibus/probes/includes/rad.m2r.include.rules"
+
+### these 2 for the 4760
+				include "/opt/netcool/omnibus/probes/includes/alcatel-ALCATEL-NMC-PROXY-AGENT-MIB.include.snmptrap.rules"
+#				include "/opt/netcool/omnibus/probes/includes/alcatel.4760.m2r.include.test.rules"
+                        	include "/opt/netcool/omnibus/probes/includes/alcatel.4760.m2r.include.rules"
+### this section manages some default alarms eg ospf rmon pim etc.
+				include "/opt/netcool/omnibus/probes/includes/generic.m2r.include.rules"
+#### added for cisco ipsla 2811
+				include "/opt/netcool/omnibus/probes/includes/cisco.include.rules"
+### Added for OV
+##				include "/opt/netcool/omnibus/probes/includes/iss.include.rules"
+### proviso section added further below
+				###################################################################
+				# End of rules file Includes
+				###################################################################
+
+			default:
+
+				$EventID = $enterprise + "|" + $generic-trap + "|" + $specific-trap
+
+				switch($EventID)
+				{
+					case "dummy case statement": ### This will prevent syntax errors in case no includes are added below.
+
+					###########################################################
+					# Enter "nco_tdc" Includes below with the following syntax:
+					#
+					# include "$OMNIHOME/probes/<arch>/include-snmp/ncotdc/
+					# <rulesfile>.ncotdc.include.rules"
+					###########################################################
+
+					###########################################################
+					# End of "nco_tdc" Includes
+					###########################################################
+
+					default:
+
+						@Summary = "Enterprise ID Not Found (see details): " + $enterprise + " " + $generic-trap + " " + $specific-trap
+					#	@Severity = 2
+						@Severity = 1
+						@AlertGroup = "Enterprise ID Not Found"
+						@Type = 0
+						#details($*)
+				}
+
+				@Identifier = @Node + " " + $enterprise + " " + $generic-trap + " " + $specific-trap + " " + @AlertGroup + " " + @AlertKey + " " + @Agent + " " + @Manager
+		}
+		
+		
+#### This section adds in information for service affecting alarm propagation etc.
+
+
+		### 6850 alarms
+		## added by Toby - RMON alarms - entityMIB change - mau jabber - ospf
+
+		# ".1.3.6.1.2.1.16": # - rmon
+		# ".1.3.6.1.2.1.47.2": # - entityMIBTraps
+		# ".1.3.6.1.2.1.14.16.2": # - ospfTraps
+		# ".1.3.6.1.2.1.26": # - snmpDot3MauMgt
+		# ".1.3.6.1.2.1.68.1.3.1": # - vrrpTraps
+		# ".1.3.6.1.2.1.68": # - vrrpMIB
+		# JL - exclude enterprise .1.3.6.1.4.1.6486.800.1.3.2.19.1.1.2
+		if((regmatch ($enterprise, ".*6486.*|.1.3.6.1.2.1.16|.1.3.6.1.2.1.47.2|.1.3.6.1.2.1.14.16.2|.1.3.6.1.2.1.26|.1.3.6.1.2.1.68|.1.3.6.1.2.1.68.1.3.1")) && (!match($enterprise,".1.3.6.1.4.1.6486.800.1.3.2.19.1.1.2")))
+		{
+		
+#		[$Summary, $Severity, $ProbableCause, $AlertKey, $ActionRequired, $ServiceAffecting, $ResilienceAffecting, $CorrelationFlag] = lookup (@AlertGroup, "SixtyEightFiftyTable")
+				
+### sort out the alertkey alertgroup manager and agent fields.
+			@Manager = "OmniVista2540"
+			@Agent = "MTTrapd Probe on " + hostname()
+			#@Summary = $Summary
+			@Severity = $Severity
+			@X733ProbableCause = $ProbableCause
+			@ActionRequired = $ActionRequired
+			@ServiceAffecting = $ServiceAffecting
+			@ResilienceAffecting = $ResilienceAffecting
+			@CorrelationFlag = $CorrelationFlag
+### as no timestamp in the traps the time is taken as $received time
+			@FirstRaiseTime = $ReceivedTime
+			@LastRaiseTime = $ReceivedTime
+
+### added by Toby - as I am using AlertGroup for the above lookup this will need to be modified for all cases where up/downmatching is required
+
+	if(match(@AlertGroup,"lnkaggAggDown"))
+	{
+		@AlertGroup = "lnkagg"
+	} else
+	if(match(@AlertGroup,"lnkaggAggUp"))
+	{
+		@AlertGroup = "lnkagg"
+	} else
+	if(match(@AlertGroup,"chassisTrapsAlert"))
+	{
+		if(match($chassisTrapsAlertDescr,"Power supply is OK"))
+                        {
+                                @Type = 2
+                                @AlertGroup = @AlertGroup + " PowerSupply"
+                                @Identifier = @Node + @AlertGroup + @AlertKey + @Type
+                        }
+                        if(match($chassisTrapsAlertDescr,"Power supply is inoperable"))
+                        {
+                                @Type = 1
+                                @AlertGroup = @AlertGroup + " PowerSupply"
+                                @Identifier = @Node + @AlertGroup + @AlertKey
+                        }
+	} else
+	if(match(@AlertGroup,"chassisTrapsStateChange"))
+	{
+		if(regmatch(@Summary,".*down.*"))
+                        {
+				@Type = 1
+			} else
+		if(regmatch(@Summary,".*up.*"))
+                        {
+				@Type = 2
+			}
+		
+
+	}
+	if(match(@AlertGroup,"aipAMAPStatusTrap"))
+	{
+		@PhysicalCard = @AlertKey
+	}
+	# chnages under OV-3
+	if(match(@AlertGroup,"alaDoSTrap"))
+	{
+                @Identifier = @Node + @AlertGroup + @AlertKey
+	}
+
+### end of 6850 alarms
+		}
+		
+#### Cellstack alarms
+		else if(match ($enterprise, ".1.3.6.1.4.1.1387"))
+		{
+		
+			[$Severity, $ProbableCause, $AlertKey, $ActionRequired, $ServiceAffecting, $ResilienceAffecting, $CorrelationFlag] = lookup ($AlertGroup, "CellStackTable")
+		
+			@AlertGroup = $AlertGroup
+			@Node = $csNmsEventNodeName
+			@NodeAlias = $IPaddress
+			@Summary = $csNmsEventDesc
+			@Manager = "CellStack"
+			@X733ProbableCause = $ProbableCause
+			@ActionRequired = $ActionRequired
+			@ServiceAffecting = $ServiceAffecting
+			@ResilienceAffecting = $ResilienceAffecting
+			@CorrelationFlag = $CorrelationFlag
+## cahnged this as some alerts have different subchannel to the resolution
+## and alertkey must match in alert and resolution event as we are using generic clear.
+## Toby
+			#@AlertKey = "Card: " + " " +  $csNmsEventCardNumber + "," + "Channel" + " " + $csNmsEventChannel + " , SubChannel " + $csNmsEventSubChannel
+			@AlertKey = "Card: " + " " +  $csNmsEventCardNumber + "," + "Channel" + " " + $csNmsEventChannel 
+			# PhysicalCard has been as per patch 3.47	
+			#@PhysicalCard = "CARD" +  $csNmsEventCardNumber + "," + "CHANNEL" + $csNmsEventChannel 
+			@PhysicalCard = "CARD" +  $csNmsEventCardNumber + ", " + "CHANNEL" + $csNmsEventChannel 
+			#@Identifier = @Node + @AlertGroup  + " " +  @AlertKey + @Type 
+			#@Identifier = @Node + @AlertGroup  + " " +  @AlertKey + @Type 
+
+			# Added by Sandip
+			if ( regmatch(@Summary, "Card Mismatch"))
+			{
+			@AlertGroup = "csNmsTrapCardMismatch"
+			@AlarmClass = "csNmsTrapCardMismatch"
+			@NodeAlias = $IPaddress
+			@Summary = $csNmsEventDesc
+			@Manager = "CellStack"
+			@X733ProbableCause = "Rack Card is Unknown State"
+			@ActionRequired = 1
+			@ServiceAffecting = 3
+			@ResilienceAffecting = 2
+			@CorrelationFlag = 2
+			@AlertKey = "Card: " + " " +  $csNmsEventCardNumber + "," + "Channel" + " " + $csNmsEventChannel
+			# PhysicalCard has been as per patch 3.47	
+			#@PhysicalCard = "CARD" +  $csNmsEventCardNumber + "," + "CHANNEL" + $csNmsEventChannel 
+			@PhysicalCard = "CARD" +  $csNmsEventCardNumber + ", " + "CHANNEL" + $csNmsEventChannel 
+			} 
+
+			if (match(@AlertGroup, "csNmsTrapBoardNoVideoSync") && match(@Type, "1") && match(@Severity, "1"))
+			{
+			@Severity = 4
+			} 
+			
+### added event desc for testing          
+### modified by Toby
+### removed type to use deplication rather than generic clea
+			@Identifier = @Node + @AlertGroup  + " " +  @AlertKey  + $csNmsEventDesc
+### added by sandip 
+			#if (match(@AlertGroup, "csNmsTrapCentinal") )
+			if (match(@AlertGroup, "csNmsTrapCentinal") && regmatch(@Summary,"^Drive temperature.*"))
+                        {
+			$csNmsTrapCentinalDesc = extract($csNmsEventDesc, ".*([0-2][0-9][0-9]+\.[0-2]+\.[0-2]+\.[0-2]+:/Raid[A-Z]).*")
+                        @Identifier = @Node + " " + @AlertGroup  + " " +  @AlertKey + " " + $csNmsTrapCentinalDesc
+                        }
+	
+		}
+		
+### 1353NM (1692 alarms)
+
+		else if(match ($enterprise, ".1.3.6.1.4.1.637.65.1.1.2"))
+		{
+		
+			[$Severity, $AlertGroup, $AlertKey, $ActionRequired, $ServiceAffecting, $ResilienceAffecting, $CorrelationFlag] = lookup ($eventType, "ThirteenFiftyThreeNM")
+			
+		#	@AlertGroup = $AlertGroup
+			@Manager = "1353NM"
+			@Severity = $Severity
+	#		@AlertKey = $AlertKey
+			@ActionRequired = $ActionRequired
+			@ServiceAffecting = $ServiceAffecting
+			@ResilienceAffecting = $ResilienceAffecting
+			@CorrelationFlag = $CorrelationFlag
+			#@Node = $IPaddress
+## removed type to use clear by deduplication
+			#@Identifier = @Identifier + @Type
+			#@Identifier =  @AlertKey + " " + @AlertGroup + " " + @Node + " " + @Manager + " " + @Type
+			@Identifier = @Identifier 
+			@Topic =  $eventType
+## added for parent child to set Interface_ID in PhysicalCard field
+			if(regmatch($friendlyName,"^[^\/]+\/.*"))
+			{
+			@PhysicalCard = extract($friendlyName,"^[^\/]+\/(.*)")
+			}
+			if(match(@Type,"2"))
+			{
+        		@Severity = 2
+        #		update(@Severity)
+			}
+			#if ((match(@Topic, "Loss Of Multiplex Section") OR match(@AlarmClass, "Replaceable Unit Problem") OR match(@AlarmClass, "Replaceable Unit Missing") OR match(@AlarmClass, "Underlying Resource Unavailable")  OR match(@AlarmClass, "Node Isolation")) && regmatch(@PhysicalCard, "sl02") && match(@InterFlag, "0"))
+
+		#if (match(@Topic, "Loss Of Multiplex Section") && regmatch(@PhysicalCard, "sl06"))
+		if (match(@Topic, "Loss Of Multiplex Section") && !regmatch(@PhysicalCard, "sl02"))
+                        {
+                        @ImpactFlag = 200
+                        @InterFlag=15
+                        }
+			if (match($eventType, "Node Isolation") && regmatch(@Node, "96CO"))
+                        {
+                        @ImpactFlag = 200
+                        @InterFlag=15
+                        }
+			if (match($eventType, "Replaceable Unit Missing") && regmatch($MOI, "board#"))
+                        {
+                        @ImpactFlag = 200
+                        @InterFlag=15
+                        }
+		}
+		
+### 4760 alarms
+		else if(match ($enterprise, ".1.3.6.1.4.1.637.64.4760") || match ($enterprise, ".1.3.6.1.4.1.637.64.4760.9.1"))
+		{
+		       	
+#	20100211	Changes by Chris Janes of Innovise ESM
+#				This is to maintain legacy code for events not include on SC11B
+ 			
+			switch($source)
+			{
+				case "OmniPCX" | "OmniVista":
+					# Do nothing as the events are complete
+				default:
+					# Start Legacy Code
+					[$AlertGroup, $Severity, $ActionRequired, $ServiceAffecting, $ResilienceAffecting, $CorrelationFlag] = lookup ($notifFaultId, "OmniPcx")
+			
+					@AlertGroup = $notifAddText
+					@Manager = "OmniVista4760"
+					@Severity = $Severity
+			#		@AlertKey = $AlertKey 
+					@ActionRequired = $ActionRequired
+					@ServiceAffecting = $ServiceAffecting
+					@ResilienceAffecting = $ResilienceAffecting
+					@CorrelationFlag = $CorrelationFlag
+					@Node = $IPaddress
+					@Identifier = @Identifier + @Type
+					### added by toby for testing 
+					## alarm id fault id and problem id exist in omnipcx. I think only alarm id is needed
+					if(exists($notifAlarmId))
+					{
+						@Node = $Node
+						@Summary = $notifAddText + " " + @Summary
+						@Identifier = $notifManagedObject + " " + $notifAlarmId
+					}		
+					# End Legacy Code	
+			}
+#       20100211        End of ChangeS
+		}
+
+
+##### Cisco alarms from 2811
+		else if(regmatch ($enterprise, "^.1.3.6.1.4.1.9"))
+		{
+			### store severity from alarm
+			## alternately set default severity to 2 or 1
+			$sev = @Severity
+			
+			[$Severity, $ActionRequired, $ServiceAffecting, $ResilienceAffecting, $ProbableCause] = lookup ($4, "TwoEightEleven")
+			
+			@Manager = "2811"
+			@Severity = $Severity
+			if(match(@Severity,"0"))
+			{
+				@Severity = $sev
+			}
+			@ActionRequired = $ActionRequired
+			@ServiceAffecting = $ServiceAffecting
+			@ResilienceAffecting = $ResilienceAffecting
+			$rttMonReactVar = lookup($rttMonReactVar,"rttMonReactVar")
+			@Summary = @Summary + " ( " + $rttMonReactVar + " ) " + "Probable Cause: " + $ProbableCause
+			# @X733SpecificProb = $ProbableCause
+### as no timestamp in the traps the time is taken as $received time
+			@FirstRaiseTime = $ReceivedTime
+			@LastRaiseTime = $ReceivedTime
+			@ClearTime = $ReceivedTime
+			@FirstOccurrence = getdate
+			@LastOccurrence = getdate
+			#if (match(@AlertGroup, "") && match(@AlarmClass, "") && match(@AlertKey, "") && regmatch(@Summary,"^rttMonNotification ( Unknown ).*"))
+                        #{
+                        #@Severity = 2
+                        #}
+
+		}
+
+#### End of lookup table section
+		
+## proviso alarms
+	else if (match($enterprise, ".1.3.6.1.4.1.2929"))
+	{
+          
+       		include "/opt/netcool/omnibus/probes/includes/proviso.include.rules"
+		$Proviso = "Yes"
+	[$ActionRequired, $ServiceAffecting, $ResilienceAffecting] = lookup (@AlertGroup, "ProvisoTable")
+		@ActionRequired = $ActionRequired
+            	@ServiceAffecting = $ServiceAffecting
+               	@ResilienceAffecting = $ResilienceAffecting
+       	}
+	else
+      	{
+		$Match = "Unmatched"
+	}
+
+    }
+    else ### Check the Generic Traps
+    {
+        ##########
+        # Generic Trap Defaults
+        ##########
+        
+        @Agent = "Generic"
+        
+        switch($generic-trap)
+        {
+            case "dummy case statement": ### This will prevent syntax errors in case no includes are added below.
+				###################################################################
+				# Enter rules file Includes below with the following syntax:
+				#
+				# include "$OMNIHOME/probes/<arch>/include-snmp/
+				# <rulesfile>.include.rules"
+				###################################################################
+
+
+				###################################################################
+				# End of rules file Includes
+				###################################################################
+
+			case "0": ### coldStart
+            
+                ##########
+                # A coldStart trap signifies that the sending protocol entity
+                # is reinitializing itself such that the agent's configuration
+                # or the protocol entity implementation may be altered.
+                ##########
+                
+                @AlertGroup = "Generic"
+                #@Type = 900
+                @ExpireTime = 900
+		@Type = 13
+                @Identifier = @Node + " " + @AlertGroup + " " + @Type + " " + @Agent + " " + @Manager + " " + $generic-trap
+				
+				#AlertGroup	Sev	AlertKey	ActionRequired	ServiceAffecting	ResilienceAffecting	CorrelationFlag
+
+				[$Summary, $Severity, $ProbableCause, $AlertKey, $ActionRequired, $ServiceAffecting, $ResilienceAffecting, $CorrelationFlag] = lookup ("coldStart", "SixtyEightFiftyTable")
+				@Summary = $Summary
+				@Severity = $Severity
+				@X733ProbableCause = $ProbableCause
+				@AlertKey = $AlertKey
+				@ActionRequired = $ActionRequired
+				@ServiceAffecting = $ServiceAffecting
+				@ResilienceAffecting = $ResilienceAffecting
+				@CorrelationFlag = $CorrelationFlag
+                        
+            case "1": ### warmStart
+            
+                ##########
+                # A warmStart trap signifies that the sending protocol entity
+                # is reinitializing itself such that neither the agent
+                # configuration nor the protocol entity implementation is
+                # altered.
+                ##########
+                
+                @AlertGroup = "Generic"
+                @AlertKey = ""
+                #@Type = 900
+                @ExpireTime = 900
+		@Type = 13
+                @Identifier = @Node + " " + @AlertGroup + " " + @Type + " " + @Agent + " " + @Manager + " " + $generic-trap
+                
+				[$Summary, $Severity, $ProbableCause, $AlertKey, $ActionRequired, $ServiceAffecting, $ResilienceAffecting, $CorrelationFlag] = lookup ("warmStart", "SixtyEightFiftyTable")
+				@Summary = $Summary
+				@Severity = $Severity
+				@X733ProbableCause = $ProbableCause
+				@AlertKey = $AlertKey
+				@ActionRequired = $ActionRequired
+				@ServiceAffecting = $ServiceAffecting
+				@ResilienceAffecting = $ResilienceAffecting
+				@CorrelationFlag = $CorrelationFlag
+				
+            case "2": ### linkDown
+            
+                ##########
+                # A linkDown trap signifies that the sending protocol entity
+                # recognizes a failure in one of the communication links
+                # represented in the agent's configuration.
+                #
+                # $1 = ifIndex - A unique value for each interface. Its value
+                #        ranges between 1 and the value of ifNumber. The value
+                #        for each interface must remain constant at least from
+                #        one re-initialization of the entity's network
+                #        management system to the next re-initialization.
+                ##########
+                
+                @AlertGroup = "Generic Link Status"
+                @AlertKey = "ifEntry." + $1
+                @Type = 1
+                @Identifier = @Node + " " + @AlertKey + " " + @AlertGroup + " " + @Type + " " + @Agent + " " + @Manager + " " + $generic-trap
+                
+				[$Summary, $Severity, $ProbableCause, $AlertKey, $ActionRequired, $ServiceAffecting, $ResilienceAffecting, $CorrelationFlag] = lookup ("linkDown", "SixtyEightFiftyTable")
+				#@Summary = $Summary
+				@Summary = $Summary + " " + @AlertKey
+				@Severity = $Severity
+				@X733ProbableCause = $ProbableCause
+				#@AlertKey = $AlertKey
+				@ActionRequired = $ActionRequired
+				@ServiceAffecting = $ServiceAffecting
+				@ResilienceAffecting = $ResilienceAffecting
+				@CorrelationFlag = $CorrelationFlag
+
+		### for parent_child
+		@PhysicalCard = $1
+				
+            case "3": ### linkUp
+            
+                ##########
+                # A linkUp trap signifies that the sending protocol entity
+                # recognizes that one of the communication links represented in
+                # the agent's configuration has come up.
+                #
+                # $1 = ifIndex - A unique value for each interface. Its value
+                #        ranges between 1 and the value of ifNumber. The value
+                #        for each interface must remain constant at least from
+                #        one re-initialization of the entity's network
+                #        management system to the next re-initialization.
+                ##########
+		### for parent_child
+		@PhysicalCard = $1
+                
+                $ifIndex = $1
+                #details($ifIndex)
+                
+                @AlertGroup = "Generic Link Status"
+                @AlertKey = "ifEntry." + $1
+                @Type = 2
+                @Identifier = @Node + " " + @AlertKey + " " + @AlertGroup + " " + @Type + " " + @Agent + " " + @Manager + " " + $generic-trap
+                
+				[$Summary, $Severity, $ProbableCause, $AlertKey, $ActionRequired, $ServiceAffecting, $ResilienceAffecting, $CorrelationFlag] = lookup ("linkUp", "SixtyEightFiftyTable")
+				#@Summary = $Summary
+				@Summary = $Summary + " " + @AlertKey
+				@Severity = $Severity
+				@X733ProbableCause = $ProbableCause
+	### commented by Toby as this breaks generic clear.
+				#@AlertKey = $AlertKey
+				@ActionRequired = $ActionRequired
+				@ServiceAffecting = $ServiceAffecting
+				@ResilienceAffecting = $ResilienceAffecting
+				@CorrelationFlag = $CorrelationFlag
+				
+	case "4": ### authenticationFailure
+            
+                ##########
+                # A linkUp trap signifies that the sending protocol entity
+                # recognizes that one of the communication links represented in
+                # the agent's configuration has come up.
+                ##########
+                
+                @AlertGroup = "Generic Authentication"
+                @AlertKey = ""
+                @Type = 1
+		@ExpireTime = 900
+                @Identifier = @Node + " " + @AlertGroup + " " + @Type + " " + @Agent + " " + @Manager + " " + $generic-trap
+                
+				[$Summary, $Severity, $ProbableCause, $AlertKey, $ActionRequired, $ServiceAffecting, $ResilienceAffecting, $CorrelationFlag] = lookup ("authenticationFailure", "SixtyEightFiftyTable")
+				@Summary = $Summary
+				@Severity = $Severity
+				@X733ProbableCause = $ProbableCause
+				@AlertKey = $AlertKey
+				@ActionRequired = $ActionRequired
+				@ServiceAffecting = $ServiceAffecting
+				@ResilienceAffecting = $ResilienceAffecting
+				@CorrelationFlag = $CorrelationFlag
+				
+            case "5": ### egpNeighborLoss
+            
+                ##########
+                # An egpNeighborLoss trap signifies that an EGP neighbor for
+                # whom the sending protocol entity was an EGP peer has been
+                # marked down and the peer relationship no longer obtains.
+                ##########
+                
+                @AlertGroup = "Generic Authentication"
+                @AlertKey = ""
+                @Type = 1
+		@ExpireTime = 900
+                @Identifier = @Node + " " + @AlertGroup + " " + @Type + " " + @Agent + " " + @Manager + " " + $generic-trap
+                
+				[$Summary, $Severity, $ProbableCause, $AlertKey, $ActionRequired, $ServiceAffecting, $ResilienceAffecting, $CorrelationFlag] = lookup ("egpNeighborLoss", "SixtyEightFiftyTable")
+				@Summary = $Summary
+				@Severity = $Severity
+				@X733ProbableCause = $ProbableCause
+				@AlertKey = $AlertKey
+				@ActionRequired = $ActionRequired
+				@ServiceAffecting = $ServiceAffecting
+				@ResilienceAffecting = $ResilienceAffecting
+				@CorrelationFlag = $CorrelationFlag
+				
+            default:
+                @Summary = "Invalid Generic Trap Number (see details): " + $enterprise + " " + $generic-trap + " " + $specific-trap
+                @Severity = 2
+                @Type = 0
+                @Identifier = @Node + " " + $enterprise + " " + $generic-trap + " " + $specific-trap + " " + @Agent + " " + @Manager
+                #details($*)
+        }
+        
+        ##########
+        # End of Generic Trap Defaults
+        ##########
+        
+    }
+
+##### details removed from here - Toby
+### for debugging it is at end of file
+#### debug only
+
+
+###### EventID setting section....
+######
+
+#### 1353NM.
+switch(@Manager)
+{
+	case "1353NM":
+		@AlarmClass = @Topic
+	case "2811":
+		@AlarmClass = @AlertKey
+##########################################################
+#
+#	THis neds Looking at
+#
+##########################################################
+#	case "OmniVista4760":
+#	20100211	Changes by Chris Janes of Innovise ESM
+#				This is to maintain legacy code for events not include on SC11B
+ 			
+			switch($source)
+			{
+				case "OmniPCX" | "OmniVista":
+					# Do nothing as the events are complete
+				default:
+					#Legacy Code Starts Here
+					@AlarmClass = @AlertGroup
+					#Legacy Code Ends Here
+			}
+#       20100211        End of Changes
+	case "CellStack":
+		@AlarmClass = @AlertGroup
+	case "PROVISO":
+		# JL - handled in the proviso rules file now
+		#@AlarmClass = "PROVISO"
+	case "OmniVista2540":
+### this will need to be changed,...
+		@AlarmClass = @AlertGroup
+		if (match(@AlarmClass,"Generic Link Status"))
+		{
+			@AlarmClass = $Summary
+		}
+
+	default: 
+}
+
+
+#### this ends the else after probewatch messsages section
+}
+#    		@Identifier = @Identifier + @InternalLast
+		@Location = $enterprise
+
+#### Added by Toby
+## the following section applies accross all technologies.
+### ClearTime for resolutions must be set to lastraisetime for 
+## modified generic clear to work correctly.
+## uncomment agent when current values prove unneeded.
+
+@Agent = "MTTrapd Probe on " + hostname()
+
+@FirstOccurrence = getdate
+@LastOccurrence = getdate
+
+if(match(@Type,"2"))
+{
+        @ClearTime = @LastRaiseTime
+	update(@ClearTime)
+}
+
+## Added by Manjeet Bhachu to consolidate @ActionRequired output
+if (int(@ActionRequired) > 1)
+	{
+	@ActionRequired = 1
+	}
+
+##  Supress as part of Patch 4-18, Jean Florentine 17/08/2010
+## TN 120710 Extra debugging for 4760 Clear not working
+##if ((match(@AlarmClass,"2043GDN")) || (match(@AlarmClass,"2019GDN"))) {
+        ##log(ERROR,"4760 Clear: Identifier: "+@Identifier)
+        ##log(ERROR,"4760 Clear: Severity: "+@Severity)
+        ##log(ERROR,"4760 Clear: Type: "+@Type)
+        ##log(ERROR,"4760 Clear: Node: "+@Node)
+        ##log(ERROR,"4760 Clear: AlertGroup: "+@AlertGroup)
+        ##log(ERROR,"4760 Clear: AlertKey: "+@AlertKey)
+        ##log(ERROR,"4760 Clear: Manager: "+@Manager)
+        ##log(ERROR,"4760 Clear: FirstRaiseTime: "+@FirstRaiseTime)
+        ##log(ERROR,"4760 Clear: LastRaiseTime: "+@LastRaiseTime)
+        ##log(ERROR,"4760 Clear: ClearTime: "+@ClearTime)
+        ##log(ERROR,"4760 Clear: enterprise: "+$enteprise)
+        ##log(ERROR,"4760 Clear: specific-trap: "+$specific-trap)
+##}
+
+## comment out for live environment
+#details($*)

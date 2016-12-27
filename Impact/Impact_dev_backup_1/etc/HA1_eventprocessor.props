@@ -1,0 +1,3 @@
+impact.eventprocessor.autostartup=true
+impact.eventprocessor.logtofile=true
+impact.eventprocessor.classname=com.micromuse.response.server.MessageAcceptor

@@ -1,0 +1,79 @@
+if ( regmatch ( $line_00, "Date_and_Time" ) ) { 
+$Date_and_Time= extract($line_00, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_01, "Date_and_Time" ) ) { 
+$Date_and_Time= extract($line_01, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_02, "Date_and_Time" ) ) { 
+$Date_and_Time= extract($line_02, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_03, "Date_and_Time" ) ) { 
+$Date_and_Time= extract($line_03, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_04, "Date_and_Time" ) ) { 
+$Date_and_Time= extract($line_04, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_05, "Date_and_Time" ) ) { 
+$Date_and_Time= extract($line_05, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_06, "Date_and_Time" ) ) { 
+$Date_and_Time= extract($line_06, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_07, "Date_and_Time" ) ) { 
+$Date_and_Time= extract($line_07, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_08, "Date_and_Time" ) ) { 
+$Date_and_Time= extract($line_08, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_09, "Date_and_Time" ) ) { 
+$Date_and_Time= extract($line_09, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_10, "Date_and_Time" ) ) { 
+$Date_and_Time= extract($line_10, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_11, "Date_and_Time" ) ) { 
+$Date_and_Time= extract($line_11, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_12, "Date_and_Time" ) ) { 
+$Date_and_Time= extract($line_12, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_13, "Date_and_Time" ) ) { 
+$Date_and_Time= extract($line_13, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_14, "Date_and_Time" ) ) { 
+$Date_and_Time= extract($line_14, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_15, "Date_and_Time" ) ) { 
+$Date_and_Time= extract($line_15, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_16, "Date_and_Time" ) ) { 
+$Date_and_Time= extract($line_16, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_17, "Date_and_Time" ) ) { 
+$Date_and_Time= extract($line_17, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_18, "Date_and_Time" ) ) { 
+$Date_and_Time= extract($line_18, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_19, "Date_and_Time" ) ) { 
+$Date_and_Time= extract($line_19, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_20, "Date_and_Time" ) ) { 
+$Date_and_Time= extract($line_20, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_21, "Date_and_Time" ) ) { 
+$Date_and_Time= extract($line_21, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_22, "Date_and_Time" ) ) { 
+$Date_and_Time= extract($line_22, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_23, "Date_and_Time" ) ) { 
+$Date_and_Time= extract($line_23, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_24, "Date_and_Time" ) ) { 
+$Date_and_Time= extract($line_24, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_25, "Date_and_Time" ) ) { 
+$Date_and_Time= extract($line_25, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_26, "Date_and_Time" ) ) {
+$Date_and_Time= extract($line_26, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_27, "Date_and_Time" ) ) {
+$Date_and_Time= extract($line_27, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_28, "Date_and_Time" ) ) {
+$Date_and_Time= extract($line_28, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_29, "Date_and_Time" ) ) {
+$Date_and_Time= extract($line_29, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_30, "Date_and_Time" ) ) {
+$Date_and_Time= extract($line_30, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_31, "Date_and_Time" ) ) {
+$Date_and_Time= extract($line_31, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_32, "Date_and_Time" ) ) {
+$Date_and_Time= extract($line_32, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_33, "Date_and_Time" ) ) {
+$Date_and_Time= extract($line_33, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_34, "Date_and_Time" ) ) {
+$Date_and_Time= extract($line_34, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_35, "Date_and_Time" ) ) {
+$Date_and_Time= extract($line_35, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_36, "Date_and_Time" ) ) {
+$Date_and_Time= extract($line_36, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_37, "Date_and_Time" ) ) {
+$Date_and_Time= extract($line_37, "Date_and_Time=(.*)")
+} else if ( regmatch ( $line_38, "Date_and_Time" ) ) {
+$Date_and_Time= extract($line_38, "Date_and_Time=(.*)")
+}   

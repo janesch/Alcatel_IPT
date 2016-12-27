@@ -1,0 +1,14 @@
+#This file was written by server.
+#Wed Feb 01 16:12:30 GMT 2012
+ha_ncoms_datasource.ObjectServer.DISABLEFAILOVER=false
+ha_ncoms_datasource.ObjectServer.BACKUPHOST=172.20.174.158
+ha_ncoms_datasource.ObjectServer.MAXSQLCONNECTION=5
+ha_ncoms_datasource.ObjectServer.FAILOVERPOLICY=DISABLED
+ha_ncoms_datasource.ObjectServer.USESSLBACKUP=FALSE
+ha_ncoms_datasource.ObjectServer.BACKUPPORT=4101
+ha_ncoms_datasource.ObjectServer.JDBCDRIVER=com.sybase.jdbc3.jdbc.SybDriver
+ha_ncoms_datasource.ObjectServer.DBUSERNAME=root
+ha_ncoms_datasource.ObjectServer.PRIMARYHOST=nv2
+ha_ncoms_datasource.ObjectServer.USESSLPRIMARY=FALSE
+ha_ncoms_datasource.ObjectServer.PRIMARYPORT=4100
+ha_ncoms_datasource.ObjectServer.DBPASSWORD={aes}7D754C8DCDC92687114D0B646E71DD26

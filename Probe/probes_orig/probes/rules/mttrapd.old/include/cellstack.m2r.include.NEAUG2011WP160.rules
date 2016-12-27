@@ -1,0 +1,3156 @@
+######
+# cellstack include file
+######
+######
+# cellstack include file
+######
+case ".1.3.6.1.4.1.1387": # - csAlarmInfo
+
+### section added by Toby. 
+### probe interprets enterprise OID as $1 and then all other $values are out of sync
+###
+
+        if(match($1,".1.3.6.1.4.1.1387"))
+        {
+        $a = $2
+        $b = $3
+        $c = $4
+        $d = $5
+        $e = $6
+	$f = $7
+	$g = $8
+	$h = $9
+	$i = $10
+## shift tokens up one.
+	$1 = $a
+	$2 = $b
+	$3 = $c
+	$4 = $d
+	$5 = $e
+	$6 = $f
+	$7 = $g
+	$8 = $h
+	$9 = $i
+	}
+
+			
+	switch($specific-trap) {
+		case "41": ### - csNmsTrapVideoInFail
+			# SNMPv1
+			# The CellStack node has lost video input.  This may be due to a hardware or software fault on the node, or a fault with the video source.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapVideoInFail"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "178": ### - csNmsTrapLossOfConnection
+			# SNMPv1
+			# The CellStack node is unavailable.  This may be due to a hardware or software fault on the node, or a loss of network connectivity.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapLossOfConnection"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "179": ### - csNmsTrapCellFrameLost
+			# SNMPv1
+			# The CellStack node has lost the cell framing.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapCellFrameLost"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "180": ### - csNmsTrapLossOfSignal
+			# SNMPv1
+			# The CellStack node has lost the ATM signal.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapLossOfSignal"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "181": ### - csNmsTrapOutOfFrame
+			# SNMPv1
+			# The CellStack node has lost ATM framing.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapOutOfFrame"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "182": ### - csNmsTrapTXRefOutOfLock
+			# SNMPv1
+			# The CellStack node has a problem with the transmission reference clock.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapTXRefOutOfLock"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "183": ### - csNmsTrapRXRefOutOfLock
+			# SNMPv1
+			# The CellStack node has a problem with the receive reference clock.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapRXRefOutOfLock"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "184": ### - csNmsTrapRPOPLOP
+			# SNMPv1
+			# The CellStack node has a receive path overhead pointer loss of pointer error.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapRPOPLOP"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "185": ### - csNmsTrapPAIS
+			# SNMPv1
+			# The CellStack node has received a path alarm indication signal.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapPAIS"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "186": ### - csNmsTrapPRDI
+			# SNMPv1
+			# The CellStack node has received a path remote defect indication error.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapPRDI"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "187": ### - csNmsTrapLAIS
+			# SNMPv1
+			# The CellStack node has received a receive path overhead pointer line alarm indication signal.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapLAIS"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "188": ### - csNmsTrapLRDI
+			# SNMPv1
+			# The CellStack node has received a line remote defect indication error.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapLRDI"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "200": ### - csNmsTrapPowerUp
+			# SNMPv1
+			# The CellStack node has just powered up.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapPowerUp"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "201": ### - csNmsTrapUserConnectionOK
+			# SNMPv1
+			# The CellStack node has started a new user connection or session.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapUserConnectionOK"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "202": ### - csNmsTrapUserConnectionFail
+			# SNMPv1
+			# The user session on the CellStack node has failed.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapUserConnectionFail"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "203": ### - csNmsTrapUserConnectionTimeout
+			# SNMPv1
+			# A user session on a CellStack node has timed out.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapUserConnectionTimeout"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "204": ### - csNmsTrapUserConnectionClose
+			# SNMPv1
+			# A user session has ben closed on a CellStack node.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapUserConnectionClose"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "210": ### - csNmsTrapNetworkFail
+			# SNMPv1
+			# The Network link to a CellStack node has been lost.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapNetworkFail"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "211": ### - csNmsTrapNetworkRegister
+			# SNMPv1
+			# The CellStack node has registered its network address.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapNetworkRegister"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "212": ### - csNmsTrapNetworkRestart
+			# SNMPv1
+			# The Network link to a CellStack node has been restarted.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapNetworkRestart"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "220": ### - csNmsTrapPSUOK
+			# SNMPv1
+			# The PSU on the CellStack node is OK.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapPSUOK"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "221": ### - csNmsTrapPSUFailure
+			# SNMPv1
+			# The CellStack node PSU has failed.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapPSUFailure"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "222": ### - csNmsTrapPSUTemperature
+			# SNMPv1
+			# The CellStack node PSU has exceeded its operating temperature range.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapPSUTemperature"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "223": ### - csNmsTrapPSUInserted
+			# SNMPv1
+			# A new CellStack node PSU has been inserted.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapPSUInserted"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "224": ### - csNmsTrapPSURemoved
+			# SNMPv1
+			# A CellStack node PSU has been removed.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapPSURemoved"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "227": ### - csNmsTrapBoardTemperature
+			# SNMPv1
+			# A temperature event has been received from a CellStack node. This will usually signify that a threshold level has been crossed and the node is overheating.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapBoardTemperature"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "230": ### - csNmsTrapConnectionSuccess
+			# SNMPv1
+			# The CellStack node connection has succeeded.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapConnectionSuccess"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "231": ### - csNmsTrapConnectionFailure
+			# SNMPv1
+			# The CellStack node connection has failed.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapConnectionFailure"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "232": ### - csNmsTrapConnectionClosed
+			# SNMPv1
+			# The CellStack node connection has closed.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapConnectionClosed"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "233": ### - csNmsTrapConnectionLeaf
+			# SNMPv1
+			# The CellStack node connection leaf has been added.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapConnectionLeaf"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "234": ### - csNmsTrapConnectionLeafDrop
+			# SNMPv1
+			# The CellStack node connection leaf has been removed.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapConnectionLeafDrop"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "240": ### - csNmsTrapBoardInserted
+			# SNMPv1
+			# The CellStack node card has been inserted.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapBoardInserted"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "241": ### - csNmsTrapBoardReset
+			# SNMPv1
+			# The CellStack node card has been reset.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapBoardReset"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "242": ### - csNmsTrapBoardRemoved
+			# SNMPv1
+			# The CellStack node card has been removed.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapBoardRemoved"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "243": ### - csNmsTrapBoardNoConfig
+			# SNMPv1
+			# The CellStack node card has not been configured.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapBoardNoConfig"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "244": ### - csNmsTrapBoardConfigured
+			# SNMPv1
+			# The CellStack node card has been configured.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapBoardConfigured"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "245": ### - csNmsTrapBoardSystemFault
+			# SNMPv1
+			# The CellStack node card has a system fault.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapBoardSystemFault"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "246": ### - csNmsTrapBoardUpgradeOK
+			# SNMPv1
+			# The CellStack node card has had its software upgraded successfully.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapBoardUpgradeOK"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "247": ### - csNmsTrapBoardUpgradeFail
+			# SNMPv1
+			# The CellStack node card SW upgrade failed.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapBoardUpgradeFail"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "248": ### - csNmsTrapBoardHardwareFail
+			# SNMPv1
+			# The CellStack node card hardware has failed.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapBoardHardwareFail"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "249": ### - csNmsTrapBoardNoVideoSync
+			# SNMPv1
+			# The CellStack node has lost video synchronisation.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapBoardNoVideoSync"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "250": ### - csNmsTrapBoardLowLuminance
+			# SNMPv1
+			# The CellStack node has detected a low light (Luminance) situation.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapBoardLowLuminance"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "251": ### - csNmsTrapBoardModeConflict
+			# SNMPv1
+			# The CellStack node card has a conflict with its configuration.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapBoardModeConflict"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "252": ### - csNmsTrapBoardPicType
+			# SNMPv1
+			# The CellStack node has detected a bad picture type.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapBoardPicType"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "253": ### - csNmsTrapBoardConnFail
+			# SNMPv1
+			# The CellStack node card has failed to setup the connection requested.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapBoardConnFail"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "254": ### - csNmsTrapBoardCtrlMoved
+			# SNMPv1
+			# The CellStack node control card has been moved.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapBoardCtrlMoved"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "255": ### - csNmsTrapBoardStatusOK
+			# SNMPv1
+			# The CellStack node card has nominal status.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapBoardStatusOK"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "256": ### - csNmsTrapNoTSDetected
+			# SNMPv1
+			# The CellStack node cannot detect a transport signal.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapNoTSDetected"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "257": ### - csNmsTrapBoardEncodingError
+			# SNMPv1
+			# The CellStack node has experienced an error in the MPEG2 encoding engine.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapBoardEncodingError"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "258": ### - csNmsTrapBoardDecodingError
+			# SNMPv1
+			# The CellStack node  has experienced an error attempting to decode the MPEG2 data stream. This may be due to an unsupported format in the stream.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapBoardDecodingError"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "259": ### - csNmsTrapNoATMStream
+			# SNMPv1
+			# The CellStack node has lost its ATM stream.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapNoATMStream"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "260": ### - csNmsTrapBoardOutOfTSSync
+			# SNMPv1
+			# The CellStack node has lost synchronisation on its ATM transport stream.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapBoardOutOfTSSync"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "261": ### - csNmsTrapIOPortStatusChange
+			# SNMPv1
+			# The CellStack node has detected an IO Port status change.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapIOPortStatusChange"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "262": ### - csNmsTrapIOPortMgmtConnEst
+			# SNMPv1
+			# An IO Port management connection has been established with the CellStack node.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapIOPortMgmtConnEst"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "263": ### - csNmsTrapIOPortMgmtConnClosed
+			# SNMPv1
+			# An IO Port management connection with the CellStack node has been closed.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapIOPortMgmtConnClosed"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "264": ### - csNmsTrapIOExBoxAttached
+			# SNMPv1
+			# The CellStack node has detected that an IO Expansion Box has been attached.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapIOExBoxAttached"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "265": ### - csNmsTrapIOExBoxRemoved
+			# SNMPv1
+			# The CellStack node has detected that an IO Expansion Box has been removed.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapIOExBoxRemoved"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "266": ### - csNmsTrapCentinal
+			# SNMPv1
+			# A Cellstack Centinal has raised an alarm.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapCentinal"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "300": ### - csNmsTrapNASRAIDWarning
+			# SNMPv1
+			# The NAS is reporting RAID warnings
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapNASRAIDWarning"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "301": ### - csNmsTrapMountDisabled
+			# SNMPv1
+			# The Mount is disabled by the user
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapMountDisabled"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "302": ### - csNmsTrapIndexNotReady
+			# SNMPv1
+			# Index Not Ready
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapIndexNotReady"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "303": ### - csNmsTrapNASUnapproved
+			# SNMPv1
+			# The NAS is not Approved. Cannot mount
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapNASUnapproved"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "304": ### - csNmsTrapMountPermission
+			# SNMPv1
+			# Permission error on mount
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapMountPermission"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "305": ### - csNmsTrapStorageNotReady
+			# SNMPv1
+			# Storage Not Ready
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapStorageNotReady"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "306": ### - csNmsTrapNewerJournal
+			# SNMPv1
+			# A newer journal file was detected on disk. Cannot read it. View syslog for more detail.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapNewerJournal"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "307": ### - csNmsTrapSystem2KFrames
+			# SNMPv1
+			# The System is out of 2K frames
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapSystem2KFrames"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "308": ### - csNmsTrapSystem8KFrames
+			# SNMPv1
+			# The System is out of 8K frames
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapSystem8KFrames"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "309": ### - csNmsTrapNFSReadDir
+			# SNMPv1
+			# The NFS Readdir is Greater than 255
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapNFSReadDir"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "310": ### - csNmsTrapHardError
+			# SNMPv1
+			# A Hard Error detected on Mount
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapHardError"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "311": ### - csNmsTrapLinkDown
+			# SNMPv1
+			# Link Down
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapLinkDown"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "312": ### - csNmsTrapCommsDown
+			# SNMPv1
+			# Comms down to NAS
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapCommsDown"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "313": ### - csNmsTrapIndexFull
+			# SNMPv1
+			# The index tag table is full
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapIndexFull"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "314": ### - csNmsTrapCreateTest
+			# SNMPv1
+			# Create Test Fail
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapCreateTest"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "315": ### - csNmsTrapWriteError
+			# SNMPv1
+			# Write error. Verify MTUs are 9000
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapWriteError"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "316": ### - csNmsTrapReadError
+			# SNMPv1
+			# Read error. Verify MTUs are 9000
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapReadError"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "317": ### - csNmsTrapNASLicense
+			# SNMPv1
+			# NAS not licensed. Cannot use
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapNASLicense"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "318": ### - csNmsTrapCannotMount
+			# SNMPv1
+			# Cannot Mount
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapCannotMount"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "319": ### - csNmsTrapMountOverrun
+			# SNMPv1
+			# The Mount is being overrun
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapMountOverrun"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "320": ### - csNmsTrapStorageWrite
+			# SNMPv1
+			# Cannot write to storage
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapStorageWrite"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "321": ### - csNmsTrapATMUNI
+			# SNMPv1
+			# ATM: UNI Failure
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapATMUNI"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "322": ### - csNmsTrapATMILMI
+			# SNMPv1
+			# ATM: ILMI Failure
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapATMILMI"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "323": ### - csNmsTrapATMPDUSize
+			# SNMPv1
+			# ATM: Oversize PDU discarded
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapATMPDUSize"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "324": ### - csNmsTrapATMPDUReassembly
+			# SNMPv1
+			# ATM: PDU reassembly. Out of resources
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapATMPDUReassembly"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "325": ### - csNmsTrapATMIFC
+			# SNMPv1
+			# ATM: IFC Failure
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapATMIFC"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "326": ### - csNmsTrapTransportResources
+			# SNMPv1
+			# TP: Transport out of resources
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapTransportResources"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "327": ### - csNmsTrapUMPAlloc
+			# SNMPv1
+			# UMP: Alloc Failed
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapUMPAlloc"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "328": ### - csNmsTrapUMPServerOpen
+			# SNMPv1
+			# UMP: Server Open Failed
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapUMPServerOpen"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "329": ### - csNmsTrapUMPServer
+			# SNMPv1
+			# UMP: Server Failed
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapUMPServer"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "330": ### - csNmsTrapIFCColdstart
+			# SNMPv1
+			# IFC: transmit coldstart Trap
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapIFCColdstart"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "331": ### - csNmsTrapIFCSSCOP
+			# SNMPv1
+			# IFC: No SSCOP activity - Restart ILMI
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapIFCSSCOP"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "332": ### - csNmsTrapSTSResources
+			# SNMPv1
+			# STS: Out of Resources
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapSTSResources"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "333": ### - csNmsTrapRTPAssignment
+			# SNMPv1
+			# RTP: Local port assignment failed
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapRTPAssignment"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "334": ### - csNmsTrapCPULevel
+			# SNMPv1
+			# Cannot start Playback. CPU above limits
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapCPULevel"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "335": ### - csNmsTrapPlayback
+			# SNMPv1
+			# Playback Failed
+			$csNmsEventNodeName = $1
+			#$csNmsEventDesc = $2
+			$csNmsEventDesc = "PlayBack Jump to live failed -- recording is not active"
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapPlayback"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "336": ### - csNmsTrapActiveRecording
+			# SNMPv1
+			# Active recording has stopped
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapActiveRecording"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "337": ### - csNmsTrapRecording
+			# SNMPv1
+			# Recording failed
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapRecording"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "338": ### - csNmsTrapRecordingNoData
+			# SNMPv1
+			# The active recording is not receiving data
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapRecordingNoData"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "339": ### - csNmsTrapLicense1Day
+			# SNMPv1
+			# The System license has less than one day remaining
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapLicense1Day"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "340": ### - csNmsTrapLicenseNone
+			# SNMPv1
+			# The System is not licensed
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapLicenseNone"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "341": ### - csNmsTrapLicenseDays
+			# SNMPv1
+			# The System license has a limited number of days remaining
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapLicenseDays"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "342": ### - csNmsTrapActiveRestart
+			# SNMPv1
+			# The active data has not received data for 20 Seconds. Forcing restart.
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapActiveRestart"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+		case "343": ### - csNmsTrapStorageUsage
+			# SNMPv1
+			# Storage usage has crossed level
+			$csNmsEventNodeName = $1
+			$csNmsEventDesc = $2
+				$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+				$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+				if(match($csNmsEventSeverity,"UNKNOWN")) {
+					$csNmsEventSeverity = $3
+				} else {
+					$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+				}
+			$csNmsEventInstance = $4
+			$csNmsEventTimestamp = $5
+			$csNmsEventExtInfo = $6
+			$csNmsEventCardNumber = $7
+			$csNmsEventChannel = $8
+			$csNmsEventSubChannel = $9
+			@AlertGroup = ""
+			@Agent = "CS-ALARMINFO-TRAP-MIB"
+			$AlertGroup = "csNmsTrapStorageUsage"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + $AlertGroup
+			#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+###### new section added for card mismatch faults
+#### to be completed
+
+case "8208": ### - csNmsTrapCard1Mismatch
+							# SNMPv1
+							# Slot 1 Card Mismatch.
+							$csNmsEventNodeName = $1
+							$csNmsEventDesc = $2
+							$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+							$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+							if(match($csNmsEventSeverity,"UNKNOWN")) {
+								$csNmsEventSeverity = $3
+							} else {
+								$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+							}
+							$csNmsEventInstance = $4
+							$csNmsEventTimestamp = $5
+							$csNmsEventExtInfo = $6
+							$csNmsEventCardNumber = $7
+							$csNmsEventChannel = $8
+							$csNmsEventSubChannel = $9
+							@AlertGroup = "cellstack"
+							@Agent = "cellstack"
+							@Summary = ""
+							@Severity = 1
+							@Type = 0
+							@Identifier = @Node + @Summary
+							#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+						case "8209": ### - csNmsTrapCard2Mismatch
+							# SNMPv1
+							# Slot 2 Card Mismatch.
+							$csNmsEventNodeName = $1
+							$csNmsEventDesc = $2
+							$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+							$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+							if(match($csNmsEventSeverity,"UNKNOWN")) {
+								$csNmsEventSeverity = $3
+							} else {
+								$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+							}
+							$csNmsEventInstance = $4
+							$csNmsEventTimestamp = $5
+							$csNmsEventExtInfo = $6
+							$csNmsEventCardNumber = $7
+							$csNmsEventChannel = $8
+							$csNmsEventSubChannel = $9
+							@AlertGroup = "cellstack"
+							@Agent = "cellstack"
+							@Summary = ""
+							@Severity = 1
+							@Type = 0
+							@Identifier = @Node + @Summary
+							#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+						case "8210": ### - csNmsTrapCard3Mismatch
+							# SNMPv1
+							# Slot 3 Card Mismatch.
+							$csNmsEventNodeName = $1
+							$csNmsEventDesc = $2
+							$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+							$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+							if(match($csNmsEventSeverity,"UNKNOWN")) {
+								$csNmsEventSeverity = $3
+							} else {
+								$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+							}
+							$csNmsEventInstance = $4
+							$csNmsEventTimestamp = $5
+							$csNmsEventExtInfo = $6
+							$csNmsEventCardNumber = $7
+							$csNmsEventChannel = $8
+							$csNmsEventSubChannel = $9
+							@AlertGroup = "cellstack"
+							@Agent = "cellstack"
+							@Summary = ""
+							@Severity = 1
+							@Type = 0
+							@Identifier = @Node + @Summary
+							#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+						case "8211": ### - csNmsTrapCard4Mismatch
+							# SNMPv1
+							# Slot 4 Card Mismatch.
+							$csNmsEventNodeName = $1
+							$csNmsEventDesc = $2
+							$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+							$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+							if(match($csNmsEventSeverity,"UNKNOWN")) {
+								$csNmsEventSeverity = $3
+							} else {
+								$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+							}
+							$csNmsEventInstance = $4
+							$csNmsEventTimestamp = $5
+							$csNmsEventExtInfo = $6
+							$csNmsEventCardNumber = $7
+							$csNmsEventChannel = $8
+							$csNmsEventSubChannel = $9
+							@AlertGroup = "cellstack"
+							@Agent = "cellstack"
+							@Summary = ""
+							@Severity = 1
+							@Type = 0
+							@Identifier = @Node + @Summary
+							#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+						case "8212": ### - csNmsTrapCard5Mismatch
+							# SNMPv1
+							# Slot 5 Card Mismatch.
+							$csNmsEventNodeName = $1
+							$csNmsEventDesc = $2
+							$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+							$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+							if(match($csNmsEventSeverity,"UNKNOWN")) {
+								$csNmsEventSeverity = $3
+							} else {
+								$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+							}
+							$csNmsEventInstance = $4
+							$csNmsEventTimestamp = $5
+							$csNmsEventExtInfo = $6
+							$csNmsEventCardNumber = $7
+							$csNmsEventChannel = $8
+							$csNmsEventSubChannel = $9
+							@AlertGroup = "cellstack"
+							@Agent = "cellstack"
+							@Summary = ""
+							@Severity = 1
+							@Type = 0
+							@Identifier = @Node + @Summary
+							#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+						case "8213": ### - csNmsTrapCard6Mismatch
+							# SNMPv1
+							# Slot 6 Card Mismatch.
+							$csNmsEventNodeName = $1
+							$csNmsEventDesc = $2
+							$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+							$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+							if(match($csNmsEventSeverity,"UNKNOWN")) {
+								$csNmsEventSeverity = $3
+							} else {
+								$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+							}
+							$csNmsEventInstance = $4
+							$csNmsEventTimestamp = $5
+							$csNmsEventExtInfo = $6
+							$csNmsEventCardNumber = $7
+							$csNmsEventChannel = $8
+							$csNmsEventSubChannel = $9
+							@AlertGroup = "cellstack"
+							@Agent = "cellstack"
+							@Summary = ""
+							@Severity = 1
+							@Type = 0
+							@Identifier = @Node + @Summary
+							#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+						case "8214": ### - csNmsTrapCard7Mismatch
+							# SNMPv1
+							# Slot 7 Card Mismatch.
+							$csNmsEventNodeName = $1
+							$csNmsEventDesc = $2
+							$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+							$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+							if(match($csNmsEventSeverity,"UNKNOWN")) {
+								$csNmsEventSeverity = $3
+							} else {
+								$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+							}
+							$csNmsEventInstance = $4
+							$csNmsEventTimestamp = $5
+							$csNmsEventExtInfo = $6
+							$csNmsEventCardNumber = $7
+							$csNmsEventChannel = $8
+							$csNmsEventSubChannel = $9
+							@AlertGroup = "cellstack"
+							@Agent = "cellstack"
+							@Summary = ""
+							@Severity = 1
+							@Type = 0
+							@Identifier = @Node + @Summary
+							#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+						case "8215": ### - csNmsTrapCard8Mismatch
+							# SNMPv1
+							# Slot 8 Card Mismatch.
+							$csNmsEventNodeName = $1
+							$csNmsEventDesc = $2
+							$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+							$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+							if(match($csNmsEventSeverity,"UNKNOWN")) {
+								$csNmsEventSeverity = $3
+							} else {
+								$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+							}
+							$csNmsEventInstance = $4
+							$csNmsEventTimestamp = $5
+							$csNmsEventExtInfo = $6
+							$csNmsEventCardNumber = $7
+							$csNmsEventChannel = $8
+							$csNmsEventSubChannel = $9
+							@AlertGroup = "cellstack"
+							@Agent = "cellstack"
+							@Summary = ""
+							@Severity = 1
+							@Type = 0
+							@Identifier = @Node + @Summary
+							#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+						case "8216": ### - csNmsTrapCard9Mismatch
+							# SNMPv1
+							# Slot 9 Card Mismatch.
+							$csNmsEventNodeName = $1
+							$csNmsEventDesc = $2
+							$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+							$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+							if(match($csNmsEventSeverity,"UNKNOWN")) {
+								$csNmsEventSeverity = $3
+							} else {
+								$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+							}
+							$csNmsEventInstance = $4
+							$csNmsEventTimestamp = $5
+							$csNmsEventExtInfo = $6
+							$csNmsEventCardNumber = $7
+							$csNmsEventChannel = $8
+							$csNmsEventSubChannel = $9
+							@AlertGroup = "cellstack"
+							@Agent = "cellstack"
+							@Summary = ""
+							@Severity = 1
+							@Type = 0
+							@Identifier = @Node + @Summary
+							#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+						case "8217": ### - csNmsTrapCard10Mismatch
+							# SNMPv1
+							# Slot 10 Card Mismatch.
+							$csNmsEventNodeName = $1
+							$csNmsEventDesc = $2
+							$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+							$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+							if(match($csNmsEventSeverity,"UNKNOWN")) {
+								$csNmsEventSeverity = $3
+							} else {
+								$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+							}
+							$csNmsEventInstance = $4
+							$csNmsEventTimestamp = $5
+							$csNmsEventExtInfo = $6
+							$csNmsEventCardNumber = $7
+							$csNmsEventChannel = $8
+							$csNmsEventSubChannel = $9
+							@AlertGroup = "cellstack"
+							@Agent = "cellstack"
+							@Summary = ""
+							@Severity = 1
+							@Type = 0
+							@Identifier = @Node + @Summary
+							#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+						case "8218": ### - csNmsTrapCard11Mismatch
+							# SNMPv1
+							# Slot 11 Card Mismatch.
+							$csNmsEventNodeName = $1
+							$csNmsEventDesc = $2
+							$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+							$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+							if(match($csNmsEventSeverity,"UNKNOWN")) {
+								$csNmsEventSeverity = $3
+							} else {
+								$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+							}
+							$csNmsEventInstance = $4
+							$csNmsEventTimestamp = $5
+							$csNmsEventExtInfo = $6
+							$csNmsEventCardNumber = $7
+							$csNmsEventChannel = $8
+							$csNmsEventSubChannel = $9
+							@AlertGroup = "cellstack"
+							@Agent = "cellstack"
+							@Summary = ""
+							@Severity = 1
+							@Type = 0
+							@Identifier = @Node + @Summary
+							#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+						case "8219": ### - csNmsTrapCard12Mismatch
+							# SNMPv1
+							# Slot 12 Card Mismatch.
+							$csNmsEventNodeName = $1
+							$csNmsEventDesc = $2
+							$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+							$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+							if(match($csNmsEventSeverity,"UNKNOWN")) {
+								$csNmsEventSeverity = $3
+							} else {
+								$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+							}
+							$csNmsEventInstance = $4
+							$csNmsEventTimestamp = $5
+							$csNmsEventExtInfo = $6
+							$csNmsEventCardNumber = $7
+							$csNmsEventChannel = $8
+							$csNmsEventSubChannel = $9
+							@AlertGroup = "cellstack"
+							@Agent = "cellstack"
+							@Summary = ""
+							@Severity = 1
+							@Type = 0
+							@Identifier = @Node + @Summary
+							#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+						case "8220": ### - csNmsTrapCard13Mismatch
+							# SNMPv1
+							# Slot 13 Card Mismatch.
+							$csNmsEventNodeName = $1
+							$csNmsEventDesc = $2
+							$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+							$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+							if(match($csNmsEventSeverity,"UNKNOWN")) {
+								$csNmsEventSeverity = $3
+							} else {
+								$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+							}
+							$csNmsEventInstance = $4
+							$csNmsEventTimestamp = $5
+							$csNmsEventExtInfo = $6
+							$csNmsEventCardNumber = $7
+							$csNmsEventChannel = $8
+							$csNmsEventSubChannel = $9
+							@AlertGroup = "cellstack"
+							@Agent = "cellstack"
+							@Summary = ""
+							@Severity = 1
+							@Type = 0
+							@Identifier = @Node + @Summary
+							#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+						case "8221": ### - csNmsTrapCard14Mismatch
+							# SNMPv1
+							# Slot 14 Card Mismatch.
+							$csNmsEventNodeName = $1
+							$csNmsEventDesc = $2
+							$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+							$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+							if(match($csNmsEventSeverity,"UNKNOWN")) {
+								$csNmsEventSeverity = $3
+							} else {
+								$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+							}
+							$csNmsEventInstance = $4
+							$csNmsEventTimestamp = $5
+							$csNmsEventExtInfo = $6
+							$csNmsEventCardNumber = $7
+							$csNmsEventChannel = $8
+							$csNmsEventSubChannel = $9
+							@AlertGroup = "cellstack"
+							@Agent = "cellstack"
+							@Summary = ""
+							@Severity = 1
+							@Type = 0
+							@Identifier = @Node + @Summary
+							#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+						case "8222": ### - csNmsTrapCard15Mismatch
+							# SNMPv1
+							# Slot 15 Card Mismatch.
+							$csNmsEventNodeName = $1
+							$csNmsEventDesc = $2
+							$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+							$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+							if(match($csNmsEventSeverity,"UNKNOWN")) {
+								$csNmsEventSeverity = $3
+							} else {
+								$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+							}
+							$csNmsEventInstance = $4
+							$csNmsEventTimestamp = $5
+							$csNmsEventExtInfo = $6
+							$csNmsEventCardNumber = $7
+							$csNmsEventChannel = $8
+							$csNmsEventSubChannel = $9
+							@AlertGroup = "cellstack"
+							@Agent = "cellstack"
+							@Summary = ""
+							@Severity = 1
+							@Type = 0
+							@Identifier = @Node + @Summary
+							#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+						case "8223": ### - csNmsTrapCard16Mismatch
+							# SNMPv1
+							# Slot 16 Card Mismatch.
+							$csNmsEventNodeName = $1
+							$csNmsEventDesc = $2
+							$csNmsEventSeveritylook = "csNmsEventSeverity." + $3
+							$csNmsEventSeverity = lookup($csNmsEventSeveritylook,VarbindValTable)
+							if(match($csNmsEventSeverity,"UNKNOWN")) {
+								$csNmsEventSeverity = $3
+							} else {
+								$csNmsEventSeverity = $csNmsEventSeverity + " ( " + $3 + " )"
+							}
+							$csNmsEventInstance = $4
+							$csNmsEventTimestamp = $5
+							$csNmsEventExtInfo = $6
+							$csNmsEventCardNumber = $7
+							$csNmsEventChannel = $8
+							$csNmsEventSubChannel = $9
+							@AlertGroup = "cellstack"
+							@Agent = "cellstack"
+							@Summary = ""
+							@Severity = 1
+							@Type = 0
+							@Identifier = @Node + @Summary
+							#details($csNmsEventNodeName,$csNmsEventDesc,$csNmsEventSeverity,$csNmsEventInstance,$csNmsEventTimestamp,$csNmsEventExtInfo,$csNmsEventCardNumber,$csNmsEventChannel,$csNmsEventSubChannel)
+
+
+
+               
+                    
+
+
+### end of section added for card mismatch faults
+		default:
+			$AlertGroup = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+### as vabind val lookup now working need to use $3 not $csNmsEventSeverity
+		#switch($csNmsEventSeverity) {
+		switch($3) {
+			case "0": 
+				@Severity = 5
+				@Type = 1
+			case "1":
+				@Severity = 4
+				@Type = 1
+			case "2":
+				@Severity = 3
+				@Type = 1
+			case "3":
+				@Severity = 2
+				@Type = 1
+			case "4":
+				#@Severity = 1
+				@Severity = 2
+				@Type = 1
+			case "5":
+				#@Severity = 1
+				@Severity = 2
+				@Type = 13
+			case "6":
+				@Type = 2
+			default:
+				@Severity = 1
+		}
+
+### added by Toby
+## to set timestamps for generic clear from the event....
+
+		@FirstRaiseTime = $csNmsEventTimestamp
+		@LastRaiseTime = $csNmsEventTimestamp

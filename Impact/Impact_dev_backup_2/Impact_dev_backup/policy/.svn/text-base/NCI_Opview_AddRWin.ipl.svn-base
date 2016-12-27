@@ -1,0 +1,606 @@
+/********************************************************* {COPYRIGHT-TOP-RM} ***
+* Licensed Materials - Property of IBM
+* "Restricted Materials of IBM"
+*
+* 5724-S43
+* (C) Copyright IBM Corp. 2009
+*
+* US Government Users Restricted Rights - Use, duplication, or
+* disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+********************************************************* {COPYRIGHT-END-RM} **/
+/*#####################################
+
+functions
+
+####################################*/
+
+
+function prepDOMValues(origString, stringForInsert)
+{
+	log(3, "DoM values from browser are " + origString);
+
+    workingArray = split(origString, ",");
+    log(3, "split values are " + workingArray);
+
+
+    //get rid of empty values and spaces
+    workingArray2 = {};
+    n = 0;
+    while (n < length(workingArray))
+    {
+        if (workingArray[n] != '')
+        {
+                workingArray2 = workingArray2 + strip(workingArray[n], " ");
+        }
+
+        n = n + 1;
+    }
+    log(3, "workingArray2 is " + workingArray2);
+
+
+    //building string from array
+    stringForInsert = "|";
+    n = 0;
+    while (n < length(workingArray2))
+    {
+        stringForInsert = stringForInsert + workingArray2[n] + "|";
+        n = n + 1;
+    }
+    log(3, "stringForInsert is " + stringForInsert);   
+           
+}
+
+
+
+
+
+/*#####################################
+
+starting values
+
+####################################*/
+
+//log(currentcontext());
+Log(3, "Node " + @t1);
+Log(3, "Node equal/like: " + @loeq1);
+Log(3, "AlertGroup " + @t2);
+Log(3, "AlertGroup  equal/like: " + @loeq2);
+Log(3, "AlertKey " + @t3);
+Log(3, "AlertKey  equal/like: " + @loeq3);
+Log(3, "Location " + @t4);
+Log(3, "Location  equal/like: " + @loeq4);
+Log(3, "Start time: " + @starttime);
+Log(3, "End time: " + @endtime);
+Log(3, "Type of Recurrence: " + @rectype);
+Log(3, "Day of Week: " + @dow); //null? is this used?
+Log(3, @Sun + " " + @Mon + " " + @Tue + " " + @Wed + " " + @Thu + " " + @Fri + " " + @Sat);
+Log(3, "Dates of Month list: " + @doms);
+Log(3, "nth values " + @first + " " + @second + " " + @third + " " + @fourth + " " +@fifth);
+Log(3, "nth days " + @nthSun + " " + @nthMon + " " + @nthTue + " " + @nthWed + " " + @nthThu + " " + @nthFri + " " + @nthSat);
+
+
+
+log(3, "timezone: " + @timezone);
+//log(3, "dst: " + @dst);
+
+
+
+
+
+
+
+/*#####################################
+
+clean up the time from the time picker gui
+
+####################################*/
+
+
+
+
+//given times like T10:30:00
+//@starttime, @endtime
+
+
+//yank off the T
+noTStartTime = strip(@starttime, "T");
+noTEndTime = strip(@endtime, "T");
+
+starttime_c = noTStartTime;
+endtime_c = noTEndTime;
+
+log(3, "starttime_c is " + starttime_c);
+log(3, "endtime_c is " + endtime_c);
+
+
+
+
+
+
+
+
+/*##################################
+
+building the filter
+
+##################################*/
+
+// tweaking the field values
+
+// Node - t1
+If(@t1 == '')
+{
+    nodeval = 'ANY';
+}
+Else
+{
+    nodeval = @t1;
+}
+
+// AlertGroup - t2
+If(@t2 == '')
+{
+    agval = 'ANY';
+}
+Else
+{
+agval = @t2;
+}
+
+// AlertKey - t3
+If(@t3 == '')
+{
+akval = 'ANY';
+}
+Else
+{
+    akval = @t3;
+}
+
+// Location - t4
+If(@t4 == '')
+{
+    locval = 'ANY';
+}
+Else
+{
+    locval = @t4;
+}
+ 
+
+
+//Building filter statement
+myfilter = "";
+
+//Node
+If((@t1 != '') && (@t1 != NULL))
+{
+    If(@loeq1 == "equal")
+    {
+        myfilter="(Node=\"" + @t1 + "\")";
+    }
+
+    ElseIf(@loeq1 == "like")
+    {
+    myfilter="(Node like \".*" + @t1 + ".*\")";
+    }
+}
+
+//AlertGroup
+If((@t2 != '') && (@t2 != NULL))
+{
+    If(myfilter != '')
+    {
+        myfilter = myfilter + " AND ";
+    }
+
+    If(@loeq2 == "equal")
+    {
+        myfilter=myfilter + "(AlertGroup=\"" + @t2 + "\")";
+    }
+
+    ElseIf(@loeq2 == "like")
+    {
+    myfilter=myfilter + "(AlertGroup like \".*" + @t2 + ".*\")";
+    }
+}
+
+//AlertKey
+If((@t3 != '') && (@t3 != NULL))
+{ 
+    If(myfilter != '')
+    {
+        myfilter = myfilter + " AND ";
+    }
+
+    If(@loeq3 == "equal")
+    {
+        myfilter=myfilter + "(AlertKey=\"" + @t3 + "\")";
+    }
+
+    ElseIf(@loeq3 == "like")
+    {
+    myfilter=myfilter + "(AlertKey like \".*" + @t3 + ".*\")";
+    }
+}
+
+//Location
+If((@t4 != '') && (@t4 != NULL))
+{ 
+    If(myfilter != '')
+    {
+        myfilter = myfilter + " AND ";
+    }
+
+    If(@loeq4 == "equal")
+    {
+        myfilter=myfilter + "(Location=\"" + @t4 + "\")";
+    }
+
+    ElseIf(@loeq4 == "like")
+    {
+        myfilter=myfilter + "(Location like \".*" + @t4 + ".*\")";
+    }
+}
+
+
+//done with filter
+Log(3, "myfilter: " + myfilter);
+
+
+
+/*#########################
+
+Setting Day(s) of week value
+
+########################*/
+
+
+
+//day(s) of week
+dowval = "";
+If(@Sun == "Sun")
+{
+    dowval = "Sun";
+}
+
+If(@Mon == "Mon") 
+{ 
+    If(dowval != "")
+    {
+        dowval = dowval + "|";
+    }
+    dowval = dowval + "Mon";
+}
+
+If(@Tue == "Tue") 
+{ 
+    If(dowval != "")
+    {
+        dowval = dowval + "|";
+    }
+    dowval = dowval + "Tue";
+}
+
+If(@Wed == "Wed") 
+{ 
+    If(dowval != "")
+    {
+        dowval = dowval + "|";
+    }
+    dowval = dowval + "Wed";
+}
+
+If(@Thu == "Thu") 
+{ 
+    If(dowval != "")
+    {
+        dowval = dowval + "|";
+    }
+    dowval = dowval + "Thu";
+}
+
+If(@Fri == "Fri") 
+{ 
+    If(dowval != "")
+    {
+        dowval = dowval + "|";
+    }
+    dowval = dowval + "Fri";
+}
+
+If(@Sat == "Sat") 
+{ 
+    If(dowval != "")
+    {
+        dowval = dowval + "|";
+    }
+    dowval = dowval + "Sat";
+}
+
+Log(3, "dowval: " + dowval);
+
+
+
+
+
+/*#########################
+
+Setting nth day of week in month values
+
+########################*/
+
+
+fstflist = "";
+
+If(@first == "first")
+{
+    fstflist = "first";
+}
+
+If(@second == "second")
+{
+    If(fstflist != "") 
+    { 
+        fstflist = fstflist + "|"; 
+    }
+    fstflist = fstflist + "second";
+}
+
+If(@third == "third")
+{
+    If(fstflist != "") 
+    { 
+        fstflist = fstflist + "|"; 
+    }
+    fstflist = fstflist + "third";
+}
+
+If(@fourth == "fourth")
+{
+    If(fstflist != "") 
+    { 
+        fstflist = fstflist + "|"; 
+    }
+    fstflist = fstflist + "fourth";
+}
+
+If(@fifth == "fifth")
+{
+    If(fstflist != "") 
+    { 
+        fstflist = fstflist + "|"; 
+    }
+    fstflist = fstflist + "fifth";
+}
+
+
+
+Log(3, "fstflist: " + fstflist);
+
+nthdaylist = "";
+If(@nthSun == "Sun") 
+{ 
+    nthdaylist = "Sun"; 
+}
+
+If(@nthMon == "Mon") 
+{ 
+    If(dowval != "") 
+    { 
+        nthdaylist = nthdaylist + "|"; 
+    }
+    nthdaylist = nthdaylist + "Mon";
+}
+
+If(@nthTue == "Tue") 
+{ 
+    If(dowval != "") 
+    { 
+        nthdaylist = nthdaylist + "|"; 
+    }
+    nthdaylist = nthdaylist + "Tue";
+}
+
+If(@nthWed == "Wed") 
+{ 
+    If(nthdaylist != "") 
+    { 
+        nthdaylist = nthdaylist + "|"; 
+    }
+    nthdaylist = nthdaylist + "Wed";
+}
+
+If(@nthThu == "Thu") 
+{ 
+    If(nthdaylist != "") 
+    { 
+        nthdaylist = nthdaylist + "|"; 
+    }
+    nthdaylist = nthdaylist + "Thu";
+}
+
+If(@nthFri == "Fri") 
+{ 
+    If(nthdaylist != "") 
+    { 
+        nthdaylist = nthdaylist + "|"; 
+    }
+    nthdaylist = nthdaylist + "Fri";
+}
+
+If(@nthSat == "Sat") 
+{ 
+    If(nthdaylist != "") 
+    { 
+        nthdaylist = nthdaylist + "|"; 
+    }
+    nthdaylist = nthdaylist + "Sat";
+}
+Log(3, "nthdaylist: " + nthdaylist);
+
+
+
+//nthdayval = fstflist + "," + nthdaylist;
+
+
+
+//BUILDING A STRUCTURE TO HOLD nth Day info
+spFSTF = Split(fstflist, "|");
+numFSTF = Length(spFSTF);
+
+spNTHDAY = Split(nthdaylist, "|");
+numNTHDAY = Length(spNTHDAY);
+
+ii = 0;
+nthdayvar = "";
+
+While(ii < numFSTF)
+{
+    dowim = spFSTF[ii];
+    Log(3, "ii is " + ii + " and dowim is " + dowim);
+    jj = 0;
+
+    While(jj < numNTHDAY)
+    {
+    combined = dowim + spNTHDAY[jj];
+    Log(3, "combined is " + combined);
+    Log(3, "pre: ii: " + ii + " and jj: " + jj);
+
+    If((ii == 0) AND (jj == 0))
+    {
+        nthdayvar = nthdayvar + combined;
+    }
+
+    Else
+    {
+    nthdayvar = nthdayvar + "|" + combined;
+    }
+    jj = jj + 1;
+
+    }
+
+ii = ii + 1;
+}
+
+
+
+
+
+
+/*##################################
+
+additional cleanups
+
+##################################*/
+
+
+
+
+
+nthdayval = nthdayvar; //seemingly needless creation of new variable
+Log(3, "nthdayval: " + nthdayval);
+
+
+
+
+
+
+/*######################################
+
+building insert statement for DB
+
+######################################*/
+
+
+
+
+
+//day(s) of week
+If(@rectype = "dow")
+{
+
+    //check for duplicate
+    window = newobject();
+    window.wintype = 2;
+    window.filterstat = myfilter;
+    window.r_starttime = starttime_c;
+    window.r_endtime = endtime_c;
+    window.timezone = @timezone;
+    window.daysofweek=dowval;
+
+    Opview_Add1TWin.jMadrox (window, bool);
+
+    if(bool == false)
+    {
+        ins_stat = "insert into mm_windows (filterstat,wintype,daysofweek,r_starttime,r_endtime,timezone) values ";
+        ins_stat = ins_stat + "('"+ myfilter + "',2,'"+dowval+"','" + starttime_c + "','";
+        ins_stat = ins_stat + endtime_c + "', '" + @timezone + "')";
+    }
+}
+
+//date(s) of month
+ElseIf(@rectype = "dom")
+{
+
+    //turn DiM string into proper string for insert -- |1|2|3|
+    Opview_AddRWin.prepDOMValues(@doms, domval);
+
+    //check for duplicate
+    window = newobject();
+    window.wintype = 3;
+    window.filterstat = myfilter;
+    window.r_starttime = starttime_c;
+    window.r_endtime = endtime_c;
+    window.timezone = @timezone;
+    window.daysofmonth= domval;
+
+    Opview_Add1TWin.jMadrox (window, bool);
+
+    if(bool == false)
+    {
+        ins_stat = "insert into mm_windows (filterstat,wintype,daysofmonth,r_starttime,r_endtime, timezone) values ";
+        ins_stat = ins_stat + "('"+ myfilter + "',3,'"+domval+"','" + starttime_c + "','";
+        ins_stat = ins_stat + endtime_c + "', '" + @timezone + "')";
+    }
+}
+
+//nth days in month
+ElseIf(@rectype = "nth")
+{
+    //check for duplicate
+    window = newobject();
+    window.wintype = 4;
+    window.filterstat = myfilter;
+    window.r_starttime = starttime_c;
+    window.r_endtime = endtime_c;
+    window.timezone = @timezone;
+    window.nweekdayofmonth= "|" + nthdayval + "|";
+
+    Opview_Add1TWin.jMadrox (window, bool);
+
+    if(bool == false)
+    {
+        ins_stat = "insert into mm_windows (filterstat,wintype,nweekdayofmonth,r_starttime,r_endtime, timezone) values ";
+        ins_stat = ins_stat + "('"+ myfilter + "',4,'|"+nthdayval+"|','" + starttime_c + "','";
+        ins_stat = ins_stat + endtime_c + "', '" + @timezone + "')";
+    }
+}
+
+
+
+log(3, "duplicate window = " + bool);
+if(bool == true)
+{
+    Log(3, "ins_stat: " + ins_stat);
+}
+
+
+
+
+////DB insert##################
+if(bool == false)
+{
+    DirectSQL('ReportsHSQLDB',ins_stat,false);
+}
+

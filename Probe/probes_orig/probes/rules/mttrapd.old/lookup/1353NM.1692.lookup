@@ -1,0 +1,29 @@
+Alarm Name	Severity	Summary	AlertKey	Action Required	Service Affecting	Resilience Affecting	Correlated Event
+Alarm Name 		Summary	AlertKey				
+Node Isolation	5	Node Isolation	Equipment domain	1	2	2	0
+Replaceable Unit Missing	4	Card Missing	Equipment domain	1	2	1	0
+Replaceable Unit Type Mismatch	5	Equipment Mismatch	Equipment domain	1	2	1	0
+Unconfigured Equipment Present	2	Unconfigured	Equipment domain	0	2	2	0
+Replaceable Unit Problem	4	Card Failure	Equipment domain	1	2	1	1
+Version Mismatch	2	Version Mismatch	Equipment domain	0	2	1	0
+Power supply failure	5	PS_FAIL	WDM domain	1	2	1	0
+Rx LOS	5	RX_LOS	WDM domain	1	2	1	1
+Transmission Fault	5	TX_FAULT	WDM domain	1	2	1	1
+Clock Data Recovery Unlock	5	CDR_UNLOCK	WDM domain	1	1	1	1
+Bit-rate Threshold Crossing Alarm	4	Bit-rate TCA	WDM domain	1	2	1	1
+Card Temperature Over Range	4	CTOR	WDM domain	1	2	1	0
+Loss of Frame at Receive side	4	RX_LOF	WDM domain	1	2	1	1
+Performance Threshold Cross Alarm on B1	3	Performance TCA	Performance domain	1	2	1	1
+Unavailable Time Alarm on SDH	4	UAT	Performance domain	1	2	1	1
+Internal Communication Problem	4	I_LINK Disconnect		1	2	2	0
+Server Signal Failure	4	Server Signal Failure		0	2	1	0
+WDM Loss of Frame	4	WDM Loss of Frame		0	2	1	0
+Unavailable Time	4	Unavailable Time		0	2	1	0
+Software Mismatch	4	Version Mismstch on EC/SC	Equipment domain	0	2	1	0
+LAN Failure	4	LAN Communication Failure	Equipment domain	0	2	1	0
+Database Abnormal	4	Database Abnormal	Equipment domain	0	2	1	0
+Input Power Degraded	3	Input Power Degrade Defect	Equipment domain	0	2	1	0
+TX_Fail	4	Transmitting Fail/Tx Fail	WDM domain	1	2	1	0
+Loss of Clock	4	Loss of Clock	WDM domain	0	2	1	0
+Egressing Server Signal Fail	4	Server Signal Failure Egre	WDM domain	0	2	1	0
+Loss of Frame 	4	Loss of Frame at Receive side	WDM domain	0	2	1	0

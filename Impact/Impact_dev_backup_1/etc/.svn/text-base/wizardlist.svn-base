@@ -1,0 +1,19 @@
+#This file was written by server.
+#Thu Feb 13 16:11:52 EST 2003
+
+impact.wizards.6.class=com.micromuse.response.client.soapclient.wizard.WSInvokeDLWizardStepInfo
+impact.wizards.5.class=com.micromuse.response.client.soapclient.wizard.EventRoutingWizardStepInfo
+impact.wizards.5.name=Event Relocation
+impact.wizards.6.name=Web Services 
+impact.wizards.4.name=Event Notification
+impact.wizards.4.class=com.micromuse.response.client.soapclient.wizard.EventNotificationWizardStepInfo
+impact.wizards.1.class=com.micromuse.response.client.soapclient.wizard.EventEnrichmentWizardStepInfo
+impact.wizards.1.name=Event Enrichment
+impact.wizards.2.class=com.micromuse.response.client.soapclient.wizard.EventSuppressionWizardStepInfo
+impact.wizards.2.name=Event Suppression
+impact.wizards.7.class=com.micromuse.response.client.soapclient.wizard.XmlDsaWizardStepInfo
+impact.wizards.3.class=com.micromuse.response.client.soapclient.wizard.XinYWizardStepInfo
+impact.wizards.3.name=XinY
+impact.wizards.7.name=XML DSA
+impact.wizards.3.name=XinY
+impact.wizards.numwizards=7

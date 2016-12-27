@@ -1,0 +1,127 @@
+// Policy Name: Multiple_RX_Loss
+// 
+// Version	Date        Name        Description
+// 1.0        14-09-10    -        Baseline
+// 1.1        14-09-10    Tony Nisbet    Capture ServerSerial with logging (patch 4.22)
+// 1.2         01-10-11   Nick Evans      10G EventID changes and numRXEvents changed for Clear Synthentic events
+
+// DB - LOGGING ADDED 
+log ("**** Multiple_RX_Loss: Start. Serial=" + @Serial + " Severity=" + @Severity + " Node is " + @Node);
+log("Multiple_RX_Loss: IQLOGSTART: ServerSerial=" + @ServerSerial + " EventId=" + @EventId);
+
+// Policy to consolidate multiple RX loss events (EventID: 1353NM_007)
+
+if(@Severity > 0)
+        {
+        RXevents = GetByFilter('ha_ncoms_impact_events',"(Severity > 0) and (Type = 1) and (EventId = '1353NM_007') and (Node not like '96C') and (RCCArea = '"+EventContainer.RCCArea+"')",false);
+        numRXevents = Length(RXevents);
+        log("Multiple_RX_Loss: Number of RX Loss events found for " + @RCCArea + ": " + numRXevents);
+
+        if(numRXevents > 1)
+                {
+                // Check if there is already a compund event for the RCC Area
+                RXCompEvent = GetByFilter('ha_ncoms_impact_events',"Identifier = 'Impact compound RX Loss event _ "+@RCCArea+"'",false);
+                numRXCompEvent = Length(RXCompEvent);
+                log("Multiple_RX_Loss: Number of Compound RX Loss events found for " + @RCCArea + ": " + numRXCompEvent);
+                if(numRXCompEvent = 0)
+                    {
+                        log("Multiple_RX_Loss: Formatting new compund event");
+                        NewEvent = NewObject();
+                        NewEvent.Identifier = 'Impact compound RX Loss event _ ' +@RCCArea ;
+                        NewEvent.Node = @RCCArea;
+                        NewEvent.NodeAlias = @Node;
+                       // Added by SK for the Vega# 200807016286, patch-3.50.1
+               NewEvent.OwnerUID = 65534;
+                        NewEvent.Class = @Class;
+                        NewEvent.AlertGroup = @AlertGroup;
+                        NewEvent.AlertKey = "Multiple_RX_Loss";
+                        NewEvent.Summary = "Multiple RX Loss events from the same RCC - " + @RCCArea;
+                        NewEvent.Severity = 5;
+             //NewEvent.LastOccurrence = getdate();
+                        NewEvent.Type = 1;
+                        NewEvent.ServiceType = @ServiceType;
+                        NewEvent.Manager = @Manager;
+                        NewEvent.RCCArea = @RCCArea;
+                        NewEvent.Agent = @Agent;
+                        NewEvent.AssetElectronicAddress= @AssetElectronicAddress;
+                        NewEvent.ImpactFlag=1;
+                        NewEvent.TSA = @TSA;
+                        NewEvent.TSB = @TSB;
+                        NewEvent.SDPLocation = @SDPLocation;
+                    NewEvent.AlarmClass = "RX_LOS Correlated";
+            NewEvent.FirstOccurrence=GetDate();
+            NewEvent.LastOccurrence=GetDate();
+            NewEvent.FirstRaiseTime=GetDate();
+            NewEvent.LastRaiseTime=GetDate();
+            NewEvent.DateGenerated = GetDate();
+            NewEvent.ImpactFlag = 2;
+            NewEvent.AssetMotorway=@AssetMotorway;
+            NewEvent.AssetGeographicAddress=@AssetGeographicAddress;
+                        // Use the AddDataItem function to add the event to the Object Server.
+                        Type = 'ha_ncoms_impact_events';
+                        AddDataItem(Type,NewEvent);
+                        log("Multiple_RX_Loss: New compound event inserted");
+                        }
+                }
+        }
+if(@Severity = 0)
+        {
+        // The event is clearing an RX Loss and so we must check to see if we need to clear any relevant compound event
+        RXevents = GetByFilter('ha_ncoms_impact_events',"(Severity > 0) and (Type = 1) and (EventId = '1353NM_007') and (Node not like '96C') and (RCCArea = '"+EventContainer.RCCArea+"')",false);
+        numRXevents = Length(RXevents);
+        if(numRXevents < 2 && numRXevents > 0)
+                {
+                log("Multiple_RX_Loss: Formatting new compund event");
+                NewEvent = NewObject();
+                NewEvent.Identifier = 'Clear - Impact compound RX Loss event _ ' +@RCCArea ;
+                NewEvent.Node = @RCCArea;
+                NewEvent.NodeAlias = @Node;
+                // Added by SK for the Vega# 200807016286, patch-3.50.1
+          NewEvent.OwnerUID = 65534;
+                NewEvent.Class = @Class;
+                NewEvent.AlertGroup = @AlertGroup;
+                NewEvent.AlertKey = "Multiple_RX_Loss";
+                //NewEvent.LastOccurrence = getdate();
+                NewEvent.Summary = "Cleared - Multiple RX Loss events from the same RCC - " + @RCCArea;
+                NewEvent.Severity = 1;
+                NewEvent.Type = 2;
+                NewEvent.ServiceType = @ServiceType;
+                NewEvent.Manager = @Manager;
+                NewEvent.RCCArea = @RCCArea;
+                NewEvent.Agent = @Agent;
+                NewEvent.AssetElectronicAddress= @AssetElectronicAddress;
+                NewEvent.ImpactFlag=1;
+                NewEvent.TSA = @TSA;
+                NewEvent.TSB = @TSB;
+                NewEvent.SDPLocation = @SDPLocation;
+                NewEvent.AlarmClass = "";
+        NewEvent.FirstOccurrence=GetDate();
+        NewEvent.LastOccurrence=GetDate();
+        NewEvent.FirstRaiseTime=GetDate();
+        NewEvent.LastRaiseTime=GetDate();
+        NewEvent.DateGenerated = GetDate();
+        NewEvent.ClearTime = GetDate();
+        NewEvent.ImpactFlag = 2;
+        NewEvent.AssetMotorway=@AssetMotorway;
+        NewEvent.AssetGeographicAddress=@AssetGeographicAddress;
+                // Use the AddDataItem function to add the event to the Object Server.
+                Type = 'ha_ncoms_impact_events';
+                AddDataItem(Type,NewEvent);
+                log("Multiple_RX_Loss: New compound event inserted");
+                }
+        }
+
+
+log("Multiple_RX_Loss: End");
+
+// DB - LOGGING ADDED 
+log("Multiple_RX_Loss: IQLOGFINISH: ServerSerial=" + @ServerSerial + " EventId=" + @EventId);
+log ("**** Multiple_RX_Loss: End. Serial=" + @Serial + " Severity=" + @Severity + " Node is " + @Node); 
+
+
+
+
+
+
+
+

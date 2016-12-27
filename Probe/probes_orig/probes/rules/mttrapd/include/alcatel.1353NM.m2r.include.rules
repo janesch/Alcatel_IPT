@@ -1,0 +1,331 @@
+######
+# alcatel include file
+######
+case ".1.3.6.1.4.1.637.65.1.1.2": # - alarmHandoffTraps
+	switch($specific-trap) {
+		case "1": ### - alarmRaise
+			# SNMPv2
+			# Notification that an alarm is currently active
+			$currentAlarmId = $13
+			$friendlyName = $11
+			$eventTime = $1
+			$eventType = $9
+			$probableCause = $9
+			$perceivedSeverity = $8
+			$additionalText = $3
+			$specificProblems = $10
+			$acknowledgementStatus = $5
+			$additionalInformation = $7
+			$neLocationName = $9
+           # $managedobjectInstance = $11
+           # $asIdentity = $9
+			@AlertGroup = ""
+			@Agent = "GENOSALARMNOTIFICATION-MIB"
+			@Summary = "alarmRaise"
+			#@Severity = 1
+			@Severity = 2
+			@Type = 1
+			@Identifier = @Node + @Summary  
+
+			#details($currentAlarmId,$friendlyName,$eventTime,$eventType,$probableCause,$perceivedSeverity,$additionalText,$specificProblems,$acknowledgementStatus,$additionalInformation,$neLocationName)
+
+		case "2": ### - alarmClear
+			# SNMPv2
+			# Notification that an alarm has been cleared
+			$currentAlarmId = $5
+			$eventTime = $4
+			$friendlyName = $3
+			$probableCause = $2
+			@AlertGroup = ""
+			@Agent = "GENOSALARMNOTIFICATION-MIB"
+			@Summary = "alarmClear"
+			#@Severity = 1
+			@Severity = 2
+			@Type = 2
+			@Identifier = @Node + @Summary 
+
+			#details($currentAlarmId,$eventTime,$friendlyName,$probableCause)
+
+		case "3": ### - alarmAck
+			# SNMPv2
+			# Notification that an alarm has been acknowledged
+			$listAlarmIds = $1
+			$operatorName = $2
+			@AlertGroup = ""
+			@Agent = "GENOSALARMNOTIFICATION-MIB"
+			@Summary = "alarmAck"
+			#@Severity = 1
+			@Severity = 2
+			@Type = 1
+			@Identifier = @Node + @Summary
+
+			#details($listAlarmIds,$operatorName)
+
+		case "4": ### - alarmPurge
+			# SNMPv2
+			# Notification that an alarm has been purged
+			$purgelistAlarmIds = $1
+			@AlertGroup = ""
+			@Agent = "GENOSALARMNOTIFICATION-MIB"
+			@Summary = "alarmPurge"
+			#@Severity = 1
+			@Severity = 2
+			@Type = 1
+			@Identifier = @Node + @Summary
+
+			#details($purgelistAlarmIds)
+
+		case "5": ### - alarmReserve
+			# SNMPv2
+			# Notification that an alarm has been reserved
+			$reservelistAlarmIds = $1
+			$reserveoperatorName = $2
+			@AlertGroup = ""
+			@Agent = "GENOSALARMNOTIFICATION-MIB"
+			@Summary = "alarmReserve"
+			#@Severity = 1
+			@Severity = 2
+			@Type = 1
+			@Identifier = @Node + @Summary
+			#details($reservelistAlarmIds,$reserveoperatorName)
+
+		case "6": ### - alarmUnreserve
+			# SNMPv2
+			# Notification that an alarm has been unreserved
+			$unreservelistAlarmIds = $1
+			$unreserveoperatorName = $2
+			@AlertGroup = ""
+			@Agent = "GENOSALARMNOTIFICATION-MIB"
+			@Summary = "alarmUnreserve"
+			#@Severity = 1
+			@Severity = 2
+			@Type = 2
+			@Identifier = @Node + @Summary
+			#details($unreservelistAlarmIds,$unreserveoperatorName)
+ 
+            case "7": ### - asConnectionStatus
+							# SNMPv2
+							# Notification that an AS status is changed
+							$asconnectionstatus = $1
+							$asId = $2
+							@AlertGroup = "alcatel"
+							@Agent = "alcatel"
+							@Summary = "asConnectionStatus: Notification that an AS status is changed"
+							#@Severity = 1
+							@Severity = 2
+							@Type = 0
+							@Identifier = @Node + @Summary
+						#	details($asconnectionstatus$asId)
+
+						case "8": ### - alarmUnAck
+							# SNMPv2
+							# Notification that an alarm has been unacknowledged
+							$unacklistAlarmIds = $1
+							$unackoperatorName = $2
+							$asIdentity = $3
+							@AlertGroup = "alcatel"
+							@Agent = "alcatel"
+							@Summary = "alarmUnAck: Notification that an alarm has been unacknowledged"
+							#@Severity = 1
+							@Severity = 2
+							@Type = 0
+							@Identifier = @Node + @Summary
+						#	details($unacklistAlarmIds,$unackoperatorName$asIdentity)
+
+
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+###
+## Timestamp section. This section is important so that the generic automation works on timestamps from the event
+## and so it sets Clear Time accordingly.
+
+	@FirstRaiseTime = datetotime($eventTime,"yyyyMMddHHmmss")
+	@LastRaiseTime = datetotime($eventTime,"yyyyMMddHHmmss")
+
+### This is for daylight saving time fix...
+## this file is a soft link to 1353.bst.include.rules in the summer,...
+include "$NCHOME/custom/probes/rules/mttrapd/include/1353.dst.include.rules"
+### 
+## The following section derived from the alcatel osos tsm rulesfile
+## Added by Toby
+##
+
+### section addded by Toby
+## to account for friendly name format not seen in osos interface rulesfile.#
+## sample FELYMSE01/r01s1/board#04/Regenerator#1
+
+    if(regmatch($friendlyName, ".*/.*/.*/.*"))
+    {
+        @Node = extract($friendlyName, "^([^\/]*)/.*/.*/.*")
+        if(regmatch($friendlyName, ".*/r.*"))
+        {
+            $MOI = "Rack: " + extract($friendlyName, ".*/r([0-9]+).*")
+        }
+        if(regmatch($friendlyName, ".*sr[0-9]+sl.*"))
+        {
+            if(!match($MOI, ""))
+            {
+                $MOI = $MOI + ", "
+            }
+            $MOI = $MOI + "Sub-Rack: " + extract($friendlyName, ".*sr([0-9]+)sl.*") + ", Slot: " + extract($friendlyName, ".*sl([0-9]+)/.*")
+        }
+	else if(regmatch($friendlyName, ".*/.*s.*/.*/.*"))
+	{
+	     if(!match($MOI, ""))
+            {
+                $MOI = $MOI + ", "
+            }
+		$MOI = $MOI + "Slot: " + extract($friendlyName, ".*/.*s(.*)/.*/.*") + ", " +  extract($friendlyName, ".*/.*s.*/(.*)/.*")
+
+        	$MO = extract($friendlyName, ".*/.*/.*/(.*)")
+	}
+
+        if(!match($MO, ""))
+        {
+            if(!match($MOI, ""))
+            {
+                $MOI = $MOI + ", "
+            }
+            $MOI = $MOI + "Managed Obj.: " + $MO
+        }
+    }
+### end of section added by Toby
+
+    else if(regmatch($friendlyName, ".*/.*/.*"))
+    {
+        @Node = extract($friendlyName, "^([^\/]*)/.*/.*")
+        if(regmatch($friendlyName, ".*/r.*"))
+        {
+            $MOI = "Rack: " + extract($friendlyName, ".*/r([0-9]+).*")
+        }
+        if(regmatch($friendlyName, ".*sr[0-9]+sl.*"))
+        {
+            if(!match($MOI, ""))
+            {
+                $MOI = $MOI + ", "
+            }
+            $MOI = $MOI + "Sub-Rack: " + extract($friendlyName, ".*sr([0-9]+)sl.*") + ", Slot: " + extract($friendlyName, ".*sl([0-9a-z]+)/.*")
+        }
+        $MO = extract($friendlyName, ".*/.*/(.*)")
+        if(!match($MO, ""))
+        {
+            if(!match($MOI, ""))
+            {
+                $MOI = $MOI + ", "
+            }
+            $MOI = $MOI + "Managed Obj.: " + $MO
+        }
+    }
+    else if (regmatch($friendlyName, ".*/.*"))
+    {
+        @Node = extract($friendlyName, "^(.*)/.*")
+        $MO = extract($friendlyName, ".*/(.*)")
+        if(!match($MO, ""))
+        {
+            $MOI = "Managed Obj.: " + $MO
+        }
+    }
+    else if(exists($friendlyName))
+    {
+       # @Node = $friendlyName
+    } else
+    {
+### added by Toby as some alarms have no friendly name ?????
+	@Node = $IPaddress
+    }
+    
+    @AlertGroup = "NE Alarm" 
+    # Added Manager by TA under Patch 3.105 on 23 June 2009
+    @Manager = "1353NM"
+    @AlertKey = "Alarm ID: " + $currentAlarmId
+    switch($perceivedSeverity)
+    {
+        case "critical":
+            @Severity = 5
+        case "major":
+            @Severity = 4
+        case "minor":
+            @Severity = 3
+        case "warning":
+            @Severity = 2
+        case "indeterminate":
+            @Severity = 2
+        case "cleared":
+            #@Severity = 1
+            @Severity = 2
+        default:
+            @Severity = 2
+    }
+    switch($notificationType)
+    {
+        case "alarmRaise"|"alarmList":
+            switch($eventType)
+            {
+                case "communicationsAlarm":
+                    @X733EventType = 1
+                    @Summary = "Communications Alarm"
+                case "environmentAlarm":
+                    @X733EventType = 5
+                    @Summary = "Environmental Alarm"
+                case "equipmentAlarm":
+                    @X733EventType = 4
+                    @Summary = "Equipment Alarm"
+                case "processingErrorAlarm":
+                    @X733EventType = 3
+                    @Summary = "Processing Error"
+                case "qualityofServiceAlarm":
+                    @X733EventType = 2
+                    @Summary = "Quality of Service Alarm"
+                default:
+                    @X733EventType = 0
+                    @Summary = "Unknown Event Type"
+            }
+            @Type = 1
+        case "alarmClear":
+            @Summary = "NE Alarm Cleared"
+            #@Severity = 1
+            @Severity = 2
+            @Type = 2
+        case "alarmAck":
+            discard
+        default:
+    }
+    if(!match($probableCause, ""))
+    {
+        @Summary = @Summary +  "," + $probableCause
+    }
+    if(!match($specificProblems, ""))
+    {
+        @Summary = @Summary + ", " + $specificProblems
+    }
+    if(!match($additionalText, "")&&!match($additionalText, "specificProblems"))
+    {
+        @Summary = @Summary + ", " + $additionalText
+    }
+    if(!match($MOI, ""))
+    {
+        @Summary = @Summary + "  ( " + $MOI + " )"
+    }
+
+### sometimes probable cause not set in clear alarm???
+        if(match(@Summary,"alarmClear"))
+        {
+                @Summary = @Summary + ", " + @AlarmClass
+        }
+
+### modified by Toby
+## remove type from identifier to use clearing by deduplication
+## also removed $6 - $11 which are not in the clear messages....
+### and friendly name which is not in some clear messages.....
+## important is the alertkey which contains alarm id....
+   # @Identifier = $friendlyName + " " + @AlertKey + " " + @AlertGroup + " " + @Type + " " + @Agent + " " + @Manager +$6 +$7 +$8 +$9 + $10 +$11
+
+# Changed Identifier by TA under Patch 3.105 on 23 June 2009
+#@Identifier =  @AlertKey + " " + @AlertGroup + " " + @Agent + " " + @Manager
+@Identifier =  @Node + " " + $eventType + " " + @Manager + " " + @Type + " " + $MOI

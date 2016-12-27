@@ -1,0 +1,509 @@
+// Policy Name: RES_Line_Card_Suppression
+// 
+// Version	Date        Name        Description
+// 1.0        14-09-10    -        Baseline
+// 1.1        14-09-10    Tony Nisbet    Capture ServerSerial with logging (patch 4.22)
+//
+
+log("RES_Line_Card_Suppression: Start " + @Serial + ": " + @Node + "," + @Summary + "," + @AlertGroup + ", suppress: " + @SuppressEscl + ", severity: " + @Severity + ", EquipmentType: " + @EquipmentType);
+log("RES_Line_Card_Suppression: IQLOGSTART: ServerSerial=" + @ServerSerial + " EventId=" + @EventId);
+
+// Event reader filter will only put devices with EquipmentType = 'RES'
+// Event reader filter: (((Type = 1) and (Severity > 0) and (SuppressEscl <> 4)) or ((Type = 1) and (Severity = 0) and (SuppressEscl = 4))) and (EquipmentType = 'RES') and (Summary like '^NVR.*[line|lines|Line|Lines|LINE|LINES] [0-9]+.*')
+
+
+//Suppress incoming Line Down Events Immediately.
+if((@Severity > 0) and (@ImpactFlag < 10))
+    {
+    @SuppressEscl = 4;
+    @ImpactFlag = 10;
+    @SuppressCause = "Suppressed by RES Line Card Suppression Impact policy";
+    ReturnEvent(EventContainer);
+    }
+
+// Added by Toby to prevent cleared events from being reprocessed
+if((@Severity = 0) and ((@ImpactFlag = 10) or (@ImpactFlag = 6) or (@ImpactFlag = 5)))
+    {
+    @ImpactFlag = 11;
+    ReturnEvent(EventContainer);
+    }
+
+//Check to see how many lines are down from this device
+//Changed under patch 3.61.1 by TA - Remove last one hour condition
+//Filter = "(Type = 1) and (Severity > 0) and (EquipmentType = 'RES') and (Node = '"+EventContainer.Node+"') and (AlertGroup = '"+EventContainer.AlertGroup+"') and (LastOccurrence > (getdate - 3600)) and (Summary like '^NVR.*[line|lines|Line|Lines|LINE|LINES] [0-9]+.*')";
+Filter = "(Type = 1) and (Severity > 0) and (EquipmentType = 'RES') and (Node = '"+EventContainer.Node+"') and (AlertGroup = '"+EventContainer.AlertGroup+"') and (Summary like '^NVR.*[line|lines|Line|Lines|LINE|LINES] [0-9]+.*')";
+log("RES_Line_Card_Suppression: " + @Serial + ": Get all lines down for this device: "+ Filter);
+linesDown = GetByFilter('ha_ncoms_impact_events', Filter, false);
+numLinesDown = Length(linesDown);
+
+log("RES_Line_Card_Suppression:  " + @Serial + ": Found "+ numLinesDown + " lines down");
+
+//Need to split the line values to get a list of distinct values
+//For example, Lines 12 indicates that lines 1 and 2 are down, not twelve.
+
+if(numLinesDown > 0)
+    {
+
+    //Create empty array to hold line numbers from multiple events
+    RES_Lines_Array = {};
+    y = 0;
+
+    while(y < numLinesDown)
+        {
+        //Check if event is suppressed, and suppress it if it isn't
+        if(linesDown[y].SuppressEscl <> 4)
+            {
+            linesDown[y].SuppressEscl = 4;
+            linesDown[y].SuppressCause = "Suppressed by RES Line Card Suppression Impact policy";
+            linesDown[y].ParentChildFlag = 4;
+            }
+
+        extractedNumber = Rextract(linesDown[y].Summary,"^NVR.*[line|lines|Line|Lines|LINE|LINES] ([0-9]+).*");
+        //Check to see how many numbers there are in the list
+        extractedValues = int(extractedNumber);
+    
+        if(extractedValues < 10) // Must be a single digit to match this
+            {
+            RES_Lines_Array = RES_Lines_Array + extractedValues;
+            }
+        else
+            {
+            if(extractedValues < 100) // Must be two digits to match this
+                {
+                value1 = int(extractedValues/10);
+                value2 = extractedValues - (value1 * 10);
+                RES_Lines_Array = RES_Lines_Array + value1; 
+                RES_Lines_Array = RES_Lines_Array + value2;
+                }
+            else
+                {
+                if(extractedValues < 1000) // Must be three digits to match this
+                    {
+                    value1 = int(extractedValues/100);
+                    value2 = int((extractedValues - (value1 * 100))/10);
+                    value3 = extractedValues - ((value1 * 100) + (value2 * 10));
+                    RES_Lines_Array = RES_Lines_Array + value1; 
+                    RES_Lines_Array = RES_Lines_Array + value2;
+                    RES_Lines_Array = RES_Lines_Array + value3;
+                    }
+                else
+                    {
+                    if(extractedValues < 10000) // Must be four digits to match this
+                        {
+                        value1 = int(extractedValues/1000);
+                        value2 = int((extractedValues - (value1 * 1000))/100);
+                        value3 = int((extractedValues - ((value1 * 1000) + (value2 * 100)))/10);
+                        value4 = extractedValues - ((value1 * 1000) + (value2 * 100) + (value3 * 10));
+                        RES_Lines_Array = RES_Lines_Array + value1; 
+                        RES_Lines_Array = RES_Lines_Array + value2;
+                        RES_Lines_Array = RES_Lines_Array + value3;
+                        RES_Lines_Array = RES_Lines_Array + value4;
+                        }
+                    else
+                        {
+                        if(extractedValues < 100000) // Must be five digits to match this
+                            {
+                            value1 = int(extractedValues/10000);
+                            value2 = int((extractedValues - (value1 * 10000))/1000);
+                            value3 = int((extractedValues - ((value1 * 10000) + (value2 * 1000)))/100);
+                            value4 = int((extractedValues - ((value1 * 10000) + (value2 * 1000) + (value3 * 100)))/10);
+                            value5 = extractedValues - ((value1 * 10000) + (value2 * 1000) + (value3 * 100) + (value4 * 10));
+                            RES_Lines_Array = RES_Lines_Array + value1; 
+                            RES_Lines_Array = RES_Lines_Array + value2;
+                            RES_Lines_Array = RES_Lines_Array + value3;
+                            RES_Lines_Array = RES_Lines_Array + value4;
+                            RES_Lines_Array = RES_Lines_Array + value5;
+                            }
+                        else
+                            {
+                            if(extractedValues < 1000000) // Must be six digits to match this
+                                {
+                                value1 = int(extractedValues/100000);
+                                value2 = int((extractedValues - (value1 * 100000))/10000);
+                                value3 = int((extractedValues - ((value1 * 100000) + (value2 * 10000)))/1000);
+                                value4 = int((extractedValues - ((value1 * 100000) + (value2 * 10000) + (value3 * 1000)))/100);
+                                value5 = int((extractedValues - ((value1 * 100000) + (value2 * 10000) + (value3 * 1000) + (value3 * 100)))/10);
+                                value6 = extractedValues - ((value1 * 100000) + (value2 * 10000) + (value3 * 1000) + (value4 * 100) + (value5 * 10));
+                                RES_Lines_Array = RES_Lines_Array + value1; 
+                                RES_Lines_Array = RES_Lines_Array + value2;
+                                RES_Lines_Array = RES_Lines_Array + value3;
+                                RES_Lines_Array = RES_Lines_Array + value4;
+                                RES_Lines_Array = RES_Lines_Array + value5;
+                                RES_Lines_Array = RES_Lines_Array + value6;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        // Increment the counter
+        y = y + 1;
+        }
+    
+    //Create list of distinct values from the RES_Lines_Array
+    LineNumbers = {};
+    If ( RES_Lines_Array <> NULL )
+        {
+        LineNumbers = Distinct(RES_Lines_Array);
+        }
+    numLineNumbers = length(LineNumbers);
+
+    // Check to see if there is already a major (less then 4 lines down) sythentic event for the RES failure in the ObjectServer
+    
+    MajorFilter = "(Type = 1) and (Severity > 0) and (EquipmentType = 'RES') and (Identifier = 'Impact RES lines down event "+@Node+"-"+@AlertGroup+"-Major')";
+    resMajorSynthEvent = GetByFilter('ha_ncoms_impact_events',MajorFilter,false);
+    
+    log("RES_Line_Card_Suppression: " + @Serial + ": Get existing major synthetic: "+ MajorFilter);
+    
+    numResMajorSynthEvent = Length(resMajorSynthEvent);
+    
+    log("RES_Line_Card_Suppression: " + @Serial + ": Found this many matching major synthetics: "+ numResMajorSynthEvent);
+
+    // Check to see if there is already a critical (4 or more lines down) sythentic event for the RES failure in the ObjectServer
+    
+    CriticalFilter = "(Type = 1) and (Severity > 0) and (EquipmentType = 'RES') and (Identifier = 'Impact RES lines down event "+@Node+"-"+@AlertGroup+"-Critical')";
+    resCriticalSynthEvent = GetByFilter('ha_ncoms_impact_events',CriticalFilter,false);
+    
+    log("RES_Line_Card_Suppression: " + @Serial + ": Get existing critical synthetic: "+ CriticalFilter);
+    
+    numResCriticalSynthEvent = Length(resCriticalSynthEvent);
+    
+    log("RES_Line_Card_Suppression: " + @Serial + ": Found this many matching critical synthetics: "+ numResCriticalSynthEvent);
+
+    if(numLineNumbers >= 4)
+            {
+        // modified by Toby to prevent child id beginning with a comma
+        // i = 0;
+        // ChildIDs = "";
+        // we know there is at least one element in linesDown
+            i = 1;
+            ChildIDs = "" + linesDown[0].ServerSerial;
+            while(i < numLineNumbers)
+                    {
+                    // Store the ChildIDs in an array
+                    //Extract the ChildIDs and add them to the ChildIDs array
+    
+                    ChildIDs = ChildIDs + "," + linesDown[i].ServerSerial;
+    
+                    // Increment the counter
+                    i = i + 1;
+                    }
+
+            if(ChildIDs = NULL)
+                {
+                ChildIDs = @ServerSerial;
+                }
+            else
+                {
+                if(ChildIDs = "")
+                    {
+                    ChildIDs = @ServerSerial;
+                    }
+                else
+                    {
+                    if(ChildIDs = "NULL")
+                        {
+                        ChildIDs = @ServerSerial;
+                        }
+                    //ChildIDs = ChildIDs + "," + @ServerSerial;
+                    }
+                }
+    log("RES_Line_Card_Suppression: " + @Serial + ": Child IDs = " + ChildIDs);
+    
+            // Check to see if we found a major synthetic event for 3 or less lines down
+        if(numResMajorSynthEvent > 0)
+                    {
+            //We need to clear the major event and replace it with a critical event
+            resMajorSynthEvent[0].ClearTime = getdate();
+            resMajorSynthEvent[0].Severity = 0;
+            }
+            if(numResCriticalSynthEvent > 0)
+                    {
+                    // If we get to here we did find an event and we need to update it
+                    if(resCriticalSynthEvent[0].Severity = 0)
+                {
+                resCriticalSynthEvent[0].Severity = 5;
+                }
+            resCriticalSynthEvent[0].Summary = "RES Lines Down (Number of Lines Down = " +numLineNumbers+ ", Line Numbers = " +LineNumbers+ ")";
+                  // Add child id of original event to synthetic events ChildID field
+                //resCriticalSynthEvent[0].ChildID = resCriticalSynthEvent[0].ChildID + "," + EventContainer.ServerSerial;
+                 resCriticalSynthEvent[0].ChildID = ChildIDs;
+               resCriticalSynthEvent[0].SuppressEscl = 0;
+            resCriticalSynthEvent[0].SuppressCause = '';
+            resCriticalSynthEvent[0].LastOccurrence=getdate();
+                    }
+            else
+                    {
+                    // If we get to here we did not find an event and we need to insert a new synthetic lines down event
+                    NewEvent = NewObject();
+                    NewEvent.Identifier = "Impact RES lines down event "  + @Node + "-" + @AlertGroup + "-Critical";
+                    NewEvent.Node = @Node;
+                    NewEvent.NodeAlias = @NodeAlias;
+                    NewEvent.AlertGroup = @AlertGroup;
+                    NewEvent.AlertKey = ""  + @Node + "-" + @AlertGroup;
+                    NewEvent.LastOccurrence = getdate();
+                    NewEvent.FirstOccurrence = getdate();
+                    NewEvent.FirstRaiseTime = @FirstRaiseTime;
+                    NewEvent.LastRaiseTime = @LastRaiseTime;
+                       //Added by SK on 16102008
+                       NewEvent.DateGenerated = getdate();
+                    NewEvent.Summary = "RES Lines Down (Number of Lines Down = " +numLineNumbers+ ", Line Numbers = " +LineNumbers+ ")";
+                    NewEvent.Severity = 5;
+                    NewEvent.Type = 1;
+                    NewEvent.EventId = 'IMP_002';
+                    NewEvent.EquipmentType = "RES";
+                    NewEvent.ServiceType = @ServiceType;
+                    NewEvent.Manager = "Netcool Impact";
+                    NewEvent.Agent = @Agent;
+                    NewEvent.ImpactFlag = 11;
+                    NewEvent.SDPLocation = @SDPLocation;
+                    NewEvent.AssetElectronicAddress = @AssetElectronicAddress;
+                    NewEvent.ChildID = ChildIDs;
+                    NewEvent.ParentChildFlag = 5;
+                    NewEvent.AssetMotorway= @AssetMotorway;
+                    NewEvent.AssetGeographicAddress= @AssetGeographicAddress;
+                    NewEvent.TSA = @TSA;
+                    NewEvent.TSB = @TSB;
+                    NewEvent.RCCArea = @RCCArea;
+                    NewEvent.HalStatus = @HalStatus;
+                    NewEvent.InServiceStatus = @InServiceStatus;
+                    NewEvent.LocalRootObj = @LocalRootObj;
+                    NewEvent.STI_ID = @STI_ID;
+                    NewEvent.STIRef = @STIRef;
+                    NewEvent.STINum = @STINum;
+            // TA 28March2008 Change so not picked up by Service_Impact policy
+                    //NewEvent.ServiceAffecting = 1;
+            NewEvent.ServiceAffecting = 0;
+            // TA 28March2008 Change so not picked up by Service_Impact policy
+                    //NewEvent.ActionRequired = 1;
+            NewEvent.ActionRequired = 0;
+
+                    NewEvent.ResilienceAffecting = 0;
+
+                    NewEvent.ParentChildTime = getdate();
+                    // JL 200707 Change TTFlag to 4 so picked up by Service_Impact policy
+                    
+             // TA 28March2008 Change TTFlag to 0 so not picked up by Service_Impact policy
+            //NewEvent.TTFlag = 4;                    
+            NewEvent.TTFlag = 0;
+
+                    NewEvent.OwnerUID = 65534;
+                    // Use the AddDataItem function to add the event to the Object Server.
+                    Type = 'ha_ncoms_impact_events';
+                    AddDataItem(Type,NewEvent);
+                    }
+    
+            // make it a child of the synthetic lines down event
+            @ParentChildFlag = 4;
+    
+            // Get parent event server name and serial
+            parentEvent = GetByFilter('ha_ncoms_impact_events',"(Type = 1) and (Severity > 0) and (EquipmentType = 'RES') and (Identifier = 'Impact RES lines down event "+@Node+"-"+@AlertGroup+"-Critical')",false);
+            numParentEvent = Length(parentEvent);
+    
+            if(numParentEvent > 0)
+                    {
+                    @ParentServerName = parentEvent[0].ServerName;
+                    @ParentServerSerial = parentEvent[0].ServerSerial;
+                    }
+            ReturnEvent(EventContainer);
+            }
+    else
+            {
+            // We must have 1 to 3 lines down
+        // Check to see if we found a synthetic event
+            if(numResCriticalSynthEvent > 0)
+                    {
+            //We need to clear the critical event and replace it with a major event
+            resCriticalSynthEvent[0].ClearTime = getdate();
+            resCriticalSynthEvent[0].Severity = 0;
+            }        
+
+        // modified by Toby to prevent child id beginning with a comma
+        // i = 0;
+        // ChildIDs = "";
+        // we know there is at least one element in linesDown
+                i = 1;
+                ChildIDs = "" + linesDown[0].ServerSerial;
+                while(i < numLineNumbers)
+                        {
+                        // Store the ChildIDs in an array
+                        //Extract the ChildIDs and add them to the ChildIDs array
+    
+                        ChildIDs = ChildIDs + "," + linesDown[i].ServerSerial;
+    
+                        // Increment the counter
+                        i = i + 1;
+                        }
+
+            if(ChildIDs = NULL)
+                {
+                ChildIDs = @ServerSerial;
+                }
+            else
+                {
+                if(ChildIDs = "")
+                    {
+                    ChildIDs = @ServerSerial;
+                    }
+                else
+                    {
+                    if(ChildIDs = "NULL")
+                        {
+                        ChildIDs = @ServerSerial;
+                        }
+                    //ChildIDs = ChildIDs + "," + @ServerSerial;
+                    }
+                }
+    log("RES_Line_Card_Suppression: " + @Serial + ": Child IDs = " + ChildIDs);
+            
+                if(numResMajorSynthEvent > 0)
+                                   {
+                    // If we get to here we did find an event and we need to update it
+                    if(resMajorSynthEvent[0].Severity = 0)
+                                        {
+                                        resMajorSynthEvent[0].Severity = 4;
+                                        resMajorSynthEvent[0].ClearTime = 0;
+                                        }
+                    resMajorSynthEvent[0].Summary = "RES Lines Down (Number of Lines Down = " +numLineNumbers+ ", Line Numbers = " +LineNumbers+ ")";
+                    // Add child id of original event to synthetic events ChildID field
+                    resMajorSynthEvent[0].ChildID = ChildIDs;
+                    resMajorSynthEvent[0].SuppressEscl = 0;
+                    resMajorSynthEvent[0].ServiceAffecting = 0;
+                    resMajorSynthEvent[0].ResilienceAffecting = 1;
+            resMajorSynthEvent[0].SuppressCause = '';
+            resMajorSynthEvent[0].LastOccurrence=getdate();
+               }
+        else
+            {
+                    // If we get to here we did not find an event and we need to insert a new synthetic lines down event
+                    NewEvent = NewObject();
+                    NewEvent.Identifier = "Impact RES lines down event "  + @Node + "-" + @AlertGroup + "-Major";
+                    NewEvent.Node = @Node;
+                    NewEvent.NodeAlias = @NodeAlias;
+                    NewEvent.AlertGroup = @AlertGroup;
+                    NewEvent.AlertKey = ""  + @Node + "-" + @AlertGroup;
+                    NewEvent.LastOccurrence = getdate();
+                    NewEvent.FirstOccurrence = getdate();
+                    NewEvent.FirstRaiseTime = @FirstRaiseTime;
+                    NewEvent.LastRaiseTime = @LastRaiseTime;
+                       //Added by SK on 16102008
+                       NewEvent.DateGenerated = getdate();
+                    NewEvent.Summary = "RES Lines Down (Number of Lines Down = " +numLineNumbers+ ", Line Numbers = " +LineNumbers+ ")";
+                    NewEvent.Severity = 4;
+                    NewEvent.Type = 1;
+                    NewEvent.EventId = 'IMP_001';
+                    NewEvent.EquipmentType = "RES";
+                    NewEvent.ServiceType = @ServiceType;
+                    NewEvent.Manager = "Netcool Impact";
+                    NewEvent.Agent = @Agent;
+                    NewEvent.ImpactFlag = 11;
+                    NewEvent.SDPLocation = @SDPLocation;
+                    NewEvent.AssetElectronicAddress = @AssetElectronicAddress;
+                    NewEvent.ChildID = ChildIDs;
+                    NewEvent.ParentChildFlag = 5;
+                    NewEvent.AssetMotorway= @AssetMotorway;
+                    NewEvent.AssetGeographicAddress= @AssetGeographicAddress;
+                    NewEvent.TSA = @TSA;
+                    NewEvent.TSB = @TSB;
+                    NewEvent.RCCArea = @RCCArea;
+                    NewEvent.HalStatus = @HalStatus;
+                    NewEvent.STI_ID = @STI_ID;
+                    NewEvent.STIRef = @STIRef;
+                    NewEvent.STINum = @STINum;
+                    NewEvent.InServiceStatus = @InServiceStatus;
+                    NewEvent.LocalRootObj = @LocalRootObj;
+
+        // DB 100807 - Set ServiceAffecting to 1 for TT creation
+                    //NewEvent.ServiceAffecting = 1;
+                    NewEvent.ServiceAffecting = 0;
+
+            // TA 28March2008 Change so not picked up by Service_Impact policy
+            //NewEvent.ActionRequired = 1;
+            NewEvent.ActionRequired = 0;
+
+                    NewEvent.ResilienceAffecting = 1;
+               
+                    NewEvent.ParentChildTime = getdate();
+                   // JL 200707 Change TTFlag to 4 so picked up by Service_Impact policy
+                  //NewEvent.TTFlag = 4;
+            // TA 28March2008 Change TTFlag to 0 so not picked up by Service_Impact policy          
+            NewEvent.TTFlag = 0;
+
+                    NewEvent.OwnerUID = 65534;
+                    // Use the AddDataItem function to add the event to the Object Server.
+                    Type = 'ha_ncoms_impact_events';
+                    AddDataItem(Type,NewEvent);
+            }
+            // make it a child of the synthetic lines down event
+            @ParentChildFlag = 4;
+    
+            // Get parent event server name and serial
+            parentEvent = GetByFilter('ha_ncoms_impact_events',"(Type = 1) and (Severity > 0) and (EquipmentType = 'RES') and (Identifier = 'Impact RES lines down event "+@Node+"-"+@AlertGroup+"-Major')",false);
+            numParentEvent = Length(parentEvent);
+    
+            if(numParentEvent > 0)
+                    {
+                    @ParentServerName = parentEvent[0].ServerName;
+                    @ParentServerSerial = parentEvent[0].ServerSerial;
+                    }
+            ReturnEvent(EventContainer);
+            }
+
+    }
+else
+    {
+    // We have no lines down currently, so need to check for a synthetic event and insert a clearing event if one exists
+    // Check to see if there is already a sythentic event for the RES failure in the ObjectServer
+    
+    Filter = "(Type = 1) and (Severity > 0) and (EquipmentType = 'RES') and ((Identifier = 'Impact RES lines down event "+@Node+"-"+@AlertGroup+"-Major') or (Identifier = 'Impact RES lines down event "+@Node+"-"+@AlertGroup+"-Critical'))";
+    resSynthEvent = GetByFilter('ha_ncoms_impact_events',Filter,false);
+    
+    log("RES_Line_Card_Suppression: " + resSynthEvent[0].Serial + ": Get existing synthetic: "+ Filter);
+    
+    numResSynthEvent = Length(resSynthEvent);
+    
+    log("RES_Line_Card_Suppression: " + resSynthEvent[0].Serial + ": Found this many matching synthetics: "+ numResSynthEvent);
+
+    if(numResSynthEvent > 0)
+                    {
+            // If we get to here we found a synthetic problem event and we need to insert a new synthetic clearing lines down event
+                    NewEvent = NewObject();
+                    NewEvent.Identifier = "Clear: Impact RES lines down event "  + @Node + "-" + @AlertGroup;
+                    NewEvent.Node = @Node;
+                    NewEvent.NodeAlias = @NodeAlias;
+                    NewEvent.AlertGroup = @AlertGroup;
+                    NewEvent.AlertKey = "" +  @Node + "-" + @AlertGroup;
+                    NewEvent.LastOccurrence = getdate();
+                    NewEvent.FirstOccurrence = getdate();
+                    NewEvent.FirstRaiseTime = getdate();
+                    NewEvent.LastRaiseTime = getdate();
+                       //Added by SK on 16102008
+                       NewEvent.DateGenerated = getdate();
+                    NewEvent.ClearTime = getdate();
+                    NewEvent.Summary = "Clearing - RES lines down ";
+                    NewEvent.Severity = 2;
+                    NewEvent.Type = 2;
+                    NewEvent.EquipmentType = "RES";
+                    NewEvent.ServiceType = @ServiceType;
+                    NewEvent.Manager = "Netcool Impact";
+                    NewEvent.Agent = @Agent;
+                    NewEvent.ImpactFlag = 11;
+                    NewEvent.RCCArea = @RCCArea;
+                    NewEvent.SDPLocation = @SDPLocation;
+                    NewEvent.AssetElectronicAddress = @AssetElectronicAddress;
+                    NewEvent.ParentChildFlag = 0;
+                    NewEvent.AssetMotorway= @AssetMotorway;
+                    NewEvent.AssetGeographicAddress= @AssetGeographicAddress;
+                    NewEvent.TSA = @TSA;
+                    NewEvent.TSB = @TSB;
+                    NewEvent.HalStatus = @HalStatus;
+                    NewEvent.OwnerUID = 65534;
+                    // Use the AddDataItem function to add the event to the Object Server.
+                    Type = 'ha_ncoms_impact_events';
+                    AddDataItem(Type,NewEvent);
+            }
+    }
+
+log("RES_Line_Card_Suppression: IQLOGFINISH: ServerSerial=" + @ServerSerial + " EventId=" + @EventId);
+log("RES_Line_Card_Suppression: End");
+

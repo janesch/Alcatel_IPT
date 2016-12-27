@@ -1,0 +1,28 @@
+/********************************************************* {COPYRIGHT-TOP-RM} ***
+* Licensed Materials - Property of IBM
+* "Restricted Materials of IBM"
+*
+* 5724-S43
+* (C) Copyright IBM Corp. 2009
+*
+* US Government Users Restricted Rights - Use, duplication, or
+* disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+********************************************************* {COPYRIGHT-END-RM} **/
+log("insert into tec at " + getdate());
+
+newTECEvent = newobject();
+newTECEvent.hostname="w2kcairo05";
+newTECEvent.severity = 50; // use integer values;
+newTECEvent.msg = "test insert 2 from Impact";
+newTECEvent.identifier = getdate(); // identifier used for dedup
+newTECEvent.impact_instance=1; //the instance of Impact sending the event
+newTECEvent.impact_Service_Desk_Ticket="none";
+newTECEvent.impact_status="ACKNOWLEDGED"; //pre acknowledged :)
+//These lines created a new object that can become a new TEC event.
+
+TEC.insertTECEventOfClass(newTECEvent, "IMPACT");
+//This line writes the new event, based on the newTECEvent object, to TEC.  The Class of the new event is passed to the function.
+//Before calling insertTECEventOfClass, the function customerConfiguration in the TEC policy needs...
+//..to be edited so that it contains valid values for your TEC environment.
+
+

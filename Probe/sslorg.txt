@@ -1,0 +1,17 @@
+SSL-ORG DEFINITIONS ::= BEGIN
+
+IMPORTS
+	MODULE-IDENTITY,
+	enterprises	
+		FROM SNMPv2-SMI;
+
+sslorg MODULE-IDENTITY
+	LAST-UPDATED	"201012011400Z"
+	ORGANIZATION	"Simulation Systems Ltd"
+	CONTACT-INFO	"Email: snmp.pen@gmail.com"
+	DESCRIPTION	"Simulation Systems Ltd Private Enterprise Number"
+	REVISION	"201012011400Z"
+	DESCRIPTION	"Initial Release"
+	::=  { enterprises 36974 }
+	
+END

@@ -1,0 +1,420 @@
+3c3
+< #    Copyright (C) 1994 - 2002 Micromuse, Inc.
+---
+> #    Copyright (C) 1994 - 2002 MicromuSe, Inc.
+17d16
+< #
+20,25d18
+< # 3.2	07-02-2011	Tony Nisbet	Merged Patch 4.36 changes
+< # 3.1	07-02-2011	Tony Nisbet	Merged Patch 4.35 changes
+< # 3.0	01-11-2010	Tony Nisbet	Initial baseline for upgrade to
+< #					Omnibus 7.3.
+< # 2.1	20100211	Chris Janes	Modifications for SC11B OmniVista 
+< #					4760 Events
+39a33,39
+> #
+> #	V 2.4	20110317	Changes by Popescu Razvan
+> #				Modifications for WP150
+> #       V 2.5   20110622        Changes by Nick Evans 
+> #                               Modifications for WP160
+> #
+> ###############################################################################
+41c41
+< table VarbindValTable = "$NCHOME/custom/probes/rules/mttrapd/lookup/m2r.varbind.lookup"
+---
+> table VarbindValTable = "/opt/IBM/tivoli/netcool/custom/probes/rules/mttrapd/lookup/m2r.varbind.lookup"
+43c43
+< table SixtyEightFiftyTable = "$NCHOME/custom/probes/rules/mttrapd/lookup/alcatel.6800.m2r.lookup"
+---
+> table SixtyEightFiftyTable = "/opt/IBM/tivoli/netcool/custom/probes/rules/mttrapd/lookup/alcatel.6800.m2r.lookup"
+45c45
+< table CellStackTable = "$NCHOME/custom/probes/rules/mttrapd/lookup/cellstack.lookup"
+---
+> table CellStackTable = "/opt/IBM/tivoli/netcool/custom/probes/rules/mttrapd/lookup/cellstack.lookup"
+47c47,50
+< table ThirteenFiftyThreeNM  = "$NCHOME/custom/probes/rules/mttrapd/lookup/1353NM.lookup"
+---
+> table ThirteenFiftyThreeNM  = "/opt/IBM/tivoli/netcool/custom/probes/rules/mttrapd/lookup/1353NM.lookup"
+> default= {"UNKNOWN", "UNKNOWN", "UNKNOWN", "UNKNOWN", "UNKNOWN", "UNKNOWN", "UNK
+> NOWN"}
+> table ThirteenFiftyThreeSixteenNintyTwoNM  = "/opt/IBM/tivoli/netcool/custom/probes/rules/mttrapd/lookup/1353NM.1692.lookup"
+49c52,54
+< table OmniPcx  = "$NCHOME/custom/probes/rules/mttrapd/lookup/omnipcx.lookup"
+---
+> table ThirteenFiftyThreeSixteenNintySixNM  = "/opt/IBM/tivoli/netcool/custom/probes/rules/mttrapd/lookup/1353NM.1696.lookup"
+> default= {"UNKNOWN", "UNKNOWN", "UNKNOWN", "UNKNOWN", "UNKNOWN", "UNKNOWN", "UNKNOWN"}
+> table OmniPcx  = "/opt/IBM/tivoli/netcool/custom/probes/rules/mttrapd/lookup/omnipcx.lookup"
+51c56
+< table TwoEightEleven  = "$NCHOME/custom/probes/rules/mttrapd/lookup/2811.lookup"
+---
+> table TwoEightEleven  = "/opt/IBM/tivoli/netcool/custom/probes/rules/mttrapd/lookup/2811.lookup"
+53c58
+< table ProvisoTable  = "$NCHOME/custom/probes/rules/mttrapd/lookup/proviso.lookup"
+---
+> table ProvisoTable  = "/opt/IBM/tivoli/netcool/custom/probes/rules/mttrapd/lookup/proviso.lookup"
+57c62
+< #table FlagKey =  "$NCHOME/custom/probes/rules/mttrapd/include/OmniVista.lookup"
+---
+> #table FlagKey =  "/opt/IBM/tivoli/netcool/custom/probes/rules/mttrapd/include/OmniVista.lookup"
+59c64
+< include "$NCHOME/custom/probes/rules/mttrapd/lookup/SC11B_W.lookup"
+---
+> include "/opt/IBM/tivoli/netcool/custom/probes/rules/mttrapd/lookup/SC11B_W.lookup"
+66,68c71,73
+< include "$NCHOME/custom/probes/rules/mttrapd/lookup/IANA.include.lookup"
+< include "$NCHOME/custom/probes/rules/mttrapd/lookup/IETF-IF-MIB.include.lookup"
+< include "$NCHOME/custom/probes/rules/mttrapd/lookup/IETF-OSPF-TRAP-MIB.include.lookup"
+---
+> include "/opt/IBM/tivoli/netcool/custom/probes/rules/mttrapd/lookup/IANA.include.lookup"
+> include "/opt/IBM/tivoli/netcool/custom/probes/rules/mttrapd/lookup/IETF-IF-MIB.include.lookup"
+> include "/opt/IBM/tivoli/netcool/custom/probes/rules/mttrapd/lookup/IETF-OSPF-TRAP-MIB.include.lookup"
+70,71c75,76
+< include "$NCHOME/custom/probes/rules/mttrapd/lookup/m2r.include.snmptrap.lookup"
+< include "$NCHOME/custom/probes/rules/mttrapd/lookup/m2r.sev.include.snmptrap.lookup"
+---
+> include "/opt/IBM/tivoli/netcool/custom/probes/rules/mttrapd/lookup/m2r.include.snmptrap.lookup"
+> include "/opt/IBM/tivoli/netcool/custom/probes/rules/mttrapd/lookup/m2r.sev.include.snmptrap.lookup"
+73,74c78,79
+< include "$NCHOME/custom/probes/rules/mttrapd/lookup/cisco.include.lookup"
+< include "$NCHOME/custom/probes/rules/mttrapd/lookup/rttMon.lookup"
+---
+> include "/opt/IBM/tivoli/netcool/custom/probes/rules/mttrapd/lookup/cisco.include.lookup"
+> include "/opt/IBM/tivoli/netcool/custom/probes/rules/mttrapd/lookup/rttMon.lookup"
+166c171
+< 			log(DEBUG,'enterprise sepcific trap with enterprise' + $enterprise + 'and notify ' + $notify)
+---
+> 			log(DEBUG,'enterprise specific trap with enterprise ' + $enterprise + ' and notify ' + $notify)
+169c174
+< 				log(DEBUG,'it had a 0 second last')
+---
+> 				log(DEBUG,'it had a 0 second last ')
+174c179
+< 				log(DEBUG,'set enterprise by loosing last number')
+---
+> 				log(DEBUG,'set enterprise by loosing last number ')
+180c185
+< 		log(DEBUG,'and now the enterprise is' + $enterprise)
+---
+> 		log(DEBUG,' and now the enterprise is ' + $enterprise)
+213c218
+<     log(DEBUG,'enterprise sepcific trap with enterprise' + $enterprise + 'and notify ' + $notify)
+---
+>     log(DEBUG,'enterprise sepcific trap with enterprise' + $enterprise + '.' + $generic-trap + '.' + $specific-trap + ' and notify ' + $notify)
+230a236,244
+> 
+> 		### 6527 - Alcatel-Lucent (Timetra) alarms --- Razvan Popescu 2011.03.04
+> 		if(regmatch($enterprise,".1.3.6.1.4.1.6527.3.1."))
+> 			{
+> 				#@AlertKey = "***************"
+> 				discard
+> 			}
+> 		### end of 6527 - Timera alarms
+> 
+242c256
+< 				include "$NCHOME/custom/probes/rules/mttrapd/include/IETF-OSPF-TRAP-MIB.include.rules"
+---
+> 				include "/opt/IBM/tivoli/netcool/custom/probes/rules/mttrapd/include/IETF-OSPF-TRAP-MIB.include.rules"
+244c258
+< 				include "$NCHOME/custom/probes/rules/mttrapd/include/alcatel.1353NM.m2r.include.rules"
+---
+> 				include "/opt/IBM/tivoli/netcool/custom/probes/rules/mttrapd/include/alcatel.1353NM.m2r.include.rules"
+246c260
+< 			include "$NCHOME/custom/probes/rules/mttrapd/include/alcatel.6800.m2r.include.rules"
+---
+> 			include "/opt/IBM/tivoli/netcool/custom/probes/rules/mttrapd/include/alcatel.6800.m2r.include.rules"
+248c262
+< 				include "$NCHOME/custom/probes/rules/mttrapd/include/cellstack.m2r.include.rules"
+---
+> 				include "/opt/IBM/tivoli/netcool/custom/probes/rules/mttrapd/include/cellstack.m2r.include.rules"
+251c265
+< 				include "$NCHOME/custom/probes/rules/mttrapd/include/rad.m2r.include.rules"
+---
+> 				include "/opt/IBM/tivoli/netcool/custom/probes/rules/mttrapd/include/rad.m2r.include.rules"
+254,256c268,270
+< 				include "$NCHOME/custom/probes/rules/mttrapd/include/alcatel-ALCATEL-NMC-PROXY-AGENT-MIB.include.snmptrap.rules"
+< #				include "$NCHOME/custom/probes/rules/mttrapd/include/alcatel.4760.m2r.include.test.rules"
+<                         	include "$NCHOME/custom/probes/rules/mttrapd/include/alcatel.4760.m2r.include.rules"
+---
+> 				include "/opt/IBM/tivoli/netcool/custom/probes/rules/mttrapd/include/alcatel-ALCATEL-NMC-PROXY-AGENT-MIB.include.snmptrap.rules"
+> #				include "/opt/IBM/tivoli/netcool/custom/probes/rules/mttrapd/include/alcatel.4760.m2r.include.test.rules"
+>                         	include "/opt/IBM/tivoli/netcool/custom/probes/rules/mttrapd/include/alcatel.4760.m2r.include.rules"
+258c272
+< 				include "$NCHOME/custom/probes/rules/mttrapd/include/generic.m2r.include.rules"
+---
+> 				include "/opt/IBM/tivoli/netcool/custom/probes/rules/mttrapd/include/generic.m2r.include.rules"
+260c274
+< 				include "$NCHOME/custom/probes/rules/mttrapd/include/cisco.include.rules"
+---
+> 				include "/opt/IBM/tivoli/netcool/custom/probes/rules/mttrapd/include/cisco.include.rules"
+262c276
+< ##				include "$NCHOME/custom/probes/rules/mttrapd/include/iss.include.rules"
+---
+> ##				include "/opt/IBM/tivoli/netcool/custom/probes/rules/mttrapd/include/iss.include.rules"
+314c328
+< 			# Jan 2011 Nick Evans include VRRP3 and UDLD events
+---
+> 		# Jan 2011 Nick Evans include VRRP3 and UDLD events
+315a330
+> 
+322a338
+> 			@AlertKey = $AlertKey
+332a349
+> 			details($*)
+400a418,422
+>                         if(match(@Type, "1")){
+> 			@Severity = $Severity
+> 			}if(match(@Type, "2")){
+> 			@Severity = 1
+> 			}
+454,455c476,481
+< 		
+< 			[$Severity, $AlertGroup, $AlertKey, $ActionRequired, $ServiceAffecting, $ResilienceAffecting, $CorrelationFlag] = lookup ($eventType, "ThirteenFiftyThreeNM")
+---
+> 	        if(regmatch(@Node,".*[M|m][S|s][E|e].*")){	
+> 			[$Severity, $AlertGroup, $AlertKey, $ActionRequired, $ServiceAffecting, $ResilienceAffecting, $CorrelationFlag] = lookup ($eventType, "ThirteenFiftyThreeSixteenNintyTwoNM")
+> 		}
+>                 if(regmatch(@Node,".*96[C|c].*")){
+>                         [$Severity, $AlertGroup, $AlertKey, $ActionRequired, $ServiceAffecting, $ResilienceAffecting, $CorrelationFlag] = lookup ($eventType, "ThirteenFiftyThreeSixteenNintySixNM")
+>                 }
+470a497
+> 			#details($*)
+471a499
+> ## changed by Razvan Popescu for WP150 (2011.02.10)
+474c502,544
+< 			@PhysicalCard = extract($friendlyName,"^[^\/]+\/(.*)")
+---
+> 				@PhysicalCard = extract($friendlyName,"^[^\/]+\/(.*)")
+> 		        if(regmatch(@Node,".*96[C|c].*")){		
+> 				if( regmatch(@PhysicalCard,".*sl.*") and (regmatch(@PhysicalCard,".*r([0-9]*)sr([0-9]*)sl([0-9]*)/port#([0-9]*).*") or regmatch(@PhysicalCard,".*r([0-9]*)sr([0-9]*)sl([0-9]*)/.*") or regmatch(@PhysicalCard,".*r([0-9]*)sr([0-9]*)sl([0-9]*)/daughter#([0-9]*).*"))) {
+> 				
+> 					$split1 = extract(@PhysicalCard,"(.*)sl")
+> 					$split2 = extract(@PhysicalCard,"sl(.*)")
+> 					
+> 					@PhysicalCard = $split1 + "board#" + $split2
+> 				}
+> 
+> 				if( regmatch(@PhysicalCard,".*daughter.*")  )
+> 				{
+> 					$PhysicalCard = @PhysicalCard
+> 					$split1 = extract(@PhysicalCard,"(.*)daughter")
+> 					$split2 = extract(@PhysicalCard,"daughter(.*)")
+> 
+> 					@PhysicalCard = $split1 + "port" + $split2
+> 
+> 				}
+> 				
+> 				if( regmatch(@PhysicalCard,".*sr[0-9].*board.*")  )
+> 				{
+> 					$split1 = extract(@PhysicalCard,"(.*)board")
+> 					$split3 = extract(@PhysicalCard,"board(.*)")
+>                                         if(regmatch($split2, ".*-[A-Z,a-z,0-9].*")){
+> 					$split3 = extract($split2,"(.*)-[A-Z,a-z,0-9]")
+> 					}if(regmatch($split2, ".*f193[A-Z,a-z,0-9]+")){
+> 					$split21 = extract($split2,"(.*)f193[A-Z,a-z,0-9]+")
+> 					$split3 = extract($split21,"(.*)-")
+> 					}
+> 				if(regmatch($split1,"r[0-9]+sr[0-9]+/")){
+> 				$split4 = extract($split1, "(.*)/")
+> 				$split1 = $split4
+> 				}
+>                                 if(!regmatch($split3, "^#[0-9]+.*")){
+> 				$split5 = "#"+$split3
+>                                 $split3 = $split5
+> 				}
+> 
+> 					@PhysicalCard = $split1 + "/board" + $split3
+> 
+> 				}
+> 
+475a546,611
+> ## Changes made for WP160 Nick Evans 22062011 
+> 			if(regmatch(@Node,".*[M|m][S|s][E|e].*")){
+>                          if(regmatch(@PhysicalCard,".*sl.*") and (regmatch(@PhysicalCard,".*r([0-9]*)sr([0-9]*)sl([0-9]*)/port#([0-9]*).*") or regmatch(@PhysicalCard,".*r([0-9]*)sr([0-9]*)sl([0-9]*)/.*") or regmatch(@PhysicalCard,".*r([0-9]*)sr([0-9]*)sl([0-9]*)/daughter#([0-9]*).*"))) {
+> 
+>                                         $split1 = extract(@PhysicalCard,"(.*)sl")
+>                                         $split2 = extract(@PhysicalCard,"sl(.*)")
+> 
+>                                         @PhysicalCard = $split1 + "/board#" + $split2
+>                                 }
+> 		        if(regmatch(@PhysicalCard,"^r[0-9]+sr[0-9]+sl[0-9]+d[0-9]+.*")){
+> 					$split1 = extract(@PhysicalCard,"(.*)sl")
+>                                         $split2 = extract(@PhysicalCard,"sl(.*)")
+> 
+>                                         @PhysicalCard = $split1 + "/board#" + $split2
+>                                 }
+>                         if(regmatch(@PhysicalCard,"^r[0-9]+sr[0-9]+b[0-9]+.*")){
+> 
+> 					$split1 = extract(@PhysicalCard,"(r[0-9]+sr[0-9]+)b[0-9]+.*")
+> 					$split2 = extract(@PhysicalCard,"r[0-9]+sr[0-9]+b([0-9]+.*)")
+> 					@PhysicalCard = $split1 + "/board#" + $split2
+> 				}
+> 
+>                                 if( regmatch(@PhysicalCard,".*daughter.*")  )
+>                                 {
+>                                         $PhysicalCard = @PhysicalCard
+>                                         $split1 = extract(@PhysicalCard,"(.*)daughter")
+>                                         $split2 = extract(@PhysicalCard,"daughter(.*)")
+> 
+>                                         @PhysicalCard = $split1 + "dboard" + $split2
+> 
+>                                 }
+>                                 if( regmatch(@PhysicalCard,"^r[0-9]+sr[0-9]+.*board.*[0-9]d[0-9]+.*")){
+> 			        $split1 = extract(@PhysicalCard,"(r[0-9]+sr[0-9]+[/]board[#][0-9]+)d[0-9]+.*")
+> 				$split2 = extract(@PhysicalCard,"r[0-9]+sr[0-9]+[/]board[#][0-9]+d([0-9]+.*)")
+>                                 if(regmatch($split2, "^[1-9].*")){
+>                                 $split2 = "0" + $split2
+>                                 }
+> 				@PhysicalCard = $split1 + "/dboard#" + $split2
+> 				}
+>                                 if( regmatch(@PhysicalCard,".*sr[0-9]+board.*")){
+>                                         $split1 = extract(@PhysicalCard,"(.*sr[0-9]+)board")
+>                                         $split2 = extract(@PhysicalCard,"board(.*)")
+>                                         if(regmatch($split2, ".*-[A-Z,a-z,0-9].*")){
+>                                         $split3 = extract($split2,"(.*)-[A-Z,a-z,0-9]")
+>                                         }if(regmatch($split2, ".*f193[A-Z,a-z,0-9]+")){
+>                                         $split21 = extract($split2,"(.*)f193[A-Z,a-z,0-9]+")
+>                                         $split3 = extract($split21,"(.*)-")
+>                                         }
+>                                 if(regmatch($split1, "r[0-9]+sr[0-9]+/")){
+>                                 $split4 = extract($split1, "(.*)/")
+>                                 $split1 = $split4
+>                                 }
+>                                 if(!regmatch($split3, "^#[0-9]+.*")){
+>                                 $split5 = "#"+$split3
+>                                 $split3 = $split5
+>                                 }
+> 
+>                                         @PhysicalCard = $split1 + "/board" + $split3
+> 
+>                                 }
+>                         
+>                         if(!regmatch(@PhysicalCard, ".*port.*") && regmatch(@PhysicalCard, "r[0-9]+sr[0-9]+.*dboard.*[0-9]+")){
+>                         @PhysicalCard = @PhysicalCard + "/port#01"
+>                         }
+>                         }
+>                         }
+478c614
+<         		@Severity = 2
+---
+>         		@Severity = 1
+484c620
+< 		if (match(@Topic, "Loss Of Multiplex Section") && !regmatch(@PhysicalCard, "sl02"))
+---
+> 		if (match(@Topic, "Loss Of Multiplex Section") && !regmatch(@PhysicalCard, "board#02") && regmatch(@Node, "92C"))
+494c630
+< 			if (match($eventType, "Replaceable Unit Missing") && regmatch($MOI, "board#"))
+---
+> 			if (match($eventType, "Replaceable Unit Missing") && regmatch($MOI, "daughter"))
+496,497c632,634
+<                         @ImpactFlag = 200
+<                         @InterFlag=15
+---
+>                         @Topic = "Replaceable Unit Missing Daughter Card"
+>                         #@ImpactFlag = 200
+>                         #@InterFlag=15
+580c717
+<        		include "$NCHOME/custom/probes/rules/mttrapd/include/proviso.include.rules"
+---
+>        		include "/opt/IBM/tivoli/netcool/custom/probes/rules/mttrapd/include/proviso.include.rules"
+590a728,730
+>         if(regmatch(@Summary, ".*[0-9]+/[0-9]+/[0-9]+")){
+>         @PhysicalCard = extract(@Summary, ".*([0-9]+/[0-9]+/[0-9]+)")
+>         }
+694a835
+> 				update(@ServiceAffecting)
+696a838
+>                 #details($*)
+718c860
+<                 #details($ifIndex)
+---
+>                 ##details($ifIndex)
+790c932
+<                 #details($*)
+---
+>                 ##details($*)
+865a1008,1032
+> 
+> 
+> ##################GT-19Oct2011##########################
+> ####added the logic to set the lastraisetime and first raise time 
+> #################for the events who got nul value or 01/01/1979 00:00:00 as Fisr and Last Raise time ####### 
+> 
+> 
+> 
+> if(exists($RecievedTime) && match(@LastRaiseTime, "0"))
+> {
+> @LastRaiseTime = $RecievedTime
+> }
+> if(!exists($RecievedTime) && match(@LastRaiseTime, "0"))
+> {
+> @LastRaiseTime = getdate
+> }
+> if(exists($RecievedTime) && match(@FirstRaiseTime, "0"))
+> {
+> @FirstRaiseTime = $RecievedTime
+> }
+> if(!exists($RecievedTime) && match(@FirstRaiseTime, "0")){
+> @FirstRaiseTime = getdate
+> }
+> 
+> ##################GT-19Oct2011###########################
+877a1045,1060
+> ##  Supress as part of Patch 4-18, Jean Florentine 17/08/2010
+> ## TN 120710 Extra debugging for 4760 Clear not working
+> ##if ((match(@AlarmClass,"2043GDN")) || (match(@AlarmClass,"2019GDN"))) {
+>         ##log(ERROR,"4760 Clear: Identifier: "+@Identifier)
+>         ##log(ERROR,"4760 Clear: Severity: "+@Severity)
+>         ##log(ERROR,"4760 Clear: Type: "+@Type)
+>         ##log(ERROR,"4760 Clear: Node: "+@Node)
+>         ##log(ERROR,"4760 Clear: AlertGroup: "+@AlertGroup)
+>         ##log(ERROR,"4760 Clear: AlertKey: "+@AlertKey)
+>         ##log(ERROR,"4760 Clear: Manager: "+@Manager)
+>         ##log(ERROR,"4760 Clear: FirstRaiseTime: "+@FirstRaiseTime)
+>         ##log(ERROR,"4760 Clear: LastRaiseTime: "+@LastRaiseTime)
+>         ##log(ERROR,"4760 Clear: ClearTime: "+@ClearTime)
+>         ##log(ERROR,"4760 Clear: enterprise: "+$enteprise)
+>         ##log(ERROR,"4760 Clear: specific-trap: "+$specific-trap)
+> ##}
+878a1062
+> 
+880,889d1063
+< 		$fan = extract(@Summary, "^Fan ([0-9]+).*")
+< 		$fan = "Fan "+ $fan
+< 		@Identifier = @Node + " ENVMON_FAN "+ $fan + " " + @Agent + " "+ @Manager
+< 	}
+< 	if(regmatch(@Summary, "^Fan [0-9]+ rotating again.*")){
+< 		$fan = extract(@Summary, "^Fan ([0-9]+).*")
+< 		$fan = "Fan "+ $fan
+< 		@Identifier = @Node + " ENVMON_FAN "+ $fan + " " + @Agent + " "+ @Manager
+< 	}
+< #### Added to resolve cisco 2811 fan rotating deduplication issues Nick Evans Jan 2011
+891,893c1065,1085
+<         ##log(ERROR,"4760 Clear: specific-trap: "+$specific-trap)
+< ##}
+< # End of fan rotating deduplication fix
+---
+> 			
+>         		$fan = extract(@Summary, "^Fan ([0-9]+).*")
+> 			$fan = "Fan "+ $fan
+> 			@Identifier = @Node + " ENVMON_FAN "+ $fan + " " + @Agent + " "+ @Manager
+>         }
+>         if(regmatch(@Summary, "^Fan [0-9]+ rotating again.*")){
+> 
+> 			
+>         		$fan = extract(@Summary, "^Fan ([0-9]+).*")
+> 			$fan = "Fan "+ $fan
+> 			@Identifier = @Node + " ENVMON_FAN "+ $fan + " " + @Agent + " "+ @Manager
+>         }
+> 	if(regmatch(@AlertGroup,"alaOvSwitchDown"))
+>         {
+>                 @AlertGroup = "alaOvSwitchUpDown"
+>         }
+>         if(match(@AlertGroup,"alaOvSwitchUp"))
+>         {
+>                 @AlertGroup = "alaOvSwitchUpDown"
+>         }
+> 
+895c1087
+< #details($*)
+---
+> ##details($*)

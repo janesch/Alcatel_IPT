@@ -1,0 +1,79 @@
+if ( regmatch ( $line_00, "logType" ) ) { 
+$logType= extract($line_00, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_01, "logType" ) ) { 
+$logType= extract($line_01, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_02, "logType" ) ) { 
+$logType= extract($line_02, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_03, "logType" ) ) { 
+$logType= extract($line_03, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_04, "logType" ) ) { 
+$logType= extract($line_04, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_05, "logType" ) ) { 
+$logType= extract($line_05, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_06, "logType" ) ) { 
+$logType= extract($line_06, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_07, "logType" ) ) { 
+$logType= extract($line_07, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_08, "logType" ) ) { 
+$logType= extract($line_08, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_09, "logType" ) ) { 
+$logType= extract($line_09, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_10, "logType" ) ) { 
+$logType= extract($line_10, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_11, "logType" ) ) { 
+$logType= extract($line_11, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_12, "logType" ) ) { 
+$logType= extract($line_12, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_13, "logType" ) ) { 
+$logType= extract($line_13, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_14, "logType" ) ) { 
+$logType= extract($line_14, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_15, "logType" ) ) { 
+$logType= extract($line_15, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_16, "logType" ) ) { 
+$logType= extract($line_16, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_17, "logType" ) ) { 
+$logType= extract($line_17, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_18, "logType" ) ) { 
+$logType= extract($line_18, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_19, "logType" ) ) { 
+$logType= extract($line_19, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_20, "logType" ) ) { 
+$logType= extract($line_20, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_21, "logType" ) ) { 
+$logType= extract($line_21, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_22, "logType" ) ) { 
+$logType= extract($line_22, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_23, "logType" ) ) { 
+$logType= extract($line_23, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_24, "logType" ) ) { 
+$logType= extract($line_24, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_25, "logType" ) ) { 
+$logType= extract($line_25, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_26, "logType" ) ) {
+$logType= extract($line_26, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_27, "logType" ) ) {
+$logType= extract($line_27, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_28, "logType" ) ) {
+$logType= extract($line_28, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_29, "logType" ) ) {
+$logType= extract($line_29, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_30, "logType" ) ) {
+$logType= extract($line_30, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_31, "logType" ) ) {
+$logType= extract($line_31, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_32, "logType" ) ) {
+$logType= extract($line_32, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_33, "logType" ) ) {
+$logType= extract($line_33, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_34, "logType" ) ) {
+$logType= extract($line_34, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_35, "logType" ) ) {
+$logType= extract($line_35, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_36, "logType" ) ) {
+$logType= extract($line_36, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_37, "logType" ) ) {
+$logType= extract($line_37, "[A-Z]*0*([0-9]+)$")
+} else if ( regmatch ( $line_38, "logType" ) ) {
+$logType= extract($line_38, "[A-Z]*0*([0-9]+)$")
+}   

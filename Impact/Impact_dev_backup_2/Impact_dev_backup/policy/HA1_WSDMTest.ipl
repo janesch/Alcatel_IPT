@@ -1,0 +1,125 @@
+/********************************************************* {COPYRIGHT-TOP-RM} ***
+* Licensed Materials - Property of IBM
+* "Restricted Materials of IBM"
+*
+* 5724-S43
+* (C) Copyright IBM Corp. 2009
+*
+* US Government Users Restricted Rights - Use, duplication, or
+* disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+********************************************************* {COPYRIGHT-END-RM} **/
+/****************************************************************************
+This policy demonstrates how to invoke a method for WSDM resource given 
+an End Point Reference (EPR).  It also demonstrates how to get and set
+a resource property for the given EPR.
+
+HowToRun this policy:
+---------------------
+1) Search and replace with specifies for your EPR:
+	a) Update every occurrance of variable named endPointRef to point to your EPR.
+		i)   Update localhost:8080 if necessary.
+		ii)  Update context-name in endPointRef.
+		iii) Update managed-resource-name.
+	b) Update every occurrance of MyPropertyName to be the name of one of your user 
+	   defined properies for your EPR.
+		Note: You can comment out this test and just test CurrentTime which is defined 
+		      for every EPR.
+	c) Update every occurrance of myns to be the prefix for the namespace for your users 
+	   defined properties within your EPR.
+              Note: Ignore this step if commenting out user defined property test as step 1b notes.
+	d) Update every occurrance of namespaceURI (http://www.example.com/managed-resource-name) 
+	   to be namespaceURI for your EPR.
+              Note: Ignore this step if commenting out user defined property test as step 1b notes.
+
+2) Do a trigger policy to execute this policy.
+
+************************************************************************/
+//
+// Function to call WSDMInvoke() for getResourceProperty.
+//
+// param qnameParams - array of strings that represent QName (namespaceURI, localPart, prefix).
+// param result - variable for return object.
+//
+function doTestOne(qnameParams, result) {
+  endPointRef = "http://localhost:8080/context-name/services/managed-resource-name";
+  methodName = "getResourceProperty";
+  if (qnameParams != null) {
+    qnameObj = NewJavaObject("javax.xml.namespace.QName", qnameParams);
+    log("just created QName object: " + qnameObj);
+    params = { qnameObj };
+    log("about to invoke method getResourceProperty");
+    result = WSDMInvoke(endPointRef, methodName, params);
+  }
+}
+
+//
+// Function to printout results for first WSDMInvoke() test.
+//
+// param result - result object passed back from WSDMInvoke (for getResourceProperty this is array).
+// praam propName - property name for property we were after.
+//
+function printTestOneResults(result, propName) {
+  log("Num results is: " + length(result));
+  i = 0;
+  while(i < length(result)) {
+    log("result[" + i + "] is: " + result[i]);
+    i = i + 1;
+  }
+  log("=====>" + propName + " is: " + result[0].textContent);
+}
+
+//
+// Function to call WSDMGetResourceProperty directly.
+//
+// param propQName - flattened QName string for property to be retrieved.
+//
+function doTestTwo(propQName) {
+  endPointRef = "http://localhost:8080/context-name/services/managed-resource-name";
+  result = WSDMGetResourceProperty(endPointRef, propQName);
+  // Get the property name out of the flattened property QName string passed in.
+  strArray = split(propQName, ":");
+  strArray = split(strArray[1], " ");
+  log("=====>" + strArray[0] + " is: " + result[0]);
+}
+
+//
+// Function to call WSDMUpdateResourceProperty directly.
+//
+// param propQName - flattened QName string for property to be retrieved.
+// param values - array of new values to set for property
+//
+function doTestThree(propQName, values) {
+  endPointRef = "http://localhost:8080/context-name/services/managed-resource-name";
+  WSDMUpdateResourceProperty(endPointRef, propQName, values);
+}
+
+log("");
+log("*****Begin WSDM test*****");
+
+log("TEST 1: WSDMInvoke()");
+qnameParams = {"http://docs.oasis-open.org/wsrf/rl-2", "CurrentTime", "wsrl"};
+doTestOne(qnameParams, result);
+printTestOneResults(result, "CurrentTime");
+
+qnameParams = {"http://www.example.com/managed-resource-name", "MyPropertyName", "myns"};
+doTestOne(qnameParams, result);
+printTestOneResults(result, "MyPropertyName");
+
+log("TEST 2: WSDMGetResourceProperty()");
+doTestTwo("wsrl:CurrentTime [http://docs.oasis-open.org/wsrf/rl-2]");
+doTestTwo("myns:MyPropertyName [http://www.example.com/managed-resource-name]");
+
+log("TEST 3: WSDMUpdateResourceProperty()");
+// Note: The resource property to update must be writable!
+//doTestThree("myns:MyPropertyName [http://www.example.com/managed-resource-name]", { "newvalue" });
+// Repeate test 2 to check if property has been updated.
+//doTestTwo("myns:MyPropertyName [http://www.example.com/managed-resource-name]");
+
+log("TEST 4: WSDMInvoke()");
+log("about to invoke method getResourcePropertyDocument");
+result = WSDMInvoke("http://localhost:8080/context-name/services/managed-resource-name", "getResourcePropertyDocument", {});
+log("WS property document is: ");
+log(result);
+
+log("*****End WSDM test*****");
+log("");

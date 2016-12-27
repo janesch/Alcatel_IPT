@@ -1,0 +1,1027 @@
+HA1_AddPolicyProcessMapping.ipl:  Filter = " name='"+POLICYNAME+"'";
+HA1_AddPolicyProcessMapping.ipl:  findPolicies = GetByFilter(Type, Filter, CountOnly);
+HA1_AddPolicyProcessMapping.ipl:  log("GetByFilter. found "+Num+" dataItem(s)");
+HA1_AddPolicyProcessMapping.ipl:    Filter = "policy_id="+findPolicies[0].id;
+HA1_AddPolicyProcessMapping.ipl:    BatchDelete(Type, Filter, null);
+HA1_AddPolicyProcessMapping.ipl:  Filter = " name='"+POLICYNAME+"'";
+HA1_AddPolicyProcessMapping.ipl:  GetByFilter(Type, Filter, CountOnly);
+HA1_AddPolicyProcessMapping.ipl:    Filter = " name='"+PROCESSNAMES[index]+"'";
+HA1_AddPolicyProcessMapping.ipl:    GetByFilter(Type, Filter, CountOnly);
+HA1_AddPolicyProcessMapping.ipl:        GetByFilter("REPORT_PolicyProcessMappings", f, null);
+HA1_Circee_Query_Test.ipl:Filter = "(L2_SYSNAME='GEORPCX301') and (L2_IF_ID like 'BOARD 05%')";
+HA1_Circee_Query_Test.ipl:Test = GetByFilter('Circee_Interface_Table', Filter, false);
+HA1_Correlate_Cable_Breaks.ipl:  Breaks = GetByFilter("ha_ncoms_impact_events","SuppressEscl = 0 and AlertGroup like '^Cable Break Event.*' and Road = '"+ @AssetMotorway +"' and (TSA in ('"+ @TSA +"','"+ @TSB +"') or TSB in ('"+ @TSA +"','"+ @TSB +"')) and Serial <> "+ @Serial ,False);
+HA1_Correlate_Cable_Breaks.ipl:    theSynthEvent=GetByFilter('ha_ncoms_impact_events',"(Identifier='"+synthIdentifier+"')",false);
+HA1_Correlate_Cable_Breaks.ipl:        aChildEvent=GetByFilter('ha_ncoms_impact_events',"(Serial="+serialArray[aa]+")",false);
+HA1_DiscreteOidSetTest.ipl:The GetByFilter action module takes the (optinal) HostId and (optional) UserId 
+HA1_DiscreteOidSetTest.ipl:Filter = "Oid = '" + ObjectToCopy.Oid + "'";
+HA1_DiscreteOidSetTest.ipl:GetByFilter(Type, Filter, CountOnly);
+HA1_DiscreteOidTest.ipl:The GetByFilter action module takes the (optinal) HostId and (optional) UserId 
+HA1_DiscreteOidTest.ipl:Filter= "Oid = '.1.3.6.1.2.1.1.4.0'";
+HA1_DiscreteOidTest.ipl:log("*** Starting DiscreteOidTest with Type = " + Type + " and Filter = " + Filter + " at " + StartTime + " ***");
+HA1_DiscreteOidTest.ipl:/* Filter for SNMPv3 related info */
+HA1_DiscreteOidTest.ipl:/*Filter = "HostId = '" + @HostId + "' AND Oid = '.1.3.6.1.2.1.1.4.0' AND UserId = 'netcool'";*/
+HA1_DiscreteOidTest.ipl:GetByFilter(Type, Filter, CountOnly);
+HA1_ERT_Phone_Cable_Break.ipl:Filter = "Serial = " +  @Serial;
+HA1_ERT_Phone_Cable_Break.ipl:BatchUpdate(DataType, Filter, UpdateExpression);
+HA1_ERT_Phone_Cable_Break.ipl:    Filter = "(Severity > 0) and (EquipmentType = 'RES') and ((TSA = '"+EventContainer.TSA+"') or (TSA = '"+EventContainer.TSB+"')) and ((TSB = '"+EventContainer.TSB+"') or (TSB = '"+EventContainer.TSA+"')) and (AssetMotorway = '"+myRoad+"') and (Manager='Halogen')";
+HA1_ERT_Phone_Cable_Break.ipl:        //Filter = "(Severity > 0) and (EquipmentType = 'RES') and (EventId = 'HAL_007') and ((TSA = '"+EventContainer.TSA+"') or (TSA = '"+EventContainer.TSB+"')) and ((TSB = '"+EventContainer.TSB+"') or (TSB = '"+EventContainer.TSA+"')) and (AssetMotorway = '"+myRoad+"') and (Summary like '.*Line ["+LineNumbers[0]+"|"+LineNumbers[1]+"|"+LineNumbers[2]+"].*')";
+HA1_ERT_Phone_Cable_Break.ipl:     Filter = "(Severity > 0) and (EquipmentType = 'RES') and ((TSA = '"+EventContainer.TSA+"') or (TSA = '"+EventContainer.TSB+"')) and ((TSB = '"+EventContainer.TSB+"') or (TSB = '"+EventContainer.TSA+"')) and (AssetMotorway = '"+myRoad+"') and (Manager='Halogen') and (Summary like '.*LINE ["+LineNumbers[0]+"|"+LineNumbers[1]+"|"+LineNumbers[2]+"].*')";
+HA1_ERT_Phone_Cable_Break.ipl:    resEvents = GetByFilter('ha_ncoms_impact_events',Filter,false);
+HA1_ERT_Phone_Cable_Break.ipl:        log("ERT_Phone_Cable_Break: Get same line failures: "+ Filter );
+HA1_ERT_Phone_Cable_Break.ipl:    Filter = "(Severity > 0) and (EquipmentType = 'RES') and ((TSA = '"+EventContainer.TSA+"') or (TSA = '"+EventContainer.TSB+"')) and ((TSB = '"+EventContainer.TSB+"') or (TSB = '"+EventContainer.TSA+"')) and (AssetMotorway = '"+myRoad+"') and (Manager='Halogen')";
+HA1_ERT_Phone_Cable_Break.ipl:        //Filter = "(Severity > 0) and (EquipmentType = 'RES') and (EventId = 'HAL_007') and ((TSA = '"+EventContainer.TSA+"') or (TSA = '"+EventContainer.TSB+"')) and ((TSB = '"+EventContainer.TSB+"') or (TSB = '"+EventContainer.TSA+"')) and (AssetMotorway = '"+myRoad+"') and (Summary not like '.*Line ["+LineNumbers[0]+"|"+LineNumbers[1]+"|"+LineNumbers[2]+"].*')";
+HA1_ERT_Phone_Cable_Break.ipl:    Filter = "(Severity > 0) and (EquipmentType = 'RES') and ((TSA = '"+EventContainer.TSA+"') or (TSA = '"+EventContainer.TSB+"')) and ((TSB = '"+EventContainer.TSB+"') or (TSB = '"+EventContainer.TSA+"')) and (AssetMotorway = '"+myRoad+"') and (Summary not like '.*LINE ["+LineNumbers[0]+"|"+LineNumbers[1]+"|"+LineNumbers[2]+"].*') and (Manager='Halogen')";
+HA1_ERT_Phone_Cable_Break.ipl:    resEvents2 = GetByFilter('ha_ncoms_impact_events',Filter,false);
+HA1_ERT_Phone_Cable_Break.ipl:        log("ERT_Phone_Cable_Break: Get different line failures: "+ Filter );
+HA1_ERT_Phone_Cable_Break.ipl:        Filter = "(Severity > 0) and (Type = 1) and (EquipmentType = 'RES') and (Node in ('"+myRoad+"_"+@TSA+"_"+@TSB+"','"+myRoad+"_"+@TSB+"_"+@TSA+"'))";
+HA1_ERT_Phone_Cable_Break.ipl:        resSynthEvent = GetByFilter('ha_ncoms_impact_events',Filter,false);
+HA1_ERT_Phone_Cable_Break.ipl:        log("ERT_Phone_Cable_Break: Get existing synthetic: "+ Filter);
+HA1_ERT_Phone_Cable_Break.ipl:        theSynthEvent=GetByFilter('ha_ncoms_impact_events',"(Identifier='"+synthIdentifier+"')",false);
+HA1_ERT_Phone_Cable_Break.ipl:            //aChildEvent=GetByFilter('ha_ncoms_impact_events',"(Serial="+serialArray[aa]+")",false);
+HA1_ERT_Phone_Cable_Break.ipl:            aChildEvent=GetByFilter('ha_ncoms_impact_events',"(Serial="+DistinctChildId[aa]+")",false);
+HA1_GCAB_6850_Resilience.ipl:        Filter = "((Type = 1) and (Severity > 0)) and((Node like '"+First7750+"') or (Node like '^"+SpanName+"[0-9][0-9]$'))";
+HA1_GCAB_6850_Resilience.ipl:        Filter = "((Type = 1) and (Severity > 0)) and((Node like '"+First7750+"') or (Node like '"+Second7750+"') or (Node like '^"+SpanName+"[0-9][0-9]$'))";
+HA1_GCAB_6850_Resilience.ipl:        SpanFaults = GetByFilter('ha_ncoms_impact_events',Filter,false);
+HA1_GCAB_6850_Resilience.ipl:        log("GCAB_6850_Resilience: " + Filter);
+HA1_GCAB_6850_Resilience.ipl:        RemoteEnd = GetByFilter('Circee_Host_Table',"SYSNAME = '"+@RemoteNode+"'",false);
+HA1_GCAB_6850_Resilience.ipl:                        Filter = "((Type = 1) and (Severity > 0)) and((Node like '"+@Node+"') or (Node like '"+Other7750+"') or (Node like '^"+SpanName+"[0-9][0-9]$'))";
+HA1_GCAB_6850_Resilience.ipl:                        SpanFaults = GetByFilter('ha_ncoms_impact_events',Filter,false);
+HA1_GCAB_6850_Resilience.ipl:                        log("GCAB_6850_Resilience: " + Filter);
+HA1_Heartbeat_Check.ipl:Filter = "(Active = 1) and ((Status = 1) or (NextTime < " + GetDate() + "))";
+HA1_Heartbeat_Check.ipl:Heartbeats = GetByFilter( DataType, Filter, False );
+HA1_Heartbeat_Check.ipl:                Filter = "(LastOccurrence > " + Heartbeats[CurrentHeartbeat].LastTime + ") and " + Heartbeats[CurrentHeartbeat].Definition;
+HA1_Heartbeat_Check.ipl:                        Filter = "(LastOccurrence > (getdate - " + Period + ")) and " + Heartbeats[CurrentHeartbeat].Definition;
+HA1_Heartbeat_Check.ipl:                GetByFilter( DataType, Filter, True );
+HA1_Heartbeat_Check.ipl:                Identifier = "Heartbeat for " + Heartbeats[CurrentHeartbeat].Identifier + ":" + Heartbeats[CurrentHeartbeat].FilterName;
+HA1_Heartbeat_Check.ipl:                        Filter = "Identifier = '" + Identifier + "'";
+HA1_Heartbeat_Check.ipl:                        HeartbeatEvent = GetByFilter( DataType, Filter, False );
+HA1_Heartbeat_Check.ipl:                                HeartbeatEvent[0].Summary = "alarms from " + Heartbeats[CurrentHeartbeat].FilterName + " in last " + Heartbeats[CurrentHeartbeat].Period + " minutes";
+HA1_Heartbeat_Check.ipl:                        NewEvent.Summary = "NO alarms from " + Heartbeats[CurrentHeartbeat].FilterName + " in last " + Heartbeats[CurrentHeartbeat].Period + " minutes";
+HA1_ITNMSamplePolicy.ipl:  Filter = "Subject = '" + "RIVERSOFT.3.0.MODEL.QUERY" + "' AND  Query='" + 'select * from master.entityByName;' + "'";
+HA1_ITNMSamplePolicy.ipl:  Filter = Filter + " AND Timeout='100000'";
+HA1_ITNMSamplePolicy.ipl:  log("Filter is " + Filter);
+HA1_ITNMSamplePolicy.ipl:  out = GetByFilter(Type, Filter, CountOnly);
+HA1_LSP_LINK.ipl:	LSP=GetByFilter('Circee_LSP_Table', "(LSP_ID='"+LSP_ID+"')", false);
+HA1_LSP_LINK.ipl:			OSOrgNodes=GetByFilter('ha_ncoms_impact_events',"(Severity > 0) AND (AlertKey like '^lsp "+LSP[0].LSP_BACKUP_1+" .*') AND (X733SpecificProb = 'LspDown')", false);
+HA1_LSP_LINK.ipl:			OSOrgNodes=GetByFilter('ha_ncoms_impact_events',"(Severity > 0) AND (AlertKey like '^lsp "+LSP[0].LSP_BACKUP_2+" .*') AND (X733SpecificProb = 'LspDown')", false);
+HA1_LSP_LINK.ipl:			OSOrgNodes=GetByFilter('ha_ncoms_impact_events',"(Severity > 0) AND (AlertKey like '^lsp "+LSP[0].LSP_BACKUP_3+" .*') AND (X733SpecificProb = 'LspDown')", false);
+HA1_LSP_LINK.ipl:			LSP=GetByFilter('Circee_LSP_Table',  "(LSP_BACKUP_" + bLocalHostId + "='"+LSP_ID+"')", false);
+HA1_LSP_LINK.ipl:					OSOrgNodes=GetByFilter('ha_ncoms_impact_events',"(Severity > 0) AND (AlertKey like '^lsp "+LSP[priCount1].LSP_ID+" .*') AND (X733SpecificProb = 'LspDown')", false);
+HA1_LSP_LINK.ipl:		LSP=GetByFilter('Circee_LSP_Table',  "(LSP_BACKUP_" + bLocalHostId + "='"+LSP_ID+"')", false);
+HA1_LSP_LINK.ipl:				OSOrgNodes=GetByFilter('ha_ncoms_impact_events',"(ServiceAffecting = 1) AND (Severity > 0) AND (AlertKey like '^lsp "+LSP[priCount1].LSP_ID+" .*') AND (X733SpecificProb = 'LspDown')", false);
+HA1_LSP_LINK.ipl:						LSPrimary=GetByFilter('Circee_LSP_Table', "(LSP_ID='"+newLSP_ID+"')", false);
+HA1_LSP_LINK.ipl:								OSOrgNodes2=GetByFilter('ha_ncoms_impact_events',"(Severity > 0) AND (AlertKey like '^lsp "+LSPrimary[0].LSP_BACKUP_1+" .*') AND (X733SpecificProb = 'LspDown')", false);
+HA1_LSP_LINK.ipl:								OSOrgNodes2=GetByFilter('ha_ncoms_impact_events',"(Severity > 0) AND (AlertKey like '^lsp "+LSPrimary[0].LSP_BACKUP_2+" .*') AND (X733SpecificProb = 'LspDown')", false);
+HA1_LSP_LINK.ipl:								OSOrgNodes2=GetByFilter('ha_ncoms_impact_events',"(Severity > 0) AND (AlertKey like '^lsp "+LSPrimary[0].LSP_BACKUP_3+" .*') AND (X733SpecificProb = 'LspDown')", false);
+HA1_LSP_LINK_Old.ipl:    LSP=GetByFilter('Circee_LSP_Table', "(LSP_ID='"+LSP_ID+"')", false);
+HA1_LSP_LINK_Old.ipl:            OSOrgNodes=GetByFilter('ha_ncoms_impact_events',"(Severity > 0) AND (AlertKey like '^lsp "+LSP[0].LSP_BACKUP_1+" .*') AND (X733SpecificProb = 'LspDown')", false);
+HA1_LSP_LINK_Old.ipl:            OSOrgNodes=GetByFilter('ha_ncoms_impact_events',"(Severity > 0) AND (AlertKey like '^lsp "+LSP[0].LSP_BACKUP_2+" .*') AND (X733SpecificProb = 'LspDown')", false);
+HA1_LSP_LINK_Old.ipl:            OSOrgNodes=GetByFilter('ha_ncoms_impact_events',"(Severity > 0) AND (AlertKey like '^lsp "+LSP[0].LSP_BACKUP_3+" .*') AND (X733SpecificProb = 'LspDown')", false);
+HA1_LSP_LINK_Old.ipl:            LSP=GetByFilter('Circee_LSP_Table',  "(LSP_BACKUP_" + bLocalHostId + "='"+LSP_ID+"')", false);
+HA1_LSP_LINK_Old.ipl:                    OSOrgNodes=GetByFilter('ha_ncoms_impact_events',"(Severity > 0) AND (AlertKey like '^lsp "+LSP[priCount1].LSP_ID+" .*') AND (X733SpecificProb = 'LspDown')", false);
+HA1_LSP_LINK_Old.ipl:        LSP=GetByFilter('Circee_LSP_Table',  "(LSP_BACKUP_" + bLocalHostId + "='"+LSP_ID+"')", false);
+HA1_LSP_LINK_Old.ipl:                OSOrgNodes=GetByFilter('ha_ncoms_impact_events',"(ServiceAffecting = 1) AND (Severity > 0) AND (AlertKey like '^lsp "+LSP[priCount1].LSP_ID+" .*') AND (X733SpecificProb = 'LspDown')", false);
+HA1_LSP_LINK_Old.ipl:                        LSPrimary=GetByFilter('Circee_LSP_Table', "(LSP_ID='"+newLSP_ID+"')", false);
+HA1_LSP_LINK_Old.ipl:                                OSOrgNodes2=GetByFilter('ha_ncoms_impact_events',"(Severity > 0) AND (AlertKey like '^lsp "+LSPrimary[0].LSP_BACKUP_1+" .*') AND (X733SpecificProb = 'LspDown')", false);
+HA1_LSP_LINK_Old.ipl:                                OSOrgNodes2=GetByFilter('ha_ncoms_impact_events',"(Severity > 0) AND (AlertKey like '^lsp "+LSPrimary[0].LSP_BACKUP_2+" .*') AND (X733SpecificProb = 'LspDown')", false);
+HA1_LSP_LINK_Old.ipl:                                OSOrgNodes2=GetByFilter('ha_ncoms_impact_events',"(Severity > 0) AND (AlertKey like '^lsp "+LSPrimary[0].LSP_BACKUP_3+" .*') AND (X733SpecificProb = 'LspDown')", false);
+HA1_Multiple_Link_Alarms.ipl://probEvents = GetByFilter('ha_ncoms_impact_events',"(Type = 1) and (Severity > 0) and (RCCArea = '"+@RCCArea+"') and ((EventId = '5620SAM_004') or ((Manager = 'PROVISO') and (AlarmClass = 'Utilization threshold')) and (Node like '^.*[s|S][r|R][01|12].*$') and (RemoteNode like '^[a-zA-Z]+[m|M][s|S][e|E][c|C|e|E][0-9][0-9].*$')",false);
+HA1_Multiple_Link_Alarms.ipl:probEvents = GetByFilter('ha_ncoms_impact_events',"(Type = 1) and (Severity > 0) and (RCCArea = '"+@RCCArea+"') and ((EventId = '5620SAM_004') or ((Manager = 'PROVISO') and (AlarmClass like 'Inbound Utilization')) and (Node like '^.*[s|S][r|R][01|12].*$') and (RemoteNode like '^[a-zA-Z0-9]+[m|M][s|S][e|E][c|C|e|E][0-9][0-9].*$' or RemoteNode like '.*96C.*'))",false);
+HA1_Multiple_Link_Alarms_Old.ipl://probEvents = GetByFilter('ha_ncoms_impact_events',"(Type = 1) and (Severity > 0) and (RCCArea = '"+@RCCArea+"') and ((EventId = '5620SAM_004') or ((Manager = 'PROVISO') and (AlarmClass = 'Utilization threshold')) and (Node like '^.*[s|S][r|R][01|12].*$') and (RemoteNode like '^[a-zA-Z]+[m|M][s|S][e|E][c|C|e|E][0-9][0-9].*$'))",false);
+HA1_Multiple_Link_Alarms_Old.ipl:probEvents = GetByFilter('ha_ncoms_impact_events',"(Type = 1) and (Severity > 0) and (RCCArea = '"+@RCCArea+"') and ((EventId = '5620SAM_004') or ((Manager = 'PROVISO') and (AlarmClass like 'Inbound Utilization')) and (Node like '^.*[s|S][r|R][01|12].*$') and (RemoteNode like '^[a-zA-Z]+[m|M][s|S][e|E][c|C|e|E][0-9][0-9].*$'))",false);
+HA1_Multiple_RX_Loss.ipl:        RXevents = GetByFilter('ha_ncoms_impact_events',"(Severity > 0) and (Type = 1) and (EventId = '1353NM_007') and (Node not like '96C') and (RCCArea = '"+EventContainer.RCCArea+"')",false);
+HA1_Multiple_RX_Loss.ipl:                RXCompEvent = GetByFilter('ha_ncoms_impact_events',"Identifier = 'Impact compound RX Loss event _ "+@RCCArea+"'",false);
+HA1_Multiple_RX_Loss.ipl:        RXevents = GetByFilter('ha_ncoms_impact_events',"(Severity > 0) and (Type = 1) and (EventId = '1353NM_007') and (Node not like '96C') and (RCCArea = '"+EventContainer.RCCArea+"')",false);
+HA1_Multiple_RX_Loss_Old.ipl:        RXevents = GetByFilter('ha_ncoms_impact_events',"(Severity > 0) and (Type = 1) and (EventId = '1353NM_004') and (RCCArea = '"+EventContainer.RCCArea+"')",false);
+HA1_Multiple_RX_Loss_Old.ipl:                RXCompEvent = GetByFilter('ha_ncoms_impact_events',"Identifier = 'Impact compound RX Loss event _ "+@RCCArea+"'",false);
+HA1_Multiple_RX_Loss_Old.ipl:        RXevents = GetByFilter('ha_ncoms_impact_events',"(Severity > 0) and (Type = 1) and (EventId = '1353NM_004') and (RCCArea = '"+EventContainer.RCCArea+"')",false);
+HA1_New_Network_Enrichment.ipl:Filter = "ServerSerial = " + @ServerSerial;
+HA1_New_Network_Enrichment.ipl:BatchUpdate(DataType,Filter,UpdateExpresssion);
+HA1_New_Network_Enrichment.ipl:Filter = "(SYSNAME='"+@Node+"')";
+HA1_New_Network_Enrichment.ipl:			Filter = "(SYSNAME='"+myNode+"')";
+HA1_New_Network_Enrichment.ipl:			Filter = "(SYSNAME='"+myNode+"')";
+HA1_New_Network_Enrichment.ipl:				Filter = "(SYSNAME='"+myNode+"')";
+HA1_New_Network_Enrichment.ipl:				Filter = "(SYSNAME='"+myNode+"')";
+HA1_New_Network_Enrichment.ipl:        	Filter = "(IP_ADDRESS='"+myNode +"')";
+HA1_New_Network_Enrichment.ipl://			Filter = "(SYSNAME='BAMBSR1201')";
+HA1_New_Network_Enrichment.ipl://			Filter = "(SYSNAME='NWCCSR1201')";
+HA1_New_Network_Enrichment.ipl:        	Filter = "(IP_ADDRESS='"+@Node+"')";
+HA1_New_Network_Enrichment.ipl:	Filter = "(SYSNAME like '" + @Node + "%')";
+HA1_New_Network_Enrichment.ipl:			Filter = "(SYSNAME='"+ruRemoteNode+"')";
+HA1_New_Network_Enrichment.ipl:			Filter="(SYSNAME='"+@Node+"')";
+HA1_New_Network_Enrichment.ipl:		//Filter="(SYSNAME='"+@Node+"')";
+HA1_New_Network_Enrichment.ipl:log("Filter = " + Filter);
+HA1_New_Network_Enrichment.ipl:EndOrgNodes = GetByFilter('Circee_Host_Table', Filter, false);
+HA1_New_Network_Enrichment.ipl:// EndOrgNodes = GetByFilter('Reporter_Host_Table', Filter, false);
+HA1_New_Network_Enrichment.ipl:log("New_Network_Enrichment: GetByFilter successful. Found "+EndNum+" dataItem(s).");
+HA1_New_Network_Enrichment.ipl:        tsaInfo = GetByFilter('Circee_TS_Table', "TRANSMISSION_STATION = '"+EventContainer.TSA+"' and MOTORWAY_REF = '"+EventContainer.AssetMotorway+"'",false);
+HA1_New_Network_Enrichment.ipl:                Filter = "(L1_SYSNAME='"+@Node+"') and (L1_IF_ID='"+@PhysicalCard+"')";
+HA1_New_Network_Enrichment.ipl:					Filter = "(L1_SYSNAME='"+myNode+"') and (L1_IF_ID='"+@PhysicalCard+"')";
+HA1_New_Network_Enrichment.ipl:					Filter = "(L1_SYSNAME='"+myNode+"') and (L1_IF_ID='"+@PhysicalCard+"')";
+HA1_New_Network_Enrichment.ipl:				Filter = "(L1_SYSNAME='"+myNode+"') and (L1_IF_ID like '"+@PhysicalCard+"%')";
+HA1_New_Network_Enrichment.ipl:				Filter = "(L1_SYSNAME='"+@Node+"') and (L1_IF_ID='"+myCard+"')";
+HA1_New_Network_Enrichment.ipl:                log("New_Network_Enrichment: Interface Filter = " + Filter);
+HA1_New_Network_Enrichment.ipl:                RemoteEnd = GetByFilter('Circee_Interface_Table', Filter, false);
+HA1_New_Network_Enrichment.ipl:		  //RemoteEnd = GetByFilter('Reporter_Interface_Table', Filter, false);	
+HA1_New_Network_Enrichment.ipl:		  log("New_Network_Enrichment: Interface GetByFilter successful. Found "+numRemoteEnd+" dataItem(s).");
+HA1_New_Network_Enrichment.ipl:	                      Filter = "(L2_SYSNAME='"+@Node+"') and (L2_IF_ID='"+@PhysicalCard+"')";
+HA1_New_Network_Enrichment.ipl:						Filter = "(L2_SYSNAME='"+myNode+"') and (L2_IF_ID='"+@PhysicalCard+"')";
+HA1_New_Network_Enrichment.ipl:						Filter = "(L2_SYSNAME='"+myNode+"') and (L2_IF_ID='"+@PhysicalCard+"')";
+HA1_New_Network_Enrichment.ipl:				Filter = "(L2_SYSNAME='"+myNode+"') and (L2_IF_ID like '"+@PhysicalCard+"%')";
+HA1_New_Network_Enrichment.ipl:				Filter = "(L2_SYSNAME='"+@Node+"') and (L2_IF_ID='"+myCard+"')";
+HA1_New_Network_Enrichment.ipl:	                      log("New_Network_Enrichment: Interface Filter = " + Filter);
+HA1_New_Network_Enrichment.ipl:                       RemoteEnd = GetByFilter('Circee_Interface_Table', Filter, false);
+HA1_New_Network_Enrichment.ipl:			  // RemoteEnd = GetByFilter('Reporter_Interface_Table', Filter, false);
+HA1_New_Network_Enrichment.ipl:			   log("New_Network_Enrichment: Interface GetByFilter successful. Found "+numRemoteEnd+" dataItem(s).");
+HA1_New_Network_Enrichment.ipl:			SLI1 = GetByFilter('Circee_Interface_Table', SLIfilter1, false);
+HA1_New_Network_Enrichment.ipl:			SLI2 = GetByFilter('Circee_Interface_Table', SLIfilter2, false);
+HA1_New_Network_Enrichment.ipl:                Filter = "(L1_SYSNAME='"+@Node+"') and (L1_IF_ID='"+@PhysicalCard+"')";
+HA1_New_Network_Enrichment.ipl:					Filter = "(L1_SYSNAME='"+myNode+"') and (L1_IF_ID='"+@PhysicalCard+"')";
+HA1_New_Network_Enrichment.ipl:					Filter = "(L1_SYSNAME='"+myNode+"') and (L1_IF_ID='"+@PhysicalCard+"')";
+HA1_New_Network_Enrichment.ipl:				Filter = "(L1_SYSNAME='"+myNode+"') and (L1_IF_ID like '"+@PhysicalCard+"%')";
+HA1_New_Network_Enrichment.ipl:				Filter = "(L1_SYSNAME='"+@Node+"') and (L1_IF_ID='"+myCard+"')";
+HA1_New_Network_Enrichment.ipl:                log("New_Network_Enrichment: InterfaceSTIonly Filter = " + Filter);
+HA1_New_Network_Enrichment.ipl:                RemoteEnd = GetByFilter('Circee_Interface_Table', Filter, false);
+HA1_New_Network_Enrichment.ipl:		  //RemoteEnd = GetByFilter('Reporter_Interface_Table', Filter, false);	
+HA1_New_Network_Enrichment.ipl:		  log("New_Network_Enrichment: InterfaceSTIonly GetByFilter successful. Found "+numRemoteEnd+" dataItem(s).");
+HA1_New_Network_Enrichment.ipl:					RuFilter = "(L1_SYSNAME='"+@Node+"') and (L1_IF_ID='01 01 RU')";
+HA1_New_Network_Enrichment.ipl:					RuNode = GetByFilter('Circee_Interface_Table', RuFilter, false);
+HA1_New_Network_Enrichment.ipl:						RuFilter = "(L2_SYSNAME='"+@Node+"') and (L2_IF_ID='01 01 RU')";
+HA1_New_Network_Enrichment.ipl:						RuNode = GetByFilter('Circee_Interface_Table', RuFilter, false);
+HA1_New_Network_Enrichment.ipl:	                      Filter = "(L2_SYSNAME='"+@Node+"') and (L2_IF_ID='"+@PhysicalCard+"')";
+HA1_New_Network_Enrichment.ipl:						Filter = "(L2_SYSNAME='"+myNode+"') and (L2_IF_ID='"+@PhysicalCard+"')";
+HA1_New_Network_Enrichment.ipl:						Filter = "(L2_SYSNAME='"+myNode+"') and (L2_IF_ID='"+@PhysicalCard+"')";
+HA1_New_Network_Enrichment.ipl:				Filter = "(L2_SYSNAME='"+myNode+"') and (L2_IF_ID like '"+@PhysicalCard+"%')";
+HA1_New_Network_Enrichment.ipl:				Filter = "(L2_SYSNAME='"+@Node+"') and (L2_IF_ID='"+myCard+"')";
+HA1_New_Network_Enrichment.ipl:	                      log("New_Network_Enrichment: InterfaceSTIonly Filter = " + Filter);
+HA1_New_Network_Enrichment.ipl:                       RemoteEnd = GetByFilter('Circee_Interface_Table', Filter, false);
+HA1_New_Network_Enrichment.ipl:			  // RemoteEnd = GetByFilter('Reporter_Interface_Table', Filter, false);
+HA1_New_Network_Enrichment.ipl:			   log("New_Network_Enrichment: InterfaceSTIonly GetByFilter successful. Found "+numRemoteEnd+" dataItem(s).");
+HA1_New_Network_Enrichment.ipl:			SLI1 = GetByFilter('Circee_Interface_Table', SLIfilter1, false);
+HA1_New_Network_Enrichment.ipl:			SLI2 = GetByFilter('Circee_Interface_Table', SLIfilter2, false);
+HA1_New_Network_Enrichment.ipl:                RemoteEnd = GetByFilter('Circee_E1_Table', "(RCC_SYSNAME='"+@Node+"') and (RCC_INTERFACE_ID='"+@PhysicalCard+"')", false);
+HA1_New_Network_Enrichment.ipl:                        RemoteEnd = GetByFilter('Circee_E1_Table', "(ROADSIDE_SYSNAME='"+@Node+"') and (ROADSIDE_INTERFACE_ID='"+@PhysicalCard+"')", false);
+HA1_New_Network_Enrichment.ipl:                Filter = "(L1_SYSNAME='"+@Node+"') and (L1_IF_ID='"+@PhysicalCard+"')";
+HA1_New_Network_Enrichment.ipl:                log("New_Network_Enrichment: Filter = " + Filter);
+HA1_New_Network_Enrichment.ipl:                RemoteEnd = GetByFilter('Circee_Interface_Table', Filter, false);
+HA1_New_Network_Enrichment.ipl:	                      Filter = "(L2_SYSNAME='"+@Node+"') and (L2_IF_ID='"+@PhysicalCard+"')";
+HA1_New_Network_Enrichment.ipl:	                      log("New_Network_Enrichment: Filter = " + Filter);
+HA1_New_Network_Enrichment.ipl:                        RemoteEnd = GetByFilter('Circee_Interface_Table', Filter, false);
+HA1_New_Network_Enrichment.ipl:                RemoteEnd = GetByFilter('Circee_Lambda_Table', "(L1_SYSNAME='"+@Node+"') and (L1_INTERFACE_ID='"+@PhysicalCard+"')", false);
+HA1_New_Network_Enrichment.ipl:                        RemoteEnd = GetByFilter('Circee_Lambda_Table', "(L2_SYSNAME='"+@Node+"') and (L2_INTERFACE_ID='"+@PhysicalCard+"')", false);
+HA1_New_Network_Enrichment.ipl:                Filter = "(L1_SYSNAME='"+@Node+"') and (L1_IF_ID='"+@PhysicalCard+"')";
+HA1_New_Network_Enrichment.ipl:                log("New_Network_Enrichment: Filter = " + Filter);
+HA1_New_Network_Enrichment.ipl:                RemoteEnd = GetByFilter('Circee_Interface_Table', Filter, false);
+HA1_New_Network_Enrichment.ipl:	                      Filter = "(L2_SYSNAME='"+@Node+"') and (L2_IF_ID='"+@PhysicalCard+"')";
+HA1_New_Network_Enrichment.ipl:	                      log("New_Network_Enrichment: Filter = " + Filter);
+HA1_New_Network_Enrichment.ipl:                     	//RemoteEnd = GetByFilter('Circee_Interface_Table', Filter, false);
+HA1_New_Network_Enrichment.ipl:			   RemoteEnd = GetByFilter('Reporter_Interface_Table', Filter, false);
+HA1_New_Network_Enrichment.ipl:                RemoteEnd=GetByFilter('Circee_LSP_Table', "(LSP_ID='"+@PhysicalCard+"') AND (HOST_ID_LOC='"+ @Node +"')", false);
+HA1_New_Network_Enrichment.ipl:                        RemoteEnd=GetByFilter('Circee_LSP_Table', "(LSP_ID='"+@PhysicalCard+"') AND (HOST_ID_REM='"+ @Node +"')", false);
+HA1_New_Network_Enrichment.ipl:		Filter = "ASSET_NAME='"+EventContainer.Node+"'";
+HA1_New_Network_Enrichment.ipl:  		EndOrgNodes = GetByFilter('Circee_Asset_STI_Table', Filter, false);
+HA1_New_Network_Enrichment.ipl:		Filter = "ASSET_NAME='"+EventContainer.Node+"'";
+HA1_New_Network_Enrichment.ipl:  		EndOrgNodes = GetByFilter('Circee_Asset_STI_Table', Filter, false);
+HA1_New_Network_Enrichment_Old.ipl:Filter = "ServerSerial = " + @ServerSerial;
+HA1_New_Network_Enrichment_Old.ipl:BatchUpdate(DataType,Filter,UpdateExpresssion);
+HA1_New_Network_Enrichment_Old.ipl:Filter = "(SYSNAME='"+@Node+"')";
+HA1_New_Network_Enrichment_Old.ipl:            Filter = "(SYSNAME='"+myNode+"')";
+HA1_New_Network_Enrichment_Old.ipl:            Filter = "(SYSNAME='"+myNode+"')";
+HA1_New_Network_Enrichment_Old.ipl:                Filter = "(SYSNAME='"+myNode+"')";
+HA1_New_Network_Enrichment_Old.ipl:                Filter = "(SYSNAME='"+myNode+"')";
+HA1_New_Network_Enrichment_Old.ipl:            Filter = "(IP_ADDRESS='"+myNode +"')";
+HA1_New_Network_Enrichment_Old.ipl://            Filter = "(SYSNAME='BAMBSR1201')";
+HA1_New_Network_Enrichment_Old.ipl://            Filter = "(SYSNAME='NWCCSR1201')";
+HA1_New_Network_Enrichment_Old.ipl:            Filter = "(IP_ADDRESS='"+@Node+"')";
+HA1_New_Network_Enrichment_Old.ipl:    Filter = "(SYSNAME like '" + @Node + "%')";
+HA1_New_Network_Enrichment_Old.ipl:            Filter = "(SYSNAME='"+ruRemoteNode+"')";
+HA1_New_Network_Enrichment_Old.ipl:            Filter="(SYSNAME='"+@Node+"')";
+HA1_New_Network_Enrichment_Old.ipl:        //Filter="(SYSNAME='"+@Node+"')";
+HA1_New_Network_Enrichment_Old.ipl:log("Filter = " + Filter);
+HA1_New_Network_Enrichment_Old.ipl:EndOrgNodes = GetByFilter('Circee_Host_Table', Filter, false);
+HA1_New_Network_Enrichment_Old.ipl:// EndOrgNodes = GetByFilter('Reporter_Host_Table', Filter, false);
+HA1_New_Network_Enrichment_Old.ipl:log("New_Network_Enrichment: GetByFilter successful. Found "+EndNum+" dataItem(s).");
+HA1_New_Network_Enrichment_Old.ipl:        tsaInfo = GetByFilter('Circee_TS_Table', "TRANSMISSION_STATION = '"+EventContainer.TSA+"' and MOTORWAY_REF = '"+EventContainer.AssetMotorway+"'",false);
+HA1_New_Network_Enrichment_Old.ipl:                Filter = "(L1_SYSNAME='"+@Node+"') and (L1_IF_ID='"+@PhysicalCard+"')";
+HA1_New_Network_Enrichment_Old.ipl:                    Filter = "(L1_SYSNAME='"+myNode+"') and (L1_IF_ID='"+@PhysicalCard+"')";
+HA1_New_Network_Enrichment_Old.ipl:                    Filter = "(L1_SYSNAME='"+myNode+"') and (L1_IF_ID='"+@PhysicalCard+"')";
+HA1_New_Network_Enrichment_Old.ipl:                Filter = "(L1_SYSNAME='"+myNode+"') and (L1_IF_ID like '"+@PhysicalCard+"%')";
+HA1_New_Network_Enrichment_Old.ipl:                Filter = "(L1_SYSNAME='"+@Node+"') and (L1_IF_ID='"+myCard+"')";
+HA1_New_Network_Enrichment_Old.ipl:                log("New_Network_Enrichment: Interface Filter = " + Filter);
+HA1_New_Network_Enrichment_Old.ipl:                RemoteEnd = GetByFilter('Circee_Interface_Table', Filter, false);
+HA1_New_Network_Enrichment_Old.ipl:          //RemoteEnd = GetByFilter('Reporter_Interface_Table', Filter, false);    
+HA1_New_Network_Enrichment_Old.ipl:          log("New_Network_Enrichment: Interface GetByFilter successful. Found "+numRemoteEnd+" dataItem(s).");
+HA1_New_Network_Enrichment_Old.ipl:                          Filter = "(L2_SYSNAME='"+@Node+"') and (L2_IF_ID='"+@PhysicalCard+"')";
+HA1_New_Network_Enrichment_Old.ipl:                        Filter = "(L2_SYSNAME='"+myNode+"') and (L2_IF_ID='"+@PhysicalCard+"')";
+HA1_New_Network_Enrichment_Old.ipl:                        Filter = "(L2_SYSNAME='"+myNode+"') and (L2_IF_ID='"+@PhysicalCard+"')";
+HA1_New_Network_Enrichment_Old.ipl:                Filter = "(L2_SYSNAME='"+myNode+"') and (L2_IF_ID like '"+@PhysicalCard+"%')";
+HA1_New_Network_Enrichment_Old.ipl:                Filter = "(L2_SYSNAME='"+@Node+"') and (L2_IF_ID='"+myCard+"')";
+HA1_New_Network_Enrichment_Old.ipl:                          log("New_Network_Enrichment: Interface Filter = " + Filter);
+HA1_New_Network_Enrichment_Old.ipl:                       RemoteEnd = GetByFilter('Circee_Interface_Table', Filter, false);
+HA1_New_Network_Enrichment_Old.ipl:              // RemoteEnd = GetByFilter('Reporter_Interface_Table', Filter, false);
+HA1_New_Network_Enrichment_Old.ipl:               log("New_Network_Enrichment: Interface GetByFilter successful. Found "+numRemoteEnd+" dataItem(s).");
+HA1_New_Network_Enrichment_Old.ipl:            SLI1 = GetByFilter('Circee_Interface_Table', SLIfilter1, false);
+HA1_New_Network_Enrichment_Old.ipl:            SLI2 = GetByFilter('Circee_Interface_Table', SLIfilter2, false);
+HA1_New_Network_Enrichment_Old.ipl:                Filter = "(L1_SYSNAME='"+@Node+"') and (L1_IF_ID='"+@PhysicalCard+"')";
+HA1_New_Network_Enrichment_Old.ipl:                    Filter = "(L1_SYSNAME='"+myNode+"') and (L1_IF_ID='"+@PhysicalCard+"')";
+HA1_New_Network_Enrichment_Old.ipl:                    Filter = "(L1_SYSNAME='"+myNode+"') and (L1_IF_ID='"+@PhysicalCard+"')";
+HA1_New_Network_Enrichment_Old.ipl:                Filter = "(L1_SYSNAME='"+myNode+"') and (L1_IF_ID like '"+@PhysicalCard+"%')";
+HA1_New_Network_Enrichment_Old.ipl:                Filter = "(L1_SYSNAME='"+@Node+"') and (L1_IF_ID='"+myCard+"')";
+HA1_New_Network_Enrichment_Old.ipl:                log("New_Network_Enrichment: InterfaceSTIonly Filter = " + Filter);
+HA1_New_Network_Enrichment_Old.ipl:                RemoteEnd = GetByFilter('Circee_Interface_Table', Filter, false);
+HA1_New_Network_Enrichment_Old.ipl:          //RemoteEnd = GetByFilter('Reporter_Interface_Table', Filter, false);    
+HA1_New_Network_Enrichment_Old.ipl:          log("New_Network_Enrichment: InterfaceSTIonly GetByFilter successful. Found "+numRemoteEnd+" dataItem(s).");
+HA1_New_Network_Enrichment_Old.ipl:                    RuFilter = "(L1_SYSNAME='"+@Node+"') and (L1_IF_ID='01 01 RU')";
+HA1_New_Network_Enrichment_Old.ipl:                    RuNode = GetByFilter('Circee_Interface_Table', RuFilter, false);
+HA1_New_Network_Enrichment_Old.ipl:                        RuFilter = "(L2_SYSNAME='"+@Node+"') and (L2_IF_ID='01 01 RU')";
+HA1_New_Network_Enrichment_Old.ipl:                        RuNode = GetByFilter('Circee_Interface_Table', RuFilter, false);
+HA1_New_Network_Enrichment_Old.ipl:                          Filter = "(L2_SYSNAME='"+@Node+"') and (L2_IF_ID='"+@PhysicalCard+"')";
+HA1_New_Network_Enrichment_Old.ipl:                        Filter = "(L2_SYSNAME='"+myNode+"') and (L2_IF_ID='"+@PhysicalCard+"')";
+HA1_New_Network_Enrichment_Old.ipl:                        Filter = "(L2_SYSNAME='"+myNode+"') and (L2_IF_ID='"+@PhysicalCard+"')";
+HA1_New_Network_Enrichment_Old.ipl:                Filter = "(L2_SYSNAME='"+myNode+"') and (L2_IF_ID like '"+@PhysicalCard+"%')";
+HA1_New_Network_Enrichment_Old.ipl:                Filter = "(L2_SYSNAME='"+@Node+"') and (L2_IF_ID='"+myCard+"')";
+HA1_New_Network_Enrichment_Old.ipl:                          log("New_Network_Enrichment: InterfaceSTIonly Filter = " + Filter);
+HA1_New_Network_Enrichment_Old.ipl:                       RemoteEnd = GetByFilter('Circee_Interface_Table', Filter, false);
+HA1_New_Network_Enrichment_Old.ipl:              // RemoteEnd = GetByFilter('Reporter_Interface_Table', Filter, false);
+HA1_New_Network_Enrichment_Old.ipl:               log("New_Network_Enrichment: InterfaceSTIonly GetByFilter successful. Found "+numRemoteEnd+" dataItem(s).");
+HA1_New_Network_Enrichment_Old.ipl:            SLI1 = GetByFilter('Circee_Interface_Table', SLIfilter1, false);
+HA1_New_Network_Enrichment_Old.ipl:            SLI2 = GetByFilter('Circee_Interface_Table', SLIfilter2, false);
+HA1_New_Network_Enrichment_Old.ipl:                RemoteEnd = GetByFilter('Circee_E1_Table', "(RCC_SYSNAME='"+@Node+"') and (RCC_INTERFACE_ID='"+@PhysicalCard+"')", false);
+HA1_New_Network_Enrichment_Old.ipl:                        RemoteEnd = GetByFilter('Circee_E1_Table', "(ROADSIDE_SYSNAME='"+@Node+"') and (ROADSIDE_INTERFACE_ID='"+@PhysicalCard+"')", false);
+HA1_New_Network_Enrichment_Old.ipl:                Filter = "(L1_SYSNAME='"+@Node+"') and (L1_IF_ID='"+@PhysicalCard+"')";
+HA1_New_Network_Enrichment_Old.ipl:                log("New_Network_Enrichment: Filter = " + Filter);
+HA1_New_Network_Enrichment_Old.ipl:                RemoteEnd = GetByFilter('Circee_Interface_Table', Filter, false);
+HA1_New_Network_Enrichment_Old.ipl:                          Filter = "(L2_SYSNAME='"+@Node+"') and (L2_IF_ID='"+@PhysicalCard+"')";
+HA1_New_Network_Enrichment_Old.ipl:                          log("New_Network_Enrichment: Filter = " + Filter);
+HA1_New_Network_Enrichment_Old.ipl:                        RemoteEnd = GetByFilter('Circee_Interface_Table', Filter, false);
+HA1_New_Network_Enrichment_Old.ipl:                RemoteEnd = GetByFilter('Circee_Lambda_Table', "(L1_SYSNAME='"+@Node+"') and (L1_INTERFACE_ID='"+@PhysicalCard+"')", false);
+HA1_New_Network_Enrichment_Old.ipl:                        RemoteEnd = GetByFilter('Circee_Lambda_Table', "(L2_SYSNAME='"+@Node+"') and (L2_INTERFACE_ID='"+@PhysicalCard+"')", false);
+HA1_New_Network_Enrichment_Old.ipl:                Filter = "(L1_SYSNAME='"+@Node+"') and (L1_IF_ID='"+@PhysicalCard+"')";
+HA1_New_Network_Enrichment_Old.ipl:                log("New_Network_Enrichment: Filter = " + Filter);
+HA1_New_Network_Enrichment_Old.ipl:                RemoteEnd = GetByFilter('Circee_Interface_Table', Filter, false);
+HA1_New_Network_Enrichment_Old.ipl:                          Filter = "(L2_SYSNAME='"+@Node+"') and (L2_IF_ID='"+@PhysicalCard+"')";
+HA1_New_Network_Enrichment_Old.ipl:                          log("New_Network_Enrichment: Filter = " + Filter);
+HA1_New_Network_Enrichment_Old.ipl:                         //RemoteEnd = GetByFilter('Circee_Interface_Table', Filter, false);
+HA1_New_Network_Enrichment_Old.ipl:               RemoteEnd = GetByFilter('Reporter_Interface_Table', Filter, false);
+HA1_New_Network_Enrichment_Old.ipl:                RemoteEnd=GetByFilter('Circee_LSP_Table', "(LSP_ID='"+@PhysicalCard+"') AND (HOST_ID_LOC='"+ @Node +"')", false);
+HA1_New_Network_Enrichment_Old.ipl:                        RemoteEnd=GetByFilter('Circee_LSP_Table', "(LSP_ID='"+@PhysicalCard+"') AND (HOST_ID_REM='"+ @Node +"')", false);
+HA1_New_Network_Enrichment_Old.ipl:        Filter = "ASSET_NAME='"+EventContainer.Node+"'";
+HA1_New_Network_Enrichment_Old.ipl:          EndOrgNodes = GetByFilter('Circee_Asset_STI_Table', Filter, false);
+HA1_New_Network_Enrichment_Old.ipl:        Filter = "ASSET_NAME='"+EventContainer.Node+"'";
+HA1_New_Network_Enrichment_Old.ipl:          EndOrgNodes = GetByFilter('Circee_Asset_STI_Table', Filter, false);
+HA1_Opview_Add1TWin.ipl:        longFilter = "wintype=1";
+HA1_Opview_Add1TWin.ipl:        longFilter = longFilter + " and filterstat= '" + windowObj.filterstat + "'";
+HA1_Opview_Add1TWin.ipl:        longFilter = longFilter + " and eot_starttime =" +  windowObj.eot_starttime;
+HA1_Opview_Add1TWin.ipl:        longFilter = longFilter + " and eot_endtime = " + windowObj.eot_endtime;
+HA1_Opview_Add1TWin.ipl:        longFilter = longFilter + " and timezone = '" + windowObj.timezone + "'";
+HA1_Opview_Add1TWin.ipl:        dup = getbyfilter("mm_windows", longFilter, false);
+HA1_Opview_Add1TWin.ipl:        longFilter = "wintype=2";
+HA1_Opview_Add1TWin.ipl:        longFilter = longFilter + " and filterstat= '" + windowObj.filterstat + "'";
+HA1_Opview_Add1TWin.ipl:        longFilter = longFilter + " and r_starttime = '" +  windowObj.r_starttime + "'";
+HA1_Opview_Add1TWin.ipl:        longFilter = longFilter + " and r_endtime =  '" + windowObj.r_endtime + "'";
+HA1_Opview_Add1TWin.ipl:        longFilter = longFilter + " and timezone = '" + windowObj.timezone + "'";
+HA1_Opview_Add1TWin.ipl:        longFilter = longFilter + " and daysofweek = '" + windowObj.daysofweek + "'";
+HA1_Opview_Add1TWin.ipl:        dup = getbyfilter("mm_windows", longFilter, false);
+HA1_Opview_Add1TWin.ipl:        longFilter = "wintype=3";
+HA1_Opview_Add1TWin.ipl:        longFilter = longFilter + " and filterstat= '" + windowObj.filterstat + "'";
+HA1_Opview_Add1TWin.ipl:        longFilter = longFilter + " and r_starttime = '" +  windowObj.r_starttime + "'";
+HA1_Opview_Add1TWin.ipl:        longFilter = longFilter + " and r_endtime = '" + windowObj.r_endtime + "'";
+HA1_Opview_Add1TWin.ipl:        longFilter = longFilter + " and timezone = '" + windowObj.timezone + "'";
+HA1_Opview_Add1TWin.ipl:        longFilter = longFilter + " and daysofmonth = '" + windowObj.daysofmonth + "'";
+HA1_Opview_Add1TWin.ipl:        dup = getbyfilter("mm_windows", longFilter, false);
+HA1_Opview_Add1TWin.ipl:        longFilter = "wintype=4";
+HA1_Opview_Add1TWin.ipl:        longFilter = longFilter + " and filterstat= '" + windowObj.filterstat + "'";
+HA1_Opview_Add1TWin.ipl:        longFilter = longFilter + " and r_starttime = '" +  windowObj.r_starttime + "'";
+HA1_Opview_Add1TWin.ipl:        longFilter = longFilter + " and r_endtime = '" + windowObj.r_endtime + "'";
+HA1_Opview_Add1TWin.ipl:        longFilter = longFilter + " and timezone = '" + windowObj.timezone + "'";
+HA1_Opview_Add1TWin.ipl:        longFilter = longFilter + " and nweekdayofmonth = '" + windowObj.nweekdayofmonth + "'";
+HA1_Opview_Add1TWin.ipl:        dup = getbyfilter("mm_windows", longFilter, false);
+HA1_Opview_onetwins.ipl:htmltext = "<table><tr><th>Suppression Filter</th><th>Start Time</th><th>End Time</th><th>Time Zone<th>Status</th><th>Delete</th></tr>";
+HA1_Opview_onetwins.ipl:        Opview_openwins.shineFilter(onetime[i].filterstat, displayFilterstat);
+HA1_Opview_onetwins.ipl:            htmltext = htmltext + "<tr><td>" + displayFilterstat + "</td>";
+HA1_Opview_onetwins.ipl:            htmltext = htmltext + "<tr><td>" + displayFilterstat + "</td>";
+HA1_Opview_onetwins.ipl:            htmltext = htmltext + "<tr><td>" + displayFilterstat + "</td>";
+HA1_Opview_openwins.ipl:                cleanFilter = Replace(deleteMe[0].filterstat,"\"","'");
+HA1_Opview_openwins.ipl:                omniSql = "update alerts.status set SuppressEscl = 0 where SuppressEscl = 6 and (" + cleanFilter + ")";
+HA1_Opview_openwins.ipl:function shineFilter(filter, r)
+HA1_Opview_openwins.ipl:        Opview_openwins.shineFilter(windows[n].filterstat, displayFilterstat);
+HA1_Opview_openwins.ipl:        htmltext1 = "<table><tr><th>Suppression Filter</th><th>Start Time</th><th>End Time</th><th>Time Zone</th><th>Delete</th></tr>";
+HA1_Opview_openwins.ipl:        htmltext1 = htmltext1 + "<tr><td>" + displayFilterstat + "</td>";
+HA1_Opview_openwins.ipl:    htmltext1 = "<table><tr><th>Suppression Filter</th><th>Start Time</th><th>End Time</th><th>Time Zone</th><th>Delete</th></tr>";
+HA1_Opview_openwins.ipl:htmltext2 = "<table><tr><th>Suppression Filter</th><th>Day of Week</th><th>Start Time</th><th>End Time</th><th>Time Zone</th><th>Delete</th></tr>";
+HA1_Opview_openwins.ipl:    Opview_openwins.shineFilter(type2[n].filterstat, displayFilterstat);
+HA1_Opview_openwins.ipl:    htmltext2 = htmltext2 + "<tr><td>" + displayFilterstat + "</td><td>" + displayDoW + "</td>";
+HA1_Opview_openwins.ipl:htmltext3 = "<table><tr><th>Suppression Filter</th><th>Day of Month</th><th>Start Time</th><th>End Time</th><th>Time Zone</th><th>Delete</th></tr>";
+HA1_Opview_openwins.ipl:    Opview_openwins.shineFilter(type3[n].filterstat, displayFilterstat);
+HA1_Opview_openwins.ipl:    htmltext3 = htmltext3 + "<tr><td>" + displayFilterstat + "</td><td>" + displayDoM + "</td>";
+HA1_Opview_openwins.ipl:htmltext4 = "<table><tr><th>Suppression Filter</th><th>Weekday of Month</th><th>Start Time</th><th>End Time</th><th>Time Zone</th><th>Delete</th></tr>";
+HA1_Opview_openwins.ipl:    Opview_openwins.shineFilter(type4[n].filterstat, displayFilterstat);
+HA1_Opview_openwins.ipl:    htmltext4 = htmltext4 + "<tr><td>" + displayFilterstat + "</td><td>" + displayDoWiM + "</td>";
+HA1_Opview_rdomwins.ipl:htmltext1 = "<table><tr><th>Suppression Filter</th><th>Day of Month</th><th>Start Time</th><th>End Time</th><th>Time Zone</th><th>Status</th><th>Delete</th></tr>";
+HA1_Opview_rdomwins.ipl:        Opview_openwins.shineFilter(recdom[winCount].filterstat, displayFilterstat);
+HA1_Opview_rdomwins.ipl:                htmltext1 = htmltext1 + "<tr><td>" + displayFilterstat + "</td><td>" + displayDoM + "</td>";
+HA1_Opview_rdomwins.ipl:                htmltext1 = htmltext1 + "<tr><td>" + displayFilterstat + "</td><td>" + displayDoM + "</td>";
+HA1_Opview_rdomwins.ipl:            htmltext1 = htmltext1 + "<tr><td>" + displayFilterstat + "</td><td>" + displayDoM + "</td>";
+HA1_Opview_rdowwins.ipl:htmltext1 = "<table><tr><th>Suppression Filter</th><th>Weekdays</th><th>Start Time</th><th>End Time</th><th>Time Zone</th><th>Status</th><th>Delete</th></tr>";
+HA1_Opview_rdowwins.ipl:        Opview_openwins.shineFilter(recdow[winCount].filterstat, displayFilterstat);
+HA1_Opview_rdowwins.ipl:                htmltext1 = htmltext1 + "<tr><td>" + displayFilterstat + "</td><td>" + displayDoW + "</td>";
+HA1_Opview_rdowwins.ipl:                htmltext1 = htmltext1 + "<tr><td>" + displayFilterstat + "</td><td>" + displayDoW + "</td>";
+HA1_Opview_rdowwins.ipl:            htmltext1 = htmltext1 + "<tr><td>" + displayFilterstat + "</td><td>" + displayDoW + "</td>";
+HA1_Opview_rwdomwins.ipl:htmltext1 = "<table><tr><th>Suppression Filter</th><th>Nth Day of Week in Month</th><th>Start Time</th><th>End Time</th><th>Time Zone</th><th>Status</th><th>Delete</th></tr>";
+HA1_Opview_rwdomwins.ipl:        Opview_openwins.shineFilter(recnth[winCount].filterstat, displayFilterstat);
+HA1_Opview_rwdomwins.ipl:                htmltext1 = htmltext1 + "<tr><td>" + displayFilterstat + "</td><td>" + displayDoWiM + "</td>";
+HA1_Opview_rwdomwins.ipl:                htmltext1 = htmltext1 + "<tr><td>" + displayFilterstat + "</td><td>" + displayDoWiM + "</td>";
+HA1_Opview_rwdomwins.ipl:            htmltext1 = htmltext1 + "<tr><td>" + displayFilterstat + "</td><td>" + displayDoWiM + "</td>";
+HA1_PackedOidSetTest.ipl:GetByFilter(Type, "", CountOnly);
+HA1_PackedOidSetTest.ipl:GetByFilter(Type, "", CountOnly);
+HA1_PackedOidTest.ipl:operation (by using the GetByFilter) with appropriate Filter value. It will 
+HA1_PackedOidTest.ipl:Some possible types of Filter are given here. Only one of them is left
+HA1_PackedOidTest.ipl:/* Preparing the params to call the GetByFilter or SNMP GET */
+HA1_PackedOidTest.ipl:Filter = "";
+HA1_PackedOidTest.ipl:log("*** Starting PackedOidTest with Type = " + Type + " and Filter = " + Filter + " at " + StartTime + " ***");
+HA1_PackedOidTest.ipl:/* Doing the SNMP GET operation by using the GetByFilter */
+HA1_PackedOidTest.ipl:GetByFilter(Type, Filter, CountOnly);
+HA1_PackedOidTest.ipl:ModifiedOrgNodes = GetByFilter(Type, Filter, CountOnly);
+HA1_Parent_Child_Correlation.ipl:Filter = "ServerSerial = " +  @ServerSerial;
+HA1_Parent_Child_Correlation.ipl:BatchUpdate(DataType, Filter, UpdateExpression);
+HA1_Parent_Child_Correlation.ipl:relatedEvents=GetByFilter('OS_Parent_Child', "(Source_Event_ID='"+@EventId+"')", false);
+HA1_Parent_Child_Correlation.ipl:    Log("Parent_Child: Parent Event Filters = " + relatedEvents[0].Parent_Filters);
+HA1_Parent_Child_Correlation.ipl:    Log("Parent_Child: Child Event Filters  = " + relatedEvents[0].Child_Filters);
+HA1_Parent_Child_Correlation.ipl:    parentEventFilters=Split(relatedEvents[0].Parent_Filters, ",");
+HA1_Parent_Child_Correlation.ipl:    childEventFilters=Split(relatedEvents[0].Child_Filters, ",");
+HA1_Parent_Child_Correlation.ipl:    Log("Parent_Child: Parent Filter Array = " + parentEventFilters);
+HA1_Parent_Child_Correlation.ipl:    Log("Parent_Child: Child Filter Array  = " + childEventFilters);
+HA1_Parent_Child_Correlation.ipl:    numParentFilters=Length(parentEventFilters);
+HA1_Parent_Child_Correlation.ipl:    numChildrenFilters=Length(childEventFilters);
+HA1_Parent_Child_Correlation.ipl:    Log("Parent_Child: Parent Event Filter Array Count = " + numParentFilters);
+HA1_Parent_Child_Correlation.ipl:    Log("Parent_Child: Child Event Filter Array  Count = " + numChildrenFilters);
+HA1_Parent_Child_Correlation.ipl:    if(numParents > numParentFilters)
+HA1_Parent_Child_Correlation.ipl:        numParents = numParentFilters;
+HA1_Parent_Child_Correlation.ipl:    if(numChildren > numChildrenFilters)
+HA1_Parent_Child_Correlation.ipl:        numChildren = numChildrenFilters;
+HA1_Parent_Child_Correlation.ipl:Filter = "ServerSerial = " +  @ServerSerial;
+HA1_Parent_Child_Correlation.ipl:BatchUpdate(DataType, Filter, UpdateExpression);
+HA1_Parent_Child_Correlation.ipl:            myFilter = "";
+HA1_Parent_Child_Correlation.ipl:            parentEventFilterList=Split(parentEventFilters[i],":");
+HA1_Parent_Child_Correlation.ipl:            numParentEventFilterList = Length(parentEventFilterList);
+HA1_Parent_Child_Correlation.ipl:            while (y < numParentEventFilterList)
+HA1_Parent_Child_Correlation.ipl:                if ( parentEventFilterList[y] == "NodeLike" ) 
+HA1_Parent_Child_Correlation.ipl:                        myFilterMatch = RExtract(@Node,"^(..RCC).*$");
+HA1_Parent_Child_Correlation.ipl:                        myFilter = myFilter + " and ( Node like '^" + myFilterMatch + ".*' )";
+HA1_Parent_Child_Correlation.ipl:                        myFilterMatch = RExtract(@Node,"^(....).*$");
+HA1_Parent_Child_Correlation.ipl:                        myFilter = myFilter + " and ( Node like '^" + myFilterMatch + ".*' )";
+HA1_Parent_Child_Correlation.ipl:                        myFilter = myFilter + " and ( Node like '^" + @Node + ".*' )";
+HA1_Parent_Child_Correlation.ipl:                elseif ( parentEventFilterList[y] == "Slot_EQ_Slot" ) 
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ((PhysicalCard like 'sl" + myCardPort + "')";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " or (PhysicalCard like 'board#" + myCardPort + "'))";
+HA1_Parent_Child_Correlation.ipl:                            log("Slot_EQ_Slot Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ((PhysicalCard like 'board#" + myCardPort + "')";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " or (PhysicalCard like 'sl" + myCardPort + "'))";
+HA1_Parent_Child_Correlation.ipl:                            log("Slot_EQ_Slot Filter2 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and (PhysicalCard = 'Not Match')";
+HA1_Parent_Child_Correlation.ipl:                elseif ( parentEventFilterList[y] == "Slot_EQ_RSlot" ) 
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ((RemoteCard like 'sl" + myCardPort + "')";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " or (RemoteCard like 'board#" + myCardPort + "'))";
+HA1_Parent_Child_Correlation.ipl:                            log("Slot_EQ_RSlot Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ((PhysicalCard like 'board#" + myCardPort + "')";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " or (PhysicalCard like 'sl" + myCardPort + "'))";
+HA1_Parent_Child_Correlation.ipl:                            log("Slot_EQ_RSlot Filter2 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                elseif ( parentEventFilterList[y] == "RSlot_EQ_Slot" ) 
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ((PhysicalCard like 'sl" + myCardPort + "')";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " or (PhysicalCard like 'board#" + myCardPort + "'))";
+HA1_Parent_Child_Correlation.ipl:                            log("RSlot_EQ_Slot Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ((PhysicalCard like 'board#" + myCardPort + "')";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " or (PhysicalCard like 'sl" + myCardPort + "'))";
+HA1_Parent_Child_Correlation.ipl:                            log("RSlot_EQ_Slot Filter2 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                    elseif ( parentEventFilterList[y] == "RSlot_NOT_EQ_RSlot" ) 
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ((RemoteCard like 'sl" + myCardPort + "')";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " or (RemoteCard like 'board#" + myCardPort + "'))";
+HA1_Parent_Child_Correlation.ipl:                            log("RSlot_NOT_EQ_RSlot Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ((RemoteCard like 'board#" + myCardPort + "')";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " or (RemoteCard like 'sl" + myCardPort + "'))";
+HA1_Parent_Child_Correlation.ipl:                            log("RSlot_NOT_EQ_RSlot Filter2 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                elseif ( parentEventFilterList[y] == "Cardnotlike_1" ) 
+HA1_Parent_Child_Correlation.ipl:                        myFilter = myFilter + " and (PhysicalCard not like 'port#01')";
+HA1_Parent_Child_Correlation.ipl:                elseif ( parentEventFilterList[y] == "SelfCardnotlike_1" ) 
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and (RemoteCard not like 'port#01') and (RemoteCard <> '')";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ( RemoteCard like 'port#01')";
+HA1_Parent_Child_Correlation.ipl:                elseif ( parentEventFilterList[y] == "Cardlike_2" ) 
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and (PhysicalCard like 'sl02')";
+HA1_Parent_Child_Correlation.ipl:                elseif ( parentEventFilterList[y] == "Node_Like_96CM" ) 
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and (Node like '96CM')";
+HA1_Parent_Child_Correlation.ipl:                elseif ( parentEventFilterList[y] == "SvrName_SvrSerial!=SvrName_SvrSerial" ) 
+HA1_Parent_Child_Correlation.ipl:                        myFilter = myFilter + " and (ServerName ='" + myServerName + "' and ServerSerial != " + myServerSerial +")";
+HA1_Parent_Child_Correlation.ipl:                elseif ( parentEventFilterList[y] == "NodeLike_1696" ) 
+HA1_Parent_Child_Correlation.ipl:                        myFilterMatch = RExtract(@Node,"^(......).*$");
+HA1_Parent_Child_Correlation.ipl:                        myFilter = myFilter + " and ( Node like '^" + myFilterMatch + ".*' )";
+HA1_Parent_Child_Correlation.ipl:                elseif ( parentEventFilterList[y] == "SlotPort_EQ_SlotDaughter" ) 
+HA1_Parent_Child_Correlation.ipl:                        myFilter = myFilter + " and (PhysicalCard like 'sl" + mySlotNumber + "/port#" + myDaughterCard + "')";                                log("SlotPort_EQ_SlotDaughter Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                elseif ( parentEventFilterList[y] == "SlotDaughter_EQ_SlotPort" ) 
+HA1_Parent_Child_Correlation.ipl:                        myFilter = myFilter + " and (PhysicalCard like 'sl" + mySlotNumber + "/daughter#" + myPortNumber + "')";                                log("SlotDaughter_EQ_SlotPort Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                elseif ( parentEventFilterList[y] == "BoardOnly" ) 
+HA1_Parent_Child_Correlation.ipl:                        myFilter = myFilter + " and (PhysicalCard like '^BOARD " + myBoardNumber + "')";                                log("SlotDaughter_EQ_SlotPort Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                elseif ( parentEventFilterList[y] == "CardOnly" ) 
+HA1_Parent_Child_Correlation.ipl:                        myFilter = myFilter + " and (PhysicalCard like '^" + myCardNumber + " [0-9]+')";                                log("SlotDaughter_EQ_SlotPort Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                elseif ( parentEventFilterList[y] == "Domain" ) 
+HA1_Parent_Child_Correlation.ipl:                        myFilter = myFilter + " and (LocalSiteName like '" + myDomain + "')";                                log("SlotDaughter_EQ_SlotPort Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                elseif ( parentEventFilterList[y] == "NodeLikeRemotenode" ) 
+HA1_Parent_Child_Correlation.ipl:                        myFilter = myFilter + " and (Node like '" + @RemoteNode + "')";                                log("SlotDaughter_EQ_SlotPort Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                elseif ( parentEventFilterList[y] == "RemotenodeInNode" ) 
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and (RemoteNode in ('" + Node1 + "','"+ Node2 +"'))";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and (RemoteNode = '" + @Node +"')";
+HA1_Parent_Child_Correlation.ipl:                    osFilters=GetByFilter('OS_Parent_Child_Filters', "FilterName = '" +  parentEventFilterList[y] + "'",false);
+HA1_Parent_Child_Correlation.ipl:                    numOsFilters=Length(osFilters);
+HA1_Parent_Child_Correlation.ipl:                    if(numOsFilters>0)
+HA1_Parent_Child_Correlation.ipl:                        if(osFilters[0].Definition like '.*@.*')
+HA1_Parent_Child_Correlation.ipl:                            myFilterStart =  RExtract(osFilters[0].Definition,"(.*)@[a-zA-Z0-9]+.*");
+HA1_Parent_Child_Correlation.ipl:                            myFilterEnd =  RExtract(osFilters[0].Definition,".*@[a-zA-Z0-9]+(.*)");
+HA1_Parent_Child_Correlation.ipl:                            myFilterMatch =  RExtract(osFilters[0].Definition,".*(@[a-zA-Z0-9]+).*");
+HA1_Parent_Child_Correlation.ipl:                            Log("Parent_Child: Filter start is " + myFilterStart);
+HA1_Parent_Child_Correlation.ipl:                            Log("Parent_Child: Filter end is " + myFilterEnd);
+HA1_Parent_Child_Correlation.ipl:                            Log("Parent_Child: Filter match is " + myFilterMatch);
+HA1_Parent_Child_Correlation.ipl:                            myFilterField = Eval(myFilterMatch, EventContainer);
+HA1_Parent_Child_Correlation.ipl:                            Log("Parent_Child: Filter field value is " + myFilterField);
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and (" + myFilterStart + myFilterField +  myFilterEnd + ")";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and (" + osFilters[0].Definition + ")";
+HA1_Parent_Child_Correlation.ipl:            if(myFilter == "")
+HA1_Parent_Child_Correlation.ipl:                Log("Parent_Child: Filter is blank. Not processing this event id");
+HA1_Parent_Child_Correlation.ipl:                Log("Parent_Child: Parent event filter " + i + " = ((Type = 1) or (Type = 13)) and (Severity > 0) and  (ParentChildFlag <> 9) and   (EventId='"+parentEventIDs[i]+"')"+myFilter+"");
+HA1_Parent_Child_Correlation.ipl:                osEvents=GetByFilter('ha_ncoms_impact_events', "((Type = 1) or (Type = 13)) and (Severity > 0) and  (ParentChildFlag <> 9) and   (EventId='"+parentEventIDs[i]+"')"+myFilter+"", false);
+HA1_Parent_Child_Correlation.ipl:                myFilter = "";
+HA1_Parent_Child_Correlation.ipl:                childEventFilterList=Split(childEventFilters[i],":");
+HA1_Parent_Child_Correlation.ipl:                numChildEventFilterList = Length(childEventFilterList);
+HA1_Parent_Child_Correlation.ipl:                while (y < numChildEventFilterList)
+HA1_Parent_Child_Correlation.ipl:                    //if ( parentEventFilterList[y] == "NodeLike" ) 
+HA1_Parent_Child_Correlation.ipl:                    if ( childEventFilterList[y] == "NodeLike" ) 
+HA1_Parent_Child_Correlation.ipl:                            myFilterMatch = RExtract(@Node,"^(..RCC).*$");
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ( Node like '^" + myFilterMatch + ".*'  )";
+HA1_Parent_Child_Correlation.ipl:                            myFilterMatch = RExtract(@Node,"^(....).*$");
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ( Node like '^" + myFilterMatch + ".*'  )";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ( Node like '^" + @Node + ".*' )";
+HA1_Parent_Child_Correlation.ipl:                    elseif ( childEventFilterList[y] == "Slot_EQ_Slot" ) 
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ((PhysicalCard like 'sl" + myCardPort + "')";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " or (PhysicalCard like 'board#" + myCardPort + "'))";
+HA1_Parent_Child_Correlation.ipl:                            log("Slot_EQ_Slot Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ((PhysicalCard like 'board#" + myCardPort + "')";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " or (PhysicalCard like 'sl" + myCardPort + "'))";
+HA1_Parent_Child_Correlation.ipl:                            log("Slot_EQ_Slot Filter2 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and (PhysicalCard = 'Not Match')";
+HA1_Parent_Child_Correlation.ipl:                    elseif ( childEventFilterList[y] == "Slot_EQ_RSlot" ) 
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ((RemoteCard like 'sl" + myCardPort + "')";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " or (RemoteCard like 'board#" + myCardPort + "'))";
+HA1_Parent_Child_Correlation.ipl:                            log("Slot_EQ_RSlot Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ((PhysicalCard like 'board#" + myCardPort + "')";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " or (PhysicalCard like 'sl" + myCardPort + "'))";
+HA1_Parent_Child_Correlation.ipl:                            log("Slot_EQ_RSlot Filter2 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                    elseif ( childEventFilterList[y] == "RSlot_EQ_Slot" ) 
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ((PhysicalCard like 'sl" + myCardPort + "')";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " or (PhysicalCard like 'board#" + myCardPort + "'))";
+HA1_Parent_Child_Correlation.ipl:                            log("RSlot_EQ_Slot Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ((PhysicalCard like 'board#" + myCardPort + "')";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " or (PhysicalCard like 'sl" + myCardPort + "'))";
+HA1_Parent_Child_Correlation.ipl:                            log("RSlot_EQ_Slot Filter2 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                        elseif ( childEventFilterList[y] == "RSlot_NOT_EQ_RSlot" ) 
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ((RemoteCard like 'sl" + myCardPort + "')";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " or (RemoteCard like 'board#" + myCardPort + "'))";
+HA1_Parent_Child_Correlation.ipl:                            log("RSlot_NOT_EQ_RSlot Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ((RemoteCard like 'board#" + myCardPort + "')";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " or (RemoteCard like 'sl" + myCardPort + "'))";
+HA1_Parent_Child_Correlation.ipl:                            log("RSlot_NOT_EQ_RSlot Filter2 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                    elseif ( childEventFilterList[y] == "Cardnotlike_1" ) 
+HA1_Parent_Child_Correlation.ipl:                                myFilter = myFilter + " and (PhysicalCard not like 'port#01')";
+HA1_Parent_Child_Correlation.ipl:                    elseif ( childEventFilterList[y] == "SelfCardnotlike_1" ) 
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and (RemoteCard not like 'port#01') and (RemoteCard <> '')";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ( RemoteCard like 'port#01')";
+HA1_Parent_Child_Correlation.ipl:                    elseif ( childEventFilterList[y] == "Cardlike_2" ) 
+HA1_Parent_Child_Correlation.ipl:                                myFilter = myFilter + " and (PhysicalCard like 'sl02')";
+HA1_Parent_Child_Correlation.ipl:                    elseif ( childEventFilterList[y] == "Node_Like_96CM" ) 
+HA1_Parent_Child_Correlation.ipl:                                myFilter = myFilter + " and (Node like '96CM')";
+HA1_Parent_Child_Correlation.ipl:                    elseif ( childEventFilterList[y] == "SvrName_SvrSerial!=SvrName_SvrSerial" ) 
+HA1_Parent_Child_Correlation.ipl:                        myFilter = myFilter + " and (ServerName ='" + myServerName + "' and ServerSerial != " + myServerSerial +")";
+HA1_Parent_Child_Correlation.ipl:                    elseif ( childEventFilterList[y] == "NodeLike_1696" ) 
+HA1_Parent_Child_Correlation.ipl:                            myFilterMatch = RExtract(@Node,"^(......).*$");
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ( Node like '^" + myFilterMatch + ".*' )";
+HA1_Parent_Child_Correlation.ipl:                    elseif ( childEventFilterList[y] == "SlotPort_EQ_SlotDaughter" ) 
+HA1_Parent_Child_Correlation.ipl:                        myFilter = myFilter + " and (PhysicalCard like 'sl" + mySlotNumber + "/port#" + myDaughterCard + "')";                            log("SlotPort_EQ_SlotDaughter Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                    elseif ( childEventFilterList[y] == "SlotDaughter_EQ_SlotPort" ) 
+HA1_Parent_Child_Correlation.ipl:                        myFilter = myFilter + " and (PhysicalCard like 'sl" + mySlotNumber + "/daughter#" + myPortNumber + "')";                                log("SlotDaughter_EQ_SlotPort Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                elseif ( childEventFilterList[y] == "BoardOnly" ) 
+HA1_Parent_Child_Correlation.ipl:                        myFilter = myFilter + " and (RemoteCard like '^BOARD " + myBoardNumber + "')";                                log("SlotDaughter_EQ_SlotPort Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                    elseif ( childEventFilterList[y] == "CardOnly" ) 
+HA1_Parent_Child_Correlation.ipl:                        myFilter = myFilter + " and (PhysicalCard like '^" + myCardNumber + " [0-9]+')";                                log("SlotDaughter_EQ_SlotPort Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                    elseif ( childEventFilterList[y] == "Domain" ) 
+HA1_Parent_Child_Correlation.ipl:                        myFilter = myFilter + " and (LocalSiteName like '" + myDomain + "')";                                log("SlotDaughter_EQ_SlotPort Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                elseif ( childEventFilterList[y] == "NodeLikeRemotenode" ) 
+HA1_Parent_Child_Correlation.ipl:                        myFilter = myFilter + " and (Node like '" + @RemoteNode + "')";                                log("SlotDaughter_EQ_SlotPort Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                elseif ( childEventFilterList[y] == "RemotenodeInNode" ) 
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and (RemoteNode in ('" + Node1 + "','"+ Node2 +"'))";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and (RemoteNode = '" + @Node +"')";
+HA1_Parent_Child_Correlation.ipl:                        osFilters=GetByFilter('OS_Parent_Child_Filters', "FilterName = '" +  childEventFilterList[y] + "'",false);
+HA1_Parent_Child_Correlation.ipl:                        numOsFilters=Length(osFilters);
+HA1_Parent_Child_Correlation.ipl:                        if(numOsFilters>0)
+HA1_Parent_Child_Correlation.ipl:                            if(osFilters[0].Definition like '.*@.*')
+HA1_Parent_Child_Correlation.ipl:                                myFilterStart =  RExtract(osFilters[0].Definition,"(.*)@[a-zA-Z0-9]+.*");
+HA1_Parent_Child_Correlation.ipl:                                myFilterEnd =  RExtract(osFilters[0].Definition,".*@[a-zA-Z0-9]+(.*)");
+HA1_Parent_Child_Correlation.ipl:                                myFilterMatch =  RExtract(osFilters[0].Definition,".*(@[a-zA-Z0-9]+).*");
+HA1_Parent_Child_Correlation.ipl:                                Log("Parent_Child: Filter start is " + myFilterStart);
+HA1_Parent_Child_Correlation.ipl:                                Log("Parent_Child: Filter end is " + myFilterEnd);
+HA1_Parent_Child_Correlation.ipl:                                Log("Parent_Child: Filter match is " + myFilterMatch);
+HA1_Parent_Child_Correlation.ipl:                                myFilterField = Eval(myFilterMatch, EventContainer);
+HA1_Parent_Child_Correlation.ipl:                                Log("Parent_Child: Filter field value is " + myFilterField);
+HA1_Parent_Child_Correlation.ipl:                                myFilter = myFilter + " and (" + myFilterStart +  myFilterField + myFilterEnd + ")";
+HA1_Parent_Child_Correlation.ipl:                                myFilter = myFilter + " and (" + osFilters[0].Definition +  ")";
+HA1_Parent_Child_Correlation.ipl:            if(myFilter == "")
+HA1_Parent_Child_Correlation.ipl:                Log("Parent_Child: Filter is blank. Not processing this event id");
+HA1_Parent_Child_Correlation.ipl:                Log("Parent_Child: Child event filter " + i + " = ((Type = 1) or (Type = 13)) and (Severity > 0) and  (ParentChildFlag <> 9) and   (EventId='"+childEventIDs[i]+"')"+myFilter+"");
+HA1_Parent_Child_Correlation.ipl:                osEvents=GetByFilter('ha_ncoms_impact_events', "((Type = 1) or (Type = 13)) and (Severity > 0) and  (ParentChildFlag <> 9) and   (EventId='"+childEventIDs[i]+"')"+myFilter+"", false);
+HA1_Parent_Child_Correlation.ipl:                    myFilter = "";
+HA1_Parent_Child_Correlation.ipl:                    //log("parentEventFilters[i] " + i + " " + parentEventFilters[i]);
+HA1_Parent_Child_Correlation.ipl:                    parentEventFilterList=Split(parentEventFilters[i],":");
+HA1_Parent_Child_Correlation.ipl:                    numParentEventFilterList = Length(parentEventFilterList);
+HA1_Parent_Child_Correlation.ipl:                    while (y < numParentEventFilterList)
+HA1_Parent_Child_Correlation.ipl:                        log("parentEventFilterList[y] " + y + " " + parentEventFilterList[y]);
+HA1_Parent_Child_Correlation.ipl:                        if ( parentEventFilterList[y] == "NodeLike" ) 
+HA1_Parent_Child_Correlation.ipl:                                myFilterMatch = RExtract(@Node,"^(..RCC).*$");
+HA1_Parent_Child_Correlation.ipl:                                myFilter = myFilter + " and ( Node like '^" + myFilterMatch  + ".*' )";
+HA1_Parent_Child_Correlation.ipl:                                myFilterMatch = RExtract(@Node,"^(....).*$");
+HA1_Parent_Child_Correlation.ipl:                                myFilter = myFilter + " and ( Node like '^" + myFilterMatch  + ".*' )";
+HA1_Parent_Child_Correlation.ipl:                                myFilter = myFilter + " and ( Node like '^" + @Node + ".*'  )";
+HA1_Parent_Child_Correlation.ipl:                        elseif ( parentEventFilterList[y] == "Slot_EQ_Slot" ) 
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ((PhysicalCard like 'sl" + myCardPort + "')";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " or (PhysicalCard like 'board#" + myCardPort + "'))";
+HA1_Parent_Child_Correlation.ipl:                            log("Slot_EQ_Slot Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ((PhysicalCard like 'board#" + myCardPort + "')";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " or (PhysicalCard like 'sl" + myCardPort + "'))";
+HA1_Parent_Child_Correlation.ipl:                            log("Slot_EQ_Slot Filter2 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and (PhysicalCard = 'Not Match')";
+HA1_Parent_Child_Correlation.ipl:                        elseif ( parentEventFilterList[y] == "Slot_EQ_RSlot" ) 
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ((RemoteCard like 'sl" + myCardPort + "')";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " or (RemoteCard like 'board#" + myCardPort + "'))";
+HA1_Parent_Child_Correlation.ipl:                            log("Slot_EQ_RSlot Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ((PhysicalCard like 'board#" + myCardPort + "')";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " or (PhysicalCard like 'sl" + myCardPort + "'))";
+HA1_Parent_Child_Correlation.ipl:                            log("Slot_EQ_RSlot Filter2 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                    elseif ( parentEventFilterList[y] == "RSlot_EQ_Slot" ) 
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ((PhysicalCard like 'sl" + myCardPort + "')";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " or (PhysicalCard like 'board#" + myCardPort + "'))";
+HA1_Parent_Child_Correlation.ipl:                            log("RSlot_EQ_Slot Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ((PhysicalCard like 'board#" + myCardPort + "')";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " or (PhysicalCard like 'sl" + myCardPort + "'))";
+HA1_Parent_Child_Correlation.ipl:                            log("RSlot_EQ_Slot Filter2 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                    elseif ( parentEventFilterList[y] == "RSlot_NOT_EQ_RSlot" ) 
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ((RemoteCard like 'sl" + myCardPort + "')";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " or (RemoteCard like 'board#" + myCardPort + "'))";
+HA1_Parent_Child_Correlation.ipl:                            log("RSlot_NOT_EQ_RSlot Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ((RemoteCard like 'board#" + myCardPort + "')";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " or (RemoteCard like 'sl" + myCardPort + "'))";
+HA1_Parent_Child_Correlation.ipl:                            log("RSlot_NOT_EQ_RSlot Filter2 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                        elseif ( parentEventFilterList[y] == "Cardnotlike_1" ) 
+HA1_Parent_Child_Correlation.ipl:                                myFilter = myFilter + " and (PhysicalCard not like 'port#01')";
+HA1_Parent_Child_Correlation.ipl:                        //elseif ( parentEventFilterList[y] == "RemoteCardnotlike_1" ) 
+HA1_Parent_Child_Correlation.ipl:                        //        myFilter = myFilter + " and (RemoteCard not like 'port#01')";
+HA1_Parent_Child_Correlation.ipl:                        elseif ( parentEventFilterList[y] == "SelfCardnotlike_1" ) 
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and (RemoteCard not like 'port#01') and (RemoteCard <> '')";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ( RemoteCard like 'port#01')";
+HA1_Parent_Child_Correlation.ipl:                        elseif ( parentEventFilterList[y] == "Cardlike_2" ) 
+HA1_Parent_Child_Correlation.ipl:                                myFilter = myFilter + " and (PhysicalCard like 'sl02')";
+HA1_Parent_Child_Correlation.ipl:                        elseif ( parentEventFilterList[y] == "Node_Like_96CM" ) 
+HA1_Parent_Child_Correlation.ipl:                                myFilter = myFilter + " and (Node like '96CM')";
+HA1_Parent_Child_Correlation.ipl:                        elseif ( parentEventFilterList[y] == "SvrName_SvrSerial!=SvrName_SvrSerial" ) 
+HA1_Parent_Child_Correlation.ipl:                                myFilter = myFilter + " and (ServerName ='" + myServerName + "' and ServerSerial != " +  myServerSerial +")";
+HA1_Parent_Child_Correlation.ipl:                        elseif ( parentEventFilterList[y] == "NodeLike_1696" ) 
+HA1_Parent_Child_Correlation.ipl:                            myFilterMatch = RExtract(@Node,"^(......).*$");
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ( Node like '^" + myFilterMatch + ".*' )";
+HA1_Parent_Child_Correlation.ipl:                        elseif ( parentEventFilterList[y] == "SlotPort_EQ_SlotDaughter" ) 
+HA1_Parent_Child_Correlation.ipl:                        myFilter = myFilter + " and (PhysicalCard like 'sl" + mySlotNumber + "/port#" + myDaughterCard + "')";                            log("SlotPort_EQ_SlotDaughter Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                        elseif ( parentEventFilterList[y] == "SlotDaughter_EQ_SlotPort" ) 
+HA1_Parent_Child_Correlation.ipl:                        myFilter = myFilter + " and (PhysicalCard like 'sl" + mySlotNumber + "/daughter#" + myPortNumber + "')";                                log("SlotDaughter_EQ_SlotPort Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                elseif ( parentEventFilterList[y] == "BoardOnly" ) 
+HA1_Parent_Child_Correlation.ipl:                        myFilter = myFilter + " and (PhysicalCard like '^BOARD " + myBoardNumber + "')";                                log("SlotDaughter_EQ_SlotPort Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                        elseif ( parentEventFilterList[y] == "CardOnly" ) 
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and (PhysicalCard like '^" + myCardNumber + " [0-9]+')";                                log("SlotDaughter_EQ_SlotPort Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                        elseif ( parentEventFilterList[y] == "Domain" ) 
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and (LocalSiteName like '" + myDomain + "')";                                log("SlotDaughter_EQ_SlotPort Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                elseif ( parentEventFilterList[y] == "NodeLikeRemotenode" ) 
+HA1_Parent_Child_Correlation.ipl:                        myFilter = myFilter + " and (Node like '" + @RemoteNode + "')";                                log("SlotDaughter_EQ_SlotPort Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                elseif ( parentEventFilterList[y] == "RemotenodeInNode" ) 
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and (RemoteNode in ('" + Node1 + "','"+ Node2 +"'))";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and (RemoteNode = '" + @Node +"')";
+HA1_Parent_Child_Correlation.ipl:                            osFilters=GetByFilter('OS_Parent_Child_Filters', "FilterName = '" +  parentEventFilterList[y] +   "'",false);
+HA1_Parent_Child_Correlation.ipl:                            numOsFilters=Length(osFilters);
+HA1_Parent_Child_Correlation.ipl:                            if(numOsFilters>0)
+HA1_Parent_Child_Correlation.ipl:                                if(osFilters[0].Definition like '.*@.*')
+HA1_Parent_Child_Correlation.ipl:                                    myFilterStart =  RExtract(osFilters[0].Definition,"(.*)@[a-zA-Z0-9]+.*");
+HA1_Parent_Child_Correlation.ipl:                                    myFilterEnd =  RExtract(osFilters[0].Definition,".*@[a-zA-Z0-9]+(.*)");
+HA1_Parent_Child_Correlation.ipl:                                    myFilterMatch =  RExtract(osFilters[0].Definition,".*(@[a-zA-Z0-9]+).*");
+HA1_Parent_Child_Correlation.ipl:                                    Log("Parent_Child: Filter start is " +  myFilterStart);
+HA1_Parent_Child_Correlation.ipl:                                    Log("Parent_Child: Filter end is " + myFilterEnd);
+HA1_Parent_Child_Correlation.ipl:                                    Log("Parent_Child: Filter match is " +  myFilterMatch);
+HA1_Parent_Child_Correlation.ipl:                                    myFilterField = Eval(myFilterMatch, EventContainer);
+HA1_Parent_Child_Correlation.ipl:                                    Log("Parent_Child: Filter field value is " +  myFilterField);
+HA1_Parent_Child_Correlation.ipl:                                    myFilter = myFilter + " and (" + myFilterStart +  myFilterField + myFilterEnd + ")";
+HA1_Parent_Child_Correlation.ipl:                                    myFilter = myFilter + " and (" +  osFilters[0].Definition + ")";
+HA1_Parent_Child_Correlation.ipl:            if(myFilter == "")
+HA1_Parent_Child_Correlation.ipl:                Log("Parent_Child: Filter is blank. Not processing this event id");
+HA1_Parent_Child_Correlation.ipl:                    Log("Parent_Child: Parent event filter " + i + " = ((Type = 1) or (Type = 13)) and (Severity > 0) and  (ParentChildFlag <> 9) and   (EventId='"+parentEventIDs[i]+"')"+myFilter+"");
+HA1_Parent_Child_Correlation.ipl:                    osEvents=GetByFilter('ha_ncoms_impact_events', "((Type = 1) or (Type = 13)) and (Severity > 0) and  (ParentChildFlag <> 9) and   (EventId='"+parentEventIDs[i]+"')"+myFilter+"", false);
+HA1_Parent_Child_Correlation.ipl:                    myFilter = "";
+HA1_Parent_Child_Correlation.ipl:                    log("childEventFilters[i] " + i + " " + childEventFilters[i]);
+HA1_Parent_Child_Correlation.ipl:                    childEventFilterList=Split(childEventFilters[i],":");
+HA1_Parent_Child_Correlation.ipl:                    numChildEventFilterList = Length(childEventFilterList);
+HA1_Parent_Child_Correlation.ipl:                    log("numChildEventFilterList =" + numChildEventFilterList);
+HA1_Parent_Child_Correlation.ipl:                    while (y < numChildEventFilterList)
+HA1_Parent_Child_Correlation.ipl:                        log("childEventFilterList[y] " + y + " " + childEventFilterList[y]);
+HA1_Parent_Child_Correlation.ipl:                        if ( childEventFilterList[y] == "NodeLike" ) 
+HA1_Parent_Child_Correlation.ipl:                                myFilterMatch = RExtract(@Node,"^(..RCC).*$");
+HA1_Parent_Child_Correlation.ipl:                                myFilter = myFilter + " and ( Node like '^" + myFilterMatch  + ".*' )";
+HA1_Parent_Child_Correlation.ipl:                                myFilterMatch = RExtract(@Node,"^(....).*$");
+HA1_Parent_Child_Correlation.ipl:                                myFilter = myFilter + " and ( Node like '^" + myFilterMatch  + ".*' )";
+HA1_Parent_Child_Correlation.ipl:                                myFilter = myFilter + " and ( Node like '^" + @Node + ".*'  )";
+HA1_Parent_Child_Correlation.ipl:                        elseif ( childEventFilterList[y] == "Slot_EQ_Slot" ) 
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ((PhysicalCard like 'sl" + myCardPort + "')";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " or (PhysicalCard like 'board#" + myCardPort + "'))";
+HA1_Parent_Child_Correlation.ipl:                            log("Slot_EQ_Slot Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ((PhysicalCard like 'board#" + myCardPort + "')";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " or (PhysicalCard like 'sl" + myCardPort + "'))";
+HA1_Parent_Child_Correlation.ipl:                            log("Slot_EQ_Slot Filter2 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and (PhysicalCard = 'Not Match')";
+HA1_Parent_Child_Correlation.ipl:                        elseif ( childEventFilterList[y] == "Slot_EQ_RSlot" ) 
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ((RemoteCard like 'sl" + myCardPort + "')";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " or (RemoteCard like 'board#" + myCardPort + "'))";
+HA1_Parent_Child_Correlation.ipl:                            log("Slot_EQ_RSlot Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ((PhysicalCard like 'board#" + myCardPort + "')";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " or (PhysicalCard like 'sl" + myCardPort + "'))";
+HA1_Parent_Child_Correlation.ipl:                            log("Slot_EQ_RSlot Filter2 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                        elseif ( childEventFilterList[y] == "RSlot_EQ_Slot" ) 
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ((PhysicalCard like 'sl" + myCardPort + "')";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " or (PhysicalCard like 'board#" + myCardPort + "'))";
+HA1_Parent_Child_Correlation.ipl:                            log("RSlot_EQ_Slot Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ((PhysicalCard like 'board#" + myCardPort + "')";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " or (PhysicalCard like 'sl" + myCardPort + "'))";
+HA1_Parent_Child_Correlation.ipl:                            log("RSlot_EQ_Slot Filter2 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                        elseif ( childEventFilterList[y] == "RSlot_NOT_EQ_RSlot" ) 
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ((RemoteCard like 'sl" + myCardPort + "')";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " or (RemoteCard like 'board#" + myCardPort + "'))";
+HA1_Parent_Child_Correlation.ipl:                            log("RSlot_NOT_EQ_RSlot Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ((RemoteCard like 'board#" + myCardPort + "')";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " or (RemoteCard like 'sl" + myCardPort + "'))";
+HA1_Parent_Child_Correlation.ipl:                            log("RSlot_NOT_EQ_RSlot Filter2 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                            elseif ( childEventFilterList[y] == "Cardnotlike_1" ) 
+HA1_Parent_Child_Correlation.ipl:                                myFilter = myFilter + " and (PhysicalCard not like 'port#01')";                                        
+HA1_Parent_Child_Correlation.ipl:                        elseif ( childEventFilterList[y] == "SelfCardnotlike_1" ) 
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and (RemoteCard not like 'port#01') and (RemoteCard <> '')";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ( RemoteCard like 'port#01')";
+HA1_Parent_Child_Correlation.ipl:                        elseif ( childEventFilterList[y] == "Cardlike_2" ) 
+HA1_Parent_Child_Correlation.ipl:                                myFilter = myFilter + " and (PhysicalCard like 'sl02')";
+HA1_Parent_Child_Correlation.ipl:                        elseif ( childEventFilterList[y] == "Node_Like_96CM" ) 
+HA1_Parent_Child_Correlation.ipl:                                myFilter = myFilter + " and (Node like '96CM')";
+HA1_Parent_Child_Correlation.ipl:                        elseif ( childEventFilterList[y] == "SvrName_SvrSerial!=SvrName_SvrSerial" ) 
+HA1_Parent_Child_Correlation.ipl:                                myFilter = myFilter + " and (ServerName ='" + myServerName + "' and ServerSerial != " +  myServerSerial +")";
+HA1_Parent_Child_Correlation.ipl:                        elseif ( childEventFilterList[y] == "NodeLike_1696" ) 
+HA1_Parent_Child_Correlation.ipl:                            myFilterMatch = RExtract(@Node,"^(......).*$");
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and ( Node like '^" + myFilterMatch + ".*' )";
+HA1_Parent_Child_Correlation.ipl:                        elseif ( childEventFilterList[y] == "SlotPort_EQ_SlotDaughter" ) 
+HA1_Parent_Child_Correlation.ipl:                        myFilter = myFilter + " and (PhysicalCard like 'sl" + mySlotNumber + "/port#" + myDaughterCard + "')";                            log("SlotPort_EQ_SlotDaughter Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                        elseif ( childEventFilterList[y] == "SlotDaughter_EQ_SlotPort" ) 
+HA1_Parent_Child_Correlation.ipl:                        myFilter = myFilter + " and (PhysicalCard like 'sl" + mySlotNumber + "/daughter#" + myPortNumber + "')";                                log("SlotDaughter_EQ_SlotPort Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                elseif ( childEventFilterList[y] == "BoardOnly" ) 
+HA1_Parent_Child_Correlation.ipl:                        myFilter = myFilter + " and (RemoteCard like '^BOARD " + myBoardNumber + "')";                                log("SlotDaughter_EQ_SlotPort Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                        elseif ( childEventFilterList[y] == "CardOnly" ) 
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and (PhysicalCard like '^" + myCardNumber + " [0-9]+')";                                log("SlotDaughter_EQ_SlotPort Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                        elseif ( childEventFilterList[y] == "Domain" ) 
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and (LocalSiteName like '" + myDomain + "')";                            log("SlotDaughter_EQ_SlotPort Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                elseif ( childEventFilterList[y] == "NodeLikeRemotenode" ) 
+HA1_Parent_Child_Correlation.ipl:                        myFilter = myFilter + " and (Node like '" + @RemoteNode + "')";                                log("SlotDaughter_EQ_SlotPort Filter1 =" + myFilter);
+HA1_Parent_Child_Correlation.ipl:                elseif ( childEventFilterList[y] == "RemotenodeInNode" ) 
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and (RemoteNode in ('" + Node1 + "','"+ Node2 +"'))";
+HA1_Parent_Child_Correlation.ipl:                            myFilter = myFilter + " and (RemoteNode = '" + @Node +"')";
+HA1_Parent_Child_Correlation.ipl:                            osFilters=GetByFilter('OS_Parent_Child_Filters', "FilterName = '" +  childEventFilterList[y] +   "'",false);
+HA1_Parent_Child_Correlation.ipl:                            numOsFilters=Length(osFilters);
+HA1_Parent_Child_Correlation.ipl:                            if(numOsFilters>0)
+HA1_Parent_Child_Correlation.ipl:                                if(osFilters[0].Definition like '.*@.*')
+HA1_Parent_Child_Correlation.ipl:                                    myFilterStart =  RExtract(osFilters[0].Definition,"(.*)@[a-zA-Z0-9]+.*");
+HA1_Parent_Child_Correlation.ipl:                                    myFilterEnd =  RExtract(osFilters[0].Definition,".*@[a-zA-Z0-9]+(.*)");
+HA1_Parent_Child_Correlation.ipl:                                    myFilterMatch =  RExtract(osFilters[0].Definition,".*(@[a-zA-Z0-9]+).*");
+HA1_Parent_Child_Correlation.ipl:                                    Log("Parent_Child: Filter start is " +  myFilterStart);
+HA1_Parent_Child_Correlation.ipl:                                    Log("Parent_Child: Filter end is " + myFilterEnd);
+HA1_Parent_Child_Correlation.ipl:                                    Log("Parent_Child: Filter match is " +  myFilterMatch);
+HA1_Parent_Child_Correlation.ipl:                                    myFilterField = Eval(myFilterMatch, EventContainer);
+HA1_Parent_Child_Correlation.ipl:                                    Log("Parent_Child: Filter field value is " +  myFilterField);
+HA1_Parent_Child_Correlation.ipl:                                    myFilter = myFilter + " and (" + myFilterStart +  myFilterField + myFilterEnd + ")";
+HA1_Parent_Child_Correlation.ipl:                                    myFilter = myFilter + " and (" +  osFilters[0].Definition + ")";
+HA1_Parent_Child_Correlation.ipl:            if(myFilter == "")
+HA1_Parent_Child_Correlation.ipl:                Log("Parent_Child: Filter is blank. Not processing this event id");
+HA1_Parent_Child_Correlation.ipl:                    Log("Parent_Child: Child event filter " + i + " = ((Type = 1) or (Type = 13)) and (Severity > 0) and  (ParentChildFlag <> 9) and   (EventId='"+childEventIDs[i]+"')"+myFilter+"");
+HA1_Parent_Child_Correlation.ipl:                    osEvents=GetByFilter('ha_ncoms_impact_events', "((Type = 1) or (Type = 13)) and (Severity > 0) and  (ParentChildFlag <> 9) and   (EventId='"+childEventIDs[i]+"')"+myFilter+"", false);
+HA1_Parent_Child_Parent_Cleared.ipl:        //currentChildEvent=GetByFilter('ha_ncoms_impact_events',"(ServerSerial = " + childEvents[x] + ")",false);
+HA1_Parent_Child_Parent_Cleared.ipl:        currentChildEvent=GetByFilter('ha_ncoms_impact_events',"(ServerSerial = " + childEvents[x] + ") and (Type != 13)",false);
+HA1_Populate_ParentTTID.ipl:        childEvents = GetByFilter('ha_ncoms_impact_events',"Serial in (" + @ChildID + ")",false);
+HA1_Populate_ParentTTID.ipl:        childEvents = GetByFilter('ha_ncoms_impact_events',"Serial in (" + @ChildID + ")",false);
+HA1_REPORT_AddPolicyProcessMapping.ipl:  Filter = " name='"+POLICYNAME+"'";
+HA1_REPORT_AddPolicyProcessMapping.ipl:  findPolicies = GetByFilter(Type, Filter, CountOnly);
+HA1_REPORT_AddPolicyProcessMapping.ipl:  log("GetByFilter. found "+Num+" dataItem(s)");
+HA1_REPORT_AddPolicyProcessMapping.ipl:    Filter = "policy_id="+findPolicies[0].id;
+HA1_REPORT_AddPolicyProcessMapping.ipl:    BatchDelete(Type, Filter, null);
+HA1_REPORT_AddPolicyProcessMapping.ipl:  Filter = " name='"+POLICYNAME+"'";
+HA1_REPORT_AddPolicyProcessMapping.ipl:  GetByFilter(Type, Filter, CountOnly);
+HA1_REPORT_AddPolicyProcessMapping.ipl:    Filter = " name='"+PROCESSNAMES[index]+"'";
+HA1_REPORT_AddPolicyProcessMapping.ipl:    GetByFilter(Type, Filter, CountOnly);
+HA1_REPORT_AddPolicyProcessMapping.ipl:        GetByFilter("REPORT_PolicyProcessMappings", f, null);
+HA1_REPORT_RecordActionProfile.ipl:log(3, "ReportManager: running GetByFilter with filter = " + filter);
+HA1_REPORT_RecordActionProfile.ipl: orgs = GetByFilter(theType, filter, false);
+HA1_REPORT_RecordActionProfile.ipl:ons = GetByFilter(theType, filter, false);
+HA1_REPORT_RecordEvent.ipl: Filter = "ServerName = '" + newservername + "' and ServerSerial = " + newserverserial + " and state = 0";
+HA1_REPORT_RecordEvent.ipl: newOns = GetByFilter('REPORT_AuditAck', Filter, false);
+HA1_REPORT_RecordEvent.ipl:  sqlChecking = GetByFilter("REPORT_EventNames", filter, false);
+HA1_REPORT_RecordEvent.ipl:  newOns = GetByFilter(Type, filter, false);
+HA1_REPORT_RecordPolicyProfile.ipl:log(3, "ReportManager: running GetByFilter with filter = " + filter);
+HA1_REPORT_RecordPolicyProfile.ipl: orgs = GetByFilter(theType, filter, false);
+HA1_REPORT_RecordPolicyProfile.ipl:ons = GetByFilter(theType, filter, false);
+HA1_REPORT_TimeReference.ipl:ons = GetByFilter(theType, filter, false);
+HA1_REST_GetByFilter.ipl:orgnodes_result_set = GetByFilter(datatype,filter,false);
+HA1_RES_Line_Card_Suppression.ipl://Filter = "(Type = 1) and (Severity > 0) and (EquipmentType = 'RES') and (Node = '"+EventContainer.Node+"') and (AlertGroup = '"+EventContainer.AlertGroup+"') and (LastOccurrence > (getdate - 3600)) and (Summary like '^NVR.*[line|lines|Line|Lines|LINE|LINES] [0-9]+.*')";
+HA1_RES_Line_Card_Suppression.ipl:Filter = "(Type = 1) and (Severity > 0) and (EquipmentType = 'RES') and (Node = '"+EventContainer.Node+"') and (AlertGroup = '"+EventContainer.AlertGroup+"') and (Summary like '^NVR.*[line|lines|Line|Lines|LINE|LINES] [0-9]+.*')";
+HA1_RES_Line_Card_Suppression.ipl:log("RES_Line_Card_Suppression: " + @Serial + ": Get all lines down for this device: "+ Filter);
+HA1_RES_Line_Card_Suppression.ipl:linesDown = GetByFilter('ha_ncoms_impact_events', Filter, false);
+HA1_RES_Line_Card_Suppression.ipl:    MajorFilter = "(Type = 1) and (Severity > 0) and (EquipmentType = 'RES') and (Identifier = 'Impact RES lines down event "+@Node+"-"+@AlertGroup+"-Major')";
+HA1_RES_Line_Card_Suppression.ipl:    resMajorSynthEvent = GetByFilter('ha_ncoms_impact_events',MajorFilter,false);
+HA1_RES_Line_Card_Suppression.ipl:    log("RES_Line_Card_Suppression: " + @Serial + ": Get existing major synthetic: "+ MajorFilter);
+HA1_RES_Line_Card_Suppression.ipl:    CriticalFilter = "(Type = 1) and (Severity > 0) and (EquipmentType = 'RES') and (Identifier = 'Impact RES lines down event "+@Node+"-"+@AlertGroup+"-Critical')";
+HA1_RES_Line_Card_Suppression.ipl:    resCriticalSynthEvent = GetByFilter('ha_ncoms_impact_events',CriticalFilter,false);
+HA1_RES_Line_Card_Suppression.ipl:    log("RES_Line_Card_Suppression: " + @Serial + ": Get existing critical synthetic: "+ CriticalFilter);
+HA1_RES_Line_Card_Suppression.ipl:            parentEvent = GetByFilter('ha_ncoms_impact_events',"(Type = 1) and (Severity > 0) and (EquipmentType = 'RES') and (Identifier = 'Impact RES lines down event "+@Node+"-"+@AlertGroup+"-Critical')",false);
+HA1_RES_Line_Card_Suppression.ipl:            parentEvent = GetByFilter('ha_ncoms_impact_events',"(Type = 1) and (Severity > 0) and (EquipmentType = 'RES') and (Identifier = 'Impact RES lines down event "+@Node+"-"+@AlertGroup+"-Major')",false);
+HA1_RES_Line_Card_Suppression.ipl:    Filter = "(Type = 1) and (Severity > 0) and (EquipmentType = 'RES') and ((Identifier = 'Impact RES lines down event "+@Node+"-"+@AlertGroup+"-Major') or (Identifier = 'Impact RES lines down event "+@Node+"-"+@AlertGroup+"-Critical'))";
+HA1_RES_Line_Card_Suppression.ipl:    resSynthEvent = GetByFilter('ha_ncoms_impact_events',Filter,false);
+HA1_RES_Line_Card_Suppression.ipl:    log("RES_Line_Card_Suppression: " + resSynthEvent[0].Serial + ": Get existing synthetic: "+ Filter);
+HA1_ReprocessFailedEvent.ipl:Filter="";
+HA1_ReprocessFailedEvent.ipl:OrgNodes = GetByFilter(Type, Filter, false);
+HA1_SNMPTableTest.ipl:GetByFilter Action Module on an SNMP TableType data type. As explained in the 
+HA1_SNMPTableTest.ipl:documentation the content of the Filter determines if the complete table has 
+HA1_SNMPTableTest.ipl://Filter = "hostId = '" + @HostId + "'";
+HA1_SNMPTableTest.ipl:Filter = "";
+HA1_SNMPTableTest.ipl:log("*** Starting SNMPTableTest with Type = " + Type + " and Filter = " + Filter + " at " + StartTime + "***");
+HA1_SNMPTableTest.ipl:/* Filter to retrieve a particular row of the table, row with index value 1 in this case */
+HA1_SNMPTableTest.ipl:/*Filter = "hostId = '" + @HostId + "' AND TableKey = '1'";*/
+HA1_SNMPTableTest.ipl:/*Filter = "hostId = '" + @HostId + "' AND ifType = '30' AND UserId = 'netcool'";*/
+HA1_SNMPTableTest.ipl:/*Filter = "hostId = '" + @HostId + "' AND RetrievalMode = 'Bulk' AND MaxRepetitions = '25' AND NonRepeaters = '1'";*/
+HA1_SNMPTableTest.ipl:GetByFilter(Type, Filter, CountOnly);
+HA1_Service_Impact.ipl:            ChildEvents2 = GetByFilter('ha_ncoms_impact_events',"ServerSerial = " + ChildSerials1[x],false);
+HA1_Service_Impact.ipl:        ChildEventRecords = GetByFilter('ha_ncoms_impact_events',"ServerSerial = " + DistinctChildSerials[g],false);
+HA1_Service_Impact.ipl:        deviceSTIs = GetByFilter('Circee_End_Device_STI_Table',"ELECTRONIC_ADDRESS = '"+ ChildEventRecords[0].AssetElectronicAddress+"'",false);
+HA1_Service_Impact.ipl:                AffectedSTIFilter = "Server_Name = '"+@ServerName+"' and Server_Serial = "+@ServerSerial+" and STI_ID = "+distinctDeviceSTIs[a] ;
+HA1_Service_Impact.ipl:                GetByFilter(AffectedSTIDataType, AffectedSTIFilter, CountOnly);
+HA1_Service_Impact.ipl:        ChildEventRecords = GetByFilter('ha_ncoms_impact_events',"ServerSerial = " + DistinctChildSerials[g],false);
+HA1_Service_Impact.ipl:        deviceSTIs = GetByFilter('Circee_Asset_STI_Table',"ASSET_ELECTRONIC_ADDRESS = '"+ ChildEventRecords[0].AssetElectronicAddress+"'",false);
+HA1_Service_Impact.ipl:                    GetByFilter(Type, "Server_Serial="+@ServerSerial+" and Server_Name='"+@ServerName+"' and STI_ID="+distinctDeviceSTIs[a], False );
+HA1_Service_Impact.ipl:            ChildEvents2 = GetByFilter('ha_ncoms_impact_events',"ServerSerial = " + ChildSerials1[x],false);
+HA1_Service_Impact.ipl:        ChildEventRecords = GetByFilter('ha_ncoms_impact_events',"ServerSerial = " + DistinctChildSerials[g],false);
+HA1_Service_Impact.ipl:        deviceSTIs = GetByFilter('Circee_Asset_STI_Table',"ASSET_ELECTRONIC_ADDRESS = '"+ ChildEventRecords[0].AssetElectronicAddress+"'",false);
+HA1_Service_Impact.ipl:                    GetByFilter(Type, "Server_Serial="+@ServerSerial+" and Server_Name='"+@ServerName+"' and STI_ID="+distinctDeviceSTIs[a], False );
+HA1_Service_Impact.ipl:        Interfaces = GetByFilter('Circee_Interface_Table',"L1_SYSNAME = '"+@Node+"'",false);
+HA1_Service_Impact.ipl:        Interfaces = GetByFilter('Circee_Interface_Table',"(L1_SYSNAME = '"+@Node+"') and (L1_IF_ID = '"+@PhysicalCard+"')",false);
+HA1_Service_Impact.ipl:            Interfaces = GetByFilter('Circee_Interface_Table',"L2_SYSNAME = '"+@Node+"'",false);
+HA1_Service_Impact.ipl:            Interfaces = GetByFilter('Circee_Interface_Table',"(L2_SYSNAME = '"+@Node+"') and (L2_IF_ID = '"+@PhysicalCard+"')",false);
+HA1_Service_Impact.ipl:            ChildEvents2 = GetByFilter('ha_ncoms_impact_events',"ServerSerial = "+ChildSerials1[x],false);
+HA1_Service_Impact.ipl:                            ChildEvents3 = GetByFilter('ha_ncoms_impact_events',"ServerSerial = "+ChildSerials2[b],false);
+HA1_Service_Impact.ipl:                                            ChildEvents4 = GetByFilter('ha_ncoms_impact_events',"ServerSerial = "+ChildSerials3[d],false);
+HA1_Service_Impact.ipl:        CheckResilient = GetByFilter('ha_ncoms_impact_events',"(Severity > 0) and (ServerSerial = "+DistinctChildSerials[g]+")",false);
+HA1_Service_Impact.ipl:                    Remove = GetByFilter('Circee_Interface_Table',"(L1_SYSNAME = '"+CheckResilient[0].Node+"')",false);
+HA1_Service_Impact.ipl:                    Remove = GetByFilter('Circee_Interface_Table',"(L1_SYSNAME = '"+CheckResilient[0].Node+"') and (L1_IF_ID = '"+CheckResilient[0].PhysicalCard+"')",false);
+HA1_Service_Impact.ipl:                        Remove = GetByFilter('Circee_Interface_Table',"(L2_SYSNAME = '"+CheckResilient[0].Node+"')",false);
+HA1_Service_Impact.ipl:                        Remove = GetByFilter('Circee_Interface_Table',"(L2_SYSNAME = '"+CheckResilient[0].Node+"') and (L2_IF_ID = '"+CheckResilient[0].PhysicalCard+"')",false);
+HA1_Service_Impact.ipl:                    GetByFilter(Type, "Server_Serial="+@ServerSerial+" and Server_Name='"+@ServerName+"' and STI_ID="+DistinctSTIs[j], False );
+HA1_Service_Impact.ipl:        remNodeType = GetByFilter('Circee_Host_Table',"SYSNAME = '"+@RemoteNode+"'",false);
+HA1_Service_Impact.ipl:                ResIso = GetByFilter('ha_ncoms_impact_events',"(Type <> 2) and (Severity > 0) and (EventId = 'TMA_001') and (Node like '^"+NameLike+"')",false);
+HA1_Service_Impact.ipl:                        Interfaces = GetByFilter('Circee_Interface_Table',"(L1_SYSNAME = '"+ ResIso[g].Node +"') and (L1_IF_ID like '[Ww][Aa][Nn]1')",false);
+HA1_Service_Impact.ipl:                            Interfaces = GetByFilter('Circee_Interface_Table',"(L2_SYSNAME = '"+ ResIso[g].Node +"') and (L2_IF_ID like '[Ww][Aa][Nn]1')",false);
+HA1_Service_Impact.ipl:                                    GetByFilter(Type, "Server_Serial="+@ServerSerial+" and Server_Name='"+@ServerName+"' and STI_ID="+DistinctSTIs[j], False );
+HA1_Service_Impact.ipl:        //Interfaces = GetByFilter('Circee_Interface_Table',"L1_SYSNAME = '"+Sysname6850+"'",false);
+HA1_Service_Impact.ipl:        Interfaces = GetByFilter('Circee_Interface_Table',"L1_SYSNAME = '"+Sysname6850+"' and L1_STI_ID is not null",false);
+HA1_Service_Impact.ipl:            //Interfaces = GetByFilter('Circee_Interface_Table',"L2_SYSNAME = '"+Sysname6850+"'",false);
+HA1_Service_Impact.ipl:            Interfaces = GetByFilter('Circee_Interface_Table',"L2_SYSNAME = '"+Sysname6850+"' and L2_STI_ID is not null",false);
+HA1_Service_Impact.ipl:                // Filter the STIs to ones that match the forwardingclass
+HA1_Service_Impact.ipl:                Filter= "(AlertKey like 'IP SLA') and (Type = 1) and (Manager='2811') and (Node = '"+ @Node + "')";
+HA1_Service_Impact.ipl:                SLAEvent = GetByFilter('ha_ncoms_impact_events',Filter,false);
+HA1_Service_Impact.ipl:                Log("Service_Impact: " + Filter);
+HA1_Service_Impact.ipl:                     Filter = "STI_ID in (" + STIList + ")";
+HA1_Service_Impact.ipl:                    Filter = "STI_ID in (" + STIList + ") and FORWARDING_CLASS_ABBR = '" + ForwardingClass + "'";
+HA1_Service_Impact.ipl:                Log("Service_Impact: " + Filter);
+HA1_Service_Impact.ipl:                Services = GetByFilter( "Circee_STI_ID", Filter, False );
+HA1_Service_Impact.ipl:                            Filter = "Server_Serial="+@ServerSerial+" and Server_Name='"+@ServerName+"' and STI_ID="+Services[CurrentService].STI_ID;
+HA1_Service_Impact.ipl:                            GetByFilter(Type, Filter, False );
+HA1_Service_Impact.ipl:    //Span3600Events = GetByFilter('ha_ncoms_impact_events',"(Severity > 0) and (Type = 1) and (AlarmClass = 'Device Failed') and (EquipmentType like '.*3600.*') and (Node like '[a-zA-Z][a-zA-Z][a-zA-Z][a-zA-Z][B|C].*') and ((TSA = '" + @TSA + "') or (TSB = '" + @TSA + "'))",false);
+HA1_Service_Impact.ipl:       Span3600Events = GetByFilter('ha_ncoms_impact_events',"(Severity > 0) and (Type = 1) and (AlarmClass = 'Device Failed') and (EquipmentType like '.*3600.*') and (Node like '[a-zA-Z][a-zA-Z][a-zA-Z][a-zA-Z][B|C|D].*') and ((TSA = '" + @TSA + "') or (TSB = '" + @TSA + "'))",false);
+HA1_Service_Impact.ipl:            STIs1 = GetByFilter('Circee_Interface_Table',"(L1_SYSNAME = '"+ Span3600Events[d].Node +"')",false);
+HA1_Service_Impact.ipl:            STIs2 = GetByFilter('Circee_Interface_Table',"(L2_SYSNAME = '"+ Span3600Events[d].Node +"')",false);
+HA1_Service_Impact.ipl:                GetByFilter(Type, "Server_Serial="+@ServerSerial+" and Server_Name='"+@ServerName+"' and STI_ID="+distinct3600STIs[j], False );
+HA1_Service_Impact.ipl:    AffectedSTIFilter = "Server_Name = '"+@ServerName+"' and Server_Serial = "+@ServerSerial+" and STI_ID = "+@STIRef ;
+HA1_Service_Impact.ipl:    GetByFilter(AffectedSTIDataType, AffectedSTIFilter, CountOnly);
+HA1_Service_Impact.ipl:        Interfaces = GetByFilter('Circee_Interface_Table',"L1_SYSNAME = '"+@Node+"'",false);
+HA1_Service_Impact.ipl:        Interfaces = GetByFilter('Circee_Interface_Table',"(L1_SYSNAME = '"+@Node+"') and (L1_IF_ID = '"+@PhysicalCard+"')",false);
+HA1_Service_Impact.ipl:            Interfaces = GetByFilter('Circee_Interface_Table',"L2_SYSNAME = '"+@Node+"'",false);
+HA1_Service_Impact.ipl:            Interfaces = GetByFilter('Circee_Interface_Table',"(L2_SYSNAME = '"+@Node+"') and (L2_IF_ID = '"+@PhysicalCard+"')",false);
+HA1_Service_Impact.ipl:                    Filter = "Server_Serial="+@ServerSerial+" and Server_Name='"+@ServerName+"' and STI_ID="+DistinctSTIs[j];
+HA1_Service_Impact.ipl:                    log( "Service_Impact :" + Filter );
+HA1_Service_Impact.ipl:                    existingSTI= GetByFilter(Type, Filter, False );
+HA1_Service_Impact.ipl:// Filter = "Server_Serial="+@ServerSerial+" and Server_Name='"+@ServerName+"'";
+HA1_Service_Impact.ipl:// GetByFilter(Type, Filter, True );
+HA1_Signalling_policy.ipl:Filter = "ServerSerial = " +  @ServerSerial;
+HA1_Signalling_policy.ipl:BatchUpdate(DataType, Filter, UpdateExpression);
+HA1_Signalling_policy.ipl:        //EndDevDown = GetByFilter('ha_ncoms_impact_events',"(Type = 1) and (Severity > 3) and (ServiceType =  '"+ @ServiceType + "') and   (SDPLocation = '"+ @SDPLocation +"') and (AlertKey <> 'MSS_SIG event')",false);
+HA1_Signalling_policy.ipl:              //EndDevDown = GetByFilter('ha_ncoms_impact_events',"(Type = 1) and (Severity > 3) and (ServiceType = '"+  @ServiceType + "') and  (SDPLocation =  '"+ @SDPLocation +"') and (AssetElectronicAddress like '" +  AssetElectronicAddressGroup + "') and  (AlertKey <> 'MSS_SIG event')",false);
+HA1_Signalling_policy.ipl:        EndDevDown = GetByFilter('ha_ncoms_impact_events',"(Type = 1) and (Severity > 3) and (ServiceType = '"+ @ServiceType +  "') and  (SDPLocation = '"+  @SDPLocation +"') and (AssetElectronicAddress like '" + AssetElectronicAddressGroup + "')  and  (Manager='Halogen')",false);
+HA1_Signalling_policy.ipl:            //ElectAddr=GetByFilter('Circee_Host_Table', "SDP_Location = '"+@SDPLocation+"'",false);
+HA1_Signalling_policy.ipl:                    ElectAddr=GetByFilter('Circee_Host_Table', "(SDP_Location = '"+@SDPLocation+"') and   (ASSET_ELECTRONIC_ADDRESS like '" +  AssetElectronicAddressGroup + "%')",false);
+HA1_Signalling_policy.ipl:            //existSynthEvent=GetByFilter('ha_ncoms_impact_events',"(Identifier='"+synthIdentifier+"') and  (Severity > 0)",false);
+HA1_Signalling_policy.ipl:            existSynthEvent=GetByFilter('ha_ncoms_impact_events',"(Identifier='"+synthIdentifier+"') and  (Severity = 5)",false);
+HA1_Signalling_policy.ipl:                Filter = "(Identifier='" + synthIdentifier + "' and Severity=5)";
+HA1_Signalling_policy.ipl:                BatchUpdate(DataType, Filter, UpdateExpression);
+HA1_Signalling_policy.ipl:                 theSynthEvent=GetByFilter('ha_ncoms_impact_events',"(Identifier='"+synthIdentifier+"')",false);
+HA1_Signalling_policy.ipl:                Filter = "(Type = 1) and (Severity > 3) and  (ServiceType = '"+ @ServiceType + "') and   (SDPLocation = '"+ @SDPLocation +"')  and  (AssetElectronicAddress like '" + AssetElectronicAddressGroup + "') and   (Manager='Halogen')";
+HA1_Signalling_policy.ipl:                BatchUpdate(DataType, Filter, UpdateExpression);
+HA1_Signalling_policy.ipl:            //Filter = "(Node = '" + @Node + "') and (Severity > 0) and (Manager = 'Halogen') and  (AlertGroup = '"+ @AlertGroup + "') and (Type = 1)";
+HA1_Signalling_policy.ipl:            //BatchUpdate(DataType, Filter, UpdateExpression);
+HA1_Signalling_policy.ipl:            //synthProbCableDowns=GetByFilter('ha_ncoms_impact_events', "(Type = 1) and (Severity > 1) and  (Agent = 'Halogen') and  (Manager='Netcool Impact') and (Node = '"+@SDPLocation+"') and (ServiceType =  '"+@ServiceType+"') and (AlertGroup = 'Impact Signal Event') and (AlertKey =  'MSS_SIG event')",false);
+HA1_Signalling_policy.ipl:                    //synthProbCableDowns=GetByFilter('ha_ncoms_impact_events', "(Type = 1) and (Severity > 1) and  (Manager='Netcool Impact') and  (AssetElectronicAddress = '" + AssetElectronicAddressGroup1 + "') and (AlertKey =  'MSS_SIG event')",false);
+HA1_Signalling_policy.ipl:            synthProbCableDowns=GetByFilter('ha_ncoms_impact_events', "(Type = 1) and (Severity > 1) and  (Manager='Netcool Impact') and  (Node = '" + myNode + "') and (ServiceType = '"+ @ServiceType + "') and (AlertKey =  'MSS_SIG event')",false);
+HA1_Signalling_policy.ipl:                //ElectAddr=GetByFilter('Circee_Host_Table', "SDP_Location =  '"+@SDPLocation+"'",false);
+HA1_Signalling_policy.ipl:                           ElectAddr=GetByFilter('Circee_Host_Table', "(SDP_Location = '"+@SDPLocation+"') and   (ASSET_ELECTRONIC_ADDRESS like '" +  AssetElectronicAddressGroup + "%')",false);
+HA1_Signalling_policy.ipl:                //EndDevDown = GetByFilter('ha_ncoms_impact_events',"(SuppressEscl = 4) and (Type = 1)  and (Manager <> 'Netcool Impact') and  (Severity > 1) and (ServiceType = '"+ @ServiceType + "') and  (SDPLocation =  '"+ @SDPLocation +"')",false);
+HA1_Signalling_policy.ipl:                           //EndDevDown = GetByFilter('ha_ncoms_impact_events',"(SuppressEscl = 4) and (Type = 1) and   (Manager <> 'Netcool Impact') and  (Severity > 1) and (ServiceType = '"+ @ServiceType + "') and  (SDPLocation = '"+   @SDPLocation +"') and (AssetElectronicAddress like '" +  AssetElectronicAddressGroup + "')",false);
+HA1_Signalling_policy.ipl://EndDevDown = GetByFilter('ha_ncoms_impact_events',"(SuppressEscl = 4) and (Type = 1) and  (Manager = 'Halogen') and  (ServiceType = '"+ @ServiceType + "')  and  (SDPLocation = '"+  @SDPLocation +"') and (AssetElectronicAddress like '"  + AssetElectronicAddressGroup + "')",false);
+HA1_Signalling_policy.ipl:                Filter = "(SuppressEscl = 4) and (Type = 1) and  (Manager = 'Halogen') and  (ServiceType = '"+ @ServiceType + "')  and  (SDPLocation = '"+  @SDPLocation +"') and (AssetElectronicAddress like '"  + AssetElectronicAddressGroup + "')";
+HA1_Signalling_policy.ipl:                BatchUpdate(DataType, Filter, UpdateExpression);
+HA1_TEC.ipl:	eventSlots=GetByFilter('TEC_slots_evt', "EVENT_HNDL = " + @EVENT_HNDL + " and SERVER_HNDL = " + @SERVER_HNDL + " and DATE_RECEPTION = " + @DATE_RECEPTION, false);
+HA1_TPR_event_enrichment.ipl:    EnrichmentOrgNodes = GetByFilter('Circee_Host_Table', "(SYSNAME like '"+@NodeAlias+"%') and (EQUIP_TYPE = 'TR')", false);
+HA1_TPR_event_enrichment.ipl:    EnrichmentOrgNodes = GetByFilter('Circee_Host_Table', "(ASSET_ELECTRONIC_ADDRESS='"+@NodeAlias+"') and (EQUIP_TYPE in ('TPR','ST'))", false);
+HA1_TPR_event_enrichment.ipl:log("TPR_event_enrichment : Filter was (ASSET_ELECTRONIC_ADDRESS='"+@NodeAlias+"') and (EQUIP_TYPE in ('TPR','ST'))");
+HA1_TPR_event_enrichment.ipl:log("TPR_event_enrichment : GetByFilter successful. Found "+Num+" dataItem(s)."); 
+HA1_TPR_event_enrichment.ipl:  Filter = "ASSET_ELECTRONIC_ADDRESS = '"+@AssetElectronicAddress+"'";
+HA1_TPR_event_enrichment.ipl:  EndOrgNodes = GetByFilter('Circee_Asset_STI_Table', Filter, false);
+HA1_TPR_event_enrichment.ipl:    //Filter condition changed under patch 3.94
+HA1_TPR_event_enrichment.ipl:    //Filter = "TPR='"+@AssetMotorway+"/"+@AssetGeographicAddress+"'";
+HA1_TPR_event_enrichment.ipl:    Filter = "ELECTRONIC_ADDRESS='"+ @AssetElectronicAddress + "'";
+HA1_TPR_event_enrichment.ipl:    EndOrgNodes = GetByFilter('Reporter_SpanChain', Filter, false);
+HA1_TenG_1696_Enrichment.ipl:Filter = "(L1_SYSNAME='"+@Node+"')";
+HA1_TenG_1696_Enrichment.ipl:Filter = "(L1_SYSNAME='"+@Node+"' and L1_IF_ID LIKE '"+PhysicalCardExtract+"%')";
+HA1_TenG_1696_Enrichment.ipl:log("TenG_1696_Enrichment Interface Filter:"+Filter);
+HA1_TenG_1696_Enrichment.ipl:RemoteEnd = GetByFilter('Circee_Interface_Table', Filter, false);
+HA1_TenG_1696_Enrichment.ipl:Log(Filter+ " RecordCount:"+numRemoteEnd);
+HA1_TenG_1696_Enrichment.ipl:Filter = "(L2_SYSNAME='"+@Node+"')";
+HA1_TenG_1696_Enrichment.ipl:Filter = "(L2_SYSNAME='"+@Node+"' and L2_IF_ID LIKE '"+PhysicalCardExtract+"%')";
+HA1_TenG_1696_Enrichment.ipl:RemoteEnd = GetByFilter('Circee_Interface_Table', Filter, false);
+HA1_TenG_1696_Enrichment.ipl:Log(Filter+ " RecordCount:"+numRemoteEnd);
+HA1_TenG_1696_Enrichment.ipl:log("TenG_1696_Enrichment Interface Filter:"+Filter);
+HA1_TenG_1696_Enrichment.ipl:Filter = "(L2_SYSNAME='"+@Node+"' and (L1_SYSNAME LIKE 'Not%' or L1_INTERFACE_ID LIKE '%port%'))";
+HA1_TenG_1696_Enrichment.ipl:Filter = "(L2_SYSNAME='"+@Node+"' and L2_INTERFACE_ID LIKE '"+PhysicalCardExtract+"%' and (L1_SYSNAME LIKE 'Not%' or L1_INTERFACE_ID LIKE '%port%'))";
+HA1_TenG_1696_Enrichment.ipl:ChannelLookup = GetByFilter('Circee_Lambda_Table', Filter, false);
+HA1_TenG_1696_Enrichment.ipl:Filter = "(L1_SYSNAME='"+@Node+"' and (L2_SYSNAME LIKE 'Not%' or L2_INTERFACE_ID like '%port%'))";
+HA1_TenG_1696_Enrichment.ipl:Filter = "(L1_SYSNAME='"+@Node+"' and L1_INTERFACE_ID LIKE '"+PhysicalCardExtract+"%' and (L2_SYSNAME LIKE 'Not%' or L2_INTERFACE_ID like '%port%'))";
+HA1_TenG_1696_Enrichment.ipl:ChannelLookup = GetByFilter('Circee_Lambda_Table', Filter, false);
+HA1_TestSocketDSA.ipl:// GetByFilter testing
+HA1_TestSocketDSA.ipl:log("Testing GetByFilter -- finding all");
+HA1_TestSocketDSA.ipl:Filter = "";
+HA1_TestSocketDSA.ipl:All = GetByFilter(Type, Filter, CountOnly);
+HA1_TestSocketDSA.ipl:log("Testing GetByFilter -- finding Peter");
+HA1_TestSocketDSA.ipl:Filter = "FirstName = 'Peter'";
+HA1_TestSocketDSA.ipl:Peter = GetByFilter(Type, Filter, CountOnly);
+HA1_TestSocketDSA.ipl:log("Testing GetByFilter -- finding Nick (bogus entry)");
+HA1_TestSocketDSA.ipl:Filter = "FirstName = 'Nick'";
+HA1_TestSocketDSA.ipl:Nick = GetByFilter(Type, Filter, CountOnly);
+HA1_TestSocketDSA.ipl:Filter = "";
+HA1_TestSocketDSA.ipl:JohnLinks = GetByLinks(Types, Filter, null, JohnOrgNodes);
+HA1_TestSocketDSA.ipl:Filter = "FirstName = 'Bill'";
+HA1_TestSocketDSA.ipl:Bill = GetByLinks(Types, Filter, null, JohnOrgNodes);
+HA1_Transponder_Cable_Break.ipl:Filter = "ServerSerial = " +  @ServerSerial;
+HA1_Transponder_Cable_Break.ipl:BatchUpdate(DataType, Filter, UpdateExpression);
+HA1_Transponder_Cable_Break.ipl:        plusMinusFilter = '^-[0-9]+';
+HA1_Transponder_Cable_Break.ipl:        plusMinusFilter = '^[0-9]+';
+HA1_Transponder_Cable_Break.ipl:    log("Transponder_Cable_Break: Span Chain Filter:- " + plusMinusFilter  );
+HA1_Transponder_Cable_Break.ipl:    //Span = GetByFilter('spanview', "(Type = 1) and (EquipmentType = 'TPR') and (Severity > 0) and (SDPLocation like'"+road+"') and (SpanChain like '"+plusMinusFilter+"') and (AlertKey <> 'TPR cable event')", false);
+HA1_Transponder_Cable_Break.ipl:    //Span = GetByFilter('spanview', "(Type = 1) and (EquipmentType = 'TPR') and (Severity > 0) and (AssetMotorway = '" + road + "') and (SpanChain like '"+plusMinusFilter+"') and (AlertKey <> 'TPR cable event') and (Summary like '^UNOBTAINABLE')", false);
+HA1_Transponder_Cable_Break.ipl:    //Span = GetByFilter('spanview', "(Type = 1) and (EquipmentType = 'TPR') and (Severity > 0) and (AssetMotorway = '" + road + "') and (SpanChain like '"+plusMinusFilter+"') and (AlertKey <> 'TPR cable event') and (Summary like '^UNOBTAINABLE') and ((TSA = '" + @TSA + "') or (TSA = '" + @TSB + "')) and ((TSB = '" + @TSB + "') or (TSB = '" + @TSA + "'))", false);
+HA1_Transponder_Cable_Break.ipl:    Span = GetByFilter('spanview', "(Type = 1) and (EquipmentType = 'TPR') and (Manager = 'Halogen') and (Severity > 2) and (AssetMotorway = '" + road + "') and (SpanChain like '"+plusMinusFilter+"') and (AlertKey <> 'TPR cable event') and (Summary like '^UNOBTAINABLE') and ((TSA = '" + @TSA + "') or (TSA = '" + @TSB + "')) and ((TSB = '" + @TSB + "') or (TSB = '" + @TSA + "')) and (AssetElectronicAddress like '" + halElecAddr + "')", false);
+HA1_Transponder_Cable_Break.ipl:    log("Transponder_Cable_Break: GetByFilter successful. Found "+NumDev+" dataItem(s)."); 
+HA1_Transponder_Cable_Break.ipl:            existSynthEvent=GetByFilter('ha_ncoms_impact_events',"(Identifier='"+synthIdentifier+"') and Severity=5",false);
+HA1_Transponder_Cable_Break.ipl:            SpanDown = GetByFilter('spanview', "(Type = 1) and (EquipmentType = 'TPR') and (Severity > 2) and (Manager = 'Halogen') and (AssetMotorway = '" + @AssetMotorway + "') and (SpanChain in ("+ SpanChainArray + ")) and (AlertKey <> 'TPR cable event') and (Summary like '^UNOBTAINABLE') and ((TSA = '" + @TSA + "') or (TSA = '" + @TSB + "')) and ((TSB = '" + @TSB + "') or (TSB = '" + @TSA + "')) and (AssetElectronicAddress like '" + halElecAddr + "')", false);
+HA1_Transponder_Cable_Break.ipl:                GetByFilter('Circee_TS_Table',"TRANSMISSION_STATION = '"+ Span[x].TSA +"' and MOTORWAY_REF = '"+ Span[x].AssetMotorway + "'",False);
+HA1_Transponder_Cable_Break.ipl:                theSynthEvent=GetByFilter('ha_ncoms_impact_events',"(Identifier='"+synthIdentifier+"') and Severity=5",false);
+HA1_Transponder_Cable_Break.ipl:                Filter = "Serial in (" + childId + ")";    
+HA1_Transponder_Cable_Break.ipl:                BatchUpdate(DataType, Filter, UpdateExpression);
+HA1_Transponder_Cable_Break.ipl:                //FilterSecondLast = "TPR like '" + @AssetMotorway + "%' and TSA = '" + @TSA + "' and Span_Chain = " + SpanChainReporterValue;
+HA1_Transponder_Cable_Break.ipl:                //FilterLast = "TPR like '"+ @AssetMotorway + "%' and TSA = '" + @TSA + "' and Span_Chain = " + SpanChainReporterValue1;
+HA1_Transponder_Cable_Break.ipl:                //FilterSecondLast = "TPR like '" + @AssetMotorway + "%' and TSA = '" + TS_NameA + "' and Span_Chain = " + SpanChainReporterValue;
+HA1_Transponder_Cable_Break.ipl:                //FilterLast = "TPR like '"+ @AssetMotorway + "%' and TSA = '" + TS_NameA + "' and Span_Chain = " + SpanChainReporterValue1;
+HA1_Transponder_Cable_Break.ipl:                //FilterSecondLast = "ELECTRONIC_ADDRESS = '" + theSynthEvent[0].AssetElectronicAddress + "' and TSA = '" + TS_NameA + "' and Span_Chain = " + SpanChainReporterValue;
+HA1_Transponder_Cable_Break.ipl:                //FilterLast = "ELECTRONIC_ADDRESS = '"+ theSynthEvent[0].AssetElectronicAddress + "' and TSA = '" + TS_NameA + "' and Span_Chain = " + SpanChainReporterValue1;
+HA1_Transponder_Cable_Break.ipl:                FilterSecondLast = "ELECTRONIC_ADDRESS like '" + halElecAddr + "%' and TSA = '" + TS_NameA + "' and Span_Chain = " + SpanChainReporterValue;
+HA1_Transponder_Cable_Break.ipl:                FilterLast = "ELECTRONIC_ADDRESS like '"+ halElecAddr + "%' and TSA = '" + TS_NameA + "' and Span_Chain = " + SpanChainReporterValue1;
+HA1_Transponder_Cable_Break.ipl:                log("FilterSecondLast = " + FilterSecondLast);
+HA1_Transponder_Cable_Break.ipl:                log("FilterLast = " + FilterLast);
+HA1_Transponder_Cable_Break.ipl:                spanOrgNodesLast = GetByFilter('Reporter_SpanChain', FilterLast, false);
+HA1_Transponder_Cable_Break.ipl:                spanOrgNodesSecondLast = GetByFilter('Reporter_SpanChain', FilterSecondLast, false);
+HA1_Transponder_Cable_Break.ipl:                Filter = "Identifier = '" + synthIdentifier + "'";
+HA1_Transponder_Cable_Break.ipl:                BatchUpdate(DataType, Filter, UpdateExpression);
+HA1_Transponder_Cable_Break.ipl:            plusMinusFilter = '^-[0-9]+';
+HA1_Transponder_Cable_Break.ipl:            plusMinusFilter = '^[0-9]+';
+HA1_Transponder_Cable_Break.ipl:    log("Transponder_Cable_Break: Span Chain Filter:- " + plusMinusFilter  );
+HA1_Transponder_Cable_Break.ipl:        Filter = "(Type = 1) and (Severity = 5) and (Manager='Netcool Impact') and (AlertGroup = 'Cable Break Event: TPR') and ((TSA = '" + @TSA + "') or (TSA = '" + @TSB + "')) and ((TSB = '" + @TSB + "') or (TSB = '" + @TSA + "')) and (AssetMotorway = '" + road + "') and (SpanChain like '" + plusMinusFilter + "') and (AssetElectronicAddress like '" + halElecAddr + "')";
+HA1_Transponder_Cable_Break.ipl:        log("Filter Clear " + Filter);
+HA1_Transponder_Cable_Break.ipl:        synthProbCableDowns=GetByFilter('ha_ncoms_impact_events',Filter,false);
+HA1_Transponder_Cable_Break.ipl:            //EndDevDown = GetByFilter('ha_ncoms_impact_events',"(SuppressEscl = 4) and (Type = 1) and (Manager <> 'Netcool Impact') and (ServiceType = '"+ @ServiceType + "') and  (TSA = '"+ @TSA +"') and (SpanChain like '"+ plusMinusFilter +"')",false);
+HA1_Transponder_Cable_Break.ipl:            Filter = "(SuppressEscl = 4) and (Type = 1) and (Manager = 'Halogen') and (TSA = '" + @TSA + "') and (AssetMotorway = '" + @AssetMotorway + "') and (SpanChain like '"+plusMinusFilter+ "')";
+HA1_Transponder_Cable_Break.ipl:            BatchUpdate(DataType, Filter, UpdateExpression);
+HA1_Update_FirstRaiseTime.ipl:        Filter = "Serial in ("+ @ChildID +") and UltimateParentSerial = Serial";
+HA1_Update_FirstRaiseTime.ipl:        OtherParents = GetByFilter( DataType, Filter, False );
+HA1_Update_FirstRaiseTime.ipl:        Filter = "Serial in ("+ @ChildID +") and UltimateParentSerial <> Serial and UltimateParentSerial <> "+ @Serial;
+HA1_Update_FirstRaiseTime.ipl:        BatchUpdate(DataType, Filter, UpdateExpression);
+HA1_Update_FirstRaiseTime.ipl:    Filter = "Serial = "+ @UltimateParentSerial +" and FirstRaiseTime > "+ @FirstRaiseTime;
+HA1_Update_FirstRaiseTime.ipl:    UltimateParent = GetByFilter( DataType, Filter, False );
+HA1_Update_FirstRaiseTime.ipl:        Filter = "Serial in ("+ @ChildID +") and UltimateParentSerial <> "+ @Serial;
+HA1_Update_FirstRaiseTime.ipl:        BatchUpdate(DataType, Filter, UpdateExpression);
+HA1_VRRP_6850_Resilience.ipl:    Filter = "Serial <> " + @Serial + " and Node like '^" + Node6850 + ".*V$'";
+HA1_VRRP_6850_Resilience.ipl:    GetByFilter("ha_ncoms_impact_events",Filter,false);
+HA1_XmlFileTestPolicy.ipl:/* First look up the top node of the file using the lookupByFilter */
+HA1_XmlFileTestPolicy.ipl:lookupFilter = "";  
+HA1_XmlFileTestPolicy.ipl:OrgNodes = GetByFilter(dataType, lookupFilter, false);
+HA1_XmlHttpTestPolicy.ipl:  //Filter = "Operation = 'POST' AND FilePath = '/axis/XmlDsaTest' AND NAME1 = 'VALUE1'";
+HA1_XmlHttpTestPolicy.ipl:  Filter = "Operation = 'GET' AND FilePath = '/axis/XmlDsaTest' AND NAME1 = 'VALUE1'";
+HA1_XmlHttpTestPolicy.ipl:  log("Filter is " + Filter);
+HA1_XmlHttpTestPolicy.ipl:  GetByFilter(Type, Filter, CountOnly);
+HA1_XmlHttpTestPolicy.ipl:  LinkFilter = "";
+HA1_XmlHttpTestPolicy.ipl:  GetByLinks(Types, LinkFilter, MaxNum, OrgNodes);
+HA1_XmlStringTestPolicy.ipl:/* Filter variable below. Once a GetByFilter is done on that    */
+HA1_XmlStringTestPolicy.ipl:/* Filter, the rest of the parsing is similar to the one in the */
+HA1_XmlStringTestPolicy.ipl:  Filter = '<JavaXML:Book xmlns:JavaXML="http"> <JavaXML:Title>Simple Book</JavaXML:Title> <JavaXML:Contents> <JavaXML:Chapter focus="Small XML Data"> <JavaXML:Heading>Introduction</JavaXML:Heading> <JavaXML:Topic subSections="1">What Is It?</JavaXML:Topic> <JavaXML:Topic subSections="0">Whats Next?</JavaXML:Topic> </JavaXML:Chapter> <JavaXML:SectionBreak/> </JavaXML:Contents> </JavaXML:Book>';
+HA1_XmlStringTestPolicy.ipl:  log("Filter is " + Filter);
+HA1_XmlStringTestPolicy.ipl:  GetByFilter(Type, Filter, CountOnly);
+HA1_XmlStringTestPolicy.ipl:  LinkFilter = "";
+HA1_XmlStringTestPolicy.ipl:  GetByLinks(Types, LinkFilter, MaxNum, OrgNodes);
+HA1_XmlXsdFileTestPolicy.ipl:/* First look up the top node of the file using the lookupByFilter */
+HA1_XmlXsdFileTestPolicy.ipl:lookupFilter = "";  
+HA1_XmlXsdFileTestPolicy.ipl:OrgNodes = GetByFilter(dataType, lookupFilter, false);
+HA1_enddevice_event_enrichment.ipl:    Filter = "(EQUIP_TYPE = '"+@EquipmentType+"') AND (MOTORWAY_REF = '"+myMotorway+"') AND (ASSET_GEOG_ADDRESS='"+myGeogAddress+"')";
+HA1_enddevice_event_enrichment.ipl:    log("enddevice_event_enrichment: " + Filter);
+HA1_enddevice_event_enrichment.ipl:    SDPOrgNodes = GetByFilter( 'Circee_Host_Table', Filter, false );
+HA1_enddevice_event_enrichment.ipl:    log("enddevice_event_enrichment: GetByFilter successful. Found "+SDPNum+" dataItem(s) using NodeAlias."); 
+HA1_enddevice_event_enrichment.ipl:  Filter = "ELECTRONIC_ADDRESS='"+@AssetElectronicAddress+"'";
+HA1_enddevice_event_enrichment.ipl:  EndOrgNodes = GetByFilter('Circee_End_Device_STI_Table', Filter, false);
+HA1_enddevice_event_enrichment.ipl:spanOrgNodes = GetByFilter('Reporter_LocalSpan', "(ELECTRONIC_ADDRESS='"+@AssetElectronicAddress+"')",false);
+HA1_intermittent2_policy.ipl:synthInterEvents = GetByFilter('ha_ncoms_impact_events',"(Manager = 'Omnibus') and (Summary like 'Int Crit 2') and (Type = 1)  and (Severity = 5) and (HalStatus = 'INTER') and (StateChange < (getdate() - 172800))",false);
+HA1_intermittent_policy.ipl://synthInterEvents = GetByFilter('ha_ncoms_impact_events',"(Type = 1) and (InterFlag = 2) and (Severity > 0) and (Manager = 'Omnibus') and (HalStatus = 'INTER')",false);
+HA1_intermittent_policy.ipl://synthInterEvents = GetByFilter('ha_ncoms_impact_events',"(Summary like 'Int Crit 3') and (Type = 1) and (InterFlag = 2) and (Severity > 0) and (Manager = 'Omnibus') and (HalStatus = 'INTER')",false);
+HA1_intermittent_policy.ipl:synthInterEvents = GetByFilter('ha_ncoms_impact_events',"(Summary like 'Int Crit 3') and (Type = 1) and (Severity = 5) and (Manager = 'Omnibus')",false);
+HA1_signalling_cable_break.ipl:Filter = "ServerSerial = " +  @ServerSerial;
+HA1_signalling_cable_break.ipl:BatchUpdate(DataType, Filter, UpdateExpression);
+HA1_signalling_cable_break.ipl:    SpanPort = GetByFilter('spanview', "(Type = 1) and (Severity > 0) and (AssetElectronicAddress like '" + spanc  + "') and (Manager='Halogen')",false);
+HA1_signalling_cable_break.ipl:    Filter = "ELECTRONIC_ADDRESS like '"+spanc+"%'";
+HA1_signalling_cable_break.ipl:       spanOrgNodesPort = GetByFilter('Reporter_LocalSpan', Filter, false);
+HA1_signalling_cable_break.ipl:    existSynthEvent=GetByFilter('ha_ncoms_impact_events',"(Identifier='" + synthIdentifierPort + "') and (Severity  > 2)",false);
+HA1_signalling_cable_break.ipl:    GetByFilter('Circee_TS_Table',"TRANSMISSION_STATION = '"+ NewEvent.TSA+"' and MOTORWAY_REF =  '"+NewEvent.AssetMotorway+"'",False);
+HA1_signalling_cable_break.ipl:    //Filter = "ELECTRONIC_ADDRESS like '"+spanc+"%' and Local_Span = -1";
+HA1_signalling_cable_break.ipl:    Filter = "ELECTRONIC_ADDRESS like '" + spanc + "%' and Local_Span like '-%' order by SDP_Location desc";
+HA1_signalling_cable_break.ipl:    spanOrgNodesNegative = GetByFilter('Reporter_LocalSpan', Filter, false);
+HA1_signalling_cable_break.ipl:    //Filter = "ELECTRONIC_ADDRESS like '"+spanc+"%' and Local_Span = 1";
+HA1_signalling_cable_break.ipl:    Filter = "ELECTRONIC_ADDRESS like '"+spanc+"%' and Local_Span not like '-%' order by SDP_Location desc";
+HA1_signalling_cable_break.ipl:    spanOrgNodesPositive = GetByFilter('Reporter_LocalSpan', Filter, false);
+HA1_signalling_cable_break.ipl:    SpanSyn = GetByFilter('spanview', "(Type = 1) and (Severity > 0) and (AssetElectronicAddress like '" + spanc +  "') and ((AlertKey = 'SIG cable event') or (AlertKey = 'MSS_SIG event'))",false);
+HA1_signalling_cable_break.ipl:    theSynthEvent=GetByFilter('ha_ncoms_impact_events',"(Identifier='"+synthIdentifierPort+"' and (Severity >  2))",false);
+HA1_signalling_cable_break.ipl:    //Filter = "ELECTRONIC_ADDRESS like '"+spanc+"%' and Local_Span = -1";
+HA1_signalling_cable_break.ipl:    //spanOrgNodesNegative = GetByFilter('Reporter_LocalSpan', Filter, false);
+HA1_signalling_cable_break.ipl:    //Filter = "ELECTRONIC_ADDRESS like '"+spanc+"%' and Local_Span = 1";
+HA1_signalling_cable_break.ipl:    //spanOrgNodesPositive = GetByFilter('Reporter_LocalSpan', Filter, false);
+HA1_signalling_cable_break.ipl:    Filter = "Serial in (" + childId + ")";    
+HA1_signalling_cable_break.ipl:    BatchUpdate(DataType, Filter, UpdateExpression);
+HA1_signalling_cable_break.ipl:    Filter = "Identifier='" + synthIdentifierPort + "' and Severity > 2";    
+HA1_signalling_cable_break.ipl:    BatchUpdate(DataType, Filter, UpdateExpression);
+HA1_signalling_cable_break.ipl:        plusMinusFilter = '^-[0-9]+';
+HA1_signalling_cable_break.ipl:        plusMinusFilter = '^[0-9]+';
+HA1_signalling_cable_break.ipl:    log("signalling_cable_break: Local Chain Filter:- " + plusMinusFilter  );
+HA1_signalling_cable_break.ipl:    //Span = GetByFilter('spanview', "(Type = 1) and (EndDeviceNum = 0) and (Severity > 0) and  (AssetElectronicAddress like'"+spanc+"')", false);
+HA1_signalling_cable_break.ipl:       //Span = GetByFilter('spanview', "(Type = 1) and (Severity > 0) and (AssetElectronicAddress like '" + spanc +  "') and (AlertKey <> 'SIG cable event')",false);
+HA1_signalling_cable_break.ipl:       Span = GetByFilter('spanview', "(Type = 1) and (Severity > 0) and (AssetElectronicAddress like '" + spanc + "')  and (AlertKey = 'MSS_SIG event') and (LocalChain like '"+plusMinusFilter+"')",false);
+HA1_signalling_cable_break.ipl:    log("signalling_cable_break: GetByFilter successful. Found "+NumDev+" dataItem(s)."); 
+HA1_signalling_cable_break.ipl:        existSynthEvent=GetByFilter('ha_ncoms_impact_events',"(Identifier='"+synthIdentifier+"') and (Severity  > 2)",false);
+HA1_signalling_cable_break.ipl://    SpanDown = GetByFilter('spanview', "(Type = 1) and (Severity > 0) and (AssetElectronicAddress like '" + spanc  + "') and (AlertKey <> 'SIG cable event') and (AlertKey = 'MSS_SIG event') and (LocalChain in (" + LocalChainArray +  "))",false);
+HA1_signalling_cable_break.ipl:    SpanDown = GetByFilter('spanview', "(Type = 1) and (Severity > 0) and (AssetElectronicAddress like '" + spanc  + "') and (AlertKey = 'MSS_SIG event') and (LocalChain in (" + LocalChainArray + "))",false);
+HA1_signalling_cable_break.ipl:    GetByFilter('Circee_TS_Table',"TRANSMISSION_STATION = '"+ NewEvent.TSA+"' and MOTORWAY_REF =  '"+NewEvent.AssetMotorway+"'",False);
+HA1_signalling_cable_break.ipl:    theSynthEvent=GetByFilter('ha_ncoms_impact_events',"(Identifier='"+synthIdentifier+"' and (Severity >  2))",false);
+HA1_signalling_cable_break.ipl:    //Filter = "(Type = 1) and (Severity > 0) and (AssetElectronicAddress like '" + spanc + "') and (AlertKey =  'MSS_SIG event') and (LocalChain like '"+plusMinusFilter+"')";
+HA1_signalling_cable_break.ipl:    Filter = "Serial in (" + childId + ")";    
+HA1_signalling_cable_break.ipl:    BatchUpdate(DataType, Filter, UpdateExpression);
+HA1_signalling_cable_break.ipl:    //Filter = "ELECTRONIC_ADDRESS like '"+spanc+"%' and Local_Span = " + LocalSpanReporterValue;
+HA1_signalling_cable_break.ipl:    FilterSecondLast = "ELECTRONIC_ADDRESS like '"+spanc+"%' and Local_Span = " + LocalSpanReporterValue;
+HA1_signalling_cable_break.ipl:    FilterLast = "ELECTRONIC_ADDRESS like '"+spanc+"%' and Local_Span = " + LocalSpanReporterValue1;
+HA1_signalling_cable_break.ipl:    spanOrgNodesLast = GetByFilter('Reporter_LocalSpan', FilterLast, false);
+HA1_signalling_cable_break.ipl:    spanOrgNodesSecondLast = GetByFilter('Reporter_LocalSpan', FilterSecondLast, false);
+HA1_signalling_cable_break.ipl:    synthProbCableDownsPort = GetByFilter('ha_ncoms_impact_events', "(Type = 1) and (Severity > 1) and (Agent =  'Halogen') and (Manager='Netcool Impact') and (AssetElectronicAddress like '" + spanc + "') and (AlertGroup = 'Port  Cable Break Event: SIG')",false);
+HA1_signalling_cable_break.ipl:        Filter = "(SuppressEscl = 4) and (Type = 1) and ((AlertKey = 'SIG cable event') or (AlertKey =  'MSS_SIG event')) and (Severity > 1) and (AssetElectronicAddress like '" + spanc + "')";
+HA1_signalling_cable_break.ipl:        BatchUpdate(DataType, Filter, UpdateExpression);
+HA1_signalling_cable_break.ipl:        plusMinusFilter = '^-[0-9]+';
+HA1_signalling_cable_break.ipl:        plusMinusFilter = '^[0-9]+';
+HA1_signalling_cable_break.ipl:        //synthProbCableDowns=GetByFilter('ha_ncoms_impact_events', "(Type = 1) and (Severity > 1) and (Agent  = 'Halogen') and (Manager='Netcool Impact') and (AssetElectronicAddress like '" + spanc + "') and (ServiceType = '" +  @ServiceType + "') and (AlertGroup = 'Cable Break Event: SIG')",false);
+HA1_signalling_cable_break.ipl:        synthProbCableDowns=GetByFilter('ha_ncoms_impact_events', "(Type = 1) and (Severity > 1) and (Agent =  'Halogen') and (Manager='Netcool Impact') and (AssetElectronicAddress like '" + spanc + "') and (ServiceType = '" +  @ServiceType + "') and (AlertGroup = 'Cable Break Event: SIG') and (LocalChain like '"+plusMinusFilter+ "')",false);
+HA1_signalling_cable_break.ipl:            Filter = "(SuppressEscl = 4) and (Type = 1) and (AlertKey = 'MSS_SIG event') and  (AssetElectronicAddress like '" + spanc + "') and (LocalChain like '"+plusMinusFilter+ "')";
+HA1_signalling_cable_break.ipl:            BatchUpdate(DataType, Filter, UpdateExpression);

@@ -1,0 +1,56 @@
+// Policy Name: IPT_enddevice_clear_synthetic_event
+// 
+// Version	Date        Name        Description
+// 1.0        08-03-12    Nick Evans     WP190 IPT end device clear synthetic event
+
+log("IPT_enddevice_clear_synthetic_event: start IPT_enddevice_clear_synthetic_event policy.");
+log("IPT_enddevice_clear_synthetic_event: IQLOGSTART: ServerSerial=" + @ServerSerial + " EventId=" + @EventId + " STIRef="+@STIRef+" Node="+@Node);
+PhysicalCardArray = Split(@Node, "/");
+Node = PhysicalCardArray[0];
+RS = PhysicalCardArray[1];
+TPRPort = PhysicalCardArray[2];
+EndDeviceNumber = PhysicalCardArray[3];
+STIRef = @STIRef;
+Nodelookup = Node+":IPT Service";
+Filter = "(Node='"+Nodelookup+"' and STIRef='"+STIRef+"' and AlertGroup='IPT Service')";
+SyntheticEventOrgNodes = GetByFilter('ha_ncoms_impact_events',Filter,false);
+numSyntheticEventOrgNodes = Length(SyntheticEventOrgNodes);
+Log(Node+":"+numSyntheticEventOrgNodes+":"+Filter);
+if(numSyntheticEventOrgNodes > 0){
+Serial = SyntheticEventOrgNodes[0].Serial;
+//Raise Sythentic Event Clear
+
+           Log("Creating A Clear Sythetic Event Because EndDevices are up on reported STI");
+
+               objNewEvent = NewObject();
+               objNewEvent.ClearTime = GetDate();
+               objNewEvent.FirstRaiseTime = GetDate();
+               objNewEvent.LastRaiseTime = GetDate();
+               objNewEvent.ParentChildTime = GetDate();
+               objNewEvent.Manager = 'Netcool Impact';
+               objNewEvent.Severity = 1;
+               objNewEvent.FirstOccurrence = GetDate();
+               objNewEvent.LastOccurrence = GetDate();
+               objNewEvent.Type = 2;
+               objNewEvent.ParentChildFlag = 8;
+               objNewEvent.ImpactFlag = 1;
+               objNewEvent.STIRef = STIRef;
+               objNewEvent.STINum = 1;
+               objNewEvent.ChildID = ChildID;
+               objNewEvent.Node = Node+":IPT Service";
+               objNewEvent.OwnerUID = 65534;
+               objNewEvent.TTFlag = 0;
+               objNewEvent.ActionRequired = 0;
+               objNewEvent.ServiceAffecting = 2;
+               objNewEvent.ResilienceAffecting = 2;
+               objNewEvent.AlertKey = STIRef;
+               objNewEvent.InServiceStatus = "In Service";
+               objNewEvent.AlertGroup = "IPT Service";
+               objNewEvent.Identifier = Node+STIRef+"2";
+               objNewEvent.Summary = "Service "+STIRef+" has been impacted by end device alarms";
+               objMyEvent = AddDataItem('ha_ncoms_impact_events', objNewEvent);
+               }else{
+Log("No Synthetic Event Found no further action required!!!");
+}
+Log("IPT_enddevice_synthetic_event_clear: IQLOGFINISH: ServerSerial=" + @ServerSerial + " EventId=" + @EventId);
+Log("IPT_enddevice_synthetic_event_clear: stop.");

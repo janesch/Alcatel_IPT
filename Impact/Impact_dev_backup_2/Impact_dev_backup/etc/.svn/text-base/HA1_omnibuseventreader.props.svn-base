@@ -1,0 +1,96 @@
+#This file was written by Impact Server.
+#Mon Oct 24 13:40:22 BST 2011
+impact.omnibuseventreader.parserestrictionfilter=true
+impact.omnibuseventreader.objectserver.orderby=
+impact.omnibuseventreader.policyname.9=Parent_Child_Parent_Cleared
+impact.omnibuseventreader.policyname.8=Parent_Child_Correlation
+impact.omnibuseventreader.policyname.7=Transponder_Cable_Break
+impact.omnibuseventreader.classname=com.micromuse.response.broker.EventBroker
+impact.omnibuseventreader.policyname.6=signalling_cable_break
+impact.omnibuseventreader.policyname.5=Signalling_policy
+impact.omnibuseventreader.policyname.4=LSP_LINK
+impact.omnibuseventreader.executeallmatchingpolicies=true
+impact.omnibuseventreader.policyname.3=New_Network_Enrichment
+impact.omnibuseventreader.autostartup=true
+impact.omnibuseventreader.policyname.2=TPR_event_enrichment
+impact.omnibuseventreader.policyname.1=enddevice_event_enrichment
+impact.omnibuseventreader.numfilters=19
+impact.omnibuseventreader.objectserver.datasource=ha_ncoms_datasource
+impact.omnibuseventreader.logtofile=true
+impact.omnibuseventreader.eventlockingexpression=
+impact.omnibuseventreader.restriction.19=((EventId \= '5620SAM_004') or (Manager \= 'PROVISO' and AlarmClass like 'Inbound Utilization' )) and (RCCArea \!\= '' OR RCCArea \!\= 'Not found') and (Node like '^.*[s|S][r|R][01|12].*$' AND (RemoteNode like '^[a-zA-Z0-9]+[m|M][s|S][e|E][c|C|e|E][0-9][0-9].*$' or RemoteNode like '.*96C.*'))
+impact.omnibuseventreader.restriction.18=(Severity > 0) and (SuppressEscl \= 0) and (AlertGroup like '^Cable Break Event.*')
+impact.omnibuseventreader.restriction.17=(ImpactFlag \= 2) and (Node like '.*[O|o][S|s]68.*[V|v]$') and (Summary like '[R|r]esource [I|i]solation')
+impact.omnibuseventreader.restriction.16=(ImpactFlag > 0) and ((TTFlag \= 4) or (Severity > 0 and AlertKey <> 'MSS_SIG event' and ((ServiceAffecting \= 1) or (ActionRequired \= 1)) and TTFlag not in (1, 10, 11 , 12, 13) and ParentChildFlag in(5, 7, 8) and ParentChildTime < DateMinus60 and ParentChildTime > 0))
+impact.omnibuseventreader.restriction.15=(Severity > 0) and (((ParentChildFlag in (5,7)) and (ParentChildTime < DateMinus30) and (UltimateParentSerial \= 0)) or ((UltimateParentSerial <> 0) and (ParentChildFlag \= 4) and (ImpactFlag <> 5))) and AlarmClass <> 'RES_NVR'
+impact.omnibuseventreader.isfilteractive.9=true
+impact.omnibuseventreader.restriction.14=(ImpactFlag \= 2) and (((Node like '.*[O|o][S|s]68.*') and (Node not like '.*[V|v]$')) or (Node like '.*[S|s][R|r][01|12].*'))
+impact.omnibuseventreader.isfilteractive.8=true
+impact.omnibuseventreader.restriction.13=((Severity > 0) and ((TTID <> '') or ((ParentTTID <> '') and (TTID \= '') and (ChildID <> ''))))
+impact.omnibuseventreader.isfilteractive.7=true
+impact.omnibuseventreader.restriction.12=((ImpactFlag \= 11) and (EquipmentType \= 'RES') and (((Type \= 1) and (Summary like '^RES Lines Down .*Lines Down . [3].*')) or ((Type \= 2) and (Severity\=0) and (Summary \='Clearing - RES lines down'))))
+impact.omnibuseventreader.uselikeoperator=true
+impact.omnibuseventreader.isfilteractive.6=true
+impact.omnibuseventreader.restriction.11=(EquipmentType \= 'RES') and (Summary like '^NVR.*[line|lines|Line|Lines|LINE|LINES] [0-9]+.*') and (Manager \= 'Halogen') and (SuppressCause <> 'Suppressed via Halogen Suppression Automation') and (((Type \= 1) and (Severity > 0) and (LocalRootObj <> '') and (ImpactFlag in (1,2,5,6))) or ((Type \= 1) and (Severity \= 0) and (ImpactFlag in (5,6,10))))
+impact.omnibuseventreader.isfilteractive.5=true
+impact.omnibuseventreader.restriction.10=(ImpactFlag \= 2) and (EventId \= '1353NM_007')
+impact.omnibuseventreader.isfilteractive.4=true
+impact.omnibuseventreader.isfilteractive.3=true
+impact.omnibuseventreader.isfilteractive.2=true
+impact.omnibuseventreader.isfilteractive.1=true
+impact.omnibuseventreader.ispolicyinchainforfilter.9=false
+impact.omnibuseventreader.ispolicyinchainforfilter.8=false
+impact.omnibuseventreader.ispolicyinchainforfilter.7=false
+impact.omnibuseventreader.isfilteractive.19=true
+impact.omnibuseventreader.ispolicyinchainforfilter.6=false
+impact.omnibuseventreader.isfilteractive.18=true
+impact.omnibuseventreader.ispolicyinchainforfilter.5=false
+impact.omnibuseventreader.isfilteractive.17=true
+impact.omnibuseventreader.ispolicyinchainforfilter.4=false
+impact.omnibuseventreader.isfilteractive.16=true
+impact.omnibuseventreader.ispolicyinchainforfilter.3=false
+impact.omnibuseventreader.isfilteractive.15=true
+impact.omnibuseventreader.ispolicyinchainforfilter.2=false
+impact.omnibuseventreader.isfilteractive.14=true
+impact.omnibuseventreader.ispolicyinchainforfilter.1=false
+impact.omnibuseventreader.isfilteractive.13=true
+impact.omnibuseventreader.isfilteractive.12=true
+impact.omnibuseventreader.isfilteractive.11=true
+impact.omnibuseventreader.isfilteractive.10=true
+impact.omnibuseventreader.objectserver.useiduc=false
+impact.omnibuseventreader.consolidatefilters=false
+impact.omnibuseventreader.objectserver.collectreports=false
+impact.omnibuseventreader.objectserver.getdeletes=false
+impact.omnibuseventreader.objectserver.getupdates=true
+impact.omnibuseventreader.policyname.19=Multiple_Link_Alarms
+impact.omnibuseventreader.policyname.18=Correlate_Cable_Breaks
+impact.omnibuseventreader.policyname.17=VRRP_6850_Resilience
+impact.omnibuseventreader.policyname.16=Service_Impact
+impact.omnibuseventreader.policyname.15=Update_FirstRaiseTime
+impact.omnibuseventreader.policyname.14=GCAB_6850_Resilience
+impact.omnibuseventreader.enableorderevents=false
+impact.omnibuseventreader.policyname.13=Populate_ParentTTID
+impact.omnibuseventreader.restriction.9=(Severity \= 0) and (ParentChildFlag <> 0) and (ParentChildFlag <> 8) and (ChildID <> '')
+impact.omnibuseventreader.policyname.12=ERT_Phone_Cable_Break
+impact.omnibuseventreader.restriction.8=((Type \= 1) or (Type \= 13)) and (Severity > 0) and (ParentChildFlag \= 0) and (EventId <> '') and (Node <> '') and (ImpactFlag \= 2)
+impact.omnibuseventreader.policyname.11=RES_Line_Card_Suppression
+impact.omnibuseventreader.objectserver.getstatusevents=false
+impact.omnibuseventreader.restriction.7=(ImpactFlag \= 2) and (EquipmentType \= 'TPR') and (AlertKey <> 'TPR cable event') and (((Severity > 2) and (Type\=1) and (Summary like '^UNOBTAINABLE')) or ((Severity <\= 2) and (Type\=2)))
+impact.omnibuseventreader.restriction.6=(ImpactFlag\=2) and (AlertKey \= 'MSS_SIG event')
+impact.omnibuseventreader.policyname.10=Multiple_RX_Loss
+impact.omnibuseventreader.restriction.5=(ImpactFlag \= 2) and (EndDeviceNum > 0) and (EquipmentType like 'MSS|SIG|MET|FOG|CTV|LCC|MID|NRT|OIF|RCC|SS|TCC|TEL|IPLU') and (LocalRootObj <> '')
+impact.omnibuseventreader.restriction.4=((ImpactFlag \= 0) AND (Severity > 0) AND (X733SpecificProb \= 'LspDown')) OR ((ImpactFlag \= 1) AND (Severity \= 0) AND (X733SpecificProb \= 'LspDown'))
+impact.omnibuseventreader.restriction.3=(ImpactFlag \= 0) and ((Type <> 2 and Manager in ('OmniVista4760','Kenton','1353NM','alcatel_5620_sam','Radview','CellStack','Scada','PROVISO','VSYS','TMA','RAD','OmniVista2540','2811','alcatel_5620_corba')) OR (Type\=2 and Node like '^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+') OR (Type\=2 and Manager \= 'PROVISO' and Node like '[0-9]+\\/[0-9]+\\/[0-9]+\\/[0-9]+'))
+impact.omnibuseventreader.restriction.2=(ImpactFlag \= 0) and ((EquipmentType \= 'TPR') or (EquipmentType \= 'RES'))
+impact.omnibuseventreader.restriction.1=(ImpactFlag \= 0) and (EquipmentType like 'MSS|SIG|MET|FOG|CTV|LCC|MID|NRT|OIF|RCC|SS|TCC|TEL|IPLU')
+impact.omnibuseventreader.ispolicyinchainforfilter.19=false
+impact.omnibuseventreader.ispolicyinchainforfilter.18=false
+impact.omnibuseventreader.ispolicyinchainforfilter.17=false
+impact.omnibuseventreader.ispolicyinchainforfilter.16=false
+impact.omnibuseventreader.ispolicyinchainforfilter.15=false
+impact.omnibuseventreader.ispolicyinchainforfilter.14=false
+impact.omnibuseventreader.ispolicyinchainforfilter.13=false
+impact.omnibuseventreader.ispolicyinchainforfilter.12=false
+impact.omnibuseventreader.ispolicyinchainforfilter.11=false
+impact.omnibuseventreader.ispolicyinchainforfilter.10=false
+impact.omnibuseventreader.objectserver.polltime=3000

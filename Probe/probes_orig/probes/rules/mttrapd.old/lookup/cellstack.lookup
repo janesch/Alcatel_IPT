@@ -1,0 +1,128 @@
+csNmsTrapVideoInFail	3		The CellStack node has lost video input.  This may be due to a hardware or software fault on the node, or a fault with the video source.	1	1	2	0
+csNmsTrapLossOfConnection	5		Unable to Connect	1	1	2	0
+csNmsTrapCellFrameLost	3		The CellStack node has lost the cell framing.	1	1	2	0
+csNmsTrapLossOfSignal	3		 	1	1	2	0
+csNmsTrapOutOfFrame	3		The CellStack node has lost ATM framing.	1	1	2	0
+csNmsTrapTXRefOutOfLock	3		The CellStack node has a problem with the transmission reference clock.	0	1	0	0
+csNmsTrapRXRefOutOfLock	3		The CellStack node has a problem with the receive reference clock.	0	1	0	0
+csNmsTrapRPOPLOP	3		The CellStack node has a receive path overhead pointer loss of pointer error.	1	1	2	0
+csNmsTrapPAIS	3		The CellStack node has received a path alarm indication signal.	0	1	2	0
+csNmsTrapPRDI	3		The CellStack node has received a path remote defect indication error.	0	1	2	0
+csNmsTrapLAIS	3		The CellStack node has received a receive path overhead pointer line alarm indication signal.	0	1	2	0
+csNmsTrapLRDI	3		The CellStack node has received a line remote defect indication error.	0	1	2	0
+csNmsTrapPowerUp	3		The CellStack node has just powered up.	1	1	2	0
+csNmsTrapUserConnectionOK	3		The CellStack node has started a new user connection or session.	0	1	2	0
+csNmsTrapUserConnectionFail	3		The user session on the CellStack node has failed.	0	1	2	0
+csNmsTrapUserConnectionTimeout	3		A user session on a CellStack node has timed out.	0	1	2	0
+csNmsTrapUserConnectionClose	3		A user session has ben closed on a CellStack node.	0	1	2	0
+csNmsTrapNetworkFail	4		The Network link to a CellStack node has been lost.	1	1	2	1
+csNmsTrapNetworkRegister	3		The CellStack node has registered its network address.	0	1	2	0
+csNmsTrapNetworkRestart	3		The Network link to a CellStack node has been restarted.	1	1	2	1
+csNmsTrapPSUOK	3		The PSU on the CellStack node is OK.	0	1	2	0
+csNmsTrapPSUFailure	3		The CellStack node PSU has failed.	1	1	2	0
+csNmsTrapPSUTemperature	3		The CellStack node PSU has exceeded its operating temperature range.	1	1	2	0
+csNmsTrapPSUInserted	3		A new CellStack node PSU has been inserted.	1	1	2	0
+csNmsTrapPSURemoved	3		A CellStack node PSU has been removed.	1	1	2	0
+csNmsTrapBoardTemperature	3		A temperature event has been received from a CellStack node. This will usually signify that a threshold level has been crossed and the node is overheating.	1	1	2	0
+csNmsTrapConnectionSuccess	3		The CellStack node connection has succeeded.	0	1	2	0
+csNmsTrapConnectionFailure	3		The CellStack node connection has failed.	0	1	2	0
+csNmsTrapConnectionClosed	3		The CellStack node connection has closed.	0	1	2	0
+csNmsTrapConnectionLeaf	3		The CellStack node connection leaf has been added.	0	1	0	0
+csNmsTrapConnectionLeafDrop	3		The CellStack node connection leaf has been removed.	0	1	0	0
+csNmsTrapBoardInserted	3		The CellStack node card has been inserted.	0	1	2	0
+csNmsTrapBoardReset	3		The CellStack node card has been reset.	0	1	2	0
+csNmsTrapBoardRemoved	3		The CellStack node card has been removed.	1	1	2	0
+csNmsTrapBoardNoConfig	3		The CellStack node card has not been configured.	0	1	2	0
+csNmsTrapBoardConfigured	3		The CellStack node card has been configured.	0	1	2	0
+csNmsTrapBoardSystemFault	3		The CellStack node card has a system fault.	1	1	2	0
+csNmsTrapBoardUpgradeOK	3		The CellStack node card has had its software upgraded successfully.	0	1	2	0
+csNmsTrapBoardUpgradeFail	3		The CellStack node card SW upgrade failed.	0	1	2	0
+csNmsTrapBoardHardwareFail	3		The CellStack node card hardware has failed.	1	1	2	0
+csNmsTrapBoardNoVideoSync	4		The CellStack node has lost video synchronisation.	1	1	2	0
+csNmsTrapBoardLowLuminance	3		The CellStack node has detected a low light (Luminance) situation.	0	1	2	0
+csNmsTrapBoardModeConflict	3		The CellStack node card has a conflict with its configuration.	0	1	2	0
+csNmsTrapBoardPicType	3		The CellStack node has detected a bad picture type.	1	1	2	0
+csNmsTrapBoardConnFail	3		The CellStack node card has failed to setup the connection requested.	1	1	2	0
+csNmsTrapBoardCtrlMoved	3		The CellStack node control card has been moved.	1	1	2	0
+csNmsTrapBoardStatusOK	3		The CellStack node card has nominal status.	0	1	2	0
+csNmsTrapNoTSDetected	3		The CellStack node cannot detect a transport signal.	0	1	0	0
+csNmsTrapBoardEncodingError	3		The CellStack node has experienced an error in the MPEG2 encoding engine.	1	1	2	0
+csNmsTrapBoardDecodingError	3		The CellStack node  has experienced an error attempting to decode the MPEG2 data stream. This may be due to an unsupported format in the stream.	0	1	2	0
+csNmsTrapNoATMStream	4		The CellStack node has lost its ATM stream.	0	1	0	0
+csNmsTrapBoardOutOfTSSync	3		The CellStack node has lost synchronisation on its ATM transport stream.	0	1	0	0
+csNmsTrapIOPortStatusChange	3		The CellStack node has detected an IO Port status change.	1	1	2	0
+csNmsTrapIOPortMgmtConnEst	3		An IO Port management connection has been established with the CellStack node.	0	1	2	0
+csNmsTrapIOPortMgmtConnClosed	3		An IO Port management connection with the CellStack node has been closed.	1	1	2	0
+csNmsTrapIOExBoxAttached	3		The CellStack node has detected that an IO Expansion Box has been attached.	0	1	2	0
+csNmsTrapIOExBoxRemoved	3		The CellStack node has detected that an IO Expansion Box has been removed.	0	1	0	0
+csNmsTrapCardMismatch	3		Rack Card is Unknown State.	1	1	2	0
+csNmsTrapCentinal	4		  Active Recording <CAMERA ID> Has Not Received Data for 120 seconds - forcing restart	0	1	2	0
+csNmsTrapNASRAIDWarning	3		The NAS is reporting RAID warnings	0	1	2	0
+csNmsTrapMountDisabled	2		Mount <IP ADDRESS:/RaidID> is disabled by user	0	1	2	0
+csNmsTrapIndexNotReady	2		Index Not Ready	0	1	2	0
+csNmsTrapNASUnapproved	3		The NAS is not Approved. Cannot mount	0	1	2	0
+csNmsTrapMountPermission	3		Permission error on mount	1	1	2	0
+csNmsTrapStorageNotReady	5		The NAS has not yet mounted all available mounts	1	1	2	0
+csNmsTrapNewerJournal	5		Firmware is too old to read journal	0	1	2	0
+csNmsTrapSystem2KFrames	5		The System is out of 2K frames	1	1	2	0
+csNmsTrapSystem8KFrames	5		The System is out of 8K frames	1	1	2	0
+csNmsTrapNFSReadDir	5		The NFS Readdir is Greater than 255	1	1	2	0
+csNmsTrapHardError	5		The usually indicates a corrupt file system	1	1	2	0
+csNmsTrapLinkDown	4		Comms down to NAS <IP ADDRESS>	1	1	2	0
+csNmsTrapCommsDown	4		Network file system not running	1	1	2	0
+csNmsTrapIndexFull	4		The internal tag and file database is full	1	1	2	0
+csNmsTrapCreateTest	4		Cannot create a write on the mount	1	1	2	0
+csNmsTrapWriteError	4		Cannot write with 9K MTU's	0	1	2	0
+csNmsTrapReadError	4		Cannot read with 9K MTU's	0	1	2	0
+csNmsTrapNASLicense	4		Centinel cannot verify the NAS License	1	1	2	0
+csNmsTrapCannotMount	4		Cannot mount <IPADDRESS:/RaidID>	1	1	2	0
+csNmsTrapMountOverrun	4		NAS is not keeping up with the subscribed data rate. This may be the result of a degraded or failing array that has lost some performance	1	1	2	0
+csNmsTrapStorageWrite	4		Cannot write to storage (the error string after this alarm provides information on the cause). Status: No channel	1	1	2	0
+csNmsTrapATMUNI	3		ATM: UNI Failure	0	1	0	0
+csNmsTrapATMILMI	3		ATM: ILMI Failure	0	1	0	0
+csNmsTrapATMPDUSize	3		ATM: Oversize PDU discarded	0	1	0	0
+csNmsTrapATMPDUReassembly	3		ATM: PDU reassembly. Out of resources	0	1	0	0
+csNmsTrapATMIFC	3		ATM: IFC Failure	0	1	0	0
+csNmsTrapTransportResources	5		The transport layer (ATM, vprof, aprof and node) is failing because requests have outstripped resources on Centinel	0	1	0	0
+csNmsTrapUMPAlloc	5		Failed to allocate multicast channel	0	1	0	0
+csNmsTrapUMPServerOpen	4		UMP: Server Open Failed	0	1	0	0
+csNmsTrapUMPServer	4		UMP: Server Failed	0	1	2	0
+csNmsTrapIFCColdstart	4		This is normal;ly caused by a reboot	1	1	2	0
+csNmsTrapIFCSSCOP	4		IFC: No SSCOP activity - Restart ILMI	0	1	2	0
+csNmsTrapSTSResources	5		"When STS (Secure Transport Services) runs out of	0	1	0	0
+	3			0	1	0	0
+No		No	No	1	1	0	0
+csNmsTrapRTPAssignment	4		RTP: Local port assignment failed	1	1	2	0
+csNmsTrapCPULevel	4		CPU usage is too high to support additional playbacks	1	1	2	0
+csNmsTrapPlayback	4		"Playback Jump to live failed - recording is not active	0	1	0	0
+	3			0	1	0	0
+	3			0	1	0	0
+Yes		No	No	1	1	0	0
+csNmsTrapActiveRecording	4		Active Recording <CAMERA ID> Has Stopped:	1	1	2	0
+csNmsTrapRecording	4		Summary : Recording <CAMERA ID> failed: Storage: Reached max write channels	1	1	2	0
+csNmsTrapRecording	4		Summary : Recording <CAMERA ID> failed: UMP: \'peer: Resource(channel) is disabled (slot:#)\'	1	1	2	0
+csNmsTrapRecording	4		Summary : Recording <CAMERA ID> failed: UMP: \'peer: There is a fault on the channel (slot:#)\'	1	1	2	0
+csNmsTrapRecordingNoData	4		Active Recording <CAMERA ID> Is Not Receiving Data	1	1	2	0
+csNmsTrapLicense1Day	5		The System license has less than one day remaining	0	1	2	0
+csNmsTrapLicenseNone	4		The System is not licensed. It will reboot every 10 minutes	0	1	0	0
+csNmsTrapLicenseDays	4		The System license has a limited number of days remaining	0	1	0	0
+csNmsTrapActiveRestart	4		The active data has not received data for 120 Seconds. Forcing restart.	0	1	0	0
+csNmsTrapStorageUsage	4		  Storage usage has crossed Level 3	1	1	2	0
+csNmsTrapStorageUsage	3		  Storage usage has crossed Level 2	0	1	2	0
+csNmsTrapStorageUsage	2		  Storage usage has crossed Level 1	0	1	2	0
+csNmsTrapCentinalMountRebuilding	2		Mount <IPADDRESS:/RaidID> status is REBUILDING.	0	1	2	0
+csNmsTrapCentinalMountDegraded	4		Mount <IPADDRESS:/RaidID> status is DEGRADED.	1	1	2	0
+csNmsTrapCentinalMountPortDriveRemoved	4		The drive in mount <IPADDRESS:/RaidID>, port # is DRIVE-REMOVED	0	1	2	0
+csNmsTrapCentinalMountRebuildPaused	2		Mount <IPADDRESS:/RaidID> status is REBUILD-PAUSED.	0	1	2	0
+csNmsTrapCentinalMountPortNotPresent	4		The drive in mount <IPADDRESS:/RaidID>, port # is NOT-PRESENT	0	1	2	0
+csNmsTrapCentinalMountPortDegraded	4		The drive in mount <IPADDRESS:/RaidID>, port # is DEGRADED	1	1	2	0
+csNmsTrapCentinalMountPortDeviceError	4		The drive in mount <IPADDRESS:/RaidID>, port # is DEVICE-ERROR	1	1	2	0
+csNmsTrapCentinalMountInitializing	2		Mount <IPADDRESS:/RaidID> status is INITIALIZING.	0	1	2	0
+csNmsTrapCentinalMountInOperable	5		Mount <IPADDRESS:/RaidID> status is INOPERABLE.	1	1	2	0
+csNmsTrapCentinalMountDiskWarning	2		Mount <IPADDRESS:/RaidID> is reporting disk warnings. \'/storage/manage/alarm ip=<IPADDRESS:/RaidID>\' for details.	1	1	2	0
+csNmsTrapCentinalMountPortSmartFailure	2		The drive in mount <IPADDRESS:/RaidID>, port # is SMART-FAILURE	1	1	2	0
+csNmsTrapCentinalDriveRemoved	2		The drive in mount <IPADDRESS:/RaidID>, port # is DRIVE-REMOVED	0	1	2	0
+csNmsTrapCentinalDriveTemperature	3		Summary : Drive temperature 46 C exceeded user threshhold 45 C on 100.0.0.2:/RaidB port 6	1	1	2	0
+Webgate camera unavailable	4		Webgate camera '<camera ID>' unavailable	0	1	0	0
+Node Events lost, node Instance 1, Expected Instance 10	3			0	1	0	0
+	3			0	1	0	0

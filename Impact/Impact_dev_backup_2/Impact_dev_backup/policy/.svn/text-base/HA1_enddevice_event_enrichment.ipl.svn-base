@@ -1,0 +1,269 @@
+// Policy Name: enddevice_event_enrichment
+// 
+// Version    Date        Name        Description
+// 1.0        14-09-10    -        Baseline
+// 1.1        14-09-10    Tony Nisbet    Capture ServerSerial with logging (patch 4.22)
+// 
+
+log("enddevice_event_enrichment: start enddevice_event_enrichment policy.");
+log("enddevice_event_enrichment: IQLOGSTART: ServerSerial=" + @ServerSerial + " EventId=" + @EventId);
+
+// Section to generate an event in the ObjectServer if we can't talk to Circee
+Handle java.lang.Exception
+	    {
+        if((ErrorMessage LIKE "Could not connect to databases") OR (ErrorMessage LIKE "JDBC Connection Pool could not connect to either data source"))
+                {
+                Log("My error occured in policy: " + ErrorMessage);
+                objNewEvent = NewObject();
+                objNewEvent.ClearTime = 0;
+                objNewEvent.FirstRaiseTime = GetDate();
+                objNewEvent.LastRaiseTime = GetDate();
+                objNewEvent.Manager = 'Impact';
+                objNewEvent.Severity = 5;
+                objNewEvent.FirstOccurrence = GetDate();
+                objNewEvent.LastOccurrence = GetDate();
+                objNewEvent.Type = 1;
+                objNewEvent.ParentChildFlag = 100;
+                objNewEvent.ImpactFlag = 100;
+                objNewEvent.Flash = 1;
+                objNewEvent.Node = "Circee Database";
+                //Added OwnerUID by sk on 24022009, patch - 3.50.1
+                objNewEvent.OwnerUID = 65534;
+                objNewEvent.AlertGroup = "Database Unavailable";
+                objNewEvent.Identifier = "Circee_Database_Unavailable - error " + ErrorMessage;
+                objNewEvent.Summary = "Circee Database unavailable from Impact " + ErrorMessage;
+                objMyEvent = AddDataItem('ha_ncoms_impact_events', objNewEvent);
+
+                }
+        }
+
+// Set the ImpactFlag to processing
+@ImpactFlag = 4;
+ReturnEvent(EventContainer);
+log("enddevice_event_enrichment: looking up sdp location for " + @Node + " with NodeAlias " + @NodeAlias + " and ET " + @EquipmentType);
+// Extract the road from the node alias
+SDPNum = 0;
+if(@NodeAlias like "^.*/[0-9]+[A-Z].*")
+    {
+    myMotorway = RExtract(@NodeAlias,"^(.*)/[0-9]+[A-Z].*");
+    myGeogAddress = RExtract(@NodeAlias,"^.*/([0-9]+[A-Z].*)");
+    Filter = "(EQUIP_TYPE = '"+@EquipmentType+"') AND (MOTORWAY_REF = '"+myMotorway+"') AND (ASSET_GEOG_ADDRESS='"+myGeogAddress+"')";
+    log("enddevice_event_enrichment: " + Filter);
+    SDPOrgNodes = GetByFilter( 'Circee_Host_Table', Filter, false );
+    SDPNum = length( SDPOrgNodes ); 
+    log("enddevice_event_enrichment: GetByFilter successful. Found "+SDPNum+" dataItem(s) using NodeAlias."); 
+    }
+
+
+
+If ( SDPNum > 0 ) {
+  log( "enddevice_event_enrichment:  assigning SDPLocation " + SDPOrgNodes[0].SDP_LOCATION );
+    if(@SDPLocation = '')
+        {
+        @SDPLocation = ''+ SDPOrgNodes[0].SDP_LOCATION;
+        }
+    if(@ServiceType = '')
+        {
+          @ServiceType = '' + SDPOrgNodes[0].SERVICE_TYPE_ID;
+        }
+    if(@ServiceCategory = '')
+        {
+          if ( @ServiceType like "^[0-9]+.*" )
+            {
+                @ServiceCategory = RExtract(@ServiceType, "^([0-9]+).*");
+            }
+        }
+    if(@TSA = '')
+        {
+        @TSA = '' + SDPOrgNodes[0].TS_A;
+        }
+    if(@TSB = '')
+        {
+        @TSB = '' + SDPOrgNodes[0].TS_B;
+        }
+    if(@RCCArea = '')
+        {
+        @RCCArea = '' + SDPOrgNodes[0].RCC_AREA_ABBR;
+        }
+    if(@AssetElectronicAddress = '')
+        {    
+          @AssetElectronicAddress = '' + SDPOrgNodes[0].ASSET_ELECTRONIC_ADDRESS;
+        }
+/// these asset fields were missing ....
+    if(@AssetBarCode = '')
+        {
+        @AssetBarCode = SDPOrgNodes[0].ASSET_BARCODE_NO;
+        }
+    if(@AssetCategory = '')
+        {
+        @AssetCategory = SDPOrgNodes[0].CATEGORY_ABBR;
+        }
+    if(@AssetID = '')
+        {
+        @AssetID = SDPOrgNodes[0].ASSET_ID;
+        }
+    if(@AssetMotorway = '')
+        {
+        @AssetMotorway = SDPOrgNodes[0].MOTORWAY_REF;
+        }
+    if(@AssetType = '')
+        {
+        @AssetType = SDPOrgNodes[0].TYPE_ABBR;
+        }
+    if(@AssetVariant = '')
+        {
+        @AssetVariant = SDPOrgNodes[0].VARIANT_ABBR;
+        }
+    if(@AssetGeographicAddress = '')
+        {
+        @AssetGeographicAddress = SDPOrgNodes[0].ASSET_GEOG_ADDRESS;
+        }
+    if(@InServiceStatus = '')
+        {
+        @InServiceStatus = SDPOrgNodes[0].ASSET_STATUS_DESC;
+        }
+    if(@PlannedOutageFlag = 0)
+        {
+        //if(@InServiceStatus = 'Planned')
+        if(@InServiceStatus = 'In Service - Planned Outage')
+                {
+                @PlannedOutageFlag = 1;
+                }
+        }
+    if(@TPRLocation = '')
+        {
+        @TPRLocation = SDPOrgNodes[0].TPR_Location;
+        }
+
+/// end of missing asset fields//
+
+  // We have an electronic address so lookup STIRef
+  Filter = "ELECTRONIC_ADDRESS='"+@AssetElectronicAddress+"'";
+  EndOrgNodes = GetByFilter('Circee_End_Device_STI_Table', Filter, false);
+  EndNum = length(EndOrgNodes); 
+  If ( EndNum > 0 ) {
+
+    // Create array of STIs from EndOrgNodes
+    EndOrgSTIs = {};
+    a = 0;
+    while (a < EndNum)
+    {
+        EndOrgSTIs = EndOrgSTIs + EndOrgNodes[a].STI_ID;
+        a = a + 1;
+    }
+
+    // Create distinct array of the STI IDs
+    DistinctSTIs = distinct(EndOrgSTIs);
+    NumDistinct = length(DistinctSTIs);
+
+    log("enddevice_event_enrichment: STIRef " + EndOrgNodes[0].STI_ID );
+    log("enddevice_event_enrichment: distinct STIRef " + DistinctSTIs[0] );
+
+    // Now build up a comma separated list of them
+    @STINum = NumDistinct;
+    if(@STIRef = '')
+        {
+        @STIRef = '' + DistinctSTIs[0];
+        a = 1;
+        while (a < NumDistinct)
+            {
+            @STIRef = @STIRef + "," + DistinctSTIs[a];
+            a = a + 1;
+            }
+        }
+
+    log("enddevice_event_enrichment: Find highest impact STI value");
+    if(@STI_HA_Impact = 0)
+        {
+        Delimiter = ",";    
+        STI_HA_Array = Split(EndOrgNodes[0].STI_Impact, Delimiter);
+        numSTIs = length(STI_HA_Array);
+        if(numSTIs > 0)
+            {
+            b = 0;
+            highestSTI = 0;
+            while (b < numSTIs)
+                {
+                if(int(STI_HA_Array[b]) > highestSTI)
+                    {
+                    highestSTI = int(STI_HA_Array[b]);
+                    }
+                b = b + 1;
+                }
+            }
+        @STI_HA_Impact = highestSTI;
+        }
+    
+  }
+  Else {
+    log("enddevice_event_enrichment: STIRef Not Found");
+    if(@STIRef = '')
+        {
+        @STIRef = 'Not found';
+        @STINum = 0;
+        @STI_HA_Impact = 1;
+        }
+  }
+  @ImpactFlag = 2;
+} 
+Else {
+  log("enddevice_event_enrichment:  No SDPLocation found");
+    if(@SDPLocation = '')
+        {
+        @SDPLocation = 'Not found';
+        }
+    if(@ServiceType = '')
+        {
+          @ServiceType = 'Not found';
+        }
+    if(@ServiceCategory = '')
+        {
+        @ServiceCategory = 'Not found';
+        }
+    if(@TSA = '')
+        {
+        @TSA = 'Not found';
+        }
+    if(@TSB = '')
+        {
+        @TSB = 'Not found';
+        }
+    if(@RCCArea = '')
+        {
+        @RCCArea = 'Not found';
+        }
+    if(@STIRef = '')
+        {
+        @STIRef = 'Not found';
+        @STINum = 0;
+        @STI_HA_Impact = 1;
+        }
+
+  @ImpactFlag = 1;
+}
+
+log("enddevice_event_enrichment: looking up end device information using " + @AssetElectronicAddress);
+spanOrgNodes = GetByFilter('Reporter_LocalSpan', "(ELECTRONIC_ADDRESS='"+@AssetElectronicAddress+"')",false);
+numSpan = length(spanOrgNodes);
+If ( numSpan > 0 ) {
+    if(@LocalChain = '')
+        {
+        @LocalChain='' + spanOrgNodes[0].LOCAL_SPAN;
+        }
+    if(@EndDeviceNum = 0)
+        {
+        @EndDeviceNum = spanOrgNodes[0].NUMBER_OF_END_DEVICES;
+        }
+} 
+Else {
+    if(@LocalChain = '')
+        {
+          @LocalChain='';
+        @EndDeviceNum = 0;    
+        }
+}
+
+ReturnEvent(EventContainer);
+log("enddevice_event_enrichment: IQLOGFINISH: ServerSerial=" + @ServerSerial + " EventId=" + @EventId);
+log("enddevice_event_enrichment: stop.");
+

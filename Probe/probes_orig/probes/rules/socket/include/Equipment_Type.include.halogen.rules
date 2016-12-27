@@ -1,0 +1,79 @@
+if ( regmatch ( $line_00, "Equipment_Type" ) ) { 
+$Equipment_Type= extract($line_00, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_01, "Equipment_Type" ) ) { 
+$Equipment_Type= extract($line_01, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_02, "Equipment_Type" ) ) { 
+$Equipment_Type= extract($line_02, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_03, "Equipment_Type" ) ) { 
+$Equipment_Type= extract($line_03, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_04, "Equipment_Type" ) ) { 
+$Equipment_Type= extract($line_04, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_05, "Equipment_Type" ) ) { 
+$Equipment_Type= extract($line_05, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_06, "Equipment_Type" ) ) { 
+$Equipment_Type= extract($line_06, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_07, "Equipment_Type" ) ) { 
+$Equipment_Type= extract($line_07, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_08, "Equipment_Type" ) ) { 
+$Equipment_Type= extract($line_08, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_09, "Equipment_Type" ) ) { 
+$Equipment_Type= extract($line_09, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_10, "Equipment_Type" ) ) { 
+$Equipment_Type= extract($line_10, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_11, "Equipment_Type" ) ) { 
+$Equipment_Type= extract($line_11, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_12, "Equipment_Type" ) ) { 
+$Equipment_Type= extract($line_12, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_13, "Equipment_Type" ) ) { 
+$Equipment_Type= extract($line_13, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_14, "Equipment_Type" ) ) { 
+$Equipment_Type= extract($line_14, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_15, "Equipment_Type" ) ) { 
+$Equipment_Type= extract($line_15, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_16, "Equipment_Type" ) ) { 
+$Equipment_Type= extract($line_16, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_17, "Equipment_Type" ) ) { 
+$Equipment_Type= extract($line_17, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_18, "Equipment_Type" ) ) { 
+$Equipment_Type= extract($line_18, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_19, "Equipment_Type" ) ) { 
+$Equipment_Type= extract($line_19, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_20, "Equipment_Type" ) ) { 
+$Equipment_Type= extract($line_20, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_21, "Equipment_Type" ) ) { 
+$Equipment_Type= extract($line_21, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_22, "Equipment_Type" ) ) { 
+$Equipment_Type= extract($line_22, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_23, "Equipment_Type" ) ) { 
+$Equipment_Type= extract($line_23, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_24, "Equipment_Type" ) ) { 
+$Equipment_Type= extract($line_24, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_25, "Equipment_Type" ) ) { 
+$Equipment_Type= extract($line_25, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_26, "Equipment_Type" ) ) {
+$Equipment_Type= extract($line_26, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_27, "Equipment_Type" ) ) {
+$Equipment_Type= extract($line_27, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_28, "Equipment_Type" ) ) {
+$Equipment_Type= extract($line_28, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_29, "Equipment_Type" ) ) {
+$Equipment_Type= extract($line_29, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_30, "Equipment_Type" ) ) {
+$Equipment_Type= extract($line_30, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_31, "Equipment_Type" ) ) {
+$Equipment_Type= extract($line_31, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_32, "Equipment_Type" ) ) {
+$Equipment_Type= extract($line_32, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_33, "Equipment_Type" ) ) {
+$Equipment_Type= extract($line_33, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_34, "Equipment_Type" ) ) {
+$Equipment_Type= extract($line_34, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_35, "Equipment_Type" ) ) {
+$Equipment_Type= extract($line_35, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_36, "Equipment_Type" ) ) {
+$Equipment_Type= extract($line_36, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_37, "Equipment_Type" ) ) {
+$Equipment_Type= extract($line_37, "Equipment_Type=(.*)")
+} else if ( regmatch ( $line_38, "Equipment_Type" ) ) {
+$Equipment_Type= extract($line_38, "Equipment_Type=(.*)")
+}   

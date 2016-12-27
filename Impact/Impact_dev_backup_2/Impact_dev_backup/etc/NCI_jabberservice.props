@@ -1,0 +1,22 @@
+#This file was written by Impact Server.
+#Tue Jun 29 11:38:43 EDT 2004
+impact.jabberservice.password=
+impact.jabberservice.yahoousername=
+impact.jabberservice.jabberpacket.debug=false
+impact.jabberservice.username=
+impact.jabberservice.nickname=impact
+impact.jabberservice.icqpassword=
+impact.jabberservice.icqserviceid=
+impact.jabberservice.jabberserver=
+impact.jabberservice.icqusername=
+impact.jabberservice.jabberport=5222
+impact.jabberservice.aimusername=
+impact.jabberservice.ssl=false
+impact.jabberservice.msnpassword=
+impact.jabberservice.sendim.debug=false
+impact.jabberservice.msnserviceid=
+impact.jabberservice.msnusername=
+impact.jabberservice.yahooserviceid=
+impact.jabberservice.aimpassword=
+impact.jabberservice.yahoopassword=
+impact.jabberservice.aimserviceid=

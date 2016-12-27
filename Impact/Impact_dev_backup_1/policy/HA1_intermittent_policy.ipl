@@ -1,0 +1,170 @@
+log("intermittent_policy: ***** Start of intermittent_policy *****");
+
+intHistNum = 10;
+strSource = "reporter_datasource";
+strType = "ha_ncoms_status_type";
+strQueryTime = LocalTime( (GetDate() - 2592000), "dd-MMM-yy HH:mm:ss");
+
+log("intermittent_policy: 1 month ago is: " + strQueryTime);
+
+strQuery = "select count(Summary) as num, Node, NodeAlias, Summary, HalLogType, AlertGroup, EquipmentType from reporter_status where Manager = 'Halogen' and Class = 50000 and HalStatus <> 'INTER' and Type = 1 and Severity = 0 and FirstRaiseTime > ClearTime - 1/288 and FirstRaiseTime > to_date('" + strQueryTime + "', 'DD-MM-YY HH24:MI:SS') group by Node, NodeAlias, Summary, HalLogType, AlertGroup, EquipmentType";
+
+log("intermittent_policy: Query is: " + strQuery);
+
+HistoryOrgNodes = DirectSQL(strSource, strQuery, false);
+intNumRows = length(HistoryOrgNodes);
+
+log("intermittent_policy: Query returned " + intNumRows + " row(s)");
+
+i = 0;
+while (i < intNumRows)
+    {
+    log("intermittent_policy: Number of occurrences of event " + i + " is " + HistoryOrgNodes[i].num + ". Threshold is " + intHistNum);
+    if (HistoryOrgNodes[i].num >= intHistNum)
+        {
+        // Changed under patch 3.82
+        //strQuery = "update reporter_status set LocalRootObj = HalStatus, HalStatus = 'INTER' where Class = 50000 and Type = 1 and Severity = 0 and FirstRaiseTime > (ClearTime - 1/288) and FirstRaiseTime > to_date('" + strQueryTime + "', 'DD-MM-YY HH24:MI:SS') and  Node = '" + HistoryOrgNodes[i].Node + "' and Summary = '" + HistoryOrgNodes[i].Summary + "'" ;
+        if (HistoryOrgNodes[i].Summary like 'UNOBTAINABLE')
+        {
+            strQuery = "update reporter_status set LocalRootObj = HalStatus, HalStatus = 'INTER' where Manager = 'Halogen' and Class = 50000 and Type = 1 and Severity = 0 and FirstRaiseTime > (ClearTime - 1/288) and FirstRaiseTime > to_date('" + strQueryTime + "', 'DD-MM-YY HH24:MI:SS') and  Node = '" + HistoryOrgNodes[i].Node + "' and Summary like 'UNOBTAINABLE%'" ;
+        }
+        else
+        {
+            strQuery = "update reporter_status set LocalRootObj = HalStatus, HalStatus = 'INTER' where Manager = 'Halogen' and Class = 50000 and Type = 1 and Severity = 0 and FirstRaiseTime > (ClearTime - 1/288) and FirstRaiseTime > to_date('" + strQueryTime + "', 'DD-MM-YY HH24:MI:SS') and  Node = '" + HistoryOrgNodes[i].Node + "' and Summary = '" + HistoryOrgNodes[i].Summary + "'" ;
+        }
+        // End of Change under patch 3.82
+        log("intermittent_policy: *** Update Query: " + strQuery);
+        DirectSQL(strSource, strQuery, false);
+        DirectSQL(strSource, "COMMIT", false);
+        log("intermittent_policy: *** Query succeeded ***");
+
+        log("insert alarm EquipmentType = " + HistoryOrgNodes[i].EquipmentType);
+        objNewEvent = NewObject();
+        objNewEvent.Class=50000;
+        objNewEvent.AlertGroup=HistoryOrgNodes[i].AlertGroup;
+        //Added by TA on 23/01/2009 for patch 3.83 developed by SK
+        objNewEvent.AlertKey= "Int Crit 3";
+        objNewEvent.ClearTime=0;
+        log("HistoryOrgNodes[i].EquipmentType =" + HistoryOrgNodes[i].EquipmentType);
+        objNewEvent.EquipmentType=HistoryOrgNodes[i].EquipmentType;
+        objNewEvent.FirstRaiseTime=getdate();
+        objNewEvent.LastRaiseTime=getdate();
+        objNewEvent.HalDateTime=0;
+        objNewEvent.HalLogType=HistoryOrgNodes[i].HalLogType;
+        objNewEvent.HalStatus='INTER';
+
+        //Added by TA on 23/01/2009 for patch 3.83 developed by SK
+        //objNewEvent.Identifier=HistoryOrgNodes[i].Node + '|' + HistoryOrgNodes[i].Summary + '|' + HistoryOrgNodes[i].AlertGroup;
+        objNewEvent.Identifier=HistoryOrgNodes[i].Node + '|' + HistoryOrgNodes[i].AlertGroup + '|' +  "Int Crit 3" + '|' + 1;
+        objNewEvent.InterFlag=2;
+        objNewEvent.Manager='Omnibus';
+        objNewEvent.Agent=HistoryOrgNodes[i].Agent;
+        objNewEvent.Node=HistoryOrgNodes[i].Node;
+        objNewEvent.NodeAlias=HistoryOrgNodes[i].NodeAlias;
+        objNewEvent.OriginalSeverity=5;
+        objNewEvent.OwnerGID=0;
+        objNewEvent.OwnerUID=65534;
+        objNewEvent.Severity=5;
+        objNewEvent.ExpireTime=172800;
+        objNewEvent.Summary="Int Crit 3: " + HistoryOrgNodes[i].Summary;
+        objNewEvent.X733SpecificProb='Fault';
+        objNewEvent.FirstOccurrence=GetDate();
+        objNewEvent.LastOccurrence=GetDate();
+        objNewEvent.ActionRequired = 1;
+        objNewEvent.Type=1;
+        objNewEvent.LocalRootObj = 'INTER';
+        objNewEvent.Agent = 'Halogen';
+
+        log("intermittent_policy: *** Trying to insert alarm ***");
+        objMyEvent = AddDataItem(strType, objNewEvent);
+        log("intermittent_policy: *** Alarm inserted ***");
+
+        }
+    i = i + 1;
+    }
+
+log("intermittent_policy: Now check synthetic events to see if the intermittent event has been ok for 48 hours");
+
+log("intermittent_policy: Get list of synthetic intermittent events");
+
+//synthInterEvents = GetByFilter('ha_ncoms_impact_events',"(Type = 1) and (InterFlag = 2) and (Severity > 0) and (Manager = 'Omnibus') and (HalStatus = 'INTER')",false);
+//synthInterEvents = GetByFilter('ha_ncoms_impact_events',"(Summary like 'Int Crit 3') and (Type = 1) and (InterFlag = 2) and (Severity > 0) and (Manager = 'Omnibus') and (HalStatus = 'INTER')",false);
+
+synthInterEvents = GetByFilter('ha_ncoms_impact_events',"(Summary like 'Int Crit 3') and (Type = 1) and (Severity = 5) and (Manager = 'Omnibus')",false);
+
+
+numSynthInterEvents = length(synthInterEvents);
+
+log("intermittent_policy: Found " + numSynthInterEvents + " synthetic intermittent events that need to be checked.");
+
+if(numSynthInterEvents > 0)
+    {
+    strQueryTime2 = LocalTime( (GetDate() - 172800), "dd-MMM-yy HH:mm:ss");
+    x = 0;
+    while(x < numSynthInterEvents)
+        {
+        // Changed under patch 3.82
+        //strQuery2 = "select count(Summary) as num, Node, NodeAlias, Summary, HalLogType, AlertGroup, EquipmentType from reporter_status where Node = '"+synthInterEvents[x].Node+"' and NodeAlias = '"+synthInterEvents[x].NodeAlias+"' and AlertGroup = '"+synthInterEvents[x].AlertGroup+"' and EquipmentType = '"+synthInterEvents[x].EquipmentType+"' and HalLogType = "+synthInterEvents[x].HalLogType+" and Summary = '"+synthInterEvents[x].Summary+"' and Class = 50000 and Type = 1 and Severity = 0 and FirstRaiseTime > (ClearTime - 1/288) and FirstRaiseTime > to_date('" + strQueryTime2 + "', 'DD-MM-YY HH24:MI:SS') group by Node, NodeAlias, Summary, HalLogType, AlertGroup, EquipmentType";
+        if (synthInterEvents[x].Summary like 'Int Crit 3: UNOBTAINABLE')
+        {
+            strQuery2 = "select count(Summary) as num, Node, NodeAlias, Summary, HalLogType, AlertGroup, EquipmentType from reporter_status where Node = '"+synthInterEvents[x].Node+"' and NodeAlias = '"+synthInterEvents[x].NodeAlias+"' and AlertGroup = '"+synthInterEvents[x].AlertGroup+"' and EquipmentType = '"+synthInterEvents[x].EquipmentType+"' and HalLogType = "+synthInterEvents[x].HalLogType + " and Summary like 'UNOBTAINABLE%' and Manager = 'Halogen' and Class = 50000 and Type = 1 and Severity = 0 and FirstRaiseTime > (ClearTime - 1/288) and FirstRaiseTime > to_date('" + strQueryTime2 + "', 'DD-MM-YY HH24:MI:SS') group by Node, NodeAlias, Summary, HalLogType, AlertGroup, EquipmentType";
+        }
+        else
+        {
+            strQuery2 = "select count(Summary) as num, Node, NodeAlias, Summary, HalLogType, AlertGroup, EquipmentType from reporter_status where Node = '"+synthInterEvents[x].Node+"' and NodeAlias = '"+synthInterEvents[x].NodeAlias+"' and AlertGroup = '"+synthInterEvents[x].AlertGroup+"' and EquipmentType = '"+synthInterEvents[x].EquipmentType+"' and HalLogType = "+synthInterEvents[x].HalLogType+" and Summary = '"+synthInterEvents[x].Summary+"' and Manager = 'Halogen' and Class = 50000 and Type = 1 and Severity = 0 and FirstRaiseTime > (ClearTime - 1/288) and FirstRaiseTime > to_date('" + strQueryTime2 + "', 'DD-MM-YY HH24:MI:SS') group by Node, NodeAlias, Summary, HalLogType, AlertGroup, EquipmentType";
+        }
+        // End of change under patch 3.82
+
+        log("intermittent_policy: *** 48 hour Query: " + strQuery2);
+        twoDaysOrgNodes = DirectSQL(strSource, strQuery2, false);
+        twoDaysNumRows = length(twoDaysOrgNodes);
+
+        log("intermittent_policy: 48hr Query returned " + twoDaysNumRows + " row(s)");
+
+        if(twoDaysNumRows = 0)
+            {
+            log("intermittent_policy: If found 0 events in 48 hours insert a clearing event");
+            objNewClear = NewObject();
+            objNewClear.Class=50000;
+            objNewClear.AlertGroup=synthInterEvents[x].AlertGroup;
+            //Added by TA on 23/01/2009 for patch 3.83 developed by SK
+            //objNewClear.AlertKey= "Int Crit 3";
+            objNewClear.ClearTime=GetDate();
+            objNewClear.EquipmentType=synthInterEvents[x].EquipmentType;
+            objNewClear.FirstRaiseTime=getdate();
+            objNewClear.LastRaiseTime=getdate();
+            objNewClear.HalDateTime=0;
+            objNewClear.HalLogType=synthInterEvents[x].HalLogType;
+            objNewClear.HalStatus='INTER';
+            //Added by TA on 23/01/2009 for patch 3.83 developed by SK
+            //objNewClear.Identifier=synthInterEvents[x].Node + '|' + synthInterEvents[x].Summary + '|' + synthInterEvents[x].AlertGroup + '| CLEAR';
+            objNewClear.Identifier=synthInterEvents[x].Node + '|' + synthInterEvents[x].AlertGroup + '|' +  "Int Crit 3" + '|' + 2;
+
+            objNewClear.Manager='Omnibus';
+            objNewClear.Agent=synthInterEvents[x].Agent;
+            objNewClear.Node=synthInterEvents[x].Node;
+            objNewClear.NodeAlias=synthInterEvents[x].NodeAlias;
+            objNewClear.OriginalSeverity=2;
+            objNewClear.OwnerGID=0;
+            objNewClear.OwnerUID=65534;
+            objNewClear.Severity=2;
+            // Changed Summary under patch 3.82
+            //objNewClear.Summary='Clear - Int Crit 3: ' + synthInterEvents[x].Summary;
+            objNewClear.Summary='Clear - ' + synthInterEvents[x].Summary;
+            objNewClear.FirstOccurrence=GetDate();
+            objNewClear.LastOccurrence=GetDate();
+            objNewClear.ActionRequired = 1;
+            objNewClear.Type=2;
+            objNewClear.LocalRootObj = 'INTER';
+            objNewEvent.Agent = 'Halogen';
+
+        log("intermittent_policy: *** Trying to insert clearing event ***");
+        objMyClear = AddDataItem(strType, objNewClear);
+        log("intermittent_policy: *** Clearing event inserted ***");
+            }    
+        x = x + 1;
+        }
+    }
+
+log("intermittent_policy: ***** End of intermittent_policy *****");
+

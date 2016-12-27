@@ -1,0 +1,28 @@
+#This file was written by Impact Server.
+#Fri Aug 14 14:31:08 EDT 2009
+impact.policy.9=MWM
+impact.policy.8=MWM_Properties
+impact.policy.7=Opview_Add1TWin
+impact.policy.6=Opview_AddRWin
+impact.policy.5=Opview_mwms
+impact.policy.4=Opview_onetwins
+impact.policy.3=Opview_openwins
+impact.policy.2=Opview_rdomwins
+impact.policy.1=Opview_rdowwins
+impact.datasrc.numdatasrc=1
+impact.policy.0=Opview_rwdomwins
+impact.datatype.numdatatype=1
+impact.opview.numopview=8
+impact.opview.7=Add1TWin
+impact.policy.numpolicy=10
+impact.opview.6=AddRWin
+impact.datatype.0=mm_windows
+impact.opview.5=mwms
+impact.opview.4=onetwins
+impact.opview.3=openwins
+impact.opview.2=rdomwins
+impact.opview.1=rdowwins
+impact.opview.0=rwdomwins
+impact.datasrc.0=ReportsHSQLDB
+impact.service.numservice=1
+impact.service.0=MWMActivator

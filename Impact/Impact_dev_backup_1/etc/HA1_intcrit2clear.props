@@ -1,0 +1,6 @@
+#This file was written by Impact Server.
+#Fri Nov 12 11:22:28 GMT 2010
+impact.intcrit2clear.autostartup=true
+impact.intcrit2clear.interval=900
+impact.intcrit2clear.logtofile=true
+impact.intcrit2clear.policyname=intermittent2_policy

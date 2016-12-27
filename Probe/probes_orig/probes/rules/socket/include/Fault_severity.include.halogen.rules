@@ -1,0 +1,79 @@
+if ( regmatch ( $line_00, "Fault_severity" ) ) { 
+$Fault_severity= extract($line_00, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_01, "Fault_severity" ) ) { 
+$Fault_severity= extract($line_01, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_02, "Fault_severity" ) ) { 
+$Fault_severity= extract($line_02, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_03, "Fault_severity" ) ) { 
+$Fault_severity= extract($line_03, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_04, "Fault_severity" ) ) { 
+$Fault_severity= extract($line_04, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_05, "Fault_severity" ) ) { 
+$Fault_severity= extract($line_05, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_06, "Fault_severity" ) ) { 
+$Fault_severity= extract($line_06, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_07, "Fault_severity" ) ) { 
+$Fault_severity= extract($line_07, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_08, "Fault_severity" ) ) { 
+$Fault_severity= extract($line_08, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_09, "Fault_severity" ) ) { 
+$Fault_severity= extract($line_09, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_10, "Fault_severity" ) ) { 
+$Fault_severity= extract($line_10, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_11, "Fault_severity" ) ) { 
+$Fault_severity= extract($line_11, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_12, "Fault_severity" ) ) { 
+$Fault_severity= extract($line_12, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_13, "Fault_severity" ) ) { 
+$Fault_severity= extract($line_13, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_14, "Fault_severity" ) ) { 
+$Fault_severity= extract($line_14, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_15, "Fault_severity" ) ) { 
+$Fault_severity= extract($line_15, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_16, "Fault_severity" ) ) { 
+$Fault_severity= extract($line_16, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_17, "Fault_severity" ) ) { 
+$Fault_severity= extract($line_17, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_18, "Fault_severity" ) ) { 
+$Fault_severity= extract($line_18, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_19, "Fault_severity" ) ) { 
+$Fault_severity= extract($line_19, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_20, "Fault_severity" ) ) { 
+$Fault_severity= extract($line_20, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_21, "Fault_severity" ) ) { 
+$Fault_severity= extract($line_21, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_22, "Fault_severity" ) ) { 
+$Fault_severity= extract($line_22, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_23, "Fault_severity" ) ) { 
+$Fault_severity= extract($line_23, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_24, "Fault_severity" ) ) { 
+$Fault_severity= extract($line_24, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_25, "Fault_severity" ) ) { 
+$Fault_severity= extract($line_25, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_26, "Fault_severity" ) ) {
+$Fault_severity= extract($line_26, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_27, "Fault_severity" ) ) {
+$Fault_severity= extract($line_27, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_28, "Fault_severity" ) ) {
+$Fault_severity= extract($line_28, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_29, "Fault_severity" ) ) {
+$Fault_severity= extract($line_29, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_30, "Fault_severity" ) ) {
+$Fault_severity= extract($line_30, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_31, "Fault_severity" ) ) {
+$Fault_severity= extract($line_31, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_32, "Fault_severity" ) ) {
+$Fault_severity= extract($line_32, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_33, "Fault_severity" ) ) {
+$Fault_severity= extract($line_33, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_34, "Fault_severity" ) ) {
+$Fault_severity= extract($line_34, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_35, "Fault_severity" ) ) {
+$Fault_severity= extract($line_35, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_36, "Fault_severity" ) ) {
+$Fault_severity= extract($line_36, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_37, "Fault_severity" ) ) {
+$Fault_severity= extract($line_37, "Fault_severity=(.*)")
+} else if ( regmatch ( $line_38, "Fault_severity" ) ) {
+$Fault_severity= extract($line_38, "Fault_severity=(.*)")
+}   

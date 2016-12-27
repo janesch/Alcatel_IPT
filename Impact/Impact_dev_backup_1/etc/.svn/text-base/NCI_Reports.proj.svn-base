@@ -1,0 +1,34 @@
+#This file was written by Impact Server.
+#Mon Feb 11 15:02:15 MST 2008
+impact.datatype.19=REPORT_PolicyProfile
+impact.datatype.18=REPORT_PolicyProcessMappings
+impact.datatype.17=REPORT_PolicyErrorDetails
+impact.policy.4=REPORT_AddPolicyProcessMapping
+impact.datatype.16=REPORT_PolicyError
+impact.policy.3=REPORT_RecordActionProfile
+impact.datatype.15=REPORT_PolicyEfficiencyDetails
+impact.policy.2=REPORT_RecordEvent
+impact.datatype.14=REPORT_PolicyEfficiency
+impact.policy.1=REPORT_RecordPolicyProfile
+impact.datasrc.numdatasrc=1
+impact.datatype.13=REPORT_Policy
+impact.policy.0=REPORT_TimeReference
+impact.datatype.12=REPORT_OperatorEfficiencyDetails
+impact.datatype.numdatatype=23
+impact.datatype.11=REPORT_OperatorEfficiency
+impact.datatype.9=REPORT_NodeEfficiency
+impact.datatype.10=REPORT_NodeEfficiencyDetails
+impact.datatype.8=REPORT_ImpactROI
+impact.datatype.7=REPORT_EventStatus
+impact.datatype.6=REPORT_EventNames
+impact.datatype.5=REPORT_AuditAck
+impact.datatype.4=REPORT_ActionProfile
+impact.datatype.3=REPORT_ActionErrorDetails
+impact.datatype.2=REPORT_ActionError
+impact.datatype.1=REPORT_ActionEfficiencyDetails
+impact.policy.numpolicy=5
+impact.datatype.0=REPORT_ActionEfficiency
+impact.datatype.22=REPORT_TimeReference
+impact.datatype.21=REPORT_ROIProcess
+impact.datatype.20=REPORT_PolicyROIProcessNameMap
+impact.datasrc.0=ReportsHSQLDB

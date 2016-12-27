@@ -1,0 +1,246 @@
+// Policy Name: LSP_LINK
+// 
+// Version	Date        Name        Description
+// 1.0        14-09-10    -        Baseline
+// 1.1        14-09-10    Tony Nisbet    Capture ServerSerial with logging (patch 4.22)
+//
+
+Log("LSP_LINK: Start");
+log("LSP_LINK: IQLOGSTART: ServerSerial=" + @ServerSerial + " EventId=" + @EventId);
+
+log("LSP_LINK: Node = " + @Node) ;
+Log("LSP_LINK: AlertKey = " + @AlertKey);
+Log("LSP_LINK: PhysicalCard = " + @PhysicalCard);
+
+// DB - LOGGING ADDED 
+log ("**** LSP_LINK: Start.  Serial=" + @Serial + " TTFlag=" + @TTFlag + " Service_Impact: service affecting set to " + @ServiceAffecting + " equipment type set to " + @EquipmentType + " Node is " + @Node); 
+
+if(@Severity > 0)
+    {
+    @ResilienceAffecting = 1;
+    @ImpactFlag = 1;
+
+    // LSP_ID = RExtract(@AlertKey,"^lsp (.*) .*");
+    LSP_ID = @PhysicalCard;
+    Log("LSP_LINK: Link ID = " + LSP_ID);
+
+    LSP=GetByFilter('Circee_LSP_Table', "(LSP_ID='"+LSP_ID+"')", false);
+    LSPEvents="";
+
+    if(Length(LSP)>0)
+    // The LSP is a primary LSP for a link and therefore the backup links need to be checked.
+        {
+        //Start Primary LSP
+        Log("LSP_LINK: Prim "+LSP[0].LSP_ID);
+        Log("LSP_LINK: BackUp 1 "+LSP[0].LSP_BACKUP_1);
+        Log("LSP_LINK: BackUp 2 "+LSP[0].LSP_BACKUP_2);
+        Log("LSP_LINK: BackUp 3 "+LSP[0].LSP_BACKUP_3);
+        Log("LSP_LINK: Primary LSP");
+        if(LSP[0].LSP_BACKUP_1<>"")
+            {
+            //Test for Alarms for Back Up LSP 1 
+            OSOrgNodes=GetByFilter('ha_ncoms_impact_events',"(Severity > 0) AND (AlertKey like '^lsp "+LSP[0].LSP_BACKUP_1+" .*') AND (X733SpecificProb = 'LspDown')", false);
+            Log("LSP_LINK: Events "+OSOrgNodes);
+            if(length(OSOrgNodes)>0)
+                {
+                @ServiceAffecting=1;
+                @AlarmClass = "LspAndBackupLspDown";
+                @ResilienceAffecting=0;
+                LSPEvents=OSOrgNodes;
+                Log("LSP_LINK: LSP down alarm");
+                } 
+            else {
+                Log("LSP_LINK: No LSP down alarm");
+                }
+            }
+        if(LSP[0].LSP_BACKUP_2<>"")
+            {
+            //Test for Alarms for Back Up LSP 2 
+            OSOrgNodes=GetByFilter('ha_ncoms_impact_events',"(Severity > 0) AND (AlertKey like '^lsp "+LSP[0].LSP_BACKUP_2+" .*') AND (X733SpecificProb = 'LspDown')", false);
+            Log("LSP_LINK: Events "+OSOrgNodes);
+            if(length(OSOrgNodes)>0)
+                {
+                @ServiceAffecting=1;
+                @AlarmClass = "LspAndBackupLspDown";
+                @ResilienceAffecting=0;
+                LSPEvents=OSOrgNodes;
+                Log("LSP_LINK: LSP down alarm");
+                } else {
+                Log("LSP_LINK: No LSP down alarm");
+                }
+            } 
+        if(LSP[0].LSP_BACKUP_3<>"")
+            {
+            //Test for Alarms for Back Up LSP 3 
+            OSOrgNodes=GetByFilter('ha_ncoms_impact_events',"(Severity > 0) AND (AlertKey like '^lsp "+LSP[0].LSP_BACKUP_3+" .*') AND (X733SpecificProb = 'LspDown')", false);
+            Log("LSP_LINK: Events "+OSOrgNodes);
+            if(length(OSOrgNodes)>0)
+                {
+                @ServiceAffecting=1;
+                @AlarmClass = "LspAndBackupLspDown";
+                @ResilienceAffecting=0;
+                LSPEvents=OSOrgNodes;
+                Log("LSP_LINK: LSP down alarm");
+                } else {
+                Log("LSP_LINK: No LSP down alarm");
+                }
+            }
+        //End Prim LSP
+        }
+        // We now need to check if the link is a backup link as well
+        bLocalHostId = 1;
+        while(bLocalHostId < 4)
+            {
+            Log("LSP_LINK: Looking for backup links under LSP_BACKUP_" + bLocalHostId);
+            LSP=GetByFilter('Circee_LSP_Table',  "(LSP_BACKUP_" + bLocalHostId + "='"+LSP_ID+"')", false);
+            Log("LSP_LINK: Number of entries with link under LSP_BACKUP_" + bLocalHostId + " is " + Length(LSP));
+            if (Length(LSP)>0)
+                {
+                numPri=Length(LSP);
+                priCount1=0;
+                while(priCount1 < numPri)
+                    {
+                    Log("LSP_LINK: Processing Primary LSP orgnode "+ priCount1);
+                    Log("LSP_LINK: Back Up LSP "+bLocalHostId+" for Primary Host "+LSP[priCount1].LSP_ID); 
+                    OSOrgNodes=GetByFilter('ha_ncoms_impact_events',"(Severity > 0) AND (AlertKey like '^lsp "+LSP[priCount1].LSP_ID+" .*') AND (X733SpecificProb = 'LspDown')", false);
+                    Log("LSP_LINK: number of associated primary link events found = " + Length(OSOrgNodes));
+                    if(Length(OSOrgNodes)>0)
+                        {
+                        //Found alarm for Primary LSP
+                        y = 0;
+                        while (y < Length(OSOrgNodes))
+                            {
+                            Log("LSP_LINK: Primary link " + Y + " node value is " + OSOrgNodes[y].Node);
+                            OSOrgNodes[y].ServiceAffecting = 1;
+                            OSOrgNodes[y].AlarmClass = "LspAndBackupLspDown";
+                            OSOrgNodes[y].ResilienceAffecting = 0;
+                            y = y + 1;
+                            }
+                        LSPEvents=LSPEvents+OSOrgNodes;
+                        }
+                    priCount1=priCount1+1;
+                    }
+                }
+            bLocalHostId = bLocalHostId+1;
+            }
+            //End Back UP LSP
+        
+    NoEvents=Length(LSPEvents);
+    Log("LSP_LINK: No LSP Events "+NoEvents);
+
+    ReturnEvent(EventContainer);
+    Log("LSP_LINK: ReturnEvent successful");
+    }
+else
+    {
+    Log("LSP_LINK: Processing a cleared event");
+
+    LSP_ID = RExtract(@AlertKey,"^lsp (.*) .*");
+    Log("LSP_LINK: Link ID = " + LSP_ID);
+
+    // We now need to check if the link is a backup link as well
+    bLocalHostId = 1;
+    while(bLocalHostId < 4)
+        {
+        Log("LSP_LINK: Looking for backup links under LSP_BACKUP_" + bLocalHostId);
+        LSP=GetByFilter('Circee_LSP_Table',  "(LSP_BACKUP_" + bLocalHostId + "='"+LSP_ID+"')", false);
+        Log("LSP_LINK: Number of entries with link under LSP_BACKUP_" + bLocalHostId + " is " + Length(LSP));
+        if (Length(LSP)>0)
+            {
+            numPri=Length(LSP);
+            priCount1=0;
+            while(priCount1 < numPri)
+                {
+                Log("LSP_LINK: Processing Primary LSP orgnode "+ priCount1);
+                Log("LSP_LINK: Back Up LSP "+bLocalHostId+" for Primary Host "+LSP[priCount1].LSP_ID);
+ 
+                OSOrgNodes=GetByFilter('ha_ncoms_impact_events',"(ServiceAffecting = 1) AND (Severity > 0) AND (AlertKey like '^lsp "+LSP[priCount1].LSP_ID+" .*') AND (X733SpecificProb = 'LspDown')", false);
+
+                Log("LSP_LINK: number of associated primary link events found = " + Length(OSOrgNodes));
+
+                if(Length(OSOrgNodes)>0)
+                    {
+                    //Found alarm for Primary LSP
+                    y = 0;
+                    while (y < Length(OSOrgNodes))
+                        {
+                        newLSP_ID = RExtract(OSOrgNodes[y].AlertKey,"^lsp (.*) .*");
+                        Log("LSP_LINK: Primary link " + Y + " node value is " + OSOrgNodes[y].Node);
+                        LSPrimary=GetByFilter('Circee_LSP_Table', "(LSP_ID='"+newLSP_ID+"')", false);
+                        LSPEvents=0;
+                        if(Length(LSPrimary)>0)
+                            {
+                            if(LSPrimary[0].LSP_BACKUP_1<>"")
+                                {
+                                //Test for Alarms for Back Up LSP 1 
+                                OSOrgNodes2=GetByFilter('ha_ncoms_impact_events',"(Severity > 0) AND (AlertKey like '^lsp "+LSPrimary[0].LSP_BACKUP_1+" .*') AND (X733SpecificProb = 'LspDown')", false);
+                                Log("LSP_LINK: Events "+OSOrgNodes2);
+                                if(length(OSOrgNodes2)>0)
+                                    {
+                                    LSPEvents=LSPEvents + Length(OSOrgNodes2);
+                                    Log("LSP_LINK: LSP down alarm");
+                                    } else {
+                                    Log("LSP_LINK: No LSP down alarm");
+                                    }
+                                }
+                            if(LSPrimary[0].LSP_BACKUP_2<>"")
+                                {
+                                //Test for Alarms for Back Up LSP 2 
+                                OSOrgNodes2=GetByFilter('ha_ncoms_impact_events',"(Severity > 0) AND (AlertKey like '^lsp "+LSPrimary[0].LSP_BACKUP_2+" .*') AND (X733SpecificProb = 'LspDown')", false);
+                                Log("LSP_LINK: Events "+OSOrgNodes2);
+                                if(length(OSOrgNodes2)>0)
+                                    {
+                                    LSPEvents=LSPEvents + Length(OSOrgNodes2);
+                                    Log("LSP_LINK: LSP down alarm");
+                                    } else {
+                                    Log("LSP_LINK: No LSP down alarm");
+                                    }
+                                } 
+                            if(LSPrimary[0].LSP_BACKUP_3<>"")
+                                {
+                                //Test for Alarms for Back Up LSP 3 
+                                OSOrgNodes2=GetByFilter('ha_ncoms_impact_events',"(Severity > 0) AND (AlertKey like '^lsp "+LSPrimary[0].LSP_BACKUP_3+" .*') AND (X733SpecificProb = 'LspDown')", false);
+                                Log("LSP_LINK: Events "+OSOrgNodes2);
+                                if(length(OSOrgNodes2)>0)
+                                    {
+                                    LSPEvents=LSPEvents + Length(OSOrgNodes2);
+                                    Log("LSP_LINK: LSP down alarm");
+                                    } else {
+                                    Log("LSP_LINK: No LSP down alarm");
+                                    }
+                                }
+                            }
+                        if(LSPEvents = 0)
+                            {
+                            OSOrgNodes[0].ServiceAffecting = 0;
+                            OSOrgNodes[0].AlarmClass = "";
+                            OSOrgNodes[0].ResilienceAffecting = 1;
+                            }
+                        else
+                            {
+                            OSOrgNodes[0].ServiceAffecting = 1;
+                            OSOrgNodes[0].AlarmClass = "LspAndBackupLspDown";
+                            OSOrgNodes[0].ResilienceAffecting = 0;
+                            }
+                        y = y + 1;
+                        }
+                    }
+                priCount1=priCount1+1;
+                }
+            }
+        bLocalHostId = bLocalHostId+1;
+        }
+    //End Back UP LSP
+
+    @ImpactFlag = 3;
+    ReturnEvent(EventContainer);
+    Log("LSP_LINK: ReturnEvent successful");
+    }
+    
+// DB - LOGGING ADDED 
+log ("**** LSP_LINK: End:  Serial=" + @Serial + " TTFlag=" + @TTFlag + " Service_Impact: service affecting set to " + @ServiceAffecting + " equipment type set to " + @EquipmentType + " Node is " + @Node); 
+
+log("LSP_LINK: IQLOGFINISH: ServerSerial=" + @ServerSerial + " EventId=" + @EventId);
+Log("LSP_LINK: END ###################");
+
+

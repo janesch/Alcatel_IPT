@@ -1,0 +1,43 @@
+// Policy Name: VRRP_6850_Resilience
+// 
+// Version    Date        Name        Description
+// 1.0        14-09-10    -        Baseline
+// 1.1        14-09-10    Tony Nisbet    Capture ServerSerial with logging (patch 4.22)
+//
+
+Log("VRRP_6850_Resilience: Start");
+log("VRRP_6850_Resilience: IQLOGSTART: ServerSerial=" + @ServerSerial + " EventId=" + @EventId);
+
+// DB - LOGGING ADDED 
+log ("**** VRRP_6850_Resilience: Start. Serial=" + @Serial + " TTFlag=" + @TTFlag + " Service_Impact: service affecting set to " + @ServiceAffecting + " equipment type set to " + @EquipmentType + " Node is " + @Node); 
+
+// If this is the second resource isolation trap from this RCC then set it to service affecting
+
+// Set the ImpactFlag so we don't reprocess this event
+@ImpactFlag = 3;
+ReturnEvent( EventContainer );
+
+// Extract the RCC part of the Node
+if (@Node like "^..RCCOS68.*V$")
+    {
+    Node6850 = RExtract( @Node, "^(..RCCOS68).*V$" );
+    
+    // Check whether we have any other VRRP from this RCC
+    Filter = "Serial <> " + @Serial + " and Node like '^" + Node6850 + ".*V$'";
+    GetByFilter("ha_ncoms_impact_events",Filter,false);
+    
+    // if we do then this is a service affecting event...
+    if ( Num > 0 )
+        {
+        @ServiceAffecting = 1;
+        @ResilienceAffecting = 1;
+        ReturnEvent( EventContainer );
+        }
+    }
+
+// DB - LOGGING ADDED 
+log ("**** VRRP_6850_Resilience: End:  Serial=" + @Serial + " TTFlag=" + @TTFlag + " Service_Impact: service affecting set to " + @ServiceAffecting + " equipment type set to " + @EquipmentType + " Node is " + @Node); 
+
+log("VRRP_6850_Resilience: IQLOGFINISH: ServerSerial=" + @ServerSerial + " EventId=" + @EventId);
+Log("VRRP_6850_Resilience: Stop");
+

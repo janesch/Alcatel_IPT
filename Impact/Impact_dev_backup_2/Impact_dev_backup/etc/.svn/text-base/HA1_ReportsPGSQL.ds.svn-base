@@ -1,0 +1,13 @@
+#This file was written by Server.
+#Wed Feb 05 13:35:31 EST 2003
+ReportsPGSQL.PostgreSQL.PRIMARYHOST=localhost
+ReportsPGSQL.PostgreSQL.PRIMARYDATABASE=impact
+ReportsPGSQL.PostgreSQL.EPASSWORD={aes}55A496B539DBC26480C52FC114C54393
+
+ReportsPGSQL.PostgreSQL.PRIMARYPORT=5700
+ReportsPGSQL.PostgreSQL.DBUSERNAME=impactadmin
+ReportsPGSQL.PostgreSQL.BACKUPHOST=localhost
+ReportsPGSQL.PostgreSQL.BACKUPDATABASE=impact
+ReportsPGSQL.PostgreSQL.JDBCDRIVER=org.postgresql.Driver
+ReportsPGSQL.PostgreSQL.BACKUPPORT=5700
+ReportsPGSQL.PostgreSQL.MAXSQLCONNECTION=30

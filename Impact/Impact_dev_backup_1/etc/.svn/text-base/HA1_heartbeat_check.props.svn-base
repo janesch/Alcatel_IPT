@@ -1,0 +1,6 @@
+#This file was written by Impact Server.
+#Fri Nov 12 11:24:17 GMT 2010
+impact.heartbeat_check.interval=60
+impact.heartbeat_check.policyname=Heartbeat_Check
+impact.heartbeat_check.logtofile=true
+impact.heartbeat_check.autostartup=true

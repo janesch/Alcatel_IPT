@@ -1,0 +1,374 @@
+	switch($specific-trap) {
+		case "1": ### - tftpStatusChangeTrap
+			# SNMPv2
+			# This trap is sent whenever the status of tftp changed.
+			$tftpStatuslook = "tftpStatus." + $1
+			$tftpStatus = lookup($tftpStatuslook,VarbindValTable)
+			if(match($tftpStatus,"UNKNOWN")) {
+				$tftpStatus = $1
+			} else {
+				$tftpStatus = $tftpStatus + " ( " + $1 + " )"
+			}
+			@AlertGroup = "TFTPStatus"
+			@Agent = "RAD-MIB"
+			@Summary = "Tftp Status Change"
+			@Severity = 2
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($tftpStatus)
+
+		case "2": ### - agnStatusChangeTrap
+			# SNMPv2
+			# This trap is sent whenever the state of the entity the agent is
+			# responsible for changed.
+			# TDM devices will send agnTestStatus variable to indicate the current test status.
+				$agnIndicationlook = "agnIndication." + $1
+				$agnIndication = lookup($agnIndicationlook,VarbindValTable)
+				if(match($agnIndication,"UNKNOWN")) {
+					$agnIndication = $1
+				} else {
+					$agnIndication = $agnIndication + " ( " + $1 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "agnStatusChangeTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($agnIndication)
+
+		case "3": ### - prtStatusChangeTrap
+			# SNMPv2
+			# This trap is sent whenever the state of a port changed.
+			# Attached, will be parameter/s that indicate the new port status.
+			# The attached variables will be specified in the specifications
+			# of the products supporting this trap.
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "prtStatusChangeTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		case "4": ### - swdlStatusResult
+			# SNMPv2
+			# This notification is sent when Software Down Load is finished.
+			# The attached object indicates the File Name.
+			$swdlStatusFileName = $1
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "swdlStatusResult"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($swdlStatusFileName)
+
+		case "5": ### - intSwdlSlotFileMismatch
+			# SNMPv2
+			# This notification is sent when the card in the chosen slot doesn't match 
+			# the chosen file.
+			# The attached object indicates the File Name.
+			$intSwdlFileName = $1
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "intSwdlSlotFileMismatch"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($intSwdlFileName)
+
+		case "6": ### - agnCounterChange
+			# SNMPv2
+			# This notification is sent when the value of a specific Counter is changed.
+			# Agent can send as attached object the updated Counter.
+			# For details about this Counter and attached object, see spec of the relevant
+			# application.
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "agnCounterChange"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		case "7": ### - prtClkSrcChangeTrap
+			# SNMPv2
+			# This trap is sent upon any port clock change.
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "prtClkSrcChangeTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		case "8": ### - moduleFailTrap
+			# SNMPv2
+			# This trap is sent upon a module failure.
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "moduleFailTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		case "9": ### - moduleInitFailTrap
+			# SNMPv2
+			# This trap is sent upon a module initialization failure.
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "moduleInitFailTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		case "10": ### - clkSrcChangeTrap
+			# SNMPv2
+			# This trap is sent upon any change in Clock Source.
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "clkSrcChangeTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		case "11": ### - agnUploadDataTrap
+			# SNMPv2
+			# This trap is sent upon an upload data session termination.
+			# For more details see product specification.
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "agnUploadDataTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		case "12": ### - enrollmentTrap
+			# SNMPv2
+			# This trap is a periodically trap, which sent to manager 
+			# untill Agent get any response (Get or Set) from this manager.
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "enrollmentTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		case "13": ### - agnPowerFailureTrap
+			# SNMPv2
+			# This trap is sent upon power failure. It is applicable for 
+			# the following devices:
+			# 1. Devices having one PS unit, which sense the failure in advance,
+			# and still have time to send this trap before it goes off.
+			# 2. Devices having 2 PS units and send this trap in order to notify a
+			# failure in one of the units.
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "agnPowerFailureTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		case "14": ### - agnFanFailureTrap
+			# SNMPv2
+			# This trap is sent upon fan failure/recovery.
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "agnFanFailureTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		case "15": ### - agnSystemParameterChangeTrap
+			# SNMPv2
+			# This trap is sent upon any change of the systemParameter value.
+			$systemParameter = $1
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "agnSystemParameterChangeTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($systemParameter)
+
+		case "16": ### - agnConfigDBChecksumError
+			# SNMPv2
+			# This trap indicates that the database currently
+			# stored in the non-volatile memory of the device is corrupted
+				$alarmSeveritylook = "alarmSeverity." + $1
+				$alarmSeverity = lookup($alarmSeveritylook,VarbindValTable)
+				if(match($alarmSeverity,"UNKNOWN")) {
+					$alarmSeverity = $1
+				} else {
+					$alarmSeverity = $alarmSeverity + " ( " + $1 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "agnConfigDBChecksumError"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($alarmSeverity)
+
+		case "17": ### - agnAlarmBufferOverflow
+			# SNMPv2
+			# This trap indicates that the quantity of 
+			# alarm messages which have been written 
+			# in the alarm buffer, since the last clear command,
+			# exceeds predefined threshold. (Buffer size) 
+			# The new alarms are overwriting the oldest alarms 
+			# (the first alarms written in the buffer).
+			# For LA-110,threshold value is 200 alarms.
+				$alarmSeveritylook = "alarmSeverity." + $1
+				$alarmSeverity = lookup($alarmSeveritylook,VarbindValTable)
+				if(match($alarmSeverity,"UNKNOWN")) {
+					$alarmSeverity = $1
+				} else {
+					$alarmSeverity = $alarmSeverity + " ( " + $1 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "agnAlarmBufferOverflow"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($alarmSeverity)
+
+		case "18": ### - agnAlarmBufferClear
+			# SNMPv2
+			# This trap indicates that 
+			# alarm buffer has been cleared.
+				$alarmSeveritylook = "alarmSeverity." + $1
+				$alarmSeverity = lookup($alarmSeveritylook,VarbindValTable)
+				if(match($alarmSeverity,"UNKNOWN")) {
+					$alarmSeverity = $1
+				} else {
+					$alarmSeverity = $alarmSeverity + " ( " + $1 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "agnAlarmBufferClear"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($alarmSeverity)
+
+		case "19": ### - agnParametersValueChanged
+			# SNMPv2
+			# This trap indicates that due to software upgrade, 
+			# some of the parameters are assigned new values
+				$alarmSeveritylook = "alarmSeverity." + $1
+				$alarmSeverity = lookup($alarmSeveritylook,VarbindValTable)
+				if(match($alarmSeverity,"UNKNOWN")) {
+					$alarmSeverity = $1
+				} else {
+					$alarmSeverity = $alarmSeverity + " ( " + $1 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "agnParametersValueChanged"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($alarmSeverity)
+
+		case "20": ### - agnDriverSwMismatch
+			# SNMPv2
+			# There is mismatch between the SW driver and 
+			# the HW of the device uplink interface.
+				$alarmSeveritylook = "alarmSeverity." + $1
+				$alarmSeverity = lookup($alarmSeveritylook,VarbindValTable)
+				if(match($alarmSeverity,"UNKNOWN")) {
+					$alarmSeverity = $1
+				} else {
+					$alarmSeverity = $alarmSeverity + " ( " + $1 + " )"
+				}
+			$ifAlias = $2
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "agnDriverSwMismatch"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($alarmSeverity,$ifAlias)
+
+		case "21": ### - agnActualLowRate
+			# SNMPv2
+			# The main link is synchronized 
+			# at a rate lower than expected.
+				$alarmSeveritylook = "alarmSeverity." + $1
+				$alarmSeverity = lookup($alarmSeveritylook,VarbindValTable)
+				if(match($alarmSeverity,"UNKNOWN")) {
+					$alarmSeverity = $1
+				} else {
+					$alarmSeverity = $alarmSeverity + " ( " + $1 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "agnActualLowRate"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($alarmSeverity)
+
+		case "22": ### - xModemFileTransferStatusTrap
+			# SNMPv2
+			# This trap is sent in the following cases:
+			# - When an xModem File Transfer Session begins. In this case,
+			# the trapVal.1 string sent will be: 'Start'.
+			# - When an xModem File Transfer Session ends. In this case,
+			# the trapVal.1 string sent will be one of the following,
+			# according to the way the session ended :
+			# - 'End: OK'
+			# - 'End: Failed'   
+			$trapVal = $1
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "xModemFileTransferStatusTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($trapVal)
+
+		case "23": ### - agnStationClkFailureTrap
+			# SNMPv2
+			# This trap is sent upon Station Clock failure.
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "agnStationClkFailureTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		case "24": ### - successfulLogin
+			# SNMPv2
+			# This trap is sent when a user performed successful Login via 
+			# Terminal/Telnet/Web. This trap is used when the device is located
+			# at End-User's premises while management is at Service Provider's 
+			# premises.
+			@AlertGroup = "Login"
+			@Agent = "RAD-MIB"
+			@Summary = "Successful Login"
+			@Type = 2
+			@Identifier = @Node + @Summary
+			@AlarmClass = "TELNET_START"
+			[$Severity,$ActionRequired,$ServiceAffecting,$ResilienceAffecting,$CorrelationFlag]= lookup(@AlarmClass,rad_rici)
+			@Severity = $Severity
+			@ActionRequired = $ActionRequired
+			@ServiceAffecting = $ServiceAffecting
+			@ResilienceAffecting = $ResilienceAffecting
+			@CorrelationFlag = $CorrelationFlag
+
+		case "25": ### - failedLogin
+			# SNMPv2
+			# This trap is sent when a user tried to Login via Terminal/Telnet/Web
+			# and failed. This trap is used when the device is located
+			# at End-User's premises while management is at Service Provider's 
+			# premises.
+			@AlertGroup = ""
+			@Agent = "RAD-MIB"
+			@Summary = "Failed Login"
+			@Type = 1
+			@Identifier = @Node + @Summary
+			@AlarmClass = "TELNET_FINISH"
+			[$Severity,$ActionRequired,$ServiceAffecting,$ResilienceAffecting,$CorrelationFlag]= lookup(@AlarmClass,rad_rici)
+                        @Severity = $Severity
+                        @ActionRequired = $ActionRequired
+                        @ServiceAffecting = $ServiceAffecting
+                        @ResilienceAffecting = $ResilienceAffecting
+                        @CorrelationFlag = $CorrelationFlag
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+

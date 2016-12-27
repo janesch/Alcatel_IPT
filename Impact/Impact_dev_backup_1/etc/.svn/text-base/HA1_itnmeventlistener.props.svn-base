@@ -1,0 +1,10 @@
+#This file was written by Impact Server.
+#Fri Jun 16 15:13:58 EDT 2006
+impact.itnmeventlistener.sourceobjname=
+impact.itnmeventlistener.sourcename=PrecisionServer
+impact.itnmeventlistener.port=4500
+impact.itnmeventlistener.nscontext=
+impact.itnmeventlistener.classname=com.micromuse.dsa.precisiondsa.PrecisionEventFeedSource
+impact.itnmeventlistener.policy=ITNMSampleListenerPolicy
+impact.itnmeventlistener.host=localhost
+impact.itnmeventlistener.filter=

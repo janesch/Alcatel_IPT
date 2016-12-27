@@ -1,0 +1,68 @@
+mttrapd_HA.rules:        switch(@Summary)
+mttrapd_HA.rules:        @Summary = @Agent + " probe on " + @Node + ": " + @Summary
+mttrapd_HA.rules:	@Summary = "Default"
+mttrapd_HA.rules:						@Summary = "Enterprise ID Not Found (see details): " + $enterprise + " " + $generic-trap + " " + $specific-trap
+mttrapd_HA.rules:		[$Summary, $Severity, $ProbableCause, $AlertKey, $ActionRequired, $ServiceAffecting, $ResilienceAffecting, $CorrelationFlag] = lookup (@AlertGroup, "SixtyEightFiftyTable")
+mttrapd_HA.rules:			#@Summary = $Summary
+mttrapd_HA.rules:		if(regmatch(@Summary,".*down.*"))
+mttrapd_HA.rules:		if(regmatch(@Summary,".*up.*"))
+mttrapd_HA.rules:			@Summary = $csNmsEventDesc
+mttrapd_HA.rules:			if ( regmatch(@Summary, "Card Mismatch"))
+mttrapd_HA.rules:			@Summary = $csNmsEventDesc
+mttrapd_HA.rules:			if (match(@AlertGroup, "csNmsTrapCentinal") && regmatch(@Summary,"^Drive temperature.*"))
+mttrapd_HA.rules:						@Summary = $notifAddText + " " + @Summary
+mttrapd_HA.rules:			@Summary = @Summary + " ( " + $rttMonReactVar + " ) " + "Probable Cause: " + $ProbableCause
+mttrapd_HA.rules:			#if (match(@AlertGroup, "") && match(@AlarmClass, "") && match(@AlertKey, "") && regmatch(@Summary,"^rttMonNotification ( Unknown ).*"))
+mttrapd_HA.rules:        if(regmatch(@Summary, ".*[0-9]+/[0-9]+/[0-9]+")){
+mttrapd_HA.rules:        @PhysicalCard = extract(@Summary, ".*([0-9]+/[0-9]+/[0-9]+)")
+mttrapd_HA.rules:				[$Summary, $Severity, $ProbableCause, $AlertKey, $ActionRequired, $ServiceAffecting, $ResilienceAffecting, $CorrelationFlag] = lookup ("coldStart", "SixtyEightFiftyTable")
+mttrapd_HA.rules:				@Summary = $Summary
+mttrapd_HA.rules:				[$Summary, $Severity, $ProbableCause, $AlertKey, $ActionRequired, $ServiceAffecting, $ResilienceAffecting, $CorrelationFlag] = lookup ("warmStart", "SixtyEightFiftyTable")
+mttrapd_HA.rules:				@Summary = $Summary
+mttrapd_HA.rules:				[$Summary, $Severity, $ProbableCause, $AlertKey, $ActionRequired, $ServiceAffecting, $ResilienceAffecting, $CorrelationFlag] = lookup ("linkDown", "SixtyEightFiftyTable")
+mttrapd_HA.rules:				#@Summary = $Summary
+mttrapd_HA.rules:				@Summary = $Summary + " " + @AlertKey
+mttrapd_HA.rules:				[$Summary, $Severity, $ProbableCause, $AlertKey, $ActionRequired, $ServiceAffecting, $ResilienceAffecting, $CorrelationFlag] = lookup ("linkUp", "SixtyEightFiftyTable")
+mttrapd_HA.rules:				#@Summary = $Summary
+mttrapd_HA.rules:				@Summary = $Summary + " " + @AlertKey
+mttrapd_HA.rules:				[$Summary, $Severity, $ProbableCause, $AlertKey, $ActionRequired, $ServiceAffecting, $ResilienceAffecting, $CorrelationFlag] = lookup ("authenticationFailure", "SixtyEightFiftyTable")
+mttrapd_HA.rules:				@Summary = $Summary
+mttrapd_HA.rules:				[$Summary, $Severity, $ProbableCause, $AlertKey, $ActionRequired, $ServiceAffecting, $ResilienceAffecting, $CorrelationFlag] = lookup ("egpNeighborLoss", "SixtyEightFiftyTable")
+mttrapd_HA.rules:				@Summary = $Summary
+mttrapd_HA.rules:                @Summary = "Invalid Generic Trap Number (see details): " + $enterprise + " " + $generic-trap + " " + $specific-trap
+mttrapd_HA.rules:			@AlarmClass = $Summary
+mttrapd_HA.rules:	if(regmatch(@Summary, "^Fan [0-9]+ not rotating.*")){
+mttrapd_HA.rules:        		$fan = extract(@Summary, "^Fan ([0-9]+).*")
+mttrapd_HA.rules:        if(regmatch(@Summary, "^Fan [0-9]+ rotating again.*")){
+mttrapd_HA.rules:        		$fan = extract(@Summary, "^Fan ([0-9]+).*")
+mttrapd_HA.rules.pre_73:        switch(@Summary)
+mttrapd_HA.rules.pre_73:        @Summary = @Agent + " probe on " + @Node + ": " + @Summary
+mttrapd_HA.rules.pre_73:	@Summary = "Default"
+mttrapd_HA.rules.pre_73:						@Summary = "Enterprise ID Not Found (see details): " + $enterprise + " " + $generic-trap + " " + $specific-trap
+mttrapd_HA.rules.pre_73:#		[$Summary, $Severity, $ProbableCause, $AlertKey, $ActionRequired, $ServiceAffecting, $ResilienceAffecting, $CorrelationFlag] = lookup (@AlertGroup, "SixtyEightFiftyTable")
+mttrapd_HA.rules.pre_73:			#@Summary = $Summary
+mttrapd_HA.rules.pre_73:		if(regmatch(@Summary,".*down.*"))
+mttrapd_HA.rules.pre_73:		if(regmatch(@Summary,".*up.*"))
+mttrapd_HA.rules.pre_73:			@Summary = $csNmsEventDesc
+mttrapd_HA.rules.pre_73:			if ( regmatch(@Summary, "Card Mismatch"))
+mttrapd_HA.rules.pre_73:			@Summary = $csNmsEventDesc
+mttrapd_HA.rules.pre_73:			if (match(@AlertGroup, "csNmsTrapCentinal") && regmatch(@Summary,"^Drive temperature.*"))
+mttrapd_HA.rules.pre_73:						@Summary = $notifAddText + " " + @Summary
+mttrapd_HA.rules.pre_73:			@Summary = @Summary + " ( " + $rttMonReactVar + " ) " + "Probable Cause: " + $ProbableCause
+mttrapd_HA.rules.pre_73:			#if (match(@AlertGroup, "") && match(@AlarmClass, "") && match(@AlertKey, "") && regmatch(@Summary,"^rttMonNotification ( Unknown ).*"))
+mttrapd_HA.rules.pre_73:				[$Summary, $Severity, $ProbableCause, $AlertKey, $ActionRequired, $ServiceAffecting, $ResilienceAffecting, $CorrelationFlag] = lookup ("coldStart", "SixtyEightFiftyTable")
+mttrapd_HA.rules.pre_73:				@Summary = $Summary
+mttrapd_HA.rules.pre_73:				[$Summary, $Severity, $ProbableCause, $AlertKey, $ActionRequired, $ServiceAffecting, $ResilienceAffecting, $CorrelationFlag] = lookup ("warmStart", "SixtyEightFiftyTable")
+mttrapd_HA.rules.pre_73:				@Summary = $Summary
+mttrapd_HA.rules.pre_73:				[$Summary, $Severity, $ProbableCause, $AlertKey, $ActionRequired, $ServiceAffecting, $ResilienceAffecting, $CorrelationFlag] = lookup ("linkDown", "SixtyEightFiftyTable")
+mttrapd_HA.rules.pre_73:				#@Summary = $Summary
+mttrapd_HA.rules.pre_73:				@Summary = $Summary + " " + @AlertKey
+mttrapd_HA.rules.pre_73:				[$Summary, $Severity, $ProbableCause, $AlertKey, $ActionRequired, $ServiceAffecting, $ResilienceAffecting, $CorrelationFlag] = lookup ("linkUp", "SixtyEightFiftyTable")
+mttrapd_HA.rules.pre_73:				#@Summary = $Summary
+mttrapd_HA.rules.pre_73:				@Summary = $Summary + " " + @AlertKey
+mttrapd_HA.rules.pre_73:				[$Summary, $Severity, $ProbableCause, $AlertKey, $ActionRequired, $ServiceAffecting, $ResilienceAffecting, $CorrelationFlag] = lookup ("authenticationFailure", "SixtyEightFiftyTable")
+mttrapd_HA.rules.pre_73:				@Summary = $Summary
+mttrapd_HA.rules.pre_73:				[$Summary, $Severity, $ProbableCause, $AlertKey, $ActionRequired, $ServiceAffecting, $ResilienceAffecting, $CorrelationFlag] = lookup ("egpNeighborLoss", "SixtyEightFiftyTable")
+mttrapd_HA.rules.pre_73:				@Summary = $Summary
+mttrapd_HA.rules.pre_73:                @Summary = "Invalid Generic Trap Number (see details): " + $enterprise + " " + $generic-trap + " " + $specific-trap
+mttrapd_HA.rules.pre_73:			@AlarmClass = $Summary

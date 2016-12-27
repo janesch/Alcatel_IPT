@@ -1,0 +1,843 @@
+/********************************************************* {COPYRIGHT-TOP-RM} ***
+* Licensed Materials - Property of IBM
+* "Restricted Materials of IBM"
+*
+* 5724-S43
+* (C) Copyright IBM Corp. 2009
+*
+* US Government Users Restricted Rights - Use, duplication, or
+* disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+********************************************************* {COPYRIGHT-END-RM} **/
+/* Maintenance Window Management #########
+
+This Policy runs from a Policy Activator
+
+This Policy checks for active maintenance windows and
+puts OMNIbus events into maintenance
+
+This Policy optionally takes events out of maintenance when windows expire
+
+Originally written by Kevin Morris
+Large chunks rewritten by Tom Daniel to add timezone support
+*/
+
+
+log(2, "MWM Policy is starting\n\n\n\n\n\n\n");
+
+
+/*#########################################
+
+functions for dealing with dates and times
+
+########################################*/
+
+function newCalendar(TZ, IMPEPOCH, CALENDAR)
+{
+
+	log(3, "creating a calendar for time zone " + TZ);
+    log(3, "epoch time is " + IMPEPOCH);
+
+    //create a time zone object
+    timeZone=javacall("java.util.TimeZone", null, "getTimeZone",{TZ});
+
+    //create a calendar object
+    CALENDAR = javacall("java.util.Calendar", null, "getInstance", {});
+
+    //tweak calendar to reflect give time and time zone
+    javacall(null, CALENDAR, "setTimeZone", {timeZone});
+    javacall(null, CALENDAR, "setTimeInMillis", {(IMPEPOCH*1000)});
+
+    //for troubleshooting...
+    log(3, CALENDAR);
+}
+
+
+function intToDOW(DOWInt, DOW)
+{
+if(DOWInt ==1) {DOW="Sun";}
+if(DOWInt ==2) {DOW="Mon";}
+if(DOWInt ==3) {DOW="Tue";}
+if(DOWInt ==4) {DOW="Wed";}
+if(DOWInt ==5) {DOW="Thu";}
+if(DOWInt ==6) {DOW="Fri";}
+if(DOWInt ==7) {DOW="Sat";}
+}
+
+
+
+
+function getDOM(TZ, calendar, DOM)
+{
+    
+    log(3, "getting DOM in timezone " + TZ);
+
+    DOMInt = getFieldValue(null, calendar, "DAY_OF_MONTH");
+
+    DOM = javacall(null, calendar, "get", {DOMInt});
+    log(3, "it's the " + DOM + " in time zone " + TZ);
+}
+
+
+
+function getDOW(TZ, calendar, DOW)
+{
+    log(3, "getting DOW in timezone " + TZ);
+
+    DOWInt = getFieldValue(null, calendar, "DAY_OF_WEEK");
+
+    DOWInt = javacall(null, calendar, "get", {DOWInt});
+    intToDOW(DOWInt, DOW);
+    log(3, "it's " + DOW + " in time zone " + TZ);
+
+}
+
+
+
+function getNTH(TZ, calendar, NTH)
+{
+
+    log(3, "getting the nth ranking for the DOW in this timezone");
+
+    NTHInt = getFieldValue(null, calendar, "DAY_OF_WEEK_IN_MONTH");
+    NTH = javacall(null, calendar, "get", {NTHInt});
+
+
+    DOWInt = getFieldValue(null, calendar, "DAY_OF_WEEK");
+    DOWInt = javacall(null, calendar, "get", {DOWInt});
+    intToDOW(DOWInt, DOW);
+    log(3, "it's the " + NTH + " " + DOW + " in time zone " + TZ);
+
+}
+
+
+function getTZs(TZs)
+{
+    log(3, "getting list of all distinct timezones in DB for recurring events");
+
+    tzQuery = "select distinct timezone from mm_windows where wintype > 1";
+    tz = DirectSQL('ReportsHSQLDB',tzQuery,false);
+
+    n = 0;
+    TZs={};
+    while(n < length(tz))
+        {
+            TZs = TZs + tz[n].TIMEZONE;
+            n = n + 1;
+        }
+    log(3, "found these time zones " + TZs);
+}
+
+
+
+function getHHMMSS(calendar, HHMMSS)
+{
+    log(3, "Generating the HH:MM:SS for the given time zone");
+
+    HHInt = getFieldValue(null, calendar, "HOUR_OF_DAY");
+    HH = javacall(null, calendar, "get", {HHInt});
+    HH = int(HH);
+    HH=string(HH);
+    log(3, "HH is " + HH);
+    if(int(HH) < 10){HH="0" + HH;}
+
+
+    MMInt = getFieldValue(null, calendar, "MINUTE");
+    MM = javacall(null, calendar, "get", {MMInt});
+    MM = int(MM);
+    MM=string(MM);
+    log(3, "MM is " + MM);
+    if(int(MM) < 10){MM="0" + MM;}
+
+    SSInt = getFieldValue(null, calendar, "SECOND");
+    SS = javacall(null, calendar, "get", {SSInt});
+    SS = int(SS);
+    SS=string(SS);
+    log(3, "SS is " + SS);
+    if(int(SS) < 10){SS="0" + SS;}
+
+    HHMMSS = HH + ":" + MM + ":" + SS;
+    log(3, "HH:MM:SS is " + HHMMSS);
+
+
+}
+
+
+
+function getyyyyMMdd(calendar, yyyyMMdd)
+{
+    log(3, "Generating the yyyy-MM-dd for the given time zone");
+
+    //what is the yyyy-MM-dd in that time zone?
+    yearInt = getFieldValue(null, calendar, "YEAR");
+    tzYear = javacall(null, calendar, "get", {yearInt});
+    log(3, "year in this time zone is " + tzYear);
+    //eg 2009
+
+    monthInt = getFieldValue(null, calendar, "MONTH");
+    tzMonth = javacall(null, calendar, "get", {monthInt});
+    tzMonth = tzMonth + 1; //Calendar object uses 0 for January while Impact parsedate function uses 1
+    if (tzMonth < 10) {tzMonth = "0" + string(tzMonth);}
+    log(3, "month in this time zone is " + tzMonth);
+    //eg 08
+
+    dateInt = getFieldValue(null, calendar, "DATE");
+    tzDate = javacall(null, calendar, "get", {dateInt});
+    if (tzDate < 10) {tzDate = "0" + string(tzDate);}
+    log(3, "date in this time zone is " + tzDate);
+    //eg 04
+
+    yyyyMMdd = tzYear + "-" + tzMonth + "-" + tzDate;
+    log(3, "yyyy-MM-dd is" + yyyyMMdd);
+
+
+
+}
+
+
+
+function getNthString(nthNumber, nthString)
+{
+    log(3, "converting nth integer to string for DB query");
+
+    If(nthNumber == 1){nthString = "first";}
+
+    ElseIf(nthNumber == 2){nthString = "second";}
+
+    ElseIf(nthNumber == 3){nthString = "third";}
+
+    ElseIf(nthNumber == 4){nthString = "fourth";}
+
+    ElseIf(nthNumber == 5){nthString = "fifth";}
+
+    log(3, "number " + nthNumber + " converted to " + nthString);
+}
+
+
+
+function getActiveOneTime(utc, ACTIVEWINDOWS)
+{
+
+    log(2, "Querying for one-time windows that are active right now");
+
+    ONETIMESQL = "select * from mm_windows where (wintype=1 and eot_starttime";
+    ONETIMESQL = ONETIMESQL + " <= " + utc + " and eot_endtime ";
+    ONETIMESQL = ONETIMESQL + ">= " + utc + ")";
+    ACTIVEWINDOWS = DirectSQL('ReportsHSQLDB',ONETIMESQL,false);
+
+    log(2, "found " + length(ACTIVEWINDOWS) + " one-time windows");
+    log(3, "windows found: \n " + ACTIVEWINDOWS);
+
+
+
+}
+
+
+
+
+
+function getActiveRecurring(timezone, utc, ACTIVEWINDOWS)
+{
+    ///////////assemble the pieces for the query
+    log(3, "checking current time against windows created in time zone " + timezone);
+
+    //java calendar object for the current time in the time zone we are working with
+    newCalendar(timezone, utc, calendar);
+
+    //get Day Of Month, Day Of Week, and Nth Weekday for this timezone
+    getDOM(timezone, calendar, DOM);
+    getDOW(timezone, calendar, DOW);
+    getNTH(timezone, calendar, NTH);
+
+    //get current time in that timezone in HH:MM:SS format
+    getHHMMSS(calendar, rCT);
+
+    //for Nth Weekday windows, data stored in DB like this: firstThu
+    getNthString(NTH, NthString);
+    nthkey = NthString + DOW;
+
+    //////////////////build query for recurring windows in this time zone
+    RSQL = "select * from mm_windows where ";
+    RSQL = RSQL + "( (wintype=2 and daysofweek like '%" + DOW + "%' and";
+    RSQL = RSQL + " r_starttime < '" + rCT + "' and r_endtime > '" + rCT + "')";
+    RSQL = RSQL + " OR (wintype=3 and daysofmonth like '%|" + DOM + "|%' and r_starttime < '" + rCT + "' and r_endtime";
+    RSQL = RSQL + " > '" + rCT + "') OR (wintype=4 and nweekdayofmonth like ";
+    RSQL = RSQL + "'%|" + nthkey + "|%' and r_starttime < '" + rCT + "' and r_endtime > '" + rCT + "'))";
+    RSQL = RSQL + " and timezone = '" + timezone + "'";
+    log(3, "using this query: \n" + RSQL);
+
+    ////////////////////perform query
+    ACTIVEWINDOWS = DirectSQL('ReportsHSQLDB',RSQL,false);
+    log(3, "got these " + length(ACTIVEWINDOWS) + " matches to the query: \n " + ACTIVEWINDOWS);
+
+
+
+}
+
+
+
+
+/*#############################################*/
+
+
+
+
+
+
+
+
+
+
+
+/* ####################################
+
+This first bit here retrieves properties set in the MWM_Properties Policy
+
+#################################### */
+
+MWM_Properties.getProperties(props);
+log(3, "remove maint flag when window expires? " + props.clearFlag);
+log(3, "put pre-existing events into maintenance? " + props.flagExistingEvents);
+
+/*#########################################################*/
+
+
+
+
+
+
+
+/* ####################################
+
+What time is it now?
+
+#################################### */
+
+//get time
+UTC = getdate();
+log(2, "Current epoch gmt time is : " + UTC);
+
+
+
+
+
+
+
+
+/*#########################################
+
+collecting active windows from the DB
+
+#########################################*/
+
+
+///////////one-time window query
+/*
+log(2, "Querying for one-time windows that are active right now");
+
+ONETIMESQL = "select * from mm_windows where (wintype=1 and eot_starttime";
+ONETIMESQL = ONETIMESQL + " <= " + UTC + " and eot_endtime ";
+ONETIMESQL = ONETIMESQL + ">= " + UTC + ")";
+windows = DirectSQL('ReportsHSQLDB',ONETIMESQL,false);
+
+log(2, "found " + length(windows) + " one-time windows");
+log(3, "windows found: \n " + windows);
+*/
+
+getActiveOneTime(UTC, windows);
+
+
+
+
+
+////////////////recurring windows
+log(2, "Now querying for recurring windows that are active right now");
+
+
+//query to see what timezones we have to deal with
+log(3, "need to deal with each timezone in the DB separately");
+getTZs(tzArray);
+log(3, "there are " + length(tzArray) + " time zones in use in the DB");
+
+
+
+//loop through them and find active windows in each time zone
+n = 0;
+
+while (n < length(tzArray))
+{
+
+    //get windows for the time zone
+    getActiveRecurring(tzArray[n], UTC, wins);
+
+
+    //add windows for this time zone to our full list of open windows
+    if (length(wins) > 0)
+    {
+       windows = windows + wins;
+    }
+    n = n + 1;
+}
+
+
+//what all did we end up with?
+log(2, "after all queries...............................................................");
+log(2, "found " + length(windows) + " matching windows");
+log(3, "matching windows: \n" + windows);
+log(2, "\n\n");
+
+/*#############################################*/
+
+
+
+
+
+
+
+
+
+
+/* ####################################
+
+This bit loops through the active windows we found in mm_windows
+- it marks the matching events in the defaultobjectserver data source as being in maintenance
+- it marks the windows  in mm_windows as well, indicating that they have been "activated"
+
+#################################### */
+
+
+log(2, "flagExistingEvents = " + props.flagExistingEvents);
+
+
+
+//////////////////////////////loop through the windows
+If(length(windows) > 0 and props.flagExistingEvents = FALSE)
+//only work with events that have occurred during the window
+{
+    log(2, "going through windows and flagging new or deduplicated OMNIbus events that match");
+    log(2, "there is one query for each window");
+
+    owi = 0;
+    While(owi < Length(windows))
+
+    {
+
+
+
+        ///////////handle type 1 (non recurring)
+        If(windows[owi].wintype == 1)
+        {
+            log(3, "This is a one time window");
+            //replace the " with ' for correct sql syntax
+            sq_filter = Replace(windows[owi].filterstat,"\"","'");
+
+            // get window start and stop times
+
+            //epoch time
+            MaintStartEpoch = int(windows[owi].eot_starttime);
+
+            //epoch time
+            MaintEndEpoch = int(windows[owi].eot_endtime);
+
+            //build sql for directsql call
+            //FO vs LO debate...
+            upStat = "update alerts.status set SuppressEscl = 6 where ";
+            upStat = upStat + sq_filter + " and SuppressEscl < 6 and LastOccurrence > " + MaintStartEpoch + " and ";
+            upStat = upStat + "LastOccurrence < " + MaintEndEpoch;
+            Log(3, "object server query for one-time windows: \n" + upStat);
+
+            //submit SQL
+            DirectSQL('defaultobjectserver',upStat,false);
+
+
+            //code for changing maint state in other products here
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        ///////////////handle type 2 (recurring day of week; eg every Friday)
+        ElseIf(windows[owi].wintype == 2)
+        {
+            log(3, "This is a recurring Day(s) of Week window");
+            //What days of the week does the window cover?
+            sDOW = Split(windows[owi].daysofweek, '|');
+
+
+            //now what day of the week is it in that window's time zone?
+            //get Day of Week in that time zone
+            //create a calendar for that time zone
+
+            newCalendar(windows[owi].timezone, UTC, calendar);
+
+            getDOW(windows[owi].timezone, calendar, DOW);
+
+            //loop through those sDoW from the table
+            numDOW = Length(sDOW);
+            z = 0;
+            While(z < numDOW)
+            {
+                If(DOW == sDOW[z])
+               {
+               // DOW in timezone matches one of sDOW in the record
+                    //get window boundaries into proper epoch time
+
+                    //what is the yyyy-MM-dd in that time zone?
+                    getyyyyMMdd(calendar, yyyyMMdd);
+
+//log("yyyyMMdd is " + yyyyMMdd);
+      
+                    MaintStart = yyyyMMdd + " " + windows[owi].r_starttime;
+                    MaintEnd = yyyyMMdd + " " + windows[owi].r_endtime;
+
+//log("windows[owi].r_starttime is " + windows[owi].r_starttime);
+//log("windows[owi].r_endtime is " + windows[owi].r_endtime);
+
+//log("MaintStart is " + MaintStart);
+//log("MaintEnd is " + MaintEnd);
+
+                    MaintStartEpoch = ParseDate(MaintStart, "yyyy-MM-dd HH:mm:ss");
+                    MaintEndEpoch = ParseDate(MaintEnd, "yyyy-MM-dd HH:mm:ss");
+
+
+                    //tweak the filterstat
+                    sq_filter = Replace(windows[owi].filterstat,"\"","'");
+
+                    //generate the SQL
+                    upStat = "update alerts.status set SuppressEscl = 6 where ";
+                    upStat = upStat + sq_filter + " and SuppressEscl < 6 and LastOccurrence > " + MaintStartEpoch + " and ";
+                    upStat = upStat + "LastOccurrence < " + MaintEndEpoch;
+                    Log(3, "object server query for Day of Week window: \n" + upStat);
+//Log("object server query for Day of Week window: \n" + upStat);
+
+                    //issue the query
+                    DirectSQL('defaultobjectserver',upStat,false);
+
+
+                    //code for changing maint state in other products here
+
+
+               }
+                z = z + 1;
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+        //handle recurring day of month (eg every 13th)
+        ElseIf(windows[owi].wintype == 3)
+        {
+            log(3, "This is a recurring Date(s) of Month window");
+            //get the current Day of Month in the window's time zone
+
+            //create a calendar for that time zone
+            log(3, "creating calendar for " + windows[owi].timezone + " & epoch time " + UTC);
+
+            newCalendar(windows[owi].timezone, UTC, calendar);
+            log(3, "calendar created");
+
+            getDOM(windows[owi].timezone, calendar, CurrDOM);
+            log(3, "CurrDOM in timezone is " + CurrDOM);
+
+
+
+            //split the DoMs in the table so we can loop through them
+            sDOM = Split(windows[owi].daysofmonth, '|');
+
+            //loop
+            numDOM = Length(sDOM);
+            y = 0;
+            While(y < numDOM)
+            {
+                //Log(3, "DOM Loop entered.");
+                Log(3, "date in window timezone: " + CurrDOM + "  AND  sDOM[y]: " + sDOM[y]);
+
+                // check for a match between current and the item from the list
+                If(CurrDOM == sDOM[y])
+                {
+                    Log(3, "It is the same day");
+                    //convert all the times to a shared format
+
+                    getyyyyMMdd(calendar, yyyyMMdd);
+
+                    MaintStart = yyyyMMdd + " " + windows[owi].r_starttime;
+                    MaintEnd = yyyyMMdd + " " + windows[owi].r_endtime;
+                    MaintStartEpoch = ParseDate(MaintStart, "yyyy-MM-dd HH:mm:ss");
+                    MaintEndEpoch = ParseDate(MaintEnd, "yyyy-MM-dd HH:mm:ss");
+
+                    //build the SQL filter
+                    // LO
+                    sq_filter = Replace(windows[owi].filterstat,"\"","'");
+                    upStat = "update alerts.status set SuppressEscl = 6 where ";
+                    upStat = upStat + sq_filter + " and SuppressEscl < 6 and LastOccurrence > " + MaintStartEpoch + " and ";
+                    upStat = upStat + "LastOccurrence < " + MaintEndEpoch;
+
+                    //make the SQL call
+                    Log(3, "object server query for day of month window: \n" + upStat);
+                    DirectSQL('defaultobjectserver',upStat,false);
+
+
+                    //code for changing maint state in other products here
+
+
+                }
+                y = y + 1;
+            }
+        }
+
+
+
+
+
+
+
+        //handle recurring every nth day of the month (eg every 3rd Tuesday)
+        ElseIf(windows[owi].wintype == 4)
+        {
+            log(3, "This is a recurring Nth day of week window");
+
+            //what is today?
+            //create a calendar for that time zone
+
+            newCalendar(windows[owi].timezone, UTC, calendar);
+
+            getNTH(windows[owi].timezone, calendar, nth);
+
+            getDOW(windows[owi].timezone, calendar, currDay);
+
+            //convert nth number to string
+            getNthString(nth, fstf);
+
+
+
+            //add string to day of week for comparison to table values
+            nthday = fstf + currDay;
+
+
+
+            //split table values into a list and loop through them
+            snthDay = Split(windows[owi].nweekdayofmonth,'|');
+            numnth = Length(snthDay);
+            w = 0;
+            While(w < numnth)
+            {
+                If(nthday == snthDay[w])
+                {
+
+                    //we have a match.  pull exact times together
+                    mdy = LocalTime(GetDate(), "yyyy-MM-dd");
+                    MaintStart = mdy + " " + windows[owi].r_starttime;
+                    MaintEnd = mdy + " " + windows[owi].r_endtime;
+                    MaintStartEpoch = ParseDate(MaintStart, "yyyy-MM-dd HH:mm:ss");
+                    MaintEndEpoch = ParseDate(MaintEnd, "yyyy-MM-dd HH:mm:ss");
+
+                    //build SQL
+                    sq_filter = Replace(windows[owi].filterstat,"\"","'");
+                    upStat = "update alerts.status set SuppressEscl = 6 where ";
+                    upStat = upStat + sq_filter + " and SuppressEscl < 6 and LastOccurrence > " + MaintStartEpoch + " and ";
+                    upStat = upStat + "LastOccurrence < " + MaintEndEpoch;
+
+                    //make SQL call
+                    Log(3, "object server query for nth day window: \n" + upStat);
+                    DirectSQL('defaultobjectserver',upStat,false);
+
+
+                    //code for changing maint state in other products here
+
+
+                }
+                w = w + 1;
+            }
+
+
+        }
+        //need to mark the window as activated so that expiration times can be checked later
+        log(3, "flagging the window's activated field");
+        updateSQL="update mm_windows set Activated = 1 where mwid = ";
+        DirectSQL('ReportsHSQLDB',updateSQL + windows[owi].mwid,false);
+
+
+        //increment so that we can move onto the next active window
+        owi = owi + 1;
+
+    }
+
+    
+        log(2, "flagged events that occurred during the time windows only");
+}
+
+
+
+
+
+If(length(windows) > 0 and props.flagExistingEvents = TRUE)
+{
+    log(2, "going through windows and flagging all OMNIbus events that match");
+    log(2, "there is one query for each window");
+
+
+    //loop through windows
+    owi = 0;
+    while (owi < length(windows))
+    {
+        //tweak filter
+        sq_filter = Replace(windows[owi].filterstat,"\"","'");
+
+        //query object server
+                    upStat = "update alerts.status set SuppressEscl = 6 where ";
+                    upStat = upStat + sq_filter;
+                    DirectSQL('defaultobjectserver',upStat,false);
+
+        //update activated value
+        updateSQL="update mm_windows set Activated = 1 where mwid = ";
+        DirectSQL('ReportsHSQLDB',updateSQL + windows[owi].mwid,false);
+        //while increment
+        owi = owi + 1;
+    }
+    
+    log(2, "flagged pre-existing events");
+
+}
+
+
+
+
+
+/* ##########################################################################
+
+This bit finds applied windows that have expired
+in order to mark those events as no longer being in maintenance
+
+########################################################### */
+
+log(3, "\n\n\nExpiredWindows");
+
+///////////one-time window query
+log(3, "querying for expired one-time windows");
+ONETIMESQL = "select * from mm_windows where activated = 1 and (wintype=1 and eot_starttime";
+ONETIMESQL = ONETIMESQL + " <= " + UTC + " and eot_endtime ";
+ONETIMESQL = ONETIMESQL + "<= " + UTC + ")";
+windows = DirectSQL('ReportsHSQLDB',ONETIMESQL,false);
+log(3, "found " + length(windows) + "expired one-time windows");
+log(3, "windows are: \n" + windows);
+
+
+
+///////////////////Recurring window query
+log(3, "querying for expired recurring windows");
+
+//query to see what timezones we have to deal with
+getTZs(tzArray);
+//loop through them and find active ones
+n = 0;
+
+while (n < length(tzArray))
+{
+
+///////////assemble the pieces for the query
+
+//java calendar object for the current time in the time zone we are working with
+newCalendar(tzArray[n], UTC, calendar);
+
+//get Day Of Month, Day Of Week, and Nth Weekday for this timezone
+getDOM(tzArray[n], calendar, DOM);
+getDOW(tzArray[n], calendar, DOW);
+getNTH(tzArray[n], calendar, NTH);
+
+//get current time in that timezone in HH:MM:SS format
+getHHMMSS(calendar, rCT);
+
+//for Nth Weekday windows, data stored in DB like this: firstThu
+getNthString(NTH, NthString);
+nthkey = NthString + DOW;
+
+//////////////////build query for recurring windows in this time zone
+//changed r_endtime comparision from > to <
+RSQL = "select * from mm_windows where ";
+RSQL = RSQL + "activated = 1 and ( (wintype=2 and daysofweek like '%" + DOW + "%' and";
+RSQL = RSQL + " r_starttime < '" + rCT + "' and r_endtime < '" + rCT + "')";
+RSQL = RSQL + " OR (wintype=3 and daysofmonth like '%|" + DOM + "|%' and r_starttime < '" + rCT + "' and r_endtime";
+RSQL = RSQL + " < '" + rCT + "') OR (wintype=4 and nweekdayofmonth like ";
+RSQL = RSQL + "'%|" + nthkey + "|%' and r_starttime < '" + rCT + "' and r_endtime < '" + rCT + "'))";
+RSQL = RSQL + " and timezone = '" + tzArray[n] + "'";
+
+////////////////////perform query
+wins = DirectSQL('ReportsHSQLDB',RSQL,false);
+log(3, wins);
+
+//add windows for this time zone to our full list of open windows
+if (length(wins) > 0)
+{
+   windows = windows + wins;
+}
+n = n + 1;
+}
+
+
+//what all did we end up with?
+log(2, "after all queries...............................................................");
+log(2, length(windows) + " expired but active windows");
+log(3, "actual time windows: \n" + windows);
+
+
+    /* ####################################
+
+    This bit loops through the active, expired windows we found in mm_windows
+    - it marks the matching events in the defaultobjectserver data source as being in out of maintenance
+    - it marks clears the "activated" flag in mm_windows as well
+
+    #################################### */
+
+if(props.clearFlag)
+{
+    log(2, "clearFlag is " + props.clearFlag + "; unflagging events for expired windows");
+    log(2, "updating OMNIbus to clear maintenance flag");
+    xWinsLength = length(windows);
+
+    xWinsCount = 0;
+    while (xWinsCount < length(windows))
+    {
+        /////////object server update
+        //replace " with ' in filterstat
+        xsql_filter = Replace(windows[xWinsCount].filterstat,"\"","'");
+        log(3, "filter for window is " + xsql_filter);
+
+        //update events in object server via filter
+        xsql = "update alerts.status set SuppressEscl = 0 where SuppressEscl = 6 and (" + xsql_filter + ")";
+        DirectSQL('defaultobjectserver',xsql,false);
+
+        /*-----------------------------------------
+        //code for changing maint state in other products here
+        -----------------------------------------*/
+
+        xWinsCount = xWinsCount + 1;
+    }
+}
+
+log(3, "\n\n\nClearing activated flag");
+xWinsLength = length(windows);
+xWinsCount = 0;
+while (xWinsCount < length(windows))
+    {
+        ////////////hsql update
+        //update mm_windows via mwid
+        mwsql = "update mm_windows set activated = 0 where activated = 1 and mwid = " + windows[xWinsCount].mwid;
+        DirectSQL('ReportsHSQLDB', mwsql, false);
+        xWinsCount = xWinsCount + 1;
+    }

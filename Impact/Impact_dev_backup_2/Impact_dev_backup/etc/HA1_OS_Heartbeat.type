@@ -1,0 +1,19 @@
+#This file was written by Impact Server.
+#Sat Aug 13 14:48:24 BST 2011
+OS_Heartbeat.SQL.RESTRICTWHERECLAUSE=
+OS_Heartbeat.SQL.COUNTCACHEINVALIDATION=0
+OS_Heartbeat.SQL.DATASOURCENUM=9
+OS_Heartbeat.SQL.USERPARAMETERS=\ WITHDEFAULTS{{'Identifier', INTEGER, 'Identifier', 'Identifier', 'Identifier', 'true', '', '', FALSE, FALSE}, {'Active', INTEGER, 'Active', 'Active', 'Active', 'true', '', '', FALSE, FALSE}, {'AlertGroup', LONG_STRING, 'AlertGroup', 'AlertGroup', 'AlertGroup', 'true', '', '', FALSE, FALSE}, {'AlertKey', LONG_STRING, 'AlertKey', 'AlertKey', 'AlertKey', 'true', '', '', FALSE, FALSE}, {'Definition', LONG_STRING, 'Definition', 'Definition', 'Definition', 'true', '', '', FALSE, FALSE}, {'FilterName', LONG_STRING, 'FilterName', 'FilterName', 'FilterName', 'true', '', '', FALSE, FALSE}, {'LastTime', INTEGER, 'LastTime', 'LastTime', 'LastTime', 'true', '', '', FALSE, FALSE}, {'Manager', LONG_STRING, 'Manager', 'Manager', 'Manager', 'true', '', '', FALSE, FALSE}, {'NextTime', INTEGER, 'NextTime', 'NextTime', 'NextTime', 'true', '', '', FALSE, FALSE}, {'Node', LONG_STRING, 'Node', 'Node', 'Node', 'true', '', '', FALSE, FALSE}, {'Period', INTEGER, 'Period', 'Period', 'Period', 'true', '', '', FALSE, FALSE}, {'Status', INTEGER, 'Status', 'Status', 'Status', 'true', '', '', FALSE, FALSE}}
+OS_Heartbeat.SQL.QUERYINTERVALFORDATATYPESTATS=0
+OS_Heartbeat.SQL.DYNAMICLINKINFOSET={}
+OS_Heartbeat.SQL.TIMEINTERVLAFORDATATYPESTATS=0
+OS_Heartbeat.SQL.INCLUDE_ROOT=true
+OS_Heartbeat.SQL.CACHESIZE=0
+OS_Heartbeat.SQL.QUERYCACHEINVALIDATION=0
+OS_Heartbeat.SQL.TABLENAME=custom.Heartbeat
+OS_Heartbeat.SQL.QUERYCACHESIZE=0
+OS_Heartbeat.SQL.KEYFIELDS.1=Identifier
+OS_Heartbeat.SQL.ORDERBY=
+OS_Heartbeat.SQL.ENABLED=true
+OS_Heartbeat.SQL.DISPLAYNAMEFIELD=FilterName
+OS_Heartbeat.SQL.CACHEINVALIDATION=0

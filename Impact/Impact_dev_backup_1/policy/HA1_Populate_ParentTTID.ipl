@@ -1,0 +1,121 @@
+// Policy Name: Populate_ParentTTID
+// 
+// Version    Date        Name        Description
+// 1.0        14-09-10    -        Baseline
+// 1.1        14-09-10    Tony Nisbet    Capture ServerSerial with logging (patch 4.22)
+// 
+
+// DB - LOGGING ADDED 
+log ("**Populate_ParentTTID: Start. Serial=" + @Serial + " ParentTTID=" + @ParentTTID + " ChildID=" + @ChildID + " TTID= " + @TTID + " Node is " + @Node);
+log("Populate_ParentTTID: IQLOGSTART: ServerSerial=" + @ServerSerial + " EventId=" + @EventId);
+
+// Case 1: The ultimate parent alarm
+
+if ('' <> @TTID) {
+ if (@ParentTTID not like @TTID) {
+	    //log("Populate_ParentTTID: Ultimate parent: " + @Serial);
+
+        // if the parentTTID is not already populated
+        if ('' = @ParentTTID) {
+                // Copy the TTID of the parent to the ParentTTID
+                @ParentTTID = @TTID;
+                ReturnEvent(EventContainer);
+        }
+     else
+        {
+            // Copy the TTID of the parent to the ParentTTID
+                    @ParentTTID = @ParentTTID + "," + @TTID;
+                    ReturnEvent(EventContainer);
+        }
+ }
+
+        // If we have child alarms populate the ParentTTID
+        if ('' <> @ChildID) {
+        childEvents = GetByFilter('ha_ncoms_impact_events',"Serial in (" + @ChildID + ")",false);
+        numChildEvents = length(childEvents);
+        log("Populate_ParentTTID: Child Serials: " + @ChildID);
+        log("Populate_ParentTTID: Num of Child events found: " + numChildEvents);
+        if(numChildEvents > 0)
+            {
+            z = 0;
+            while(z < numChildEvents)
+                {
+                if(childEvents[z].ParentTTID = '')
+                    {
+                    childEvents[z].ParentTTID = '' + @ParentTTID;
+                    }
+                else
+                    {
+                    childEventTTIDs=Split(childEvents[z].ParentTTID, ",");
+                    numChildEventTTIDs = length(childEventTTIDs);
+                    w = 0;
+                    x = 0;
+                    while(w < numChildEventTTIDs)
+                        {
+                        if(childEventTTIDs[w] = @ParentTTID)
+                            {
+                            x = x + 1;
+                            }
+                        w = w + 1;
+                        }
+                    if(x = 0)
+                        {
+                        childEvents[z].ParentTTID = childEvents[z].ParentTTID + "," + @ParentTTID;
+                        }
+                    }
+                z = z + 1;
+                }
+            }
+        }
+}
+
+// Case 2: A child alarm that has subsequent children
+
+elseif (('' <> @ParentTTID) && ('' = @TTID) && ('' <> @ChildID)) {
+
+        //log("Populate_ParentTTID: Non-ultimate parent: " + @Serial);
+        
+        // Get all the child alarms for the event
+        
+        childEvents = GetByFilter('ha_ncoms_impact_events',"Serial in (" + @ChildID + ")",false);
+        numChildEvents = length(childEvents);
+        if(numChildEvents > 0)
+            {
+            z = 0;
+            while(z < numChildEvents)
+                {
+                if(childEvents[z].ParentTTID = '')
+                    {
+                    childEvents[z].ParentTTID = '' + @ParentTTID;
+                    }
+                else
+                    {
+                    childEventTTIDs=Split(childEvents[z].ParentTTID, ",");
+                    numChildEventTTIDs = length(childEventTTIDs);
+                    w = 0;
+                    x = 0;
+                    while(w < numChildEventTTIDs)
+                        {
+                        if(childEventTTIDs[w] = @ParentTTID)
+                            {
+                            x = x + 1;
+                            }
+                        w = w + 1;
+                        }
+                    if(x = 0)
+                        {
+                        childEvents[z].ParentTTID = childEvents[z].ParentTTID + "," + @ParentTTID;
+                        }
+                    }
+                z = z + 1;
+                }
+            }
+}
+
+//log("Populate_ParentTTID: End: " + @Serial);
+
+// DB - LOGGING ADDED 
+log("Populate_ParentTTID: IQLOGFINISH: ServerSerial=" + @ServerSerial + " EventId=" + @EventId);
+log ("**Populate_ParentTTID: End. Serial=" + @Serial + " ParentTTID=" + @ParentTTID + " ChildID=" + @ChildID + " TTID= " + @TTID + " Node is " + @Node);
+
+

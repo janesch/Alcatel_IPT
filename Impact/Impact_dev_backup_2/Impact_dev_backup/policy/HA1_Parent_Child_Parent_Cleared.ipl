@@ -1,0 +1,61 @@
+// Policy Name: Parent_Child_Parent_Cleared
+// 
+// Version    Date        Name        Description
+// 1.0        14-09-10    -        Baseline
+// 1.1        14-09-10    Tony Nisbet    Capture ServerSerial with logging (patch 4.22)
+//
+
+Log("Parent_Child_Parent_Cleared: Starting policy");
+log("Parent_Child_Parent_Cleared: IQLOGSTART: ServerSerial=" + @ServerSerial + " EventId=" + @EventId);
+
+// DB - LOGGING ADDED 
+log ("**** Parent_Child_Parent_Cleared: Start. Serial=" + @Serial + " TTFlag=" + @TTFlag + " Service_Impact: service affecting set to " + @ServiceAffecting + " equipment type set to " + @EquipmentType + " Node is " + @Node); 
+
+childEvents = Split(EventContainer.ChildID,",");
+numChildEvents = Length(childEvents);
+if(numChildEvents > 0)
+    {
+    x = 0;
+    while(x < numChildEvents)
+        {
+// Added clause to not select informational events, as these are not to be unsuppressed when their parent clears
+// Giles Blake, 09/02/2010
+        //currentChildEvent=GetByFilter('ha_ncoms_impact_events',"(ServerSerial = " + childEvents[x] + ")",false);
+        currentChildEvent=GetByFilter('ha_ncoms_impact_events',"(ServerSerial = " + childEvents[x] + ") and (Type != 13)",false);
+// End of amendment
+        numCurrentChildEvent = Length(currentChildEvent);
+        if(numCurrentChildEvent > 0)
+            {
+            i = 0;
+            while(i < numCurrentChildEvent)
+                {
+                currentChildEvent[i].ParentChildFlag = 0;
+// Added if statement to check if the event is a Kenton POTS event, and not unsuppress these when the parent clears, as they occur on a 
+// 20 minute polling cycle. The unsuppression of these will be handled in the de-duplication trigger in Omnibus. This will unsuppress
+// the event when the ParentChildFlag field is not set to 4 (Established child event)
+// Giles Blake, 09/02/2010
+                if(currentChildEvent[i].AlertGroup <> "POTS")
+                    {
+                    currentChildEvent[i].SuppressEscl = 0;
+                    currentChildEvent[i].SuppressCause = "";
+                    }
+                currentChildEvent[i].ImpactFlag = 2;
+// End of Amendment
+                currentChildEvent[i].ParentID = "";
+                currentChildEvent[i].ChildID = "";
+                currentChildEvent[i].ParentIdentifier = "";
+                currentChildEvent[i].ParentServerName = "";
+                currentChildEvent[i].ParentServerSerial = "";
+                i = i + 1;
+                }
+            }
+        x = x + 1;
+        }
+    }
+
+Log("Parent_Child_Parent_Cleared: End");
+
+// DB - LOGGING ADDED 
+log("Parent_Child_Parent_Cleared: IQLOGFINISH: ServerSerial=" + @ServerSerial + " EventId=" + @EventId);
+log ("**** Parent_Child_Parent_Cleared: End:  Serial=" + @Serial + " TTFlag=" + @TTFlag + " Service_Impact: service affecting set to " + @ServiceAffecting + " equipment type set to " + @EquipmentType + " Node is " + @Node); 
+

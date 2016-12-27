@@ -1,0 +1,36 @@
+/********************************************************* {COPYRIGHT-TOP-RM} ***
+* Licensed Materials - Property of IBM
+* "Restricted Materials of IBM"
+*
+* 5724-S43
+* (C) Copyright IBM Corp. 2009
+*
+* US Government Users Restricted Rights - Use, duplication, or
+* disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+********************************************************* {COPYRIGHT-END-RM} **/
+log("TECtest_update policy running on event with date_reception of: " + @DATE_RECEPTION);
+
+@MSG = @MSG + " : updated by Impact";
+//This line changes the value of MSG in the Event Container.
+//Changes will be pushed to TEC when returnTECEvent function is called.
+
+
+TEC.getSlots(EventContainer);
+//This line retrieves additional slots for the event and adds them to the Event Container.
+
+
+@impact_Service_Desk_Ticket = "Ticket # 12345";
+//This line changes the value of impact_Service_Desk_Ticket, which is one of the additional slots retrieved by the getSlots function.
+//The changes will be pushed to TEC when returnTECEvent function is called.
+
+
+TEC.returnTECEvent(EventContainer);
+//This line writes changes back to TEC.
+//The msg in the TEC console should have " : updated by Impact" added to it.
+//impact_Service_Desk_Ticket (viewable in event details) should read "Ticket # 12345"
+//Before calling returnTECEvent the customerConfiguration function in the TEC policy needs...
+//...to be edited so that it contains valid values for your TEC environment.
+
+
+
+

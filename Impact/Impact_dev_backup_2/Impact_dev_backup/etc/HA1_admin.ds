@@ -1,0 +1,14 @@
+#This file was written by server.
+#Fri Oct 28 14:32:01 BST 2011
+admin.ObjectServer.FAILOVERPOLICY=FAILBACK
+admin.ObjectServer.DBPASSWORD={aes}55A496B539DBC26480C52FC114C54393
+admin.ObjectServer.PRIMARYHOST=172.20.174.58
+admin.ObjectServer.MAXSQLCONNECTION=30
+admin.ObjectServer.PRIMARYPORT=4101
+admin.ObjectServer.DISABLEFAILOVER=false
+admin.ObjectServer.BACKUPHOST=172.20.174.158
+admin.ObjectServer.JDBCDRIVER=com.sybase.jdbc3.jdbc.SybDriver
+admin.ObjectServer.DBUSERNAME=root
+admin.ObjectServer.BACKUPPORT=4101
+admin.ObjectServer.USESSLBACKUP=FALSE
+admin.ObjectServer.USESSLPRIMARY=FALSE

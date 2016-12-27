@@ -1,0 +1,141 @@
+// Policy Name: GCAB_6850_Resilience
+// 
+// Version	Date        Name        Description
+// 1.0        14-09-10    -        Baseline
+// 1.1        14-09-10    Tony Nisbet    Capture ServerSerial with logging (patch 4.22)
+// 
+
+log("GCAB_6850_Resilience: Start");
+log("GCAB_6850_Resilience: IQLOGSTART: ServerSerial=" + @ServerSerial + " EventId=" + @EventId);
+
+// DB - LOGGING ADDED 
+log ("**** GCAB_6850_Resilience: Start. Serial=" + @Serial + " TTFlag=" + @TTFlag + " Service_Impact: service affecting set to " + @ServiceAffecting + " equipment type set to " + @EquipmentType + " Node is " + @Node + "ActionRequired is "+@ActionRequired); 
+
+// Is the event from a 6850 ?
+if(EventContainer.EquipmentType like '.*6850.*')
+        {
+        log("GCAB_6850_Resilience: Found a 6850 event");
+        // Is the event from a 6850 ? Yes - Determine the span identity from the name of the 6850
+        SpanName = RExtract(@Node,"(.*)[0-9][0-9]");
+
+        // Lookup current problem events from 6850s on the same span as the remote 6850
+        // plus 7750 events from either end of the span
+        First7750 = RExtract(@Node,"^([A-Z][A-Z][A-Z][A-Z]).*");
+        First7750 = '' + First7750 + 'SR[01|12][0-9][0-9]';
+
+// Amended to fix the matching of GCAB (non-TS) node names
+// Patch 4.07a
+// Giles Blake, 25/05/2010
+        Filter = "((Type = 1) and (Severity > 0)) and((Node like '"+First7750+"') or (Node like '^"+SpanName+"[0-9][0-9]$'))";
+
+    if(@Node like "^[A-Z][A-Z][A-Z][A-Z][0-9][0-9][A-Z][A-Z][A-Z][A-Z].*")
+        {
+            Second7750 = RExtract(@Node,"^[A-Z][A-Z][A-Z][A-Z][0-9][0-9]([A-Z][A-Z][A-Z][A-Z]).*");
+            Second7750 = '' + Second7750 + 'SR[01|12][0-9][0-9]';
+        Filter = "((Type = 1) and (Severity > 0)) and((Node like '"+First7750+"') or (Node like '"+Second7750+"') or (Node like '^"+SpanName+"[0-9][0-9]$'))";
+        }
+// End of Patch 4.07a
+
+        SpanFaults = GetByFilter('ha_ncoms_impact_events',Filter,false);
+        numSpanFaults = Length(SpanFaults);
+        log("GCAB_6850_Resilience: " + Filter);
+        log("GCAB_6850_Resilience: Found "+numSpanFaults+" related events.");
+        }
+else
+        {
+        log("GCAB_6850_Resilience: Found a 7750 event");
+        // Is the event from a 6850 ? No - must be from 7750
+        // Check if the remote end of the connection is on a 6850
+        RemoteEnd = GetByFilter('Circee_Host_Table',"SYSNAME = '"+@RemoteNode+"'",false);
+        numRemoteEnd = Length(RemoteEnd);
+        if(numRemoteEnd > 0)
+                {
+                if(RemoteEnd[0].EQUIP_TYPE like '.*6850.*')
+                        {
+                        // If the other end is a 6850 determine the span identity from the name of the 6850
+                        SpanName = RExtract(@RemoteNode,"(.*)[0-9][0-9]");
+
+                        // Lookup current problem events from 6850s on the same span as the remote 6850
+                        // plus 7750 events from either end of the span
+                        First7750 = RExtract(@RemoteNode,"^([A-Z][A-Z][A-Z][A-Z]).*");
+                        Second7750 = RExtract(@RemoteNode,"^[A-Z][A-Z][A-Z][A-Z][0-9][0-9]([A-Z][A-Z][A-Z][A-Z]).*");
+                        if(@Node like First7750)
+                                {
+                                Other7750 = '' + Second7750 + 'SR[01|12][0-9][0-9]';
+                                }
+                        else
+                                {
+                                Other7750 = '' + First7750 + 'SR[01|12][0-9][0-9]';
+                                }
+                        Filter = "((Type = 1) and (Severity > 0)) and((Node like '"+@Node+"') or (Node like '"+Other7750+"') or (Node like '^"+SpanName+"[0-9][0-9]$'))";
+                        SpanFaults = GetByFilter('ha_ncoms_impact_events',Filter,false);
+                        numSpanFaults = Length(SpanFaults);
+                        log("GCAB_6850_Resilience: " + Filter);
+                        log("GCAB_6850_Resilience: Found "+numSpanFaults+" related events.");
+                        }
+                }
+        }
+
+resourceIsolationFound = False; // Flags whether a resource isolation has been found
+interfacesDownSerials = "" + @ServerSerial; // Stores any related interface down events
+
+// Start loop. Set x = 0
+x = 0;
+
+// is x < number of events found ?
+while (x < numSpanFaults) {
+        // is x < number of events found ? yes -
+        // is event x a 6850 resource isolation?
+// Amendment to check AlarmClass rather than EventID field
+// Patch 4.07b
+// Giles Blake, 25/05/2010
+        if((!resourceIsolationFound) && SpanFaults[x].AlarmClass = "6850ResourceIsolation") {
+                log("GCAB_6850_Resilience: Found a resource isolation event.");
+                // is event x a 6850 resource isolation? yes -
+                // Flag that a resource isolation event has been found
+                resourceIsolationFound = True;
+        }
+        elseif(SpanFaults[x].AlarmClass = "InterfaceDown") {
+// End of Patch 4.07b
+                // is event x a 6850 resource isolation? no -
+                // is event x an interface down ?
+
+                log("GCAB_6850_Resilience: Found an interface down event.");
+                // is event x an interface down ? yes -
+                // Add serial of event x to InterfacesDownArray
+                log("GCAB_6850_Resilience: InterfacesDownArray = "+interfacesDownSerials+".");
+                interfacesDownSerials = interfacesDownSerials + "," + SpanFaults[x].ServerSerial;
+                log("GCAB_6850_Resilience: InterfacesDownArray = "+interfacesDownSerials+".");
+        }
+        // Increment x
+        x = x + 1;
+}
+
+// is x < number of events found ? no -
+
+// Are number of resources isolated > 0?
+if(resourceIsolationFound)
+        {
+        log("GCAB_6850_Resilience: Flagging alarms as service affecting");
+        // Update the interface alarms to be service affecting -
+
+        BatchUpdate('ha_ncoms_impact_events', "ServerSerial in ("+interfacesDownSerials+") and (ServiceAffecting <> 1 or ResilienceAffecting <> 0)", "ServiceAffecting = 1, AlarmClass = 'BothAdjacentLinkDown', ResilienceAffecting = 0, ImpactFlag = 3");
+
+        }
+else
+        {
+        log("GCAB_6850_Resilience: Flagging alarms as resilience affecting");
+        // Update the interface alarms to be resilience affecting -
+
+        BatchUpdate('ha_ncoms_impact_events', "ServerSerial in ("+interfacesDownSerials+") and (ServiceAffecting <> 0 or ResilienceAffecting <> 1)", "ServiceAffecting = 0, ResilienceAffecting = 1, ImpactFlag = 3");
+
+        }
+
+// Stop
+
+log("GCAB_6850_Resilience: End");
+
+// DB - LOGGING ADDED 
+log("GCAB_6850_Resilience: IQLOGFINISH: ServerSerial=" + @ServerSerial + " EventId=" + @EventId);
+log ("**** GCAB_6850_Resilience: End:  Serial=" + @Serial + " TTFlag=" + @TTFlag + " Service_Impact: service affecting set to " + @ServiceAffecting + " equipment type set to " + @EquipmentType + " Node is " + @Node); 
+

@@ -1,0 +1,79 @@
+if ( regmatch ( $line_00, "MTTR_Exceeded" ) ) { 
+$MTTR_Exceeded= extract($line_00, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_01, "MTTR_Exceeded" ) ) { 
+$MTTR_Exceeded= extract($line_01, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_02, "MTTR_Exceeded" ) ) { 
+$MTTR_Exceeded= extract($line_02, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_03, "MTTR_Exceeded" ) ) { 
+$MTTR_Exceeded= extract($line_03, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_04, "MTTR_Exceeded" ) ) { 
+$MTTR_Exceeded= extract($line_04, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_05, "MTTR_Exceeded" ) ) { 
+$MTTR_Exceeded= extract($line_05, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_06, "MTTR_Exceeded" ) ) { 
+$MTTR_Exceeded= extract($line_06, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_07, "MTTR_Exceeded" ) ) { 
+$MTTR_Exceeded= extract($line_07, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_08, "MTTR_Exceeded" ) ) { 
+$MTTR_Exceeded= extract($line_08, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_09, "MTTR_Exceeded" ) ) { 
+$MTTR_Exceeded= extract($line_09, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_10, "MTTR_Exceeded" ) ) { 
+$MTTR_Exceeded= extract($line_10, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_11, "MTTR_Exceeded" ) ) { 
+$MTTR_Exceeded= extract($line_11, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_12, "MTTR_Exceeded" ) ) { 
+$MTTR_Exceeded= extract($line_12, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_13, "MTTR_Exceeded" ) ) { 
+$MTTR_Exceeded= extract($line_13, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_14, "MTTR_Exceeded" ) ) { 
+$MTTR_Exceeded= extract($line_14, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_15, "MTTR_Exceeded" ) ) { 
+$MTTR_Exceeded= extract($line_15, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_16, "MTTR_Exceeded" ) ) { 
+$MTTR_Exceeded= extract($line_16, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_17, "MTTR_Exceeded" ) ) { 
+$MTTR_Exceeded= extract($line_17, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_18, "MTTR_Exceeded" ) ) { 
+$MTTR_Exceeded= extract($line_18, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_19, "MTTR_Exceeded" ) ) { 
+$MTTR_Exceeded= extract($line_19, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_20, "MTTR_Exceeded" ) ) { 
+$MTTR_Exceeded= extract($line_20, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_21, "MTTR_Exceeded" ) ) { 
+$MTTR_Exceeded= extract($line_21, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_22, "MTTR_Exceeded" ) ) { 
+$MTTR_Exceeded= extract($line_22, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_23, "MTTR_Exceeded" ) ) { 
+$MTTR_Exceeded= extract($line_23, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_24, "MTTR_Exceeded" ) ) { 
+$MTTR_Exceeded= extract($line_24, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_25, "MTTR_Exceeded" ) ) { 
+$MTTR_Exceeded= extract($line_25, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_26, "MTTR_Exceeded" ) ) {
+$MTTR_Exceeded= extract($line_26, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_27, "MTTR_Exceeded" ) ) {
+$MTTR_Exceeded= extract($line_27, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_28, "MTTR_Exceeded" ) ) {
+$MTTR_Exceeded= extract($line_28, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_29, "MTTR_Exceeded" ) ) {
+$MTTR_Exceeded= extract($line_29, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_30, "MTTR_Exceeded" ) ) {
+$MTTR_Exceeded= extract($line_30, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_31, "MTTR_Exceeded" ) ) {
+$MTTR_Exceeded= extract($line_31, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_32, "MTTR_Exceeded" ) ) {
+$MTTR_Exceeded= extract($line_32, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_33, "MTTR_Exceeded" ) ) {
+$MTTR_Exceeded= extract($line_33, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_34, "MTTR_Exceeded" ) ) {
+$MTTR_Exceeded= extract($line_34, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_35, "MTTR_Exceeded" ) ) {
+$MTTR_Exceeded= extract($line_35, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_36, "MTTR_Exceeded" ) ) {
+$MTTR_Exceeded= extract($line_36, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_37, "MTTR_Exceeded" ) ) {
+$MTTR_Exceeded= extract($line_37, "MTTR_Exceeded=(.*)")
+} else if ( regmatch ( $line_38, "MTTR_Exceeded" ) ) {
+$MTTR_Exceeded= extract($line_38, "MTTR_Exceeded=(.*)")
+}   

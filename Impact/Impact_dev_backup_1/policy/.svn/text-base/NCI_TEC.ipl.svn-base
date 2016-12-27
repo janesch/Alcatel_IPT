@@ -1,0 +1,478 @@
+/********************************************************* {COPYRIGHT-TOP-RM} ***
+* Licensed Materials - Property of IBM
+* "Restricted Materials of IBM"
+*
+* 5724-S43
+* (C) Copyright IBM Corp. 2009
+*
+* US Government Users Restricted Rights - Use, duplication, or
+* disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+********************************************************* {COPYRIGHT-END-RM} **/
+function customerConfiguration(T){
+
+
+
+/******************************************************************************
+Configuration Information for your TEC environment in lines below
+Please update to match your environment
+******************************************************************************/
+
+//TEC Class used to identify new inserts from Impact
+TEC_InsertClass = "IMPACT";
+
+
+//TEC Class used to identify that updates to an existing event are being passed
+TEC_UpdateClass = "IMPACT_Update";
+
+
+//valid slots for the TEC class named in TEC_InsertClass
+TEC_Insert_ValidSlots = "severity, msg, hostname, impact_MRO_Service_Desk_Ticket, impact_instance, identifier";
+
+
+//valid slots for the TEC class named in TEC_UpdateCLass
+TEC_Update_ValidSlots = "impact_MRO_Service_Desk_Ticket, severity, msg";
+
+
+// full path to the ImpactTECAgent.conf file
+ImpactTECAgentConfFileLocation = "/opt/ibm/netcool/impact/integrations/tec/ImpactTECAgent.conf";
+
+
+/******************************************************************************
+Configuration Information for your TEC environment in lines above
+Please update to match your environment
+******************************************************************************/
+
+
+
+
+
+
+
+
+
+
+T=newobject();
+T.updateClass=TEC_UpdateClass;
+T.insertClass=TEC_InsertClass;
+T.confFile=ImpactTECAgentConfFileLocation;
+T.validUpdateSlots=TEC_Update_ValidSlots;
+T.validSlots=TEC_Insert_ValidSlots;
+}
+
+
+
+
+
+/******************************************************************************
+Policy Code
+******************************************************************************/
+
+
+///CORE FUNCTIONS THAT THE END USER WILL CALL/////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+function returnTECEvent(EventContainer) {
+	//log("returnTECEvent called");
+//retrieve configuration information
+	getConfObject(configObject);
+
+//make a duplicate of the event to work with
+	createProxyEvent (EventContainer, proxyEvent);
+
+//create the java object that will hold the event
+	initializeEIFEventObject (EIFEventObject);
+
+//set the class to the update_class specified in the configuration information (default = IMPACT_Update)
+	setTECEventClassName(EIFEventObject, configObject.updateClass);
+
+//set slots needed for TEC Rule to correlate the event we are about to push in with the event that triggered the policy
+	setUpdateCorrelationSlots(EIFEventObject, proxyEvent);
+
+//set STATUS-- requires special handling
+	setUpdateEventStatus(EIFEventObject, proxyEvent);
+
+// set other slots;  only sets slots listed in configObject.validUpdateSlots
+	setUpdateSlots(EIFEventObject, proxyEvent, configObject);
+
+// send EIF Event Object to TEC via the EIF API
+	sendEIFEventObjectToTEC(EIFEventObject, configObject);
+
+}
+
+
+function getSlots(EventContainer){
+	//log("getSlots started");
+	eventSlots=GetByFilter('TEC_slots_evt', "EVENT_HNDL = " + @EVENT_HNDL + " and SERVER_HNDL = " + @SERVER_HNDL + " and DATE_RECEPTION = " + @DATE_RECEPTION, false);
+
+	slotsObject = newobject();
+	s = 0;
+	while (s < length(eventSlots) ){
+		slotName = eventSlots[s].SLOT_NAME;
+		if (eventSlots[s].LONG_SLOT_VALUE == NULL){
+			slotsObject[slotName] = eventSlots[s].SHORT_SLOT_VALUE;
+		}
+		else {
+			slotsObject[slotName] = eventSlots[s].LONG_SLOT_VALUE;
+		}
+		s=s+1;
+	}
+	//log("slotsObject is: " + slotsObject);
+	EventContainer = merge(EventContainer, slotsObject, NULL);
+	//log("getSlots finished: " + EventContainer);
+}
+
+
+
+function insertTECEvent(eventObject){
+	//log("insertTECEvent called");
+
+//retrieve configuration information
+	getConfObject(configObject);
+
+//make a duplicate of the event to work with
+	createProxyEvent (eventObject, proxyEvent);
+
+//create the java object that will hold the event
+	initializeEIFEventObject (EIFEventObject);
+
+//set the class to the insert class specified in the configuration information (default = IMPACT)
+	setTECEventClassName(EIFEventObject, configObject.insertClass);
+
+//set the other values
+	setSlots(EIFEventObject, proxyEvent, configObject);
+
+// send EIF Event Object to TEC via the EIF API
+	sendEIFEventObjectToTEC(EIFEventObject, configObject);
+}
+
+
+
+
+
+function insertTECEventOfClass(eventObject, class){
+	log("insertTECEventofClass called");
+
+//retrieve configuration information
+	getConfObject(configObject);
+
+//make a duplicate of the event to work with
+	createProxyEvent (eventObject, proxyEvent);
+
+//create the java object that will hold the event
+	initializeEIFEventObject (EIFEventObject);
+
+//set the class to the passed class
+	setTECEventClassName(EIFEventObject, class);
+
+//set the other values
+	setSlots(EIFEventObject, proxyEvent, configObject);
+
+// send EIF Event Object to TEC via the EIF API
+	sendEIFEventObjectToTEC(EIFEventObject, configObject);
+}
+
+
+
+
+/////SUPPORTING FUNCTIONS/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+function getConfObject(configObject){
+	//log("getConfObject started");
+
+
+//retrieve customer-specific values
+	customerConfiguration(configObject);
+
+
+//need to convert validUpdateSlots and validSlots to arrays
+
+	slotListToArrays(configObject.validSlots);
+	slotListToArrays(configObject.validUpdateSlots);
+
+	log(configObject.updateClass);
+
+	log(configObject.insertClass);
+
+	log(configObject.confFile);
+
+	log(configObject.validUpdateSlots);
+
+	log(configObject.validSlots);
+
+
+	log("getConfObject finished: " + configObject);
+}
+
+
+function slotListToArrays(slotList){
+	//break up at ,
+	x=split(slotList, ",");
+
+	//strip any extra space at end (loop)
+	n=0;
+	while (n < length(x)) {
+		//log(x[n]);
+		x[n]=trim(x[n]);
+		//log(x[n]);
+		n=n+1;
+	}
+	slotList=x;
+}
+
+
+function createProxyEvent (originalEvent, proxyEvent){
+	//log("createProxyEvent started");
+	proxyEvent = newobject();
+	proxyEvent = Merge(proxyEvent, originalEvent, NULL);
+
+	//log("createProxyEvent finished: " + proxyEvent);
+}
+
+
+
+
+function initializeEIFEventObject (EIFEventObject){
+	//log("initializeEIFEventObject started");
+
+	EIFEventObject=NewJavaObject("com.ibm.tivoli.netcool.impact.integrations.tec.ImpactTECEvent",{});
+
+	//log("initializeEIFEventObject finished");
+
+}
+
+
+
+
+
+function setTECEventClassName(EIFEventObject, tecClass){
+	log("setTECEventClassName started");
+	log("Class name to assign TEC event is: " + tecClass);
+	result=JavaCall("com.ibm.tivoli.netcool.impact.integrations.tec.ImpactTECEvent",EIFEventObject,"setClassName",{tecClass});
+	//log("setTECEventClassName finished successfully? " + result);
+}
+
+
+
+
+
+function addQuotes(n){
+	n = '"' + n + '"';
+	//log("addQuotes result: " + n);
+}
+
+
+
+
+
+
+function setUpdateCorrelationSlots(EIFEventObject, proxyEvent){
+	//log("setUpdateCorrelationSlots started");
+
+	addQuotes(proxyEvent.EVENT_HNDL);
+	result=JavaCall("com.ibm.tivoli.netcool.impact.integrations.tec.ImpactTECEvent",EIFEventObject,"setSlot",{"impact_event_handle",proxyEvent.EVENT_HNDL});
+	//log("setUpdateCorrelationSlots successfully set impact_event_handle? " + result);
+
+
+	addQuotes(proxyEvent.SERVER_HNDL);
+	result=JavaCall("com.ibm.tivoli.netcool.impact.integrations.tec.ImpactTECEvent",EIFEventObject,"setSlot",{"impact_server_handle",proxyEvent.SERVER_HNDL});
+	//log("setUpdateCorrelationSlots successfully set impact_server_handle? " + result);
+
+
+	addQuotes(proxyEvent.DATE_RECEPTION);
+	result=JavaCall("com.ibm.tivoli.netcool.impact.integrations.tec.ImpactTECEvent",EIFEventObject,"setSlot",{"impact_date_reception",proxyEvent.DATE_RECEPTION});
+	//log("setUpdateCorrelationSlots successfully set impact_date_reception? " + result);
+
+	//log("setUpdateCorrelationSlots finished");
+
+}
+
+
+
+function setUpdateEventStatus(EIFEventObject, proxyEvent){
+	//log("setUpdateEventStatus started");
+	if (proxyEvent.STATUS == 0) {
+	proxyEvent.impact_status = "OPEN";}
+
+	if (proxyEvent.STATUS == 20) {
+	proxyEvent.impact_status = "ACKNOWLEDGED";}
+
+	if (proxyEvent.STATUS == 30) {
+	proxyEvent.impact_status = "CLEARED";}
+
+	if(proxyEvent.STATUS != 0 and proxyEvent.STATUS != 20 and proxyEvent.STATUS != 30){
+// invalid value, set to OPEN
+	//log("invalid STATUS value passed to returnTECEvent: " + proxyEvent.STATUS);
+	proxyEvent.impact_status = "OPEN";}
+
+	addQuotes(proxyEvent.impact_status);
+	result=JavaCall("com.ibm.tivoli.netcool.impact.integrations.tec.ImpactTECEvent",EIFEventObject,"setSlot",{"impact_status",proxyEvent.impact_status});
+
+
+	//log("setUpdateEventStatus finished successfully? " + result);
+}
+
+
+
+
+/*
+function getFields(row, fieldList){
+	fieldList = keys(row);
+}
+*/
+
+
+
+
+function findMatches(proxyEvent, fieldList, validSlot, tempEvent){
+	//log("findMatches started for " + validSlot);
+	f=0;
+	while (f < length (fieldList) ) {
+		//log("validSlot I am checking is: " + validSlot);
+		//log("event field I am comparing to is: " + fieldList[f]);
+
+		if (toupper(validSlot) == toupper(fieldList[f]) ) {
+			tempEvent[validSlot] = proxyEvent[fieldList[f]];
+			fieldList = fieldList - fieldList[f];
+			//log("they match.  tempEvent is now: " + tempEvent);
+			f=length(fieldList);
+
+		}
+		f=f+1;
+	}
+	//log("findMatches finished: " + tempEvent);
+}
+
+
+
+
+function quoteValuesWithSpaces(proxyEvent, fieldList) {
+	//log("quoteValuesWithSpaces started");
+	i=0;
+	while(i < length(fieldList) ){
+		spaceCheck = split ( proxyEvent[fieldList[i]] , " ");
+		if (length(spaceCheck) > 1){
+			proxyEvent[fieldList[i]] = "'" + proxyEvent[fieldList[i]] + "'";
+			//log(proxyEvent[fieldList[i]]);
+		}
+		i = i + 1;
+	}
+	//log("quoteValuesWithSpaces finished: " + proxyEvent);
+
+}
+
+
+
+function addSlotToEIFEventObject(EIFEventObject, slotName, proxyEvent){
+	//log("addSlotToEIFEventObject started for " + slotName);
+	//log("slot name is: " + slotName);
+	//log("slot value is: " + proxyEvent[slotName]);
+
+	addQuotes(proxyEvent[slotName]);
+	//log(proxyEvent[slotName]);
+	result=JavaCall("com.ibm.tivoli.netcool.impact.integrations.tec.ImpactTECEvent",EIFEventObject,"setSlot",{slotName,proxyEvent[slotName]});
+	//log("addSlotToEIFEventObject finished successfully? " + result);
+}
+
+
+
+
+function setUpdateSlots(EIFEventObject, proxyEvent, configObject){
+	//log("setUpdateSlots started");
+
+	v=0;
+	fieldList = keys(proxyEvent);
+	tempEvent=newobject();
+	while (v < length(configObject.validUpdateSlots) ){
+		validSlots = configObject.validUpdateSlots;
+		//log("looking for fields in the event container matching " + validSlots[v]);
+		findMatches(proxyEvent, fieldList, validSlots[v], tempEvent);
+
+		v=v+1;
+	}
+
+	proxyEvent = tempEvent;
+	//log("new proxyEvent is: " + proxyEvent);
+
+
+	fieldList = keys(proxyEvent);
+	quoteValuesWithSpaces(proxyEvent, fieldList);
+
+
+	i = 0;
+	while (i < length(fieldList) ){
+		addSlotToEIFEventObject(EIFEventObject, fieldList[i], proxyEvent);
+		i = i + 1;
+	}
+
+
+	//log("setUpdateSlots finished");
+
+}
+
+
+
+function setSlots(EIFEventObject, proxyEvent, configObject){
+	//log("setSlots started");
+
+	v=0;
+	fieldList = keys(proxyEvent);
+	tempEvent=newobject();
+	while (v < length(configObject.validSlots) ){
+		validSlots = configObject.validSlots;
+		//log("looking for fields in the event container matching " + validSlots[v]);
+		findMatches(proxyEvent, fieldList, validSlots[v], tempEvent);
+
+		v=v+1;
+	}
+
+	proxyEvent = tempEvent;
+	//log("new proxyEvent is: " + proxyEvent);
+
+
+	fieldList = keys(proxyEvent);
+	quoteValuesWithSpaces(proxyEvent, fieldList);
+
+
+	i = 0;
+	while (i < length(fieldList) ){
+		addSlotToEIFEventObject(EIFEventObject, fieldList[i], proxyEvent);
+		i = i + 1;
+	}
+	//log("setSlots finished");
+
+}
+
+
+
+
+function sendEIFEventObjectToTEC(EIFEventObject, configObject){
+	log("sendEIFEventObjectToTEC started");
+
+// convert EIFEventObject to string
+	//this turns the java object tec_event into a string to be passed to the eif api
+	event_string=JavaCall("com.ibm.tivoli.netcool.impact.integrations.tec.ImpactTECEvent",EIFEventObject,"toString",{true});
+	event_string = strip(event_string, '"');
+	log("event string is: " + event_string);
+
+
+synchronized(sending_event) {
+// create agent
+	log("eif conf file is at: " + configObject.confFile);
+	eifAgent=NewJavaObject("com.ibm.tivoli.netcool.impact.integrations.tec.ImpactTECAgent",{configObject.confFile, "SENDER_MODE", false});
+
+
+
+// push string to agent
+	result=JavaCall("com.ibm.tivoli.netcool.impact.integrations.tec.ImpactTECAgent",eifAgent,"sendEvent",{event_string});
+	log("results of sending event through agent are: " + result);
+	result=JavaCall("com.ibm.tivoli.netcool.impact.integrations.tec.ImpactTECAgent",eifAgent,"getErrorMsg",{});
+	log("checking for error messages from eif api after sending event: " + result);
+
+
+
+// disconnect agent
+	JavaCall("com.ibm.tivoli.netcool.impact.integrations.tec.ImpactTECAgent",eifAgent,"disconnect",{0});
+
+	log("sendEIFEventObjectToTEC finished");
+
+}//end synchronized
+}//end function

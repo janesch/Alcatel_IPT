@@ -1,0 +1,9 @@
+#This file was written by Impact Server.
+#Mon Aug 21 21:32:46 EDT 2006
+impact.datatype.numdatatype=2
+impact.datasrc.0=SocketMediatorDataSource
+impact.datatype.1=SocketInfo
+impact.policy.numpolicy=1
+impact.datatype.0=SocketData
+impact.datasrc.numdatasrc=1
+impact.policy.0=TestSocketDSA

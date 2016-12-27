@@ -1,0 +1,79 @@
+if ( regmatch ( $line_00, "loggingSystemID" ) ) { 
+$loggingSystemID= extract($line_00, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_01, "loggingSystemID" ) ) { 
+$loggingSystemID= extract($line_01, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_02, "loggingSystemID" ) ) { 
+$loggingSystemID= extract($line_02, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_03, "loggingSystemID" ) ) { 
+$loggingSystemID= extract($line_03, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_04, "loggingSystemID" ) ) { 
+$loggingSystemID= extract($line_04, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_05, "loggingSystemID" ) ) { 
+$loggingSystemID= extract($line_05, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_06, "loggingSystemID" ) ) { 
+$loggingSystemID= extract($line_06, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_07, "loggingSystemID" ) ) { 
+$loggingSystemID= extract($line_07, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_08, "loggingSystemID" ) ) { 
+$loggingSystemID= extract($line_08, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_09, "loggingSystemID" ) ) { 
+$loggingSystemID= extract($line_09, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_10, "loggingSystemID" ) ) { 
+$loggingSystemID= extract($line_10, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_11, "loggingSystemID" ) ) { 
+$loggingSystemID= extract($line_11, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_12, "loggingSystemID" ) ) { 
+$loggingSystemID= extract($line_12, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_13, "loggingSystemID" ) ) { 
+$loggingSystemID= extract($line_13, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_14, "loggingSystemID" ) ) { 
+$loggingSystemID= extract($line_14, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_15, "loggingSystemID" ) ) { 
+$loggingSystemID= extract($line_15, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_16, "loggingSystemID" ) ) { 
+$loggingSystemID= extract($line_16, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_17, "loggingSystemID" ) ) { 
+$loggingSystemID= extract($line_17, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_18, "loggingSystemID" ) ) { 
+$loggingSystemID= extract($line_18, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_19, "loggingSystemID" ) ) { 
+$loggingSystemID= extract($line_19, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_20, "loggingSystemID" ) ) { 
+$loggingSystemID= extract($line_20, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_21, "loggingSystemID" ) ) { 
+$loggingSystemID= extract($line_21, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_22, "loggingSystemID" ) ) { 
+$loggingSystemID= extract($line_22, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_23, "loggingSystemID" ) ) { 
+$loggingSystemID= extract($line_23, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_24, "loggingSystemID" ) ) { 
+$loggingSystemID= extract($line_24, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_25, "loggingSystemID" ) ) { 
+$loggingSystemID= extract($line_25, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_26, "loggingSystemID" ) ) {
+$loggingSystemID= extract($line_26, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_27, "loggingSystemID" ) ) {
+$loggingSystemID= extract($line_27, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_28, "loggingSystemID" ) ) {
+$loggingSystemID= extract($line_28, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_29, "loggingSystemID" ) ) {
+$loggingSystemID= extract($line_29, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_30, "loggingSystemID" ) ) {
+$loggingSystemID= extract($line_30, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_31, "loggingSystemID" ) ) {
+$loggingSystemID= extract($line_31, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_32, "loggingSystemID" ) ) {
+$loggingSystemID= extract($line_32, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_33, "loggingSystemID" ) ) {
+$loggingSystemID= extract($line_33, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_34, "loggingSystemID" ) ) {
+$loggingSystemID= extract($line_34, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_35, "loggingSystemID" ) ) {
+$loggingSystemID= extract($line_35, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_36, "loggingSystemID" ) ) {
+$loggingSystemID= extract($line_36, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_37, "loggingSystemID" ) ) {
+$loggingSystemID= extract($line_37, "loggingSystemID=(.*)")
+} else if ( regmatch ( $line_38, "loggingSystemID" ) ) {
+$loggingSystemID= extract($line_38, "loggingSystemID=(.*)")
+}   

@@ -1,0 +1,371 @@
+Alarm Name	Severity	Action Required	Resilience Affecting	Service Affecting	Correlated Event	Probable Cause
+DataLossAlarm	4	0	2	2	0	An error has occurred while writingto the compact flash on the router.This indicates a probable data loss.Check the compact flash capacity onthe router.
+DiskCapacityProblem	4	0	2	2	0	These are a non-configurable thresholdWhen disk capacity equals:. 75% to 89%, severity is warning. 90% to 99%, severity is minor. 100% or greater, severity is major
+EquipmentDown	5	1	2	1	1	inoperableEquipment
+EquipmentFailure	5	1	2	1	1	fanFailure (116), cardFailure (123), powerSupplyFailure (117)
+EquipmentInTest	2	0	2	2	0	Equipment In Test
+EquipmentMismatch	5	1	2	1	0	Equipment Type Mismatch
+EquipmentRemoved	5	1	2	1	0	Replaceable Equipment Removed
+FirmwareMismatchAlarm	5	1	2	2	0	A mismatch occurred between thefirmware version and the softwareimage on the router. The alarm liststhe expected version.
+FirmwareUpgradeAlarm	2	0	2	2	0	A mismatch occurred between thefirmware version and the softwareimage on the router. The alarm liststhe expected version.
+HardwareRedundancyAlarm	4	1	1	2	0	Primary CPM Failure
+LinkDown	5	1	2	1	1	Port Link Problem
+SoftwareFailureAlarm	5	1	1	2	0	Load Failed.  This alarm is generated when the CPM fails to load the software from the specified location. The alarmlists the location of the software.
+TemperatureThresholdCrossed	4	1	2	2	0	Equipment Overheated
+DowngradedCardAlarm	2	0	2	2	0	The upgraded card alarm is raisedagainst the standby CPM when thestandby CPM is rebooted andonline. When the managed devicesoftware is upgraded on both CPMs,and the IOM cards are not upgradedor reset, the downgraded card alarmis raised against IOMs not yet reset.The IOM cards are rebootedautomatically after 120 minutes ifthey are not rebooted manually aftera CPM upgrade.
+UpgradedCardAlarm	2	0	2	2	0	The upgraded card alarm is raisedagainst the standby CPM when thestandby CPM is rebooted andonline. When the managed devicesoftware is upgraded on both CPMs,and the IOM cards are not upgradedor reset, the downgraded card alarmis raised against IOMs not yet reset.The IOM cards are rebootedautomatically after 120 minutes ifthey are not rebooted manually aftera CPM upgrade.
+CModeRxQueryMismatch	2	0	2	2	0	Invalid Compatibility Mode of Query  Received
+IGMPDown	5	1	2	1	0	Protocol Down
+QueryVerMismatch	2	0	2	2	0	Invalid Version of Query Message Received
+IsisAdjacencyDown	3	1	1	2	0	Protocol Down
+IsisAreaMismatch	2	0	2	2	0	Area Type Misconfigured
+IsisAuthFailure	2	0	1	2	0	Auth Failure
+IsisAuthTypeFailure	2	0	1	2	0	Auth Failure
+IsisDown	5	1	1	2	0	Protocol Down
+IsisManualAddressDrops	2	0	2	2	0	No Error
+IsisRejectedAdjacency	3	0	3	2	0	Lack Of Resources
+lagDown	5	1	1	1	1	Lag Down
+LdpDown	5	1	2	1	0	Protocol Down
+LdpInterfaceDown	5	1	2	1	0	Protocol Down
+LdpTargetedPeerDown	5	1	1	2	0	Protocol Down.  This is an LDP configuration componet
+LspDown	5	1	2	1	1	The alarm is raised when theoperational state of the LSP is down,but the administrative state is up.
+LspPathBypassTunnelActive	2	1	1	2	0	When an LSP primary path isrerouted to the bypass tunnel, thealarm is raised.When the primary path is returned tothe original tunnel and the actualhop returns to the primary path, thealarm is cleared.
+LspPathDown	4	1	2	1	1	LSP Path Down
+MplsDown	5	1	2	1	1	Protocol Down
+PathReoptimized	2	0	2	2	0	Path Reoptimized
+PathRerouted	2	0	2	2	0	Path Rerouted
+TunnelDown	2	1	2	1	1	Tunnel Down
+InterfaceDown	5	1	2	1	1	Interface Down
+ManagementInterfaceProtection Switch	2	1	2	2	0	Switch to Secondary, or switch to Primary
+NodeColdStart	2	1	1	2	1	Node cold start
+NodeRebooted	2	1	1	2	1	Node rebooted
+NodeUpgraded	2	0	2	2	0	Upgraded node version
+NodeVersionMismatch	5	0	2	2	0	Downgraded node version
+OutofBandManagementConnectionDown	5	1	1	2	0	Management connection down
+PersistentIndexParametersMisconfigured	4	0	2	2	0	Persistent index configuration mismatch
+PhysicalLinkPortsMisconfigured	3	0	2	2	0	The alarm can be raised when thereis a mismatch in MTU size betweenlink endpoints and ports. When theMTU is configured to match, thealarm is cleared.
+SnmpAuthenticationFailure	2	0	2	2	0	Authentication failure
+UpgradedBuildVersionMismatch	2	0	2	2	0	Upgraded image not booted
+AreaTypeMismatch	2	0	2	2	0	Area type misconfigured
+InterfaceDbDescriptAuthFailure	2	0	2	2	0	Auth type mismatch, Auth failure
+InterfaceDbDescriptConfig	2	0	2	2	0	Bad version, area mismatch, unknown Nbma Nbr, Netmask mismatch, hello interval mismatch, deal interval mismatch, option mismatch,mtu mismiatch, no error, duplicate router id, if type mismatch, null router id
+InterfaceHelloAuthFailure	2	0	1	2	0	The alarms may be generated whenthe managed devices arenegotiating with OSPF neighborsafter a link failure or an OSPFconfiguration change. In this case,manually clear the alarm when theOSPF neighbor status is Full.
+InterfaceHelloConfig	2	0	1	2	0	The alarms may be generated whenthe managed devices arenegotiating with OSPF neighborsafter a link failure or an OSPFconfiguration change. In this case,manually clear the alarm when theOSPF neighbor status is Full.
+InterfaceLsAckAuthFailure	2	0	2	2	0	Auth type mismatch, Auth failure
+InterfaceLsAckConfig	2	0	2	2	0	Bad version, area mismatch, unknown Nbma Nbr, Netmask mismatch, hello interval mismatch, deal interval mismatch, option mismatch,mtu mismatch, no error, duplicate router id, if type mismatch, null router id
+InterfaceLsReqAckAuthFailure	2	0	2	2	0	Auth type mismatch, Auth failure
+InterfaceLsReqConfig	2	0	2	2	0	Bad version, area mismatch, unknown Nbma Nbr, Netmask mismatch, hello interval mismatch, deal interval mismatch, option mismatch,mtu mismatch, no error, duplicate router id, if type mismatch, null router id
+InterfaceLsUpdateAuthFailure	2	0	2	2	0	Auth type mismatch, Auth failure
+InterfaceLsUpdateConfig	2	0	2	2	0	Bad version, area mismatch, unknown Nbma Nbr, Netmask mismatch, hello interval mismatch, deal interval mismatch, option mismatch,mtu mismatch, no error, duplicate router id, if type mismatch, null router id
+InterfaceNullPacketAuthFailure	2	0	2	2	0	Auth type mismatch, Auth failure
+InterfaceNullPacketConfig	2	0	2	2	0	Bad version, area mismatch, unknown Nbma Nbr, Netmask mismatch, hello interval mismatch, deal interval mismatch, option mismatch,mtu mismiatch, no error, duplicate router id, if type mismatch, null router id
+InterfaceRxBadPacket	2	0	2	2	0	Hello, DB Descript, IS Req, IS Update, IS Ack, Null Packet
+InterfaceTxRestransmit	2	0	2	2	0	Hello, DB Descript, IS Req, IS Update, IS Ack, Null Packet
+LsDbOverflow	2	0	2	2	0	Resource Full
+NeighborDown	3	0	2	2	0	The alarm is raised when an OSPFinterface neighbor is operationallyDown.
+InterfaceNeighborDown	2	0	2	2	0	The alarm is raised when aninterface neighbor is operationallyDown.
+OspfInterfaceDown	2	0	2	2	1	OSPF Interface Down
+TxRetransmit	2	0	2	2	0	The alarm lists the router ID of theOSPF neighbor device.
+VirtualLinkDbDescriptAuthFailure	2	0	2	2	0	Auth type mismatch, Auth failure
+VirtualLinkDbDescriptConfig	2	0	2	2	0	Bad version, area mismatch, unknown Nbma Nbr, Netmask mismatch, hello interval mismatch, deal interval mismatch, option mismatch,mtu mismatch, no error, duplicate router id, if type mismatch, null router id
+VirtualLinkDown	2	0	2	2	0	Virtual Link Down
+VirtualLinkHelloAuthFailure	2	0	2	2	0	Auth type mismatch, Auth failure
+VirtualLinkHelloConfig	2	0	2	2	0	Bad version, area mismatch, unknown Nbma Nbr, Netmask mismatch, hello interval mismatch, deal interval mismatch, option mismatch,mtu mismiatch, no error, duplicate router id
+VirtualLinkLsAckAuthFailure	2	0	2	2	0	Auth type mismatch, Auth failure
+VirtualLinkLsAckConfig	2	0	2	2	0	Bad version, area mismatch, unknown Nbma Nbr, Netmask mismatch, hello interval mismatch, deal interval mismatch, option mismatch,mtu mismatch, no error, duplicate router id
+VirtualLinkLsReqAuthFailure	2	0	2	2	0	Auth type mismatch, Auth failure
+VirtualLinkLsReqConfig	2	0	2	2	0	Bad version, area mismatch, unknown Nbma Nbr, Netmask mismatch, hello interval mismatch, deal interval mismatch, option mismatch,mtu mismiatch, no error, duplicate router id
+VirtualLinkLsUpdateAuthFailure	2	0	2	2	0	Auth type mismatch, Auth failure
+VirtualLinkLsUpdateConfig	2	0	2	2	0	Bad version, area mismatch, unknown Nbma Nbr, Netmask mismatch, hello interval mismatch, deal interval mismatch, option mismatch,mtu mismatch, no error, duplicate router id
+VirtualLinkNullPacketAuthFailure	2	0	2	2	0	Auth type mismatch, Auth failure
+VirtualLinkNullPacketConfig	2	0	2	2	0	Bad version, area mismatch, unknown Nbma Nbr, Netmask mismatch, hello interval mismatch, deal interval mismatch, option mismatch,mtu mismatch, no error, duplicate router id
+VirtualLinkRxBadPacket	2	0	2	2	0	Hello, DB Descript, IS Req, IS Update, IS Ack, Null Packet
+VirtualLinkTxRetransmit	2	0	2	2	0	Hello, DB Descript, IS Req, IS Update, IS Ack, Null Packet
+VirtualNeighbourDown	2	0	2	2	0	Virtual neighbour down
+GroupInSSMRange	2	0	2	2	0	STARG Group in SSM Range
+InvalidJoinPrune	2	0	2	2	0	Invalid join prune received
+InvalidRegister	2	0	3	1	0	Invalid join register received
+NeighborLoss	4	1	2	1	0	Neighbor connection lost
+PimDown	2	1	3	1	0	Protocol down
+RsvpDown	5	1	2	1	0	Protocol down
+SessionDown	5	1	2	1	0	Interface Down
+MediationAuthenticationFailure	2	0	2	2	0	Other possible probable causes forthis alarm include:. authentication did not occurwithin the time allowed. the user name or engine ID ofthe managed device is unknown. the wrong digest. a decrypting error
+New SSH2 Server Key Detected	2	0	2	2	0	NewSsh2ServerKeyDetected
+AccessInterfaceDown	5	1	2	1	1	An alarm is raised when an L2 or L3interface operational state is down,but the administrative state of thesite on which the interface resides isup.
+FrameSizeProblem	2	0	2	2	0	The MTU (sdp-mtu in CLI) definesthe largest service frame size (inoctets) that can be transmittedthrough an SDP to the far-endrouter, without requiring the packetto be fragmented.
+ServiceCustomerInconsistent	5	0	2	2	0	Service Customer Inconsistent
+ServiceSiteDown	5	1	2	1		All SAPs on the site areoperationally down, or the servicetunnels to the site are operationallydown.
+TopologyMisconfigured	5	0	2	2	0	The service type for the sameservice ID is different on anotherdevice.Check the service SDP bindings. Ifthe required SDP bindings aremissing from the service, the alarmis raised. Because VPLSs can usespoke bindings (service sites withthe save VPLS service ID can havespoke bindings), the alarm does notapply.
+Type Mismatch	5	0	2	2	0	Service Site Type Misconfigured
+BerLineSignalFailure	4	1	3	2	0	lb2er-sf reports line signal failureBER errors. Use the thresholdcommand to set the error rate(s) thatwhen exceeded determine signaldegradation and signal failure.Whenconfigured, lb2er-sf alarms areraised and cleared. These alarmsare issued by default
+SectionLossOfFrame	4	1	3	2	0	Reports SLOF errors. Whenconfigured, SLOF alarms are raisedand cleared.
+LossOfClock	4	1	3	2	0	Reports a LOC which causes theoperational state of the port to beshut down.
+LineRemoteDefectIndication	4	0	3	2	0	Reports line remote defect indicationerrors. LRDIs are caused by remoteLOF, LOC, LOS. When configured,LRDI alarms are raised and cleared.
+SectionLossOfSignal	4	1	3	2	0	Reports a SLOS error on thetransmit side. When configured,SLOS alarms are raised andcleared.
+FrameSizeProblem	5	0	1	2	0	The MTU (sdp-mtu in CLI) definesthe largest service frame size (inoctets) that can be transmittedthrough an SDP to the far-endrouter, without requiring the packetto be fragmented.
+KeepAliveProblem	2	0	2	2	0	Keep Alive Failed
+LabelProblem	5	0	3	1	0	Label Problem
+SdpBindingDown	5	1	1	2	0	The underlying LSP is operationallydown, or the LDP sessions aredown.
+SdpBindingTunnelDown	5	1	2	2	0	The underlying LSP is operationallydown, or the LDP sessions aredown.
+TunnelDown	5	1	2	2	1	A service tunnel (SDP) is downbecause the LSP that was relying onit is down.
+BootEnvironmentSyncFailed	5	0	2	2	0	Synchronization of bof file betweenCPM cards failed.
+ConfigFileSyncFailed	5	0	2	2	0	Synchronization of the configurationfile between CPM cards failed.
+HardwareBootFailure	5	1	3	3	0	The managed device software failedto boot because of hardwareissue(s).
+PrimaryImageBootFailure	2	0	2	2	0	Boot option file misconfigured
+SaveConfigFailed	4	0	2	2	0	The admin save command failed onthe managed device.
+SoftwareBootFailure	4	0	3	1	0	Software boot problem
+SoftwareDownloading	2	0	2	2	0	SoftwareDownloading
+SoftwareInitialized	2	0	2	2	0	Software initialized
+SoftwareInitializing	2	0	2	2	0	Software initializing
+StatsRetrieveFailed	4	0	2	2	0	File transfer failure
+MFibTableSizeLimitReached	2	0	2	2	0	Resource limit reached
+MissSpokeConfiguration	2	0	2	2	0	Miss spoke configuration
+MvrConfiguredFromVplsNotExist	2	0	2	2	0	Mvr Configured From Vpls Not Exist
+MvrConfiguredProxySapNotExist	2	0	2	2	0	MVR Configured Proxy Sap Not Exist
+UdefinedSchedulerReference	3	0	2	2	0	The QoS and Scheduler tabs on theL2 Interface configuration form musthave a queue that points to ascheduler with scheduler policy thatis specified in the Scheduler tab.
+McacPolicyDropped	4	0	0	0	0	The alarm is generated when anIGMP group is dropped because ofthe application of a multicast CACpolicy.
+SapStaticHostDynamicMacConflict	3	0	2	2	0	Learned Dynamic Mac Already Learned
+BgpDown	5	1	2	1	0	protocol Down
+PeerConnectionDown	5	1	1	2	0	connection Down
+PeerDown	5	1	2	1	0	protocolDown. Alarm is raised when the BGP peerhas an operational state other thanup, and the administrative state isup.
+PeerGroupDown	5	1	2	1	0	protocolDown
+PrefixLimitExceeded	5	0	2	2	0	The prefix-limit is the maximumnumber of routes BGP can learnfrom a peer.The alarm is raised when themaximum number of peer routeshas been learned.
+PrefixLimitNearing	4	0	2	2	0	The prefix limit is the maximumnumber of routes BGP can learnfrom a peer.The alarm is raised when 90% of themaximum allowed peer routes arelearned.
+EthernetPortHighBer	4	1	2	1	1	High Ber
+EthernetPortLocalFault	4	1	2	1	1	Local Fault
+EthernetPortNoFrameLock	4	1	2	1	1	No Frame Lock
+EthernetPortRemoteFault	4	1	2	1	1	Remote Fault
+EthernetPortSignalFailure	4	1	2	1	1	SignalFailure
+ConfigNotCompatible	5	0	2	2	0	Daughter Card Config Not Compatible
+DaughterCardConfigNotCompatible	5	0	2	2	0	Daughter Card Config Not Compatible
+IsisInterfaceDown	2	1	2	1	1	protocolDown
+CpuUtilizationExceeded	2	0	2	2	0	Threshold Crossed.
+FtpClientFailure	2	0	2	2	0	The alarm is generated when the NEsends notification that a file transferoperation initiated by the FTP clienthas failed because of fileunavailability, interruption during thefile transfer, or a lack of availablestorage space.
+InBandManagementConnectionDown	5	1	2	2	0	managementConnectionDown
+RamFreeSpaceExceeded	2	0	2	2	0	thresholdCrossed
+RedundancySwitchover	2	1	1	2	0	Redundancy switchover
+SnmpDaemonProblem	4	0	2	2	0	SNMP daemon error
+SnmpDown	5	0	2	2	0	SnmpDown
+SnmpIndexUpdateFailed	5	0	2	2	0	Snmp Index Update Failure
+SnmpTrapDropped	2	0	2	2	0	SNMP daemon overloaded
+TrapDestinationMisconfigured	4	0	2	2	0	The SNMP trap destinationconfigured on the router is notpointing to 5620 SAM.
+TrapMalformed	4	0	2	2	0	Trap schema mismatch
+DataMtReused	2	0	0	0	0	Data Mt Reused
+invalidRPLoopbackInterfaceConfig	2	0	2	2	0	invalid RP Loopback If Config
+mismatchAnyCastRPTypes	2	0	2	2	0	mismatch Any Cast RP Types
+missingStaticRPConfigurations	2	0	2	2	0	missing Static RP Configurations
+peerSetConfigurationIssue	4	0	2	2	0	mismatch PeerSets
+MissingFallingEvent	4	0	2	2	0	incomplete Config
+MissingRisingEvent	4	0	2	2	0	incomplete Config
+TodSuiteAssignmentFailure	3	0	2	2	0	The alarm is generated when a Timeof Day suite cannot be assigned toan aggregation scheduler, or an L2or L3 access interface because of aconfiguration conflict or a lack ofresources.
+ManagementAccessFilterMisconfigured	2	0	2	2	0	Management access filters are usedto restrict management of the deviceby other nodes outside specificnetworks or subnetworks, or throughdesignated ports. The filters must beconfigured locally.The default action denies or permitsmanagement access in the absenceof a more specific managementaccess filter match.Each entry represents a collection offilter match criteria.
+BerLineSignalDegradation	4	1	1	2	0	lb2er-sd reports line signaldegradation BER errors. Use thethreshold command to set the errorrate(s) that when exceededdetermine signal degradation andsignal failure. When configured,lb2er-sd alarms are raised andcleared. These alarms are notissued by default.
+LineAlarmIndicationSignal	4	1	1	2	0	Reports line alarm indication signalLAIS errors. When configured, LAISalarms are raised and cleared.
+LineErrorCondition	4	1	1	2	0	Reports a line error condition raisedby the remote as a result of b1 errorsreceived from this node. Whenconfigured, LREI traps are raisedbut not cleared.
+RxSectionSynchronizationError	4	0	2	2	0	Reports section synchronizationfailure as reported by the S1 byte.When configured, SS1F alarms areraised and cleared.
+SectionB1Error	4	1	1	2	0	Reports a b1 line error conditionraised by the remote node when b1errors are received from this node.When configured, LREI traps areraised but not cleared.
+SectionS1Failure	4	0	2	2	0	See theRxSectionSynchronizationErroralarm in this table.
+SonetPathAlarmIndicationSignal	4	1	1	2	0	Reports PAIS errors. Whenconfigured, PAIS alarms are raisedand cleared.
+SonetPathB3Error	4	1	1	2	0	Reports a path error condition raisedby the remote node when b3 errorsare received from this node. Whenconfigured, PREI traps are raisedbut not cleared.
+SonetPathLossOfCodegroupDelineationErro	4	0	2	2	0	Reports PLOP (per tributary) errors.When configured, PLOP traps areraised but not cleared.
+SonetPathLossOfPointer	4	0	2	2	0	Reports PLOP (per tributary) errors.When configured, PLOP traps areraised but not cleared.
+SonetPathPayloadMismatch	4	0	2	2	1	Reports a PPLM. As a result, thechannel is operationally down.When configured, PPLM traps areraised but not cleared.
+SonetPathRemoteB3Error	4	1	1	2	0	Reports a PREI raised by the remotenode when b3 errors are receivedfrom this node. When configured,PREI traps are raised but notcleared
+SonetPathRemoteDefectIndication	4	1	1	2	0	Reports path remote defectindication errors. When configured,PAIS alarms are raised and cleared.
+SonetPathUnequippedPathError	4	0	2	2	0	
+SonetSDHLoopback	2	0	2	2	0	
+TxSectionSynchronizationError	4	0	2	2	0	Reports SS1F alarms as reported bythe S1 byte. When configured, SS1Falarms are raised and cleared.
+ThresholdCrossingAlarm	4	1	2	2	0	Packet loss occurred on the interface reported.  A packet loss greater than or equal to 1 has occurred in 15 minutes.
+LagPortAddFailed	3	1	1	2	0	LinkDown condition occurred on a Lag port 
+AccountingPolicyDown	5	1	2	2	0	The alarm is raised when anaccounting policy goes operationallyDown after a file-creation failure atthe specified admin and backuplocations.
+AncillaryPathLimitReached	2	1	2	1	0	The alarm is raised when theancillary path bandwidth limit isreached.
+BackgroundDiagnosticFault	3	0	2	2	0	The alarm is raised when an NEdetects a failure in a backgrounddiagnostic test suite on acomponent.
+BatteryFail	2	1	2	2	0	The alarm is raised when the batteryfails or is missing.
+BootLoaderFirmwareMismatchAlarm	5	0	2	2	0	The alarm is raised when there is amismatch between the firmwareversion and the software image on anNE. The alarm information includesthe discovered and expected versionidentifiers.
+BrokenLoop	4	0	2	2	0	The alarm is raised when theloop-detection stack detects a loopcondition, or when the stackcontains an unexpected element
+CardCPUAboveThreshold	4	1	2	2	0	The alarm is raised when the cardCPU usage is above the thresholdvalue
+CardMemoryAboveThreshold	4	1	2	2	0	The alarm is raised when the cardmemory usage is above the thresholdvalue
+CardRxAboveThreshold	4	1	2	2	0	The alarm is raised when the card Rxis above the threshold value
+CardRxTxAboveThreshold	4	1	2	2	0	The alarm is raised when the card Txis above the threshold value
+ContainingEquipmentAdministrativelyDown	3	0	2	2	0	The alarm is raised when theattribute compositeEquipmentStatehas a value ofcontainingEquipmentAdministrativelyDown
+ContainingEquipmentMismatch	4	0	2	2	0	The alarm is raised when theattribute compositeEquipmentStatehas a value ofcontainingEquipmentMismatch
+ContainingEquipmentMissing	4	0	2	2	0	The alarm is raised when theattribute compositeEquipmentStatehas a value ofcontainingEquipmentMissing
+ContainingEquipmentOperationallyDown	4	1	2	1	0	The alarm is raised when theattribute compositeEquipmentStatehas a value ofcontainingEquipmentOperationllyDown
+DDMAux1HighAlarm	4	1	2	2	0	The alarm is raised when themanufacturer-specific Auxiliary 1 ofthe XFP reaches the maximumthreshold value
+DDMAux1HighWarning	2	1	2	2	0	The alarm is raised when themanufacturer-specific Auxiliary 1 ofthe XFP approaches the maximumthreshold value
+DDMAux1LowAlarm	4	1	2	2	0	The alarm is raised when themanufacturer-specific Auxiliary 1 ofthe XFP reaches the minimumthreshold value
+DDMAux1LowWarning	2	1	2	2	0	The alarm is raised when themanufacturer-specific Auxiliary 1 ofthe XFP approaches the minimumthreshold value
+DDMAux2HighAlarm	4	1	2	2	0	The alarm is raised when themanufacturer-specific Auxiliary 2 ofthe XFP reaches the maximumthreshold value
+DDMAux2HighWarning	2	1	2	2	0	The alarm is raised when themanufacturer-specific Auxiliary 2 ofthe XFP approaches the maximumthreshold value
+DDMAux2LowAlarm	4	1	2	2	0	The alarm is raised when themanufacturer-specific Auxiliary 2 ofthe XFP reaches the minimumthreshold value
+DDMAux2LowWarning	2	1	2	2	0	The alarm is raised when themanufacturer-specific Auxiliary 2 ofthe XFP approaches the minimumthreshold value
+DDMRxOpticalPowerHighAlarm	4	1	2	2	0	The alarm is raised when thereceived optical power of an SFP orXFP reaches the maximum thresholdvalue
+DDMRxOpticalPowerHighWarning	2	1	2	2	0	The alarm is raised when thereceived optical power of an SFP orXFP approaches the maximumthreshold value
+DDMRxOpticalPowerLowAlarm	4	1	2	2	0	The alarm is raised when thereceived optical power of an SFP orXFP reaches the minimum thresholdvalue
+DDMRxOpticalPowerLowWarning	2	1	2	2	0	The alarm is raised when thereceived optical power of an SFP orXFP approaches the minimumthreshold value
+DDMSupplyVoltageHighAlarm	4	1	2	2	0	The alarm is raised when the supplyvoltage of an SFP or XFP reaches themaximum threshold value
+DDMSupplyVoltageHighWarning	2	1	2	2	0	The alarm is raised when the supplyvoltage of an SFP or XFP approachesthe maximum threshold value
+DDMSupplyVoltageLowAlarm	4	1	2	2	0	The alarm is raised when the supplyvoltage of an SFP or XFP reaches themaximum threshold value
+DDMSupplyVoltageLowWarning	2	1	2	2	0	The alarm is raised when the supplyvoltage of an SFP or XFP approachesthe maximum threshold value
+DDMTemperatureHighAlarm	4	1	2	2	0	The alarm is raised when thetemperature of an SFP or XFPreaches the maximum thresholdvalue
+DDMTemperatureHighWarning	2	1	2	2	0	The alarm is raised when thetemperature of an SFP or XFPapproaches the maximum thresholdvalue
+DDMTemperatureLowAlarm	4	1	2	2	0	The alarm is raised when thetemperature of an SFP or XFPreaches the maximum thresholdvalue
+DDMTemperatureLowWarning	2	1	2	2	0	The alarm is raised when thetemperature of an SFP or XFPapproaches the maximum thresholdvalue
+DDMTxBiasCurrentHighAlarm	4	1	2	2	0	The alarm is raised when thetransmit bias current of an SFP orXFP reaches the maximum thresholdvalue
+DDMTxBiasCurrentHighWarning	2	1	2	2	0	The alarm is raised when thetransmit bias current of an SFP orXFP approaches the maximumthreshold value
+DDMTxBiasCurrentLowAlarm	4	1	2	2	0	The alarm is raised when thetransmit bias current of an SFP orXFP reaches the maximum thresholdvalue
+DDMTxBiasCurrentLowWarning	2	1	2	2	0	The alarm is raised when thetransmit bias current of an SFP orXFP approaches the maximumthreshold value
+DDMTxOutputPowerHighAlarm	4	1	2	2	0	The alarm is raised when the outputpower of an SFP or XFP reaches themaximum threshold value
+DDMTxOutputPowerHighWarning	2	1	2	2	0	The alarm is raised when the outputpower of an SFP or XFP approachesthe maximum threshold value
+DDMTxOutputPowerLowAlarm	4	1	2	2	0	The alarm is raised when the outputpower of an SFP or XFP reaches themaximum threshold value
+DDMTxOutputPowerLowWarning	2	1	2	2	0	The alarm is raised when the outputpower of an SFP or XFP approachesthe maximum threshold value
+Degrade	4	1	2	2	0	The alarm is raised when a degradedsignal is detected
+DiskCapacityProblem	2	1	2	2	0	The alarm is raised when a compactflash capacity threshold value on anNE is reached or exceeded. Thealarm condition is detected duringresynchronization or when atnmxEqFlashDiskFull trap isreceived. The threshold value is notconfigurable.The severity of thealarm is variable, depending on thepercentage of disk capacity used, aslisted below:- 75 percent, Minor- 90percent, Major- 100 percent, Critical
+downgradedCardAlarm	2	0	2	2	0	The alarm is raised when an IOM isnot upgraded or reset after a devicesoftware upgrade of both CPMs. Adevice resets an IOM automaticallyafter 120 minutes if the IOM is notmanually reset after a CPM upgrade
+DuplicateRole	4	0	2	2	0	The alarm is raised when a slot hasthe same primary or secondary roleas another slot in the stack. The slotsubsequently enters pass-throughmode
+DuplicateSlot	4	0	2	2	0	The alarm is raised when a slot hasthe same slot number as anotherstack element. The slot mustrelinquish its operational statusbecause it has a higher election key,based on the up time, slot number,and MAC address. Both slotssubsequently enter pass-throughmode
+EquipmentAdministrativelyDown	3	0	2	2	0	The alarm is raised when theattribute compositeEquipmentStatehas a value ofequipmentAdministrativelyDown
+EquipmentDegraded	3	1	2	2	0	The alarm is raised when a single fanfails. The chassis attempts tocontinue operating within the normaltemperature range using only theremaining fans
+FanFailure	5	1	2	2	0	The alarm is raised when theassociated fan is not operationallyUp
+FanTrayRemoved	5	1	2	2	0	The alarm is raised when theattribute deviceState has a value ofdeviceNotEquipped
+FIBHighOccupancy	2	1	2	2	0	The alarm is raised when the FIBoccupancy on an IOM card changesfrom normal to high
+FibOutOfSynch	5	1	2	2	0	The alarm is raised when the FIB onan MDA is out of synchronization
+FirmwareDownloadOnGoing	2	0	2	2	0	The alarm is raised when a firmwaredownload is in progress
+FirmwareMismatchAlarm	5	0	2	2	0	The alarm is raised when a mismatchoccurs between the firmware versionand the software image on thedevice. The alarm informationincludes the expected firmwareversion
+InternalCommunicationProblem	4	1	2	2	0	The alarm is raised when an ODU isunresponsive
+LanFailure	4	1	2	2	0	The alarm is raised when a LANfailure is detected
+LossOfAlignment	3	1	2	1	0	The alarm is raised when a Loss ofAlignment signal is detected
+LossOfFrame	4	1	2	1	0	The alarm is raised when the portreceives an LOF signal
+LossOfSignal	4	1	2	1	0	The alarm is raised when a Loss ofSignal signal is detected on a PDHtributary
+MigrationCompleted	2	0	2	2	0	The alarm is raised when an attemptto migrate cards has completed
+MigrationFailed	4	0	2	2	0	The alarm is raised when an attemptto migrate cards fails
+OverTemperatureDetected	4	1	2	2	0	The alarm is raised when the chassistemperature is above the maximumthreshold value
+PChipError	2	1	2	2	0	The alarm is raised when a P-chipreports persistent errors on thespecified complex in the specifieddirection
+PChipMemoryEvent	2	1	2	2	0	The alarm is raised when a P chipdetects a memory parity error. Thealarm is raised against a 7450 ESS,7710 SR, or 7750 SR. The alarm israised against a Release 5.0 NE atR21 or later, a Release 6.0 NE at R10or later, and a Release 6.1 NE at R5or later
+PowerSupplyFailure	5	1	2	2	0	The alarm is raised when apower-supply tray reports a failure.When the alarm is raised duringdevice discovery, a power-supplytray may be out of service. When thealarm is raised while the device is inthe managed state, a power-supplytray may be out of service or the ACpower shelf has sent a fault message.The alarm clears when the statuschanges to OK
+PowerSupplyRemoved	5	1	2	2	0	The alarm is raised when a chassispower supply is removed
+PPPFail	2	0	2	2	0	The alarm is raised when a PPP IP Failcondition is detected
+PrimaryPathLimitReached	2	1	2	2	0	The alarm is raised when the primarypath bandwidth limit is reached
+ReplaceableUnitMissing	4	0	2	2	0	The alarm is raised when a card ismissing
+ReplaceableUnitProblem	4	1	2	2	0	The alarm is raised when a card fails
+ReplaceableUnitTypeMismatch	4	0	2	2	0	The alarm is raised when there is amismatch between the installed cardand the expected card
+SecondaryPathLimitReached	2	1	2	2	0	The alarm is raised when thesecondary path bandwidth limit isreached
+SGLimitExceeded	2	1	2	2	0	The alarm is raised when themaximum number of PIM snoopingsource group records on a card isexceeded
+SoftwareFailureAlarm	5	1	2	2	0	The alarm is raised when the CPMfails to load the software from thespecified location. The alarminformation includes the softwarelocation
+SSHServerPreserveKeyFailure	5	1	2	2	0	The alarm is raised when the CPMfails to save the SSH server host keyon the persistent drive
+UnconfiguredEquipmentPresent	2	0	2	2	0	The alarm is raised whenunconfigured equipment is detected
+VersionMismatch	3	1	2	2	0	The alarm is raised when an ODUsoftware version mismatch isdetected
+XplError	2	1	2	2	0	The alarm is raised when an MDAreports persistent XPL Errors
+EthernetPortConfiguredLoopback	2	0	2	2	0	The alarm is raised when a timedloopback is in effect for an Ethernetport
+TmnxEqPortEtherLoopDetected	4	1	2	1	0	The alarm is raised when a physicalloop is detected on an Ethernet port
+LogLocFailure	2	0	2	2	0	The alarm is raised when an attemptto create a log or billing file fails.The probable cause isAdminLocFailure when using theadmin location fails, in which casethe backup location, if specified, isused. The probable cause isBackupLocFailure when using thebackup location fails
+LinkAggMemberMisconfigured	5	0	2	2	0	The alarm is raised when one or moremisconfigured LAG members aredetected, for example, when someLAG members are in access mode andsome are in network mode
+LinkAggModeMisconfigured	5	0	2	2	0	The alarm is raised when the LAGmode differs from the mode of oneor more LAG members, for example,when the LAG mode is access and theLAG members are in network mode
+LinkAggPortJoin	2	0	2	2	0	The alarm is raised when a LAG portjoins a LAG by entering the attachedstate
+LinkAggPortLeave	2	1	1	2	0	The alarm is raised when a LAG portleaves a LAG by exiting the attachedstate
+LinkAggPortRemove	2	0	2	2	0	The alarm is raised when a LAG portis removed from a LAG because of aninvalid configuration
+MirrorDestinationMisconfigured	4	0	2	2	0	The alarm is raised when multipledestination SAPs are configured for aservice mirror
+MirrorEncapsulationTypeInconsistent	4	0	2	2	0	The alarm is raised when theencapsulation types of the sourceand destination mirror sites differ
+TunnelAdministrativelyDown	3	0	2	2	0	The alarm is raised when an MPLSpath is administratively Down
+BootConfigFailScriptNotAccesible	4	0	2	2	0	The alarm is raised when a CLI scriptthat runs after NE configuration fileexecution failure is inaccessible
+BootConfigOKScriptNotAccesible	4	0	2	2	0	The alarm is raised when a CLI scriptthat runs after NE configuration fileexecution failure is inaccessible
+BootParametersMisconfigured	5	1	2	2	0	The alarm is raised when the SNMPIndex Boot Status on an NE is not setto Persistent
+CliCommandFailure	2	0	2	2	0	The alarm is raised when a CLIcommand on an NE fails
+CliConnectionProblem	2	0	2	2	0	The alarm is raised when the5620 SAM fails to open a CLI sessionon an NE because the number ofopen CLI sessions on the NE is at themaximum
+CliLoginFailed	2	1	2	2	0	The alarm is raised when a CLI loginattempt fails because of an incorrectuser name or password
+ManagementInterfaceProtectionSwitch	2	1	2	2	0	The alarm is raised when an NE hasin-band and out-of-bandmanagement interfaces and switchesfrom one type of management to theother
+ModuleOutOfMemory	5	1	2	2	0	The alarm is raised when theavailable NE memory is insufficientfor allocation to a task
+RedundancySwitchover	2	1	2	2	0	The alarm is raised when a 5620 SAMmain server receives assiRedSwitchover trap from an NE,which indicates that the standby CPMdetects an active CPM failure and ispreparing to take over as the newactive CPM
+NeighborLoss	2	1	2	1	0	The alarm is raised when theconnection to a neighbor is lost
+InstanceDown	4	1	1	2	0	The alarm is raised when the VRRPinstance Operational State is Down
+IPListMismatch	2	1	2	2	0	The alarm is raised when the IPaddress list in an advertisementmessage from the current masterdoes not match the configured IPaddress list.
+mismatchBackupAddress	3	1	2	2	0	The alarm is raised when two VRinstances in a VR have differentbackup addresses
+mismatchSubnets	4	1	2	2	0	The alarm is raised when two VRInstances in a VR have backupaddresses that are in differentsubnets
+mismatchVrrpTypes	3	1	2	2	0	The alarm is raised when two VRinstances in a VR are of differenttypes, for example, when one VRinstance type is Network and theother is IES
+MultipleOwners	4	1	2	2	0	The alarm is raised when an ownerVR instance detects another instancethat advertises itself as an owner
+VirtualRouterDown	4	1	2	1	0	The alarm is raised when theaggregated operational state of theVR is Down
+AllArchiveLogsDeleted	2	0	2	2	0	The alarm is raised when the5620 SAM deletes all databasearchive logs because it requires moredisk space. When database diskspace is low, the 5620 SAM firstdeletes the archive logs that havebeen applied to the standbydatabase and raises theOldArch
+BackupDiskSpaceBelowThreshold	4	0	2	2	0	
+DatabaseBackupFailed	4	0	2	2	0	database Backup Failure.  The backup file could not be createdbecause of, for example, lack of diskspace or invalid write permissions.
+DataFileDiskSpaceBelowThreshold	4	0	2	2	0	One or more filesystem thresholdsfor the 5620 SAM database havebeing reached, as specified in thenms-server.xml file.
+OldArchiveLogsDeleted	2	0	2	2	0	Old Archive Logs Deleted
+OracleHomeDiskSpaceBelowThreshold	4	0	2	2	0	Oracle Home Disk Space Below Threshold
+ReinstantiateStandbyDatabase	2	0	2	2	0	Reinstantiate Standby Database
+RowThresholdConstraintViolated	4	0	2	2	0	This alarm is raised when thenumber of records in a tableexceeds the number specified in asize constraint policy. Sizeconstraint policies specify theamount of database capacity thathistorical records consume. See the5620 SAM User Guide for moreinf
+SwitchOverDatabase	2	0	2	2	0	Switch Over Database
+TwoPrimaryDatabase	5	0	2	2	0	Two Primary Database
+UnableDeleteArchivedLogs	2	0	2	2	0	UnableDeleteArchivedLogs
+DeploymentFailure	3	0	2	2	0	Unable to create, modify, or delete anetwork object because there isintermittent or no IP connectivity tothe network object, SNMP securityparameters are incorrect, or SNMPis disabled on the router.
+ThresholdCrossingAlarm	2	0	2	2	0	Threshold Crossed.
+ThresholdCrossingAlarmDbl	3	0	2	2	0	Alarms are raised when a rising orfalling threshold is crossed due torising or falling values. The alarmlists current threshold data, thedefault threshold value, and thethreshold name.
+CorruptImageFile	5	0	2	2	0	The image file indicated in theSoftware Upgrade Policy in5620 SAM is corrupt.
+SoftwareImageRootPathMisconfigured	2	0	2	2	0	See the file path configured in theSoftware Upgrade Policy on the5620 SAM.
+BootParameterMisconfigured	5	0	2	2	0	The SNMP Index Boot Status is notconfigured to be persistent on therouter. See the router CLI menu.show system info. for the currentsetting.
+FrameSizeProblem	5	1	2	2		The MTU (sdp-mtu in CLI) definesthe largest service frame size (inoctets) that can be transmittedthrough an SDP to the far-endrouter, without requiring the packetto be fragmented.
+FrequentFullResyncsDueToTrapProblems	4	0	2	2	0	The managed device has sent anumber of SNMP traps to the5620 SAM, and some of the trapswere lost, possibly because ofcongestion in the Ethernet or IPinfrastructure.The NE is therefore resynchronizedto ensure consistency between the5620 SAM databas
+InBandManagementConnection Down	5	0	2	2	0	The 5620 SAM can be configured toregularly ping all network devices attwo-minute intervals. When anetwork device cannot be reachedusing the ping, an alarm is raised.
+PollerProblem	2	0	2	2	0	Unable to poll a network object.Possible causes include: intermittentor no IP connectivity to the networkobject, incorrect SNMP securityparameters, or SNMP is disabled onthe router.
+PollDeadlineMissed	2	0	2	2	0	Too many items to poll
+RedAlarmThresholdReached	5	0	2	2	0	The number of outstanding alarmshas reached the critical threshold,and alarms are being discarded tokeep below system limits.
+SystemMemory Consumption	5	0	2	2	0	Too many traps buffered
+SystemNameChange	4	0	2	2	0	System name change
+TrapDesinationMisconfigured	4	0	2	2	0	Trap destination misconfigured, or duplicatetrap Log ID
+UnsupportedNode	2	0	2	2	0	Unsupported node
+YellowAlarmThresholdReached	5	0	2	2	0	The number of outstanding alarmshas reached the yellow threshold,and non-critical alarms are beingdiscarded to keep below systemlimits.
+LicensedMdaLimitExceeded	5	0	2	2	0	Licensed MDA Limit Exceeded
+LicensedMdaLimitNearing	2	0	2	2	0	Licensed MDA Limit Nearing
+LicensedMdaLimitNearlyExceeded	4	0	2	2	0	LicensedMdaLimitNearlyExceeded
+TimedLicenseExpiryNotice	2	0	2	2	0	Timed License Expiry Notice
+MediationAuthenticationFailure	5	0	2	2	0	No Mediation Policy Found 
+BootableConfigBackupFailed	4	0	2	2	0	5620 SAM failed to back up thenode configuration files.
+BootableConfigRestoreFailed	4	0	2	2	0	5620 SAM failed to restore thenode configuration files.
+SoftwareUpgradeFailed	4	0	2	2	0	The software upgrade using the5620 SAM failed.
+DuplicateRouterIdProblem	5	0	2	2	0	Duplicate RouterId Problem
+EventsThrottled	4	0	2	2	0	SNMP Daemon Overloaded
+JMSServerDown	5	0	2	2	0	systemFailed
+ManagementInterfaceProtectionSwitch	2	0	2	2	0	When a network element has dualmanagement interfaces (in-bandand out-of-band), this alarmindicates a switch from out-of-management to in-bandmanagement or vice versa.
+MemoryConsumption	4	0	2	2	0	Too many traps buffered
+MisconfiguredNode	4	0	2	2	0	Persist Off or no System Address
+MissedStatsCollection	5	0	2	2	0	no Auxiliary Servers Available
+TrapRateThresholdExceeded	5	0	2	2	0	trap Rate Greater Than Configured
+UnmanageFailed	2	0	2	2	0	This alarm is raised when an attemptto unmanage an NE fails.
+DefaultInstanceInconsistency	2	0	2	2	0	An accounting policy can specify adefault policy for Network andService policies.The 5620 SAM raises this alarm ifan accounting policy is the defaultfor more then one service type ormore then one network type.
+TemplateInconsistency	2	0	2	2	0	The 5620 SAM raises this alarm ifthere is a mismatch of data orproperties between a global policyand a local node policy.
+StandbyCPMManagementConnectionDown	5	0	2	2	0	Management connection down.  The 5620 SAM can be configured toregularly ping all network devices at2-min intervals. When a networkdevice cannot be reached using theping, an alarm is raised.
+SnmpReachabilityProblem	4	1	2	2	0	The alarm is raised if an SNMP pollof the SysUpTimeAlarm OID fails.The likely cause of the failure is thatthe SNMP agent on the manageddevice is not reachable. By default,the 5620 SAM polls the manageddevices every 2 min. If the poll fails,the alar
+TraceError	5	0	2	2	0	The alarm is raised when problemsare raised on the managed devices.For example, when IOM unusualerror log trace messages aregenerated on the managed device,an SNMP trap is sent to the5620 SAM. The 5620 SAM thenraises this alarm.The alarm indicates
+ArchiveLogDiskSpaceBelowThreshold	5	1	2	2	0	The alarm is raised when the primaryor standalone database archive logdisk space threshold specified in thenms-server.xml file is reached.
+BackupDiskSpaceBelowThreshold	5	1	2	2	0	The alarm is raised when the primaryor standalone database backup diskspace threshold specified in thenms-server.xml file is reached.
+DatabaseArchivedLogNotApplied	2	1	2	2	0	The alarm is raised when, during adatabase backup, the 5620 SAMdetermines that the archive logs arenot being applied to the standbydatabase, as indicated by the archivelog gap. The archive log gapthreshold is defined in thenms-server.xml file. The 
+DatabaseBackupRsyncFailed	2	1	2	2	0	The alarm is raised when databasebackup files cannot be copied to thestandby database server.
+DatabaseRedundancyArchiveGap	4	1	2	2	0	The alarm is raised when the primary5620 SAM main server detects anarchive log gap. An archive log gapoccurs when a number of archive logscannot be applied to the standbydatabase. The alarm may indicatethat the primary database is out ofarchive log
+DatabaseRedundancyFailure	4	1	2	2	0	The alarm is raised when the5620 SAM detects a standby databaseproblem, for example, the databaseis down or not in managed recoverymode. The alarm clears when thestandby database is functional. Thealarm is raised only in a redundant5620 SAM system.
+DatabaseRedundancyOutOfSync	2	1	2	2	0	The alarm is raised when the primary5620 SAM server polls the primaryand standby databases and detects adifference in the primary andstandby database archive logsequence numbers that is greaterthan one. The alarm may indicatethat the primary databa
+DatabaseRedundancyRealTimeApplyFailure	2	1	2	2	0	The alarm is raised when databaseredundancy falls out of real-timeapply transfer mode, which meansthat the primary databasetransactions are not immediatelyreplicated to the standby database.The alarm clears when the databaseis operating in real-tim
+DatafileSizeAboveThreshold	5	1	2	2	0	The alarm is raised when atablespace data file size exceeds 85percent of 32 Gbytes. This mayindicate that the number of storedNE backups is too high.
+DBFailOver	5	1	2	2	0	The alarm is raised when a databasefailover occurs. A standby databasere-instantiation is required. Thealarm clears when the standbydatabase is online.
+InstallDirectoryDiskSpaceBelowThreshold	4	1	2	2	0	The alarm is raised when the primaryor standalone database installationdisk space threshold specified in thenms-server.xml file is reached.
+PrimaryDatabaseDown	5	1	2	2	0	The alarm is raised when the primarydatabase is down for at least onepoll. This alarm is not persisted inthe database. When the databasecomes back online, thePrimaryDatabaseWasDown alarm israised in its place.This alarm is notput in the Alarm Histo
+PrimaryDatabaseWasDown	2	0	2	2	0	The alarm is raised when the primarydatabase is down for at least onepoll. The alarm is raised when thedatabase is online.
+ReinstantiateStandbyDatabaseFailed	5	1	2	2	0	The alarm is raised when a standbydatabase re-instantiation fails.
+StagingDiskSpaceBelowThreshold	4	1	2	2	0	The alarm is raised when the primaryor standalone database staging diskspace threshold specified in thenms-server.xml file is reached.
+StandbyDataFileDiskSpaceBelowThreshold	5	1	2	2	0	The alarm is raised when the standbydata file disk space thresholdspecified in the nms-server.xml fileis reached.
+StandbyInstallDirectoryDiskSpaceBelowThreshold	4	1	2	2	0	The alarm is raised when the standbydatabase installation disk spacethreshold specified in thenms-server.xml file is reached.
+StandbyOracleHomeDiskSpaceBelowThreshold	4	1	2	2	0	The alarm is raised when the standbydatabase Oracle disk space thresholdspecified in the nms-server.xml fileis reached.
+StandbyStagingDiskSpaceBelowThreshold	4	1	2	2	0	The alarm is raised when the standbydatabase staging disk spacethreshold specified in thenms-server.xml file is reached.
+SwitchOverDatabaseFailed	5	1	2	2	0	The alarm is raised when a databaseswitchover fails.
+TableSpaceAboveThreshold	5	1	2	2	0	The alarm is raised when thedatabase table space becomes toofull, which may indicate that theperformance statistics collectionrate or the statistics retention timeis too high.
+ProvisioningMismatch	4	0	2	2	0	The alarm is raised when a licensemismatch is detected for provisionedequipment
+CorruptImageFile	5	0	2	2	0	The alarm is raised when one or morefiles in the 5620 SAM software imagespecified for a device softwareupgrade is invalid, corrupt or absent.The 5620 SAM validates a devicesoftware file set before it importsthe file set and distributes it to anNE. 
+ActivitySwitch	5	1	2	2	0	The alarm is raised when a 5620 SAMmain server activity switch occurs
+PatchLevelMismatch	5	0	2	2	0	The alarm is raised when the SAMActive Server software patch leveldoes not match the SAM StandbyServer software patch level
+StandbyServerStatus	5	1	2	2	0	The alarm is raised when the primary5620 SAM main server cannotcommunicate with the 5620 SAMstandby main server. The alarmclears when communication betweenthe servers is restored
+StatisticsCollectionThresholdExceeded	4	1	2	2	0	The alarm is raised when theaccounting statistics collection rateexceeds the retention specifications
+SystemMemoryConsumption	5	1	2	2	0	The alarm is raised when the globalnumber of SNMP traps that awaitprocessing by the 5620 SAM surpassesthe system red threshold for trapmemory management specified inthe base configuration of the5620 SAM server. Caution:Alcatel-Lucent strongly recom
+RuleRegistrationError	2	1	2	2	0	The alarm is raised when one or moreinternal 5620 SAM server rule-enginerules fails to compile. The cause istypically a rule syntax error or asystem error
+AuthenticationFailure	2	0	2	2	0	The alarm is raised when aconfigurable number of attempts tolog in to a 5620 SAM client fail. Thealarm information includes the nameof the user attemptingauthentication. The 5620 SAMdeletes the alarm when the useraccount is deleted
+AuthorizationFailure	2	0	2	2	0	The alarm is raised when aconfigurable number of attempts todelete or modify an object that is notin the current user span of controlfail
+LicenseMismatch	5	1	2	2	0	The alarm is raised when the primary5620 SAM server license does notmatch the standby 5620 SAM serverlicense
+TypeMismatch	5	1	2	2	0	The alarm is raised when a 5620 SAMservice ID is used for a differentservice on another NE
+DiscoveredPhysicalLinkMismatch	2	0	2	2	0	The alarm is raised when oneendpoint of a physical link is used asan endpoint in another physical link
+DuplicatePhysicalLinks	3	0	2	2	0	The alarm is raised when there ismore then one physical linkconfigured between two endpoints

@@ -1,0 +1,3 @@
+impact.databaseeventlistener.logtofile=true
+impact.databaseeventlistener.autostartup=false
+impact.databaseeventlistener.classname=com.micromuse.response.service.listener.DatabaseListener

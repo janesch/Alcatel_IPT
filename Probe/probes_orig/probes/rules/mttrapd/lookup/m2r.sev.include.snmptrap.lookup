@@ -1,0 +1,9 @@
+# Created by mib2rules on Tue Jun 13 13:02:22 2006
+table alcatel-ALCATEL-NMC-PROXY-AGENT-MIB_sev = "$NCHOME/custom/probes/rules/mttrapd/lookup/alcatel-ALCATEL-NMC-PROXY-AGENT-MIB.sev.snmptrap.lookup"
+default = {"Unknown","Unknown","Unknown"}
+
+table alcatel-NMC50-MIB_sev = "$NCHOME/custom/probes/rules/mttrapd/lookup/alcatel-NMC50-MIB.sev.snmptrap.lookup"
+default = {"Unknown","Unknown","Unknown"}
+
+table generic-SNMPv2-MIB_sev = "$NCHOME/custom/probes/rules/mttrapd/lookup/generic-SNMPv2-MIB.sev.snmptrap.lookup"
+default = {"Unknown","Unknown","Unknown"}

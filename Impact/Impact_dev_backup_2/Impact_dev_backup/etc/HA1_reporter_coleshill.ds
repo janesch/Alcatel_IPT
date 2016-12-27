@@ -1,0 +1,19 @@
+#This file was written by server.
+#Wed Feb 01 16:14:43 GMT 2012
+reporter_coleshill.Oracle.PRIMARYPORT=1521
+reporter_coleshill.Oracle.CUSTOMURL=
+reporter_coleshill.Oracle.FAILOVERPOLICY=DISABLED
+reporter_coleshill.Oracle.CONNECTIONOPTION=GeneralSettings
+reporter_coleshill.Oracle.BINDINGNAME=
+reporter_coleshill.Oracle.DBPASSWORD={aes}C3F20308C3CB44B5239D94A34304A4F4
+reporter_coleshill.Oracle.MAXSQLCONNECTION=5
+reporter_coleshill.Oracle.BACKUPHOST=172.20.174.157
+reporter_coleshill.Oracle.DISABLEFAILOVER=false
+reporter_coleshill.Oracle.CONTEXTFACTORY=
+reporter_coleshill.Oracle.BACKUPSID=NTCLDB
+reporter_coleshill.Oracle.BACKUPPORT=1521
+reporter_coleshill.Oracle.JDBCDRIVER=oracle.jdbc.driver.OracleDriver
+reporter_coleshill.Oracle.PRIMARYHOST=nv1
+reporter_coleshill.Oracle.PRIMARYSID=NTCLDB
+reporter_coleshill.Oracle.PROVIDERURL=
+reporter_coleshill.Oracle.DBUSERNAME=reporter

@@ -1,0 +1,79 @@
+if ( regmatch ( $line_00, "RMC_Area_name" ) ) { 
+$RMC_Area_name= extract($line_00, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_01, "RMC_Area_name" ) ) { 
+$RMC_Area_name= extract($line_01, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_02, "RMC_Area_name" ) ) { 
+$RMC_Area_name= extract($line_02, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_03, "RMC_Area_name" ) ) { 
+$RMC_Area_name= extract($line_03, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_04, "RMC_Area_name" ) ) { 
+$RMC_Area_name= extract($line_04, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_05, "RMC_Area_name" ) ) { 
+$RMC_Area_name= extract($line_05, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_06, "RMC_Area_name" ) ) { 
+$RMC_Area_name= extract($line_06, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_07, "RMC_Area_name" ) ) { 
+$RMC_Area_name= extract($line_07, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_08, "RMC_Area_name" ) ) { 
+$RMC_Area_name= extract($line_08, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_09, "RMC_Area_name" ) ) { 
+$RMC_Area_name= extract($line_09, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_10, "RMC_Area_name" ) ) { 
+$RMC_Area_name= extract($line_10, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_11, "RMC_Area_name" ) ) { 
+$RMC_Area_name= extract($line_11, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_12, "RMC_Area_name" ) ) { 
+$RMC_Area_name= extract($line_12, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_13, "RMC_Area_name" ) ) { 
+$RMC_Area_name= extract($line_13, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_14, "RMC_Area_name" ) ) { 
+$RMC_Area_name= extract($line_14, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_15, "RMC_Area_name" ) ) { 
+$RMC_Area_name= extract($line_15, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_16, "RMC_Area_name" ) ) { 
+$RMC_Area_name= extract($line_16, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_17, "RMC_Area_name" ) ) { 
+$RMC_Area_name= extract($line_17, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_18, "RMC_Area_name" ) ) { 
+$RMC_Area_name= extract($line_18, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_19, "RMC_Area_name" ) ) { 
+$RMC_Area_name= extract($line_19, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_20, "RMC_Area_name" ) ) { 
+$RMC_Area_name= extract($line_20, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_21, "RMC_Area_name" ) ) { 
+$RMC_Area_name= extract($line_21, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_22, "RMC_Area_name" ) ) { 
+$RMC_Area_name= extract($line_22, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_23, "RMC_Area_name" ) ) { 
+$RMC_Area_name= extract($line_23, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_24, "RMC_Area_name" ) ) { 
+$RMC_Area_name= extract($line_24, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_25, "RMC_Area_name" ) ) { 
+$RMC_Area_name= extract($line_25, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_26, "RMC_Area_name" ) ) {
+$RMC_Area_name= extract($line_26, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_27, "RMC_Area_name" ) ) {
+$RMC_Area_name= extract($line_27, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_28, "RMC_Area_name" ) ) {
+$RMC_Area_name= extract($line_28, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_29, "RMC_Area_name" ) ) {
+$RMC_Area_name= extract($line_29, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_30, "RMC_Area_name" ) ) {
+$RMC_Area_name= extract($line_30, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_31, "RMC_Area_name" ) ) {
+$RMC_Area_name= extract($line_31, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_32, "RMC_Area_name" ) ) {
+$RMC_Area_name= extract($line_32, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_33, "RMC_Area_name" ) ) {
+$RMC_Area_name= extract($line_33, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_34, "RMC_Area_name" ) ) {
+$RMC_Area_name= extract($line_34, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_35, "RMC_Area_name" ) ) {
+$RMC_Area_name= extract($line_35, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_36, "RMC_Area_name" ) ) {
+$RMC_Area_name= extract($line_36, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_37, "RMC_Area_name" ) ) {
+$RMC_Area_name= extract($line_37, "RMC_Area_name=(.*)")
+} else if ( regmatch ( $line_38, "RMC_Area_name" ) ) {
+$RMC_Area_name= extract($line_38, "RMC_Area_name=(.*)")
+}   

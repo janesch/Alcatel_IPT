@@ -1,0 +1,1365 @@
+// Policy Name: Service_Impact
+// 
+// Version	Date        Name        Description
+// 1.0        14-09-10    -        Baseline
+// 1.1        14-09-10    Tony Nisbet    Capture ServerSerial with logging (patch 4.22)
+// 
+
+Log("Service_Impact: Start");
+Log("Service_Impact: Serial of triggering event - " + @Serial);
+log("Service_Impact: IQLOGSTART: ServerSerial=" + @ServerSerial + " EventId=" + @EventId); 
+
+
+//Is the event an ultimate parent, and has been for more than 1 minute
+//if((@Severity > 0) and ((@ParentChildFlag = 5) or (@ParentChildFlag = 7)) and (@ParentChildTime < (GetDate() - 60)))
+
+// set variable to show that this policy was triggered by a manually flagged event
+
+manTT = 0;
+
+if ( @TTFlag = 4 )
+    {
+    manTT = 1;
+    }
+
+//Set the TTFlag = 10 so that the event is not reprocessed...
+@TTFlag = 10;
+ReturnEvent(EventContainer);
+
+//If this event is not service affecting then just update the TTFlag so that a trouble ticket can be raised...
+if ( @ServiceAffecting <> 1 )
+    {
+    }
+//The event is service affecting...
+// Check if the equipment is from an end device
+
+elseif((@AlertKey = 'MSS_SIG event') or (@AlertKey ='SIG cable event') or (@AlertKey ='Port SIG cable event'))
+    {
+    //Check if the device has an electronic address associated with it
+    log("Service_Impact: Triggering event values - AlertKey: " + @AlertKey + ", ChildID: " + @ChildID + ", Electronic address: " + @AssetElectronicAddress);
+
+//Create array to hold Child Event Serial numbers from the orginating parent event
+    ChildSerials = {};
+
+    // Look for child events for the parent
+
+    // Extract the individual child events from the ChildID field
+    ChildSerials1 = Split(@ChildID,",");
+    numChildSerials1 = Length(ChildSerials1);
+    log("ChildSerials1= " + ChildSerials1);
+    log("numChildSerials1= " + numChildSerials1);
+    // Check if we found any child event serial values
+    if(numChildSerials1 > 0)
+        {
+        // Check the first layer down from the ultimate parent
+        x = 0;
+        while (x < numChildSerials1)
+            {
+            // Look for sub-child events
+            ChildEvents2 = GetByFilter('ha_ncoms_impact_events',"ServerSerial = " + ChildSerials1[x],false);
+            numChildEvents2 = Length(ChildEvents2);
+            if(numChildEvents2 > 0)
+                {
+                a = 0;
+                while(a < numChildEvents2)
+                    {
+                    ChildSerials2 = Split(ChildEvents2[a].ChildID,",");
+                    numChildSerials2 = Length(ChildSerials2);
+                    if(numChildSerials2 > 0)
+                        {
+                        b = 0;
+                        while (b < numChildSerials2)
+                            {
+                            ChildSerials = ChildSerials + ChildSerials2[b];
+                            log("The value of b is= " + b);
+                            b = b + 1;
+                            }
+                        }
+                    else
+                    {
+                    ChildSerials = ChildSerials + ChildSerials1[x];
+                    log("ChildSerials=" + ChildSerials);
+                    }
+                    a = a + 1;
+                }
+                }    
+            x = x + 1;
+            }
+        }
+    // Get distinct values from the Serial number array
+    DistinctChildSerials = Distinct(ChildSerials);
+    log("DistinctChildSerials =" + DistinctChildSerials);
+    numDistinctChildSerials = Length(DistinctChildSerials);
+    log("numDistinctChildSerials= " + numDistinctChildSerials);                    
+
+    AllDeviceSTIs = {};
+    // Start loop through events with serials in the distinct child serials array
+    g = 0;
+    while (g < numDistinctChildSerials)
+        {
+        log("ServerSerial = " + DistinctChildSerials[g]);
+        log("Value of g is = " + g);
+        ChildEventRecords = GetByFilter('ha_ncoms_impact_events',"ServerSerial = " + DistinctChildSerials[g],false);
+        log("ChildEventRecords[g].AssetElectronicAddress = " + ChildEventRecords[g].AssetElectronicAddress);
+        if((ChildEventRecords[0].AssetElectronicAddress != '') and (ChildEventRecords[0].AssetElectronicAddress != 'Not found'))
+        {
+        //Lookup device in Circee and store STI information in an array
+        deviceSTIs = GetByFilter('Circee_End_Device_STI_Table',"ELECTRONIC_ADDRESS = '"+ ChildEventRecords[0].AssetElectronicAddress+"'",false);
+        numDeviceSTIs = Length(deviceSTIs);
+        log("Service_Impact: Number of end device STIs found = " + numDeviceSTIs);
+        if(numDeviceSTIs > 0)
+            {
+
+            // GB - 160807 - Amended to only handle distinct STIs
+
+            // Build array of all STIs
+            //AllDeviceSTIs = {};
+            a = 0;
+            while (a < numDeviceSTIs)
+                {
+                AllDeviceSTIs = AllDeviceSTIs + deviceSTIs[a].STI_ID;
+                a = a + 1;
+                }
+    
+            }
+        }
+        g = g + 1;
+    }
+    
+            numAllDeviceSTIs = length(AllDeviceSTIs);
+            log("AllDeviceSTIs = " + AllDeviceSTIs);
+            // Produce array of distinct STIs
+            distinctDeviceSTIs = {};
+            distinctDeviceSTIs = distinct(AllDeviceSTIs) ;
+            log("distinctDeviceSTIs = " + distinctDeviceSTIs);
+            numDistinctDeviceSTIs = length(distinctDeviceSTIs);
+            
+            // Correct values in triggering event
+            //if(numDistinctDeviceSTIs <> @STINum)
+                //{
+                //EventContainer.STINum = numDistinctDeviceSTIs;
+                //EventContainer.STIRef = 'ADJ: ' + distinctDeviceSTIs[0];
+                //a = 1;
+                //while (a < numDistinctDeviceSTIs)
+                    //{
+                    //EventContainer.STIRef = EventContainer.STIRef + "," + distinctDeviceSTIs[a];
+                    //a = a + 1;
+                    //}
+                //}
+
+            a = 0;
+            while (a < numDistinctDeviceSTIs)
+                {
+                // Added to prevent the policy failing if the event already exists in
+                // Oracle. Tony Nisbet 10/08/10
+                AffectedSTIDataType = 'Reporter_STI_Ref';
+                AffectedSTIFilter = "Server_Name = '"+@ServerName+"' and Server_Serial = "+@ServerSerial+" and STI_ID = "+distinctDeviceSTIs[a] ;
+                CountOnly = False;
+                GetByFilter(AffectedSTIDataType, AffectedSTIFilter, CountOnly);
+
+                if (Num == 0) 
+                    {
+                    AffectedSTI = NewObject();
+                    AffectedSTI.Server_Name = @ServerName;
+                    AffectedSTI.Server_Serial = @ServerSerial;
+                    AffectedSTI.STI_ID = distinctDeviceSTIs[a];
+
+                    log("Service_Impact: ServerName = " + AffectedSTI.Server_Name + ", ServerSerial = " + AffectedSTI.Server_Serial + ", STI_ID = " + AffectedSTI.STI_ID);
+
+                    Type = 'Reporter_STI_Ref';
+                    AddDataItem(Type,AffectedSTI);
+                    }
+                // End of Oracle Failure Insertions
+                // Tony Nisbet 10/08/10
+                
+                a = a + 1;
+                }
+            // GB - 160807 - End of amended code section
+
+            //}
+        //}
+        //g = g + 1;
+    //}
+}
+
+// Check if the equipment is from a transponder - under Patch 3.77 by TA
+elseif((@EquipmentType like 'ST|TPR'))
+    {
+    //Check if the device has an electronic address associated with it
+    log("Service_Impact: Triggering event values - Node: " + @Node + ", ChildID: " + @ChildID + ", STIRef: " + @STIRef);
+
+    //Create array to hold Child Event Serial numbers from the orginating parent event
+    ChildSerials = {};
+    // Extract the individual child events from the ChildID field
+    ChildSerials1 = Split(@ChildID,",");
+    numChildSerials1 = Length(ChildSerials1);
+    log("ChildSerials1= " + ChildSerials1);
+    log("numChildSerials1= " + numChildSerials1);
+    // Check if we found any child event serial values
+    if(numChildSerials1 > 0)
+        {
+        // Check the first layer down from the ultimate parent
+        x = 0;
+        while (x < numChildSerials1)
+            {
+            ChildSerials = ChildSerials + ChildSerials1[x];
+            x = x + 1;
+            }
+        }
+        else
+        {
+            ChildSerials = ChildSerials + @ServerSerial;
+        }
+    log("ChildSerials = " + ChildSerials);
+    // Get distinct values from the Serial number array
+    //DistinctChildSerials = {};
+    DistinctChildSerials = Distinct(ChildSerials);
+    log("DistinctChildSerials =" + DistinctChildSerials);
+    numDistinctChildSerials = Length(DistinctChildSerials);
+    log("numDistinctChildSerials= " + numDistinctChildSerials);                    
+
+    AllDeviceSTIs = {};
+    // Start loop through events with serials in the distinct child serials array
+    g = 0;
+    while (g < numDistinctChildSerials)
+        {
+        log("ServerSerial = " + DistinctChildSerials[g]);
+        log("Value of g is = " + g);
+
+        ChildEventRecords = GetByFilter('ha_ncoms_impact_events',"ServerSerial = " + DistinctChildSerials[g],false);
+        //log("ChildEventRecords[g].AssetElectronicAddress = " + ChildEventRecords[g].AssetElectronicAddress);
+        if((ChildEventRecords[0].AssetElectronicAddress != '') and (ChildEventRecords[0].AssetElectronicAddress != 'Not found'))
+        {
+        //Lookup device in Circee and store STI information in an array
+        deviceSTIs = GetByFilter('Circee_Asset_STI_Table',"ASSET_ELECTRONIC_ADDRESS = '"+ ChildEventRecords[0].AssetElectronicAddress+"'",false);
+        numDeviceSTIs = Length(deviceSTIs);
+        log("Service_Impact: Number of end device STIs found = " + numDeviceSTIs);
+        if(numDeviceSTIs > 0)
+            {
+
+            // GB - 160807 - Amended to only handle distinct STIs
+
+            // Build array of all STIs
+            //AllDeviceSTIs = {};
+            a = 0;
+            while (a < numDeviceSTIs)
+                {
+                AllDeviceSTIs = AllDeviceSTIs + deviceSTIs[a].STI_ID;
+                a = a + 1;
+                }
+            }
+        }
+        log("AllDeviceSTIs = " + AllDeviceSTIs);
+        g = g + 1;
+    }
+    
+            numAllDeviceSTIs = length(AllDeviceSTIs);
+            log("AllDeviceSTIs = " + AllDeviceSTIs);
+            // Produce array of distinct STIs
+            distinctDeviceSTIs = {};
+            distinctDeviceSTIs = distinct(AllDeviceSTIs) ;
+            log("distinctDeviceSTIs = " + distinctDeviceSTIs);
+            numDistinctDeviceSTIs = length(distinctDeviceSTIs);
+            if(numDistinctDeviceSTIs <> @STINum)
+            {
+                EventContainer.STINum = numDistinctDeviceSTIs;
+            }
+            a = 0;
+            while (a < numDistinctDeviceSTIs)
+                {
+                AffectedSTI = NewObject();
+                AffectedSTI.Server_Name = @ServerName;
+                AffectedSTI.Server_Serial = @ServerSerial;
+                AffectedSTI.STI_ID = distinctDeviceSTIs[a];
+
+                //log("Service_Impact: ServerName = " + AffectedSTI.Server_Name + ", ServerSerial = " + AffectedSTI.Server_Serial + ", STI_ID = " + AffectedSTI.STI_ID);
+
+                Type = 'Reporter_STI_Ref';
+                if (distinctDeviceSTIs[a] <> NULL && distinctDeviceSTIs[a] <> '' and distinctDeviceSTIs[a] <> 'NULL') 
+                    {
+                    GetByFilter(Type, "Server_Serial="+@ServerSerial+" and Server_Name='"+@ServerName+"' and STI_ID="+distinctDeviceSTIs[a], False );
+                    if (Num == 0) 
+                        {
+                        log("Service_Impact: ServerName = " + AffectedSTI.Server_Name + ", ServerSerial = " + AffectedSTI.Server_Serial + ", STI_ID = " + AffectedSTI.STI_ID);
+                        AddDataItem(Type,AffectedSTI);
+                        }
+                    }        
+                a = a + 1;
+                }
+
+    
+    }
+
+// Check if the equipment is from a transponder or responder
+//elseif((@EquipmentType like 'ST|TR|TPR|RES'))
+// Check if the equipment is from a responder - under Patch 3.66 by TA
+elseif((@EquipmentType like 'TR|RES'))
+    {
+    //Check if the device has an electronic address associated with it
+    log("Service_Impact: Triggering event values - AlertKey: " + @AlertKey + ", ChildID: " + @ChildID + ", STIRef: " + @STIRef);
+//Create array to hold Child Event Serial numbers from the orginating parent event
+    ChildSerials = {};
+    // Extract the individual child events from the ChildID field
+    ChildSerials1 = Split(@ChildID,",");
+    numChildSerials1 = Length(ChildSerials1);
+    log("ChildSerials1= " + ChildSerials1);
+    log("numChildSerials1= " + numChildSerials1);
+    // Check if we found any child event serial values
+    if(numChildSerials1 > 0)
+        {
+        // Check the first layer down from the ultimate parent
+        x = 0;
+        while (x < numChildSerials1)
+            {
+            // Store child serials in the array
+            //ChildSerials = ChildSerials + ChildSerials1[x];
+            log("The value of x is = " + x);
+            log("ChildSerials1[x] = " + ChildSerials1[x]);
+            // Look for sub-child events
+            ChildEvents2 = GetByFilter('ha_ncoms_impact_events',"ServerSerial = " + ChildSerials1[x],false);
+            numChildEvents2 = Length(ChildEvents2);
+            log("ChildEvents2= " + ChildEvents2);
+            log("numChildEvents2= " + numChildEvents2);
+            //if (numChildEvents2 <> NULL)
+            //{
+            if(numChildEvents2 > 0)
+                {
+                a = 0;
+                while(a < numChildEvents2)
+                    {
+                    log("The value of a is= " + a);
+                    ChildSerials2 = Split(ChildEvents2[a].ChildID,",");
+                    numChildSerials2 = Length(ChildSerials2);
+                    log("ChildSerials2 = " + ChildSerials2);
+                    log("numChildSerials2 = " + numChildSerials2);
+                    if(numChildSerials2 > 0)
+                        {
+                        b = 0;
+                        while (b < numChildSerials2)
+                            {
+                            ChildSerials = ChildSerials + ChildSerials2[b];
+                            log("The value of b is= " + b);
+                            b = b + 1;
+                            }
+                        }
+                    else
+                    {
+                    ChildSerials = ChildSerials + ChildSerials1[x];
+                    log("ChildSerials=" + ChildSerials);
+                    }
+                    a = a + 1;
+                }
+                }    
+            //}
+            //else
+            //    {
+            //    ChildSerials = ChildSerials + ChildSerials1[x];
+            //    log("ChildSerials=" + ChildSerials);
+            //    }
+
+            x = x + 1;
+            }
+        }
+    log("ChildSerials = " + ChildSerials);
+    // Get distinct values from the Serial number array
+    //DistinctChildSerials = {};
+    DistinctChildSerials = Distinct(ChildSerials);
+    log("DistinctChildSerials =" + DistinctChildSerials);
+    numDistinctChildSerials = Length(DistinctChildSerials);
+    log("numDistinctChildSerials= " + numDistinctChildSerials);                    
+
+    AllDeviceSTIs = {};
+    // Start loop through events with serials in the distinct child serials array
+    g = 0;
+    while (g < numDistinctChildSerials)
+        {
+        log("ServerSerial = " + DistinctChildSerials[g]);
+        log("Value of g is = " + g);
+        ChildEventRecords = GetByFilter('ha_ncoms_impact_events',"ServerSerial = " + DistinctChildSerials[g],false);
+        //log("ChildEventRecords[g].AssetElectronicAddress = " + ChildEventRecords[g].AssetElectronicAddress);
+        if((ChildEventRecords[0].AssetElectronicAddress != '') and (ChildEventRecords[0].AssetElectronicAddress != 'Not found'))
+        {
+        //Lookup device in Circee and store STI information in an array
+        deviceSTIs = GetByFilter('Circee_Asset_STI_Table',"ASSET_ELECTRONIC_ADDRESS = '"+ ChildEventRecords[0].AssetElectronicAddress+"'",false);
+        numDeviceSTIs = Length(deviceSTIs);
+        log("Service_Impact: Number of end device STIs found = " + numDeviceSTIs);
+        if(numDeviceSTIs > 0)
+            {
+
+            // GB - 160807 - Amended to only handle distinct STIs
+
+            // Build array of all STIs
+            //AllDeviceSTIs = {};
+            a = 0;
+            while (a < numDeviceSTIs)
+                {
+                AllDeviceSTIs = AllDeviceSTIs + deviceSTIs[a].STI_ID;
+                a = a + 1;
+                }
+            }
+        }
+        log("AllDeviceSTIs = " + AllDeviceSTIs);
+        g = g + 1;
+    }
+    
+            numAllDeviceSTIs = length(AllDeviceSTIs);
+            log("AllDeviceSTIs = " + AllDeviceSTIs);
+            // Produce array of distinct STIs
+            distinctDeviceSTIs = {};
+            distinctDeviceSTIs = distinct(AllDeviceSTIs) ;
+            log("distinctDeviceSTIs = " + distinctDeviceSTIs);
+            numDistinctDeviceSTIs = length(distinctDeviceSTIs);
+            a = 0;
+            while (a < numDistinctDeviceSTIs)
+                {
+                AffectedSTI = NewObject();
+                AffectedSTI.Server_Name = @ServerName;
+                AffectedSTI.Server_Serial = @ServerSerial;
+                AffectedSTI.STI_ID = distinctDeviceSTIs[a];
+
+                //log("Service_Impact: ServerName = " + AffectedSTI.Server_Name + ", ServerSerial = " + AffectedSTI.Server_Serial + ", STI_ID = " + AffectedSTI.STI_ID);
+
+                Type = 'Reporter_STI_Ref';
+                if (distinctDeviceSTIs[a] <> NULL && distinctDeviceSTIs[a] <> '' and distinctDeviceSTIs[a] <> 'NULL') 
+                    {
+                    GetByFilter(Type, "Server_Serial="+@ServerSerial+" and Server_Name='"+@ServerName+"' and STI_ID="+distinctDeviceSTIs[a], False );
+                    if (Num == 0) 
+                        {
+                        log("Service_Impact: ServerName = " + AffectedSTI.Server_Name + ", ServerSerial = " + AffectedSTI.Server_Serial + ", STI_ID = " + AffectedSTI.STI_ID);
+                        AddDataItem(Type,AffectedSTI);
+                        }
+                    }        
+                a = a + 1;
+                }
+
+    
+    }
+
+//The event is from a new network device
+elseif((@EquipmentType like '.*6850.*') or (@EquipmentType like '.*7750.*'))
+    {
+    //Lookup device in Circee and store STI information in an array
+    if(@PhysicalCard = '')
+        {
+        Interfaces = GetByFilter('Circee_Interface_Table',"L1_SYSNAME = '"+@Node+"'",false);
+        numInterfaces = Length(Interfaces);
+        LValue = 1;
+        }
+    else
+        {
+        Interfaces = GetByFilter('Circee_Interface_Table',"(L1_SYSNAME = '"+@Node+"') and (L1_IF_ID = '"+@PhysicalCard+"')",false);
+        numInterfaces = Length(Interfaces);
+        LValue = 1;
+        }
+    if(numInterfaces = 0)
+        {
+        if(@PhysicalCard = '')
+            {
+            Interfaces = GetByFilter('Circee_Interface_Table',"L2_SYSNAME = '"+@Node+"'",false);
+            numInterfaces = Length(Interfaces);
+            LValue = 2;
+            }
+        else
+            {
+            Interfaces = GetByFilter('Circee_Interface_Table',"(L2_SYSNAME = '"+@Node+"') and (L2_IF_ID = '"+@PhysicalCard+"')",false);
+            numInterfaces = Length(Interfaces);
+            LValue = 2;
+            }
+        }
+    if(numInterfaces > 0)
+        {
+        //Create array to hold STI info
+        STIs = {};
+        RemoveSTIsArray = {};
+
+        //Start loop to store STI info in array
+        y = 0;
+
+        while(y < numInterfaces)
+            {
+            if(LValue = 1)
+                {
+                interfaceSTIs = Interfaces[y].L1_STI_ID;
+                }
+            else
+                {
+                interfaceSTIs = Interfaces[y].L2_STI_ID;
+                }
+            interfaceSTIarray = Split(interfaceSTIs,",");
+            numInterfaceSTIarray = Length(interfaceSTIarray);
+            if(numInterfaceSTIarray > 0)
+                {
+                z = 0;
+                while (z < numInterfaceSTIarray)
+                    {
+                    STIs = STIs + interfaceSTIarray[z];
+                    z = z + 1;
+                    }
+                }
+
+            y = y + 1;
+            }
+        }
+        DistinctSTIs = {};
+        If ( STIs <> NULL ) {
+            DistinctSTIs = Distinct(STIs);
+        }
+
+    //Create array to hold Child Event Serial numbers from the orginating parent event
+    ChildSerials = {};
+
+    // Look for child events for the parent
+
+    // Extract the individual child events from the ChildID field
+    ChildSerials1 = Split(@ChildID,",");
+    numChildSerials1 = Length(ChildSerials1);
+
+    // Check if we found any child event serial values
+    if(numChildSerials1 > 0)
+        {
+        // Check the first layer down from the ultimate parent
+        x = 0;
+        while (x < numChildSerials1)
+            {
+            // Store child serials in the array
+            ChildSerials = ChildSerials + ChildSerials1[x];
+
+            // Look for sub-child events
+            ChildEvents2 = GetByFilter('ha_ncoms_impact_events',"ServerSerial = "+ChildSerials1[x],false);
+            numChildEvents2 = Length(ChildEvents2);
+            if(numChildEvents2 > 0)
+                {
+                a = 0;
+                while(a < numChildEvents2)
+                    {
+                    ChildSerials2 = Split(ChildEvents2[a].ChildID);
+                    numChildSerials2 = Length(ChildSerials2);
+                    if(numChildSerials2 > 0)
+                        {
+                        b = 0;
+                        while (b < numChildSerials2)
+                            {
+                            ChildSerials = ChildSerials + ChildSerials2[b];
+
+                            ChildEvents3 = GetByFilter('ha_ncoms_impact_events',"ServerSerial = "+ChildSerials2[b],false);
+                            numChildEvents3 = Length(ChildEvents3);
+                            if(numChildEvents3 > 0)
+                                {
+                                c = 0;
+                                while (c < numChildEvents3)
+                                    {
+                                    ChildSerials3 = Split(ChildEvents3[c].ChildID);
+                                    numChildSerials3 = Length(ChildSerials3);
+                                    if(numChildSerials3 > 0)
+                                        {
+                                        d = 0;
+                                        while (d < numChildSerials3)
+                                            {
+                                            ChildSerials = ChildSerials + ChildSerials3[d];
+
+                                            ChildEvents4 = GetByFilter('ha_ncoms_impact_events',"ServerSerial = "+ChildSerials3[d],false);
+                                            numChildEvents4 = Length(ChildEvents4);
+                                            if(numChildEvents4 > 0)
+                                                {
+                                                e = 0;
+                                                while (e < numChildEvents4)
+                                                    {
+                                                    ChildSerials4 = Split(ChildEvents4[e].ChildID);
+                                                    numChildSerials4 = Length(ChildSerials4);
+                                                    if(numChildSerials4 > 0)
+                                                        {
+                                                        f = 0;
+                                                        while ( f < numChildSerials4)
+                                                            {
+                                                            ChildSerials = ChildSerials + ChildSerials4[f];
+                                                            f = f + 1;
+                                                            }
+                                                        }
+                                                    e = e + 1;
+                                                    }
+                                                }
+                                            d = d + 1;
+                                            }
+                                        }
+                                    c = c + 1;
+                                    }
+                                }
+                            b = b + 1;
+                            }
+                        }
+                    a = a + 1;
+                    }
+                }
+            x = x + 1;
+            }
+        }
+
+    // Get distinct values from the Serial number array
+    DistinctChildSerials = Distinct(ChildSerials);
+    numDistinctChildSerials = Length(DistinctChildSerials);
+    log("Service_Impact: Number of 6850 device STIs found = " + numDistinctChildSerials);
+
+    // Start loop through events with serials in the distinct child serials array
+    g = 0;
+    while (g < numDistinctChildSerials)
+        {
+        CheckResilient = GetByFilter('ha_ncoms_impact_events',"(Severity > 0) and (ServerSerial = "+DistinctChildSerials[g]+")",false);
+        numCheckResilient = Length(CheckResilient);
+        if(numCheckResilient > 0)
+            {
+            if(CheckResilient[0].ResilienceAffecting = 1)
+                {
+                if(CheckResilient[0].PhysicalCard = '')
+                    {
+                    Remove = GetByFilter('Circee_Interface_Table',"(L1_SYSNAME = '"+CheckResilient[0].Node+"')",false);
+                    RValue = 1;
+                    }
+                else
+                    {
+                    Remove = GetByFilter('Circee_Interface_Table',"(L1_SYSNAME = '"+CheckResilient[0].Node+"') and (L1_IF_ID = '"+CheckResilient[0].PhysicalCard+"')",false);
+                    RValue = 1;
+                    }
+                numRemove = Length(Remove);
+                if(numRemove = 0)
+                    {
+                    if(CheckResilient[0].PhysicalCard = '')
+                        {
+                        Remove = GetByFilter('Circee_Interface_Table',"(L2_SYSNAME = '"+CheckResilient[0].Node+"')",false);
+                        RValue = 2;
+                        }
+                    else
+                        {
+                        Remove = GetByFilter('Circee_Interface_Table',"(L2_SYSNAME = '"+CheckResilient[0].Node+"') and (L2_IF_ID = '"+CheckResilient[0].PhysicalCard+"')",false);
+                        RValue = 2;
+                        }
+                    }
+                if(numRemove > 0)
+                    {
+                    h = 0;
+                    while (h < numRemove)
+                        {
+                        if(Rvalue = 1)
+                            {
+                            removeSTIs = Remove[h].L1_STI_ID;
+                            }
+                        else
+                            {
+                            removeSTIs = Remove[h].L2_STI_ID;
+                            }
+                        removeSTIsList = Split(removeSTIs,",");
+                        numremoveSTIsList = Length(removeSTIsList);
+                        if(numremoveSTIsList > 0)
+                            {
+                            i = 0;
+                            while (i < numremoveSTIsList)
+                                {
+                                RemoveSTIsArray = RemoveSTIsArray + removeSTIsList[i];
+                                i = i + 1;
+                                }
+                            }
+                        h = h + 1;
+                        }
+                    }
+                }
+            }
+        g = g + 1;
+        }
+    DistinctRemoveSTIList = {};
+    If ( RemoveSTIsArray <> NULL ) {
+        DistinctRemoveSTIList = Distinct(RemoveSTIsArray);
+    }
+
+    // We now have an array of STIs that are potentially affected (DistinctSTIs) and another array containing STIs that are
+    // dependant on resilient links that need to be removed as their resilient connection is still available.
+    // (DistinctRemoveSTIList)
+
+    // GB - 160807 - Create empty array
+
+    TriggeringDistinctSTIs = {};
+
+    // GB - 160807 - End of amended code section
+
+
+    numDistinctRemoveSTIList = Length(DistinctRemoveSTIList);
+    numDistinctSTIs = Length(DistinctSTIs);
+    if(numDistinctSTIs > 0)
+        {
+        j = 0;
+        while (j < numDistinctSTIs)
+            {
+            k = 0;
+            m = 0;
+            while(k < numDistinctRemoveSTIList)
+                {
+                if(DistinctRemoveSTIList[k] = DistinctSTIs[j])
+                    {
+                    m = 1;
+                    k = numDistinctRemoveSTIList;
+                    }
+                k = k + 1;
+                }
+            if(m = 0)
+                {
+                AffectedSTI = NewObject();
+                AffectedSTI.Server_Name = @ServerName;
+                AffectedSTI.Server_Serial = @ServerSerial;
+                AffectedSTI.STI_ID = DistinctSTIs[j];
+
+                // GB - 160807 - Create distinct array for use in adjusting value in the triggering event for STINum and STIRef
+
+                TriggeringDistinctSTIs = TriggeringDistinctSTIs + DistinctSTIs[j];
+
+                // GB - 160807 - End of amended code section
+
+                Type = 'Reporter_STI_Ref';
+                if (DistinctSTIs[j] <> NULL && DistinctSTIs[j] <> '' and DistinctSTIs[j] <> 'NULL') 
+                    {
+                    GetByFilter(Type, "Server_Serial="+@ServerSerial+" and Server_Name='"+@ServerName+"' and STI_ID="+DistinctSTIs[j], False );
+                    if (Num == 0) 
+                        {
+                        log("Service_Impact: ServerName = " + AffectedSTI.Server_Name + ", ServerSerial = " + AffectedSTI.Server_Serial + ", STI_ID = " + STI_ID);
+                        AddDataItem(Type,AffectedSTI);
+                        }
+                    }
+                }
+            j = j + 1;
+            }
+        }
+
+    // GB - 160807 - Check values against those in triggering event for STINum and STIRef
+
+    numTriggeringDistinctSTIs = length(TriggeringDistinctSTIs);
+    if(numTriggeringDistinctSTIs <> EventContainer.STINum)
+        {
+        EventContainer.STINum = numTriggeringDistinctSTIs;
+        EventContainer.STIRef = 'ADJ: ' + TriggeringDistinctSTIs[0];
+        a = 1;
+        while (a < numDistinctDeviceSTIs)
+            {
+            EventContainer.STIRef = EventContainer.STIRef + "," + TriggeringDistinctSTIs[a];
+            a = a + 1;
+            }
+        }
+
+    // GB - 160807 - End of amended code section
+
+    }
+
+elseif(@EquipmentType like '.*1423.*')
+    {
+    if(@RemoteNode <> '')
+        {
+        // We need to check the remote node for the event and ensure it is a 1423
+        remNodeType = GetByFilter('Circee_Host_Table',"SYSNAME = '"+@RemoteNode+"'",false);
+        numRemNodeType = length(remNodeType);
+        if(numRemNodeType > 0)
+            {
+            if(remNodeType.EQUIP_TYPE like '.*1423.*')
+                {
+                // We now know that the remote device is also a 1423, and so we need to find all the
+                // resource isolations from 1423s below the original event
+                NameLike = RExtract(@Node,"([A-Za-z0-9]+\-[A-Za-z0-9]+)\-.*");
+                // Get all 1423 resource isolation events where the sysname is like the extracted value
+                ResIso = GetByFilter('ha_ncoms_impact_events',"(Type <> 2) and (Severity > 0) and (EventId = 'TMA_001') and (Node like '^"+NameLike+"')",false);
+                numResIso = length(ResIso);
+                if(ResIso > 0)
+                    {
+                    //Create array to hold STI info
+                    STIs = {};
+                    // We now need to create a list of all the affected STIs for the isolation 1423s
+                    g = 0;
+                    while (g < numResIso)
+                        {
+                        Interfaces = GetByFilter('Circee_Interface_Table',"(L1_SYSNAME = '"+ ResIso[g].Node +"') and (L1_IF_ID like '[Ww][Aa][Nn]1')",false);
+                        numInterfaces = Length(Interfaces);
+                        GValue = 1;
+                        if(numInterfaces = 0)
+                            {
+                            Interfaces = GetByFilter('Circee_Interface_Table',"(L2_SYSNAME = '"+ ResIso[g].Node +"') and (L2_IF_ID like '[Ww][Aa][Nn]1')",false);
+                            numInterfaces = Length(Interfaces);
+                            GValue = 2;
+                            }
+                        if(numInterfaces > 0)
+                            {
+                            //Start loop to store STI info in array
+                            y = 0;
+
+                            while(y < numInterfaces)
+                                {
+                                if(GValue = 1)
+                                    {
+                                    interfaceSTIs = Interfaces[y].L1_STI_ID;
+                                    }
+                                else
+                                    {
+                                    interfaceSTIs = Interfaces[y].L2_STI_ID;
+                                    }
+                                interfaceSTIarray = Split(interfaceSTIs,",");
+                                numInterfaceSTIarray = Length(interfaceSTIarray);
+                                if(numInterfaceSTIarray > 0)
+                                    {
+                                    z = 0;
+                                    while (z < numInterfaceSTIarray)
+                                        {
+                                        STIs = STIs + interfaceSTIarray[z];
+                                        z = z + 1;
+                                        }
+                                    }
+
+                                y = y + 1;
+                                }
+                            }
+                        g = g + 1;
+                        }
+                    DistinctSTIs = {};
+                    If ( STIs <> NULL )
+                        {
+                        DistinctSTIs = Distinct(STIs);
+                        numDistinctSTIs = Length(DistinctSTIs);
+                        log("Service_Impact: Number of 1423 distinct STIs found = " + numDistinctSTIs);
+                        if(numDistinctSTIs > 0)
+                            {
+                            j = 0;
+
+                            while (j < numDistinctSTIs)
+                                {
+                                AffectedSTI = NewObject();
+                                AffectedSTI.Server_Name = @ServerName;
+                                AffectedSTI.Server_Serial = @ServerSerial;
+                                AffectedSTI.STI_ID = DistinctSTIs[j];
+
+                                Type = 'Reporter_STI_Ref';
+                                if (DistinctSTIs[j] <> NULL && DistinctSTIs[j] <> '' and DistinctSTIs[j] <> 'NULL') 
+                                    {
+                                    GetByFilter(Type, "Server_Serial="+@ServerSerial+" and Server_Name='"+@ServerName+"' and STI_ID="+DistinctSTIs[j], False );
+                                    if (Num == 0) 
+                                        {
+                                        log("Service_Impact: ServerName = " + AffectedSTI.Server_Name + ", ServerSerial = " + AffectedSTI.Server_Serial + ", STI_ID = " + STI_ID);
+                                        AddDataItem(Type,AffectedSTI);
+                                        }
+                                    }
+
+                                j = j + 1;
+                                }
+                            }
+
+                        // GB - 160807 - Check values against those in triggering event for STINum and STIRef
+            
+                        if(numDistinctSTIs <> EventContainer.STINum)
+                            {
+                            EventContainer.STINum = numDistinctSTIs;
+                            EventContainer.STIRef = 'ADJ: ' + DistinctSTIs[0];
+                            a = 1;
+                            while (a < numDistinctSTIs)
+                                {
+                                EventContainer.STIRef = EventContainer.STIRef + "," + DistinctSTIs[a];
+                                a = a + 1;
+                                }
+                            }
+
+                        // GB - 160807 - End of amended code section
+
+                        }
+                    }
+                }
+            }
+        }
+    else
+        {
+        }
+
+    }
+
+elseif ((@AlertKey like 'IP SLA') and (@Manager='2811'))
+    {
+    // Deal with IPSLA failure
+    
+    // Work out the associated 6850 name
+    if (@Node like ".*CISC01")
+    {
+        Sysname6850 = RExtract( @Node, "(.*)CISC01" );
+        Sysname6850 = Sysname6850 + "OS6801";
+    }
+    Log ("ServiceImpact : 6850 = " + Sysname6850 );
+
+    Delimiters=":";
+    MyArray = split(@Summary,Delimiters);
+    ProbeNumber=Substring(MyArray[0],8,9);
+    ForwardingClass=Substring(MyArray[2],1,3);
+
+    Log ("ServiceImpact : ProbeNumber is: = " + ProbeNumber );
+    Log ("ServiceImpact : ForwardingClass is: = " + ForwardingClass );
+        
+        // Look up all the STIs associated with the 6850
+        //Interfaces = GetByFilter('Circee_Interface_Table',"L1_SYSNAME = '"+Sysname6850+"'",false);
+        Interfaces = GetByFilter('Circee_Interface_Table',"L1_SYSNAME = '"+Sysname6850+"' and L1_STI_ID is not null",false);
+        numInterfaces = Num;
+        HValue = 1;
+        if(numInterfaces = 0)
+            {
+            //Interfaces = GetByFilter('Circee_Interface_Table',"L2_SYSNAME = '"+Sysname6850+"'",false);
+            Interfaces = GetByFilter('Circee_Interface_Table',"L2_SYSNAME = '"+Sysname6850+"' and L2_STI_ID is not null",false);
+            numInterfaces = Num;
+            HValue = 2;
+            }
+           log("Service_Impact: Number of Interfaces found in " + Sysname6850 + " device is: " + numInterfaces);    
+        if(numInterfaces > 0)
+            {
+            //Create array to hold STI info
+            STIs = {};
+    
+            //Start loop to store STI info in array
+            y = 0;
+    
+            while(y < numInterfaces)
+                {
+                if(HValue = 1)
+                    {
+                    interfaceSTIs = Interfaces[y].L1_STI_ID;
+                    }
+                else
+                    {
+                    interfaceSTIs = Interfaces[y].L2_STI_ID;
+                    }
+                interfaceSTIarray = Split(interfaceSTIs,",");
+                numInterfaceSTIarray = Length(interfaceSTIarray);
+                if(numInterfaceSTIarray > 0)
+                    {
+                    z = 0;
+                    while (z < numInterfaceSTIarray)
+                        {
+                        STIs = STIs + interfaceSTIarray[z];
+                        z = z + 1;
+                        }
+                    }
+    
+                y = y + 1;
+                }
+            }
+            NumSTIs = Length(STIs);
+            DistinctSTIs = Distinct(STIs);
+            NumDistinctSTIs = Length(DistinctSTIs);
+            log("NumSTIs = " + NumSTIs);
+            log("NumDistinctSTIs = " + NumDistinctSTIs);
+            
+            // Lookup the Forwarding Class from the Probe Number
+            if (NumSTIs > 0)
+            {
+                // Filter the STIs to ones that match the forwardingclass
+                //STIList = "" + STIs;
+                STIList = "" + DistinctSTIs;
+                STIList = RExtract( STIList, "{(.*)}" );
+                Filter= "(AlertKey like 'IP SLA') and (Type = 1) and (Manager='2811') and (Node = '"+ @Node + "')";
+                SLAEvent = GetByFilter('ha_ncoms_impact_events',Filter,false);
+                Log("Service_Impact: " + Filter);
+                numSLA = Length(SLAEvent);
+                Log("Service_Impact: No. of IP SLA Alarm: " + numSLA);
+                if(numSLA = 6 )
+                {
+                     Filter = "STI_ID in (" + STIList + ")";
+                }
+                else
+                {
+                    Filter = "STI_ID in (" + STIList + ") and FORWARDING_CLASS_ABBR = '" + ForwardingClass + "'";
+                }
+                Log("Service_Impact: " + Filter);
+                Services = GetByFilter( "Circee_STI_ID", Filter, False );
+                NumServices = Num;
+                log("NumServices = " + NumServices);
+                if (NumServices > 0)
+                {
+                    // Insert them into the STI_REF table...
+                    Type = 'Reporter_STI_Ref';
+                    CurrentService = 0;
+
+                    // GB - 160807 - Create empty array to hold STIs
+
+                    AllSTIs = {};
+
+                    // GB - 160807 - End of code section
+
+                    While ( CurrentService < NumServices )
+                    {
+                        if (Services[CurrentService].STI_ID <> '' and Services[CurrentService].STI_ID <> 'NULL' and Services[CurrentService].STI_ID <> NULL) 
+                        {
+                            AffectedSTI = NewObject();
+                            AffectedSTI.Server_Name = @ServerName;
+                            AffectedSTI.Server_Serial = @ServerSerial;
+                            AffectedSTI.STI_ID = Services[CurrentService].STI_ID;
+                            Filter = "Server_Serial="+@ServerSerial+" and Server_Name='"+@ServerName+"' and STI_ID="+Services[CurrentService].STI_ID;
+                            GetByFilter(Type, Filter, False );
+                            if (Num == 0) 
+                            {
+                                log("Service_Impact: ServerName = " + AffectedSTI.Server_Name + ", ServerSerial = " + AffectedSTI.Server_Serial + ", STI_ID = " + Services[CurrentService].STI_ID);
+                                AddDataItem(Type,AffectedSTI);
+                            }
+
+                            // GB - 160807 - Check values against those in triggering event for STINum and STIRef
+            
+                            AllSTIs = AllSTIs + Services[CurrentService].STI_ID;
+
+                            // GB - 160807 - End of amended code section
+
+                        }
+                        CurrentService = CurrentService + 1;
+                    }
+
+                    // GB - 160807 - Check values against those in triggering event for STINum and STIRef
+
+                    DistinctSTIs = distinct(AllSTIs);
+
+                    numDistinctSTIs = length(DistinctSTIs);
+
+                    if(numDistinctSTIs <> EventContainer.STINum)
+                    {
+                        EventContainer.STINum = numDistinctSTIs;
+                        EventContainer.STIRef = 'ADJ: ' + DistinctSTIs[0];
+                        a = 1;
+                        while (a < numDistinctSTIs)
+                        {
+                            EventContainer.STIRef = EventContainer.STIRef + "," + DistinctSTIs[a];
+                            a = a + 1;
+                        }
+                    }
+
+                    // GB - 160807 - End of code section
+
+
+                }
+            }
+        
+            
+    }
+
+    // TA - 02June2008 - Section to handle SPCB 3600 span resiliency
+
+    elseif((@EquipmentType like '.*3600.*') and (@Node like '.*MS36.*'))
+    {
+       // Changed as per patch-3.104 by SK
+    //Span3600Events = GetByFilter('ha_ncoms_impact_events',"(Severity > 0) and (Type = 1) and (AlarmClass = 'Device Failed') and (EquipmentType like '.*3600.*') and (Node like '[a-zA-Z][a-zA-Z][a-zA-Z][a-zA-Z][B|C].*') and ((TSA = '" + @TSA + "') or (TSB = '" + @TSA + "'))",false);
+       Span3600Events = GetByFilter('ha_ncoms_impact_events',"(Severity > 0) and (Type = 1) and (AlarmClass = 'Device Failed') and (EquipmentType like '.*3600.*') and (Node like '[a-zA-Z][a-zA-Z][a-zA-Z][a-zA-Z][B|C|D].*') and ((TSA = '" + @TSA + "') or (TSB = '" + @TSA + "'))",false);
+
+    
+    num3600SpanEvents = length(Span3600Events);
+    log("Service Impact:" +num3600SpanEvents+ " SPCB's 3600 events found");
+    // Create empty array to hold STIs
+    STIs = {};
+
+    if(num3600SpanEvents > 0)
+        {
+        // Look up STIs for each event found and add to a list of STIs
+        d = 0;
+        while (d < num3600SpanEvents)
+            {
+            STIs1 = GetByFilter('Circee_Interface_Table',"(L1_SYSNAME = '"+ Span3600Events[d].Node +"')",false);
+            numSTIs1 = length(STIs1);
+            log("Service Impact:" +numSTIs1+ " L1_SYSNAME found in L1_L2 table");
+
+            if(numSTIs1 > 0)
+                {
+                e = 0;
+                while (e < numSTIs1)
+                    {
+                    //Split the STIs found
+                    interface1STIarray = Split(STIs1[e].L1_STI_ID,",");
+                    numInterface1STIarray = length(interface1STIarray);
+                    if(numInterface1STIarray > 0)
+                        {
+                        f = 0;
+                        while ( f < numInterface1STIarray)
+                            {
+                            STIs = STIs + interface1STIarray[f];
+                            f = f + 1;
+                            }
+                        }
+                    e = e + 1;
+                    }
+                }
+
+            STIs2 = GetByFilter('Circee_Interface_Table',"(L2_SYSNAME = '"+ Span3600Events[d].Node +"')",false);
+
+            numSTIs2 = length(STIs2);
+            
+            if(numSTIs2 > 0)
+                {
+                e = 0;
+                while (e < numSTIs2)
+                    {
+                    //Split the STIs found
+                    interface2STIarray = Split(STIs2[e].L2_STI_ID,",");
+                    numInterface2STIarray = length(interface2STIarray);
+                    if(numInterface2STIarray > 0)
+                        {
+                        f = 0;
+                        while ( f < numInterface2STIarray)
+                            {
+                            STIs = STIs + interface2STIarray[f];
+                            f = f + 1;
+                            }
+                        }
+                    e = e + 1;
+                    }
+                }
+            d = d + 1;
+            }
+        }
+
+    // Get distinct STI values from the STIs array
+    distinct3600STIs = {};
+    num3600STIs = length(STIs);
+    if ( (STIs <> NULL) and (num3600STIs > 0) )
+        {
+        distinct3600STIs = Distinct(STIs);
+        }
+    numDistinct3600STIs = length(distinct3600STIs);
+    log("Service Impact:" +numDistinct3600STIs+ " distinct STIs");
+
+    if( numDistinct3600STIs > 0 )
+        {
+        j = 0;
+        while (j < numDistinct3600STIs)
+            {
+            AffectedSTI = NewObject();
+            AffectedSTI.Server_Name = @ServerName;
+            AffectedSTI.Server_Serial = @ServerSerial;
+            AffectedSTI.STI_ID = distinct3600STIs[j];
+            Type = 'Reporter_STI_Ref';
+            //if (distinct3600STIs[j] <> NULL && distinct3600STIs[j] <> '' and distinct3600STIs[j] <> 'NULL') 
+            if (distinct3600STIs[j] <> NULL && distinct3600STIs[j] <> '' and distinct3600STIs[j] <> 'NULL')
+                {
+                GetByFilter(Type, "Server_Serial="+@ServerSerial+" and Server_Name='"+@ServerName+"' and STI_ID="+distinct3600STIs[j], False );
+                if (Num == 0) 
+                    {
+                    log("Service_Impact: ServerName = " + AffectedSTI.Server_Name + ", ServerSerial = " + AffectedSTI.Server_Serial + ", STI_ID = " + AffectedSTI.STI_ID);
+                    AddDataItem(Type,AffectedSTI);
+                    }
+                }
+            j = j + 1;
+            }
+        }
+
+    if(numDistinct3600STIs <> EventContainer.STINum)
+        {
+        EventContainer.STINum = numDistinct3600STIs;
+        EventContainer.STIRef = 'ADJ: ' + distinct3600STIs[0];
+        a = 1;
+        while (a < numDistinct3600STIs)
+            {
+            EventContainer.STIRef = EventContainer.STIRef + "," + distinct3600STIs[a];
+            a = a + 1;
+            }
+        }
+
+    }
+// Added for handling Kenton OffHk and Terminated_NotTerminated events
+// Giles Blake 05/05/10
+
+elseif(@Manager = 'Kenton' and (@AlarmClass = 'POTS-Terminated_OffHk' or @AlarmClass = 'POTS-Terminated_NotTerminated') and @PhysicalCard like '^[0-9][0-9] [0-9][0-9] RU' and @STINum = 1)
+    {
+    // Added to prevent the policy failing if the event already exists in
+    // Oracle. Tony Nisbet 10/08/10
+    AffectedSTIDataType = 'Reporter_STI_Ref';
+    AffectedSTIFilter = "Server_Name = '"+@ServerName+"' and Server_Serial = "+@ServerSerial+" and STI_ID = "+@STIRef ;
+    CountOnly = False;
+    GetByFilter(AffectedSTIDataType, AffectedSTIFilter, CountOnly);
+    
+    if (Num == 0)
+        {
+        AffectedSTI = NewObject();
+        AffectedSTI.Server_Name = @ServerName;
+        AffectedSTI.Server_Serial = @ServerSerial;
+        AffectedSTI.STI_ID = @STIRef;
+
+        Type = 'Reporter_STI_Ref';
+
+        log("Service_Impact: ServerName = " + AffectedSTI.Server_Name + ", ServerSerial = " + AffectedSTI.Server_Serial + ", STI_ID = " + AffectedSTI.STI_ID);
+        AddDataItem(Type,AffectedSTI);
+        }
+// End of Oracle Insertion Fail amendments
+// Tony Nisbet 10/08/10
+    }
+
+// End of Kenton amendments
+// Giles Blake, 05/05/10
+
+    // TA - 02June2008 - END - Section to handle SPCB 3600 span resiliency
+    else
+    {
+    // This portion of the policy deals with all non-resilient devices
+    //Lookup device in Circee and store STI information in an array
+    if(@PhysicalCard = '')
+        {
+        Interfaces = GetByFilter('Circee_Interface_Table',"L1_SYSNAME = '"+@Node+"'",false);
+        numInterfaces = Length(Interfaces);
+        CValue = 1;
+        }
+    else
+        {
+        Interfaces = GetByFilter('Circee_Interface_Table',"(L1_SYSNAME = '"+@Node+"') and (L1_IF_ID = '"+@PhysicalCard+"')",false);
+        numInterfaces = Length(Interfaces);
+        CValue = 1;
+        }
+    if(numInterfaces = 0)
+        {
+        if(@PhysicalCard = '')
+            {
+            Interfaces = GetByFilter('Circee_Interface_Table',"L2_SYSNAME = '"+@Node+"'",false);
+            numInterfaces = Length(Interfaces);
+            CValue = 2;
+            }
+        else
+            {
+            Interfaces = GetByFilter('Circee_Interface_Table',"(L2_SYSNAME = '"+@Node+"') and (L2_IF_ID = '"+@PhysicalCard+"')",false);
+            numInterfaces = Length(Interfaces);
+            CValue = 2;
+            }
+        }
+    if(numInterfaces > 0)
+        {
+        //Create array to hold STI info
+        STIs = {};
+
+        //Start loop to store STI info in array
+        y = 0;
+
+        while(y < numInterfaces)
+            {
+            if(CValue = 1)
+                {
+                interfaceSTIs = Interfaces[y].L1_STI_ID;
+                }
+            else
+                {
+                interfaceSTIs = Interfaces[y].L2_STI_ID;
+                }
+            interfaceSTIarray = Split(interfaceSTIs,",");
+            numInterfaceSTIarray = Length(interfaceSTIarray);
+            if(numInterfaceSTIarray > 0)
+                {
+                z = 0;
+                while (z < numInterfaceSTIarray)
+                    {
+                    STIs = STIs + interfaceSTIarray[z];
+                    z = z + 1;
+                    }
+                }
+
+            y = y + 1;
+            }
+        }
+    DistinctSTIs = {};
+    If ( STIs <> NULL )
+        {
+        DistinctSTIs = Distinct(STIs);
+        numDistinctSTIs = Length(DistinctSTIs);
+        if(numDistinctSTIs > 0)
+            {
+            j = 0;
+
+            while (j < numDistinctSTIs)
+                {
+                AffectedSTI = NewObject();
+                AffectedSTI.Server_Name = @ServerName;
+                AffectedSTI.Server_Serial = @ServerSerial;
+                AffectedSTI.STI_ID = DistinctSTIs[j];
+
+                Type = 'Reporter_STI_Ref';
+                if (DistinctSTIs[j] <> NULL && DistinctSTIs[j] <> '' and DistinctSTIs[j] <> 'NULL') 
+                    {
+                    Filter = "Server_Serial="+@ServerSerial+" and Server_Name='"+@ServerName+"' and STI_ID="+DistinctSTIs[j];
+                    log( "Service_Impact :" + Filter );
+                    existingSTI= GetByFilter(Type, Filter, False );
+                    numExistingSTI = length(existingSTI);
+                    if (numExistingSTI == 0) 
+                        {
+                        log("Service_Impact: ServerName = " + AffectedSTI.Server_Name + ", ServerSerial = " + AffectedSTI.Server_Serial + ", STI_ID = " + STI_ID);
+                        AddDataItem(Type,AffectedSTI);
+                        }
+                    }
+
+                j = j + 1;
+                }
+            }
+
+        // GB - 160807 - Check values against those in triggering event for STINum and STIRef
+
+
+        if(numDistinctSTIs <> EventContainer.STINum)
+            {
+            EventContainer.STIRef = 'ADJ: ' + DistinctSTIs[0];
+            a = 1;
+            while (a < numDistinctSTIs)
+                {
+                EventContainer.STINum = numDistinctSTIs;
+                EventContainer.STIRef = EventContainer.STIRef + "," + DistinctSTIs[a];
+                a = a + 1;
+                }
+            }
+
+        // GB - 160807 - End of code section
+
+
+        }
+    }
+
+    // GB - 160807 - Commented out the following, as now handled in each section
+
+    // Populate the STINum to be the number of affected STIs
+// Type = 'Reporter_STI_Ref';
+// Filter = "Server_Serial="+@ServerSerial+" and Server_Name='"+@ServerName+"'";
+// GetByFilter(Type, Filter, True );
+// STINum = Num;
+
+// GB - 160807 - End of commented out section
+
+// Check to see if the event was manually flagged
+if( manTT = 1 )
+{
+    if (@InServiceStatus not like 'In Service')
+    {
+        if(@STINum > 0)
+        {
+            @TTFlag = 12;
+        }
+        else
+        {
+            @TTFlag = 13;
+        }
+    }
+    else
+    {
+    //Set the TTFlag = 12 so that we know Service Impact is complete and the event was manually flagged...
+    @TTFlag = 12;
+    }
+    ReturnEvent( EventContainer );
+
+}
+else
+    {
+
+    if (@InServiceStatus not like 'In Service')
+    {
+        if(@STINum > 0)
+        {
+            @TTFlag = 11;
+        }
+        else
+        {
+            if(@Manager = 'alcatel_5620_sam' AND @Node not like '.*[s|S][r|R][01|12].*'){
+            @TTFlag = 11;
+            }else{
+            @TTFlag = 13;
+            }
+        }
+    }
+    else
+    {
+    //Set the TTFlag = 11 so that we know Service Impact is complete...
+    @TTFlag = 11;
+    }
+    ReturnEvent( EventContainer );
+}
+
+log("Service_Impact: IQLOGFINISH: ServerSerial=" + @ServerSerial + " EventId=" + @EventId);
+Log("Service_Impact: Stop");
+

@@ -1,0 +1,13 @@
+#This file was written by Impact Server.
+#Mon Aug 21 19:32:42 EDT 2006
+impact.policy.9=SNMPTrapActionTest
+impact.policy.8=SNMPTableTest
+impact.policy.7=SNMPTableSetTest
+impact.policy.6=SNMPSetActionTest
+impact.policy.5=SNMPGetNextActionTest
+impact.policy.numpolicy=10
+impact.policy.4=SNMPGetActionTest
+impact.policy.3=PackedOidTest
+impact.policy.2=PackedOidSetTest
+impact.policy.1=DiscreteOidTest
+impact.policy.0=DiscreteOidSetTest

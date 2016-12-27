@@ -1,0 +1,5 @@
+impact.commandlinemanager.port=2000
+impact.commandlinemanager.autostartup=true
+impact.commandlinemanager.classname=com.micromuse.response.service.CmdLineService
+impact.commandlinemanager.logtofile=false
+impact.commandlinemanager.description=No Description

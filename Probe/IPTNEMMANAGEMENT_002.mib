@@ -1,0 +1,624 @@
+
+  
+IPTNEMMANAGEMENT-MIB DEFINITIONS ::= BEGIN 
+  
+IMPORTS 
+        DateAndTime, 
+        DisplayString, 
+            TruthValue 
+                FROM SNMPv2-TC 
+        OBJECT-GROUP, NOTIFICATION-GROUP 
+                FROM SNMPv2-CONF 
+        MODULE-IDENTITY, 
+        NOTIFICATION-TYPE, 
+        OBJECT-TYPE, 
+        Counter64, 
+        Gauge32, 
+        Integer32, 
+        IpAddress, 
+        TimeTicks, 
+        Unsigned32 
+                FROM SNMPv2-SMI 
+        sslorg 
+                FROM SSL-ORG; 
+        
+iptnemmanagement MODULE-IDENTITY 
+        LAST-UPDATED    "201201161430Z" 
+        ORGANIZATION    "Simulation Systems Ltd" 
+        CONTACT-INFO    "Web: http://www.simulation-systems.co.uk/ 
+                        Email: ssl.support@simulation-systems.co.uk 
+                        Tel: +44 (0)1934 838 803" 
+        DESCRIPTION             "IPTNEMManagement MIB" 
+        REVISION                "201201161430Z" 
+        DESCRIPTION             "IPTNEM-Netcool Trap Management MIB" 
+        ::= { sslorg 2 } 
+        
+iptnemmanagementObjectGroup OBJECT-GROUP         
+        OBJECTS { 
+                sequenceNumber, 
+                trapOID, 
+                managedObject, 
+                reasonCode, 
+                eventTimestamp, 
+                additionalInfo, 
+                geogAddr, 
+                receiptTimestamp, 
+                severity, 
+                probableCause, 
+                acknowledged, 
+                acknowledgementTime, 
+                acknowledgementSource, 
+                cleared, 
+                manualClear, 
+                clearanceTime, 
+                clearanceSource, 
+                remarks 
+        } 
+        STATUS current 
+        DESCRIPTION "IPTNEM Management Object Group" 
+        REFERENCE "None" 
+        ::= { iptnemmanagement 6 } 
+        
+iptnemmanagementNotificationGroup NOTIFICATION-GROUP         
+        NOTIFICATIONS { 
+        trBootSuccess, 
+        trBootFail, 
+        trShutdown, 
+        trRestart, 
+        trImgSuccDwnld, 
+        trImgFailDwnld, 
+        trSuccFwDwnld, 
+        trFailFwDwnld, 
+        trFailCfgChg, 
+        trCfgChg, 
+        trSCEthPort, 
+        trSC485Port, 
+        trConfChgHw, 
+        trECPChanged, 
+        trHwFail, 
+        trPowerFail, 
+            trBatteryFail, 
+            trChargerFail, 
+            trRTCBatteryFail, 
+        trTemperature, 
+        trDiscovery, 
+        trNTPFail, 
+        trLCCUnobtain, 
+        trEDUnobtain, 
+        trEDUnidentified, 
+        trMIDPowerFail, 
+        trOverlongOccupation, 
+        tr485LinkDown, 
+        trEthLinkDown, 
+        trThreshTCP, 
+        trThreshVoltageAlarm, 
+        trThreshELIMO, 
+        trThreshHighAlarmRate, 
+        trLogin, 
+        trLoginFail, 
+        trDryContactAlarm, 
+        trSCTopology, 
+        trIPTIsolation, 
+        trIPTMismatch, 
+        trMultipleUnobtainAlarm, 
+        trMultipleRetryAlarm, 
+        trResourceThreshAlarm, 
+        trNetConnLost, 
+        trIPTNEMStartup, 
+        trIPTNEMShutdown, 
+            trSWException, 
+            trMODSChange 
+        } 
+        STATUS current 
+        DESCRIPTION "IPTNEM Notification Group" 
+        REFERENCE "None" 
+        ::= { iptnemmanagement 7 } 
+        
+alarmcategories OBJECT IDENTIFIER ::= { iptnemmanagement 10 } 
+eventtable OBJECT IDENTIFIER ::= { iptnemmanagement 11 } 
+            
+categoryBoot OBJECT IDENTIFIER ::= { alarmcategories 1 } 
+categoryBulkConfig OBJECT IDENTIFIER ::= { alarmcategories 2 } 
+categoryFirmware OBJECT IDENTIFIER ::= { alarmcategories 3 } 
+categoryLocalConfig OBJECT IDENTIFIER ::= { alarmcategories 4 } 
+categoryHardwareFailures OBJECT IDENTIFIER ::= { alarmcategories 5 } 
+categoryDiscovery OBJECT IDENTIFIER ::= { alarmcategories 6 } 
+categoryTcpIp OBJECT IDENTIFIER ::= { alarmcategories 7 } 
+categoryEndDevices OBJECT IDENTIFIER ::= { alarmcategories 8 } 
+categoryRS485 OBJECT IDENTIFIER ::= { alarmcategories 9 } 
+categoryEthernet OBJECT IDENTIFIER ::= { alarmcategories 10 } 
+categoryThreshold OBJECT IDENTIFIER ::= { alarmcategories 11 } 
+categorySecurity OBJECT IDENTIFIER ::= { alarmcategories 12 } 
+categoryDryContactAlarm OBJECT IDENTIFIER ::= { alarmcategories 13 } 
+categoryIPTNEM OBJECT IDENTIFIER ::= { alarmcategories 14 } 
+  
+oid0Boot OBJECT IDENTIFIER ::= { categoryBoot 0 } 
+oid0BulkConfig OBJECT IDENTIFIER ::= { categoryBulkConfig 0 } 
+oid0Firmware OBJECT IDENTIFIER ::= { categoryFirmware 0 } 
+oid0LocalConfig OBJECT IDENTIFIER ::= { categoryLocalConfig 0 } 
+oid0HardwareFailures OBJECT IDENTIFIER ::= { categoryHardwareFailures 0 } 
+oid0Discovery OBJECT IDENTIFIER ::= { categoryDiscovery 0 } 
+oid0TcpIp OBJECT IDENTIFIER ::= { categoryTcpIp 0 } 
+oid0EndDevices OBJECT IDENTIFIER ::= { categoryEndDevices 0 } 
+oid0RS485 OBJECT IDENTIFIER ::= { categoryRS485 0 } 
+oid0Ethernet OBJECT IDENTIFIER ::= { categoryEthernet 0 } 
+oid0Threshold OBJECT IDENTIFIER ::= { categoryThreshold 0 } 
+oid0Security OBJECT IDENTIFIER ::= { categorySecurity 0 } 
+oid0DryContactAlarm OBJECT IDENTIFIER ::= { categoryDryContactAlarm 0 } 
+oid0IPTNEM OBJECT IDENTIFIER ::= { categoryIPTNEM 0 } 
+            
+trBootSuccess NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "Initialisation Completed Successfully. IPT in Normal Mode." 
+        ::= { oid0Boot 1 } 
+    
+trBootFail NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "Boot Failure" 
+        ::= { oid0Boot 2 } 
+        
+trShutdown NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "IPT Shutdown at Operator's Request" 
+        ::= { oid0Boot 3 } 
+        
+trRestart NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "IPT Reboot" 
+        ::= { oid0Boot 4 } 
+        
+trImgSuccDwnld NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "Configuration Image Downloaded & Validated" 
+        ::= { oid0BulkConfig 1 } 
+        
+trImgFailDwnld NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "Configuration Image Download Failed" 
+        ::= { oid0BulkConfig 2 } 
+        
+trSuccFwDwnld NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "Firmware Image Downloaded & Validated" 
+        ::= { oid0Firmware 1 } 
+        
+trFailFwDwnld NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "Firmware Image Download Failed" 
+        ::= { oid0Firmware 2 } 
+        
+trCfgChg NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "A Configuration Parameter was Successfully Changed" 
+        ::= { oid0LocalConfig 2 } 
+        
+trSCEthPort NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "A Terminal has been Connected to the Local Ethernet LAN" 
+        ::= { oid0LocalConfig 3 } 
+        
+trSC485Port NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "RS485 Port Enabled/Disabled" 
+        ::= { oid0LocalConfig 4 } 
+        
+trConfChgHw NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "IPT Equipment Component Change" 
+        ::= { oid0LocalConfig 5 } 
+        
+trECPChanged NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "IPT Equipment Configuration Plug Changed - IPT Configuration Data Erased" 
+        ::= { oid0LocalConfig 7 } 
+  
+trHwFail NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "Hardware Component Failure" 
+        ::= { oid0HardwareFailures 1 } 
+  
+trPowerFail NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "Power Failure" 
+        ::= { oid0HardwareFailures 3 } 
+  
+trBatteryFail NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "Battery Failure" 
+        ::= { oid0HardwareFailures 7 } 
+  
+trChargerFail NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "Charger Failure" 
+        ::= { oid0HardwareFailures 9 } 
+  
+trRTCBatteryFail NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "Charger Failure" 
+        ::= { oid0HardwareFailures 11 } 
+  
+trTemperature NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "Temperature Alarm" 
+        ::= { oid0HardwareFailures 5 } 
+        
+trDiscovery NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "IPT Commissioned" 
+        ::= { oid0Discovery 1 } 
+        
+trNTPFail NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "NTP Server Not Responding" 
+        ::= { oid0TcpIp 1 } 
+        
+trLCCUnobtain NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "LCC Unobtainable" 
+        ::= { oid0TcpIp 3 } 
+        
+trEDUnobtain NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "End Device/Outstation Unobtainable" 
+        ::= { oid0EndDevices 1 } 
+        
+trEDUnidentified NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "Device Found that is not Present in Configuration Data" 
+        ::= { oid0EndDevices 3 } 
+        
+trMIDPowerFail NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "MIDAS Outstation Reports Mains Failure" 
+        ::= { oid0EndDevices 4 } 
+  
+trOverlongOccupation NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "MIDAS T1' Timer Expired" 
+        ::= { oid0EndDevices 5 } 
+        
+tr485LinkDown NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "All Devices on RS485 Link Unobtainable" 
+        ::= { oid0RS485 1 } 
+        
+trEthLinkDown NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "Ethernet Cable Disconnected" 
+        ::= { oid0Ethernet 1 } 
+        
+trThreshTCP NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "Number of TCP Disconnections Exceeded Limit Per Period" 
+        ::= { oid0Threshold 1 } 
+        
+trThreshVoltageAlarm NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "Voltage Alarm Threshold" 
+        ::= { oid0Threshold 3 } 
+        
+trThreshELIMO NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "ELIMO Alarm Threshold" 
+        ::= { oid0Threshold 5 } 
+        
+trThreshHighAlarmRate NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "High Alarm Rate" 
+        ::= { oid0Threshold 7 } 
+        
+trLogin NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "Login Attempt (Successful or Failed)" 
+        ::= { oid0Security 2 } 
+        
+trLoginFail NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "User Locked Out After 3 Failed Login Attempts" 
+        ::= { oid0Security 3 } 
+        
+trDryContactAlarm NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "Spare Dry Contact in Alarm State" 
+        ::= { oid0DryContactAlarm 1 } 
+        
+trSCTopology NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "IPT Removed from Topology Tree" 
+        ::= { oid0IPTNEM 1 } 
+        
+trIPTIsolation NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "IPT Isolated from IPTNEM" 
+        ::= { oid0IPTNEM 2 } 
+        
+trIPTMismatch NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "IPT Configuration or Firmware Mismatch" 
+        ::= { oid0IPTNEM 3 } 
+        
+trMultipleUnobtainAlarm NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "Multiple Unobtainable Devices on Link" 
+        ::= { oid0IPTNEM 4 } 
+        
+trMultipleRetryAlarm NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "High Retry Rate to Multiple Devices on Link" 
+        ::= { oid0IPTNEM 5 } 
+        
+trResourceThreshAlarm NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "Resource Threshold Exceeded" 
+        ::= { oid0IPTNEM 6 } 
+        
+trNetConnLost NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "Network Connectivity to External System Lost" 
+        ::= { oid0IPTNEM 7 } 
+        
+trIPTNEMStartup NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "IPTNEM Startup Notification" 
+        ::= { oid0IPTNEM 8 } 
+        
+trIPTNEMShutdown NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "IPTNEM Shutdown Notification" 
+        ::= { oid0IPTNEM 9 } 
+  
+trMODSChange NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "End Device MODS Change" 
+        ::= { oid0IPTNEM 10 } 
+            
+trSWException NOTIFICATION-TYPE 
+        OBJECTS {  sequenceNumber, trapOID, managedObject, reasonCode, eventTimestamp, receiptTimestamp, severity, probableCause, acknowledged, acknowledgementTime, acknowledgementSource, cleared, manualClear, clearanceTime, clearanceSource, geogAddr, remarks  } 
+        STATUS current 
+        DESCRIPTION "IPTNEM Internal Software Exception" 
+        ::= { oid0IPTNEM 11 } 
+        
+eventsTable OBJECT-TYPE 
+        SYNTAX SEQUENCE OF EventsTableEntry 
+        MAX-ACCESS not-accessible 
+        STATUS current 
+        DESCRIPTION "Event Table" 
+        ::= { eventtable 1 } 
+        
+eventsTableEntry OBJECT-TYPE 
+        SYNTAX EventsTableEntry 
+        MAX-ACCESS not-accessible 
+        STATUS current 
+        DESCRIPTION "Event Table Entry" 
+        INDEX { eventTableIndex } 
+        ::= { eventsTable 1 } 
+        
+EventsTableEntry ::= 
+        SEQUENCE { 
+                eventTableIndex 
+                        Integer32, 
+                sequenceNumber 
+                        Unsigned32, 
+                trapOID 
+                        OBJECT IDENTIFIER, 
+                managedObject 
+                        DisplayString, 
+                reasonCode 
+                        Unsigned32, 
+                eventTimestamp 
+                        DateAndTime, 
+                receiptTimestamp 
+                        DateAndTime, 
+                severity 
+                        INTEGER, 
+                probableCause 
+                        DisplayString, 
+                acknowledged 
+                        TruthValue, 
+                acknowledgementTime 
+                        DateAndTime, 
+                acknowledgementSource 
+                        DisplayString, 
+                cleared 
+                        TruthValue, 
+                manualClear 
+                        TruthValue, 
+                clearanceTime 
+                        DateAndTime, 
+                clearanceSource 
+                        DisplayString, 
+                geogAddr 
+                        DisplayString, 
+                remarks 
+                        DisplayString, 
+                additionalInfo 
+                        DisplayString 
+        } 
+        
+eventTableIndex OBJECT-TYPE 
+        SYNTAX Integer32 (1..2000000) 
+        MAX-ACCESS not-accessible 
+        STATUS current 
+        DESCRIPTION "Event Table Index" 
+        ::= { eventsTableEntry 1 } 
+        
+sequenceNumber OBJECT-TYPE 
+        SYNTAX Unsigned32 
+        MAX-ACCESS read-only 
+        STATUS current 
+        DESCRIPTION "Trap Sequence Number" 
+        ::= { eventsTableEntry 2 } 
+        
+trapOID OBJECT-TYPE 
+      SYNTAX OBJECT IDENTIFIER 
+      MAX-ACCESS read-only 
+      STATUS current 
+      DESCRIPTION "Object Identifier of Trap" 
+      ::= { eventsTableEntry 3 } 
+  
+managedObject OBJECT-TYPE 
+        SYNTAX DisplayString 
+        MAX-ACCESS read-only 
+        STATUS current 
+        DESCRIPTION "Network Object Generating the Alarm" 
+        ::= { eventsTableEntry 4 } 
+        
+reasonCode OBJECT-TYPE 
+        SYNTAX Unsigned32 
+        MAX-ACCESS read-only 
+        STATUS current 
+        DESCRIPTION "Alarm Reason Code" 
+        ::= { eventsTableEntry 5 } 
+        
+eventTimestamp OBJECT-TYPE 
+        SYNTAX DateAndTime 
+        MAX-ACCESS read-only 
+        STATUS current 
+        DESCRIPTION "Timestamp of Event Occurrence" 
+        ::= { eventsTableEntry 6 } 
+        
+receiptTimestamp OBJECT-TYPE 
+        SYNTAX DateAndTime 
+        MAX-ACCESS read-only 
+        STATUS current 
+        DESCRIPTION "Timestamp of Event Receipt by IPTNEM" 
+        ::= { eventsTableEntry 7 } 
+        
+severity OBJECT-TYPE 
+        SYNTAX INTEGER{ 
+                nonAlarm(1), 
+                cleared(2), 
+                warning(3), 
+                minor(4), 
+                major(5), 
+                critical(6) 
+        } 
+        
+        MAX-ACCESS read-only 
+        STATUS current 
+        DESCRIPTION "Severity of Event as Assigned by IPTNEM" 
+        ::= { eventsTableEntry 8 } 
+        
+probableCause OBJECT-TYPE 
+        SYNTAX DisplayString 
+        MAX-ACCESS read-only 
+        STATUS current 
+        DESCRIPTION "Probable Cause of Event as Assigned by IPTNEM" 
+        ::= { eventsTableEntry 9 } 
+        
+acknowledged OBJECT-TYPE 
+        SYNTAX TruthValue 
+        MAX-ACCESS read-only 
+        STATUS current 
+        DESCRIPTION "Event Acknowledged State" 
+        ::= { eventsTableEntry 10 } 
+  
+acknowledgementTime OBJECT-TYPE 
+        SYNTAX DateAndTime 
+        MAX-ACCESS read-only 
+        STATUS current 
+        DESCRIPTION "Time of Event Acknowledgement" 
+        ::= { eventsTableEntry 11 } 
+  
+acknowledgementSource OBJECT-TYPE 
+        SYNTAX DisplayString 
+        MAX-ACCESS read-only 
+        STATUS current 
+        DESCRIPTION "Acknowledging Operator" 
+        ::= { eventsTableEntry 12 } 
+  
+cleared OBJECT-TYPE 
+        SYNTAX TruthValue 
+        MAX-ACCESS read-only 
+        STATUS current 
+        DESCRIPTION "Clearance State" 
+        ::= { eventsTableEntry 13 } 
+  
+manualClear OBJECT-TYPE 
+        SYNTAX TruthValue 
+        MAX-ACCESS read-only 
+        STATUS current 
+        DESCRIPTION "Manual Clearance State" 
+        ::= { eventsTableEntry 14 } 
+  
+clearanceTime OBJECT-TYPE 
+        SYNTAX DateAndTime 
+        MAX-ACCESS read-only 
+        STATUS current 
+        DESCRIPTION "Time of Event Clearance" 
+        ::= { eventsTableEntry 15 } 
+  
+clearanceSource OBJECT-TYPE 
+        SYNTAX DisplayString 
+        MAX-ACCESS read-only 
+        STATUS current 
+        DESCRIPTION "Operator Responsible for Manual Clear" 
+        ::= { eventsTableEntry 16 } 
+        
+geogAddr OBJECT-TYPE 
+        SYNTAX DisplayString 
+        MAX-ACCESS read-only 
+        STATUS current 
+        DESCRIPTION "Geographic Address of Managed Object" 
+        ::= { eventsTableEntry 17 } 
+        
+remarks OBJECT-TYPE 
+        SYNTAX DisplayString 
+        MAX-ACCESS read-only 
+        STATUS current 
+        DESCRIPTION "Operator Remarks" 
+        ::= { eventsTableEntry 18 } 
+        
+additionalInfo OBJECT-TYPE 
+        SYNTAX DisplayString 
+        MAX-ACCESS read-only 
+        STATUS current 
+        DESCRIPTION "Additional Information Relating to the Event" 
+        ::= { eventsTableEntry 19 } 
+        
+END 

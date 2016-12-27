@@ -1,0 +1,19 @@
+#This file was written by server.
+#Wed Feb 01 16:13:36 GMT 2012
+reporter_datasource.Oracle.BACKUPSID=NTCLDB
+reporter_datasource.Oracle.CONTEXTFACTORY=
+reporter_datasource.Oracle.CONNECTIONOPTION=GeneralSettings
+reporter_datasource.Oracle.MAXSQLCONNECTION=5
+reporter_datasource.Oracle.DBPASSWORD={aes}C3F20308C3CB44B5239D94A34304A4F4
+reporter_datasource.Oracle.PRIMARYHOST=nv1
+reporter_datasource.Oracle.PROVIDERURL=
+reporter_datasource.Oracle.CUSTOMURL=
+reporter_datasource.Oracle.PRIMARYPORT=1521
+reporter_datasource.Oracle.BACKUPHOST=172.20.174.157
+reporter_datasource.Oracle.FAILOVERPOLICY=DISABLED
+reporter_datasource.Oracle.BINDINGNAME=
+reporter_datasource.Oracle.DISABLEFAILOVER=false
+reporter_datasource.Oracle.JDBCDRIVER=oracle.jdbc.driver.OracleDriver
+reporter_datasource.Oracle.PRIMARYSID=NTCLDB
+reporter_datasource.Oracle.DBUSERNAME=reporter
+reporter_datasource.Oracle.BACKUPPORT=1521

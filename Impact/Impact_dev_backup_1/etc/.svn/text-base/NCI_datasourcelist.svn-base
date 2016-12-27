@@ -1,0 +1,18 @@
+#This file was written by server.
+#Thu Mar 10 09:53:34 GMT 2011
+impact.datasources.2.name=SocketMediatorDataSource
+impact.datasources.5.number=2
+impact.datasources.4.number=4
+impact.datasources.4.type=DirectMediator
+impact.datasources.1.type=HSQLDB
+impact.datasources.3.name=XmlDsaMediatorDataSource
+impact.datasources.3.number=3
+impact.datasources.2.number=5
+impact.datasources.5.type=ObjectServer
+impact.datasources.4.name=ITNM
+impact.datasources.2.type=DirectMediator
+impact.datasources.1.name=ReportsHSQLDB
+impact.datasources.1.number=1
+impact.datasources.5.name=defaultobjectserver
+impact.datasources.numdatasources=5
+impact.datasources.3.type=DirectMediator

@@ -1,0 +1,2817 @@
+###############################################################################
+#
+#    Copyright (C) 1994 - 2002 Micromuse, Inc.
+#    All Rights Reserved
+#
+#    RESTRICTED RIGHTS:
+#
+#    This file may have been supplied under a license.  It may be used,
+#    disclosed, and/or copied only as permitted under such license agreement.
+#    Any copy must contain the above copyright notice and this restricted
+#    rights notice.  Use, copying, and/or disclosure of the file is strictly
+#    prohibited unless otherwise provided in the license agreement.
+#
+#    cisco.include.snmp.lookup 2.7 2003/06/17 Robert Cowart
+#
+###############################################################################
+#
+# 2.7 - Added the following tables: ModuleOperType, PowerOperType,
+#       PowerAdminType, cefcPhysicalStatus, cefcFanTrayOperStatus,
+#       ciscoExtScsiLunDiscStatus, fcTrunkIfOperStatus, FcIfOperStatusReason,
+#       FcGs3RejectReasonCode, fcTraceRouteOperStatus, FspfInterfaceState,
+#       cHcAlarmSampleType, CHcValueStatus, ciscoScsiTgtDeviceStatus,
+#       ciscoScsiLuStatus, SyslogSeverity, CseHaRestartReason, virtualNwIfType,
+#       VsanAdminState, VsanOperationalState, ZoneMemberType,
+#       zoneMemberTypeIndex, zoneDefaultZoneBehaviour.
+#
+#     - Updated ciscoProducts table with new entries from CISCO-PRODUCTS-MIB.
+#
+# 2.6 - Added workgroupProducts table which is required to determine the model
+#       of devices sending generic traps with an enterprise OID from
+#       CISCO-STACK-MIB.
+#
+#     - Updated entries in the ipPermitDeniedAccess table.
+#
+#     - Removed tcpConnState table.  Now part of
+#       IETF-RFC1213-MIB.include.lookup.
+#
+#     - modified many tables for improved readability.
+#
+# 2.5 - Added alpsCktBaseDownReason table which is required for handling traps
+#       from CISCO-ALPS-MIB.
+#
+#     - Added CctCallCategory table which is required for handling traps from
+#       CISCO-CALL-TRACKER-MIB.
+#
+#     - Added ccmFailCauseCode, CcmDevFailCauseCode, and ccmMediaResourceType
+#       tables which are required for handling traps from CISCO-CCM-MIB.
+#
+#     - Expanded cdxCmtsCmStatusValue to include newer keys (13-25).
+#
+#     - Added SecurityEvent, ContentInspectionEvent, ConnectionEvent,
+#       AccessEvent, AuthenticationEvent, and GenericEvent tables which are
+#       required for handling traps from CISCO-FIREWALL-MIB.
+#
+#     - Added CgkNAddressTag, cgkHistoryEventEndpointType, and
+#       cgkHistoryEventType tables which are required for handling traps from
+#       CISCO-GATEKEEPER-MIB.
+#
+#     - Added CifthThresholdSeverity table which is required for handling
+#       traps from CISCO-IF-THRESHOLD-MIB.
+#
+#     - Added cItpSpLinkStateReason table which is required for handling traps
+#       from CISCO-ITP-SP-MIB.
+#
+#     - Added cpimRPMappingChangeType table which is required for handling
+#       traps from CISCO-PIM-MIB.
+#
+#     - Added RFState table which is required for handling traps from
+#       CISCO-RF-MIB.
+#
+#     - Added IpsMode table which is required for handling traps from
+#       CISCO-SRP-MIB.
+#
+#     - Added stpxSpanningTreeType table which is required for handling traps
+#       from CISCO-STP-EXTENSIONS-MIB.
+#
+#     - Added ciscoTsStackSwitchPwrSupplyStatus table which is required for
+#       handling traps from CISCO-TS-STACK-MIB.
+#
+#     - Added cvaModuleFailureCause and cvaModuleRunTimeFailureCause tables
+#       which is required for handling traps from CISCO-VOICE-APPS-MIB.
+#
+#     - Added CvcCoderTypeRate table which is required for handling traps from
+#       CISCO-VOICE-DIAL-CONTROL-MIB.
+#
+#     - Added CwrRfType table which is required for handling traps from
+#       CISCO-WIRELESS-P2MP-PHY-MIB.
+#
+#     - Added dspuLuOperLastActivationFailureReason table which is required for
+#       handling traps from CISCO-DSPU-MIB.
+#
+#     - Modified the RedundancyStatus, ccmHistoryEventCommandSource, 
+#       HistoryEventMedium, ciscoEnvMonState, bstunRoutePeerState,
+#       cipCmpcSubChannelAdminDirection, cipCmpcTgOperLastSeqNumFailureCause,
+#       ConfigCopyFailCause, ciscoHeaMonStatusType tables to result in more
+#       readable text.
+#
+# 2.4 - Updated ciscoProducts table with new entries from CISCO-PRODUCTS-MIB.
+#
+# 2.3 - Added ciscoProducts table which is required by
+#       cisco.generic.include.rules
+#
+# 2.2 - Removed xgcpOperStatus table. This table is now defined in
+#       IETF-DRAFT-XGCP-MIB.include.lookup
+#
+# 2.1 - Removed the TruthValue table which is now defined in
+#       IETF-SNMPv2-TC.include.lookup. For cisco.include.rules to
+#       properly process traps which contain variable bindings of
+#       TruthValue syntax, IETF-SNMPv2-TC.include.lookup must be
+#       included into the base rules file.
+#
+# 2.0 - Initial Release
+#
+###############################################################################
+
+table ciscoHealthMonStatusType = ### Monitoring Type
+{
+    {"1","Modem Utilization"}, ### modemUtil
+    {"2","Trunk Utilization"}, ### trunkUtil
+    {"3","IO Memory Utilization"} ### iomemUtil
+}
+default = "Unknown"
+
+table ciscoEnvMonState = ### Represents the state of a device being monitored.
+{
+    {"1","Normal"},
+    {"2","Warning"},
+    {"3","Critical"},
+    {"4","Shutdown"},
+    {"5","Not Present"}
+}
+default = "Unknown State"
+
+table alpsRemPeerState =
+{
+    ##########
+    # TCP Peer State. Initially the connection is in the closed state. For permanent
+    # connections, it starts opening the TCP connection immediately, but for dynamic
+    # ones, it waits till there is traffic addressed to the remote peer. It then
+    # progresses via opening into the opened state.
+    ##########
+    
+    {"1","Closed"},
+    {"2","Opening"},
+    {"3","Opened"}
+}
+default = "Unknown"
+
+table alpsCktBaseState = ### Indicates the state of ALPS Circuit.
+{
+    {"1","Disabled"},
+    {"2","Inoperable"},
+    {"3","Opening"},
+    {"4","Opened"}
+}
+default = "Unknown"
+
+table alpsAscuState = 
+{
+    ##########
+    # Reports the current ASCU Status. ASCUs are initially in disabled state. They
+    # are enabled from the parser if the operator wants to. This takes them to an UP
+    # state from which they go to a DOWN state if there are too many errors.
+    ##########
+    
+    {"1","Disabled"},
+    {"2","Unknown"},
+    {"3","Down"},
+    {"4","Up"}
+} 
+default = "Unknown"
+
+table bstunRoutePeerState = ### The state of the peer connection through the BSTUN tunnel.
+{
+    {"1","Dead"},
+    {"2","Closed"},
+    {"3","Opening"},
+    {"4","Open Waiting"},
+    {"5","Connected"},
+    {"6","Direct"}
+}
+default = "Unknown"
+
+table RedundancyStatus = ### The operational status of a card.
+{
+    {"1","Not Present"}, ### notPresent - no card in slot
+    {"2","OK"}, ### ok
+    {"3","Fault"} ### fault
+}
+default = "Unknown"
+
+table RedundancyMode = ### The redundancy mode of a card.
+{
+    ##########
+    # The redundancy mode of a card is part of the state of the redundancy machine
+    # (i.e., the hardware or software that implements redundancy). The redundancy
+    # modes of all the cards in a redundancy group together represent    the state of
+    # the redundancy machine for that redundancy group. The inputs to the redundancy
+    # machine that cause the redundancy mode of a card to transition from one value
+    # to another are events like card failure, card removal, user configuration, etc.
+    #
+    # Objects defined using this TC have a MAX-ACCESS of read-write or read-create.
+    # This allows a user to force the redundancy machine to transition to a desired
+    # state.
+    ##########
+    
+    {"1","Active"}, ### This card is an active member of the redundancy group. (Primary)
+    {"2","Standby"}, ### This card is a standby member of the redundancy group. (Secondary)
+    {"3","Unused"}, ### This card is not being used at present. (non participant)
+    {"4","Not Present"} ### There is no card in the slot.
+}
+default = "Unknown"
+
+table linkIncidentTrapCause = ### This indicates the reason for the last link failure.
+{    
+    {"1","Other"}, ### liOther
+    {"2","Daughter Board Status Changed"}, ### liStatus - The daughter board status has changed.
+    {"3","Implicit Incident"}, ### liImplicitIncidents - A condition which may cause the recognition of a link incident in the attached node has been recognized.
+    {"4","Excessive Code Violation Errors"}, ### liBERthreshold - The code violation error rate exceeded the threshold.
+    {"5","Loss of Signal/Sync"}, ### liSignalOrSyncLoss - A loss-of-signal or loss-of-synchronization persisted longer than the link interval duration.
+    {"6","Not-Operational Sequence"}, ### liNotOperationalSequence - Recognition of not-operational sequence, usually due to the operator taking the channel offline.
+    {"7","Sequence Timeouts"}, ### liSequenceTimeouts - A connection recovery-timeout or response-timeout occurred while in the transmit OLS state.
+    {"8","Invalid Sequences"} ### liInvalidSequences - A UD or UDR sequence was recognized while in wait-for-offline-sequence state.
+}
+default = "Unknown"
+
+table cipCmpcSubChannelAdminDirection = ### Specifies whether the CMPC subchannel is for host reads or host writes.
+{
+    {"1","Read"},
+    {"2","Write"},
+    {"3","Read Or Write"}
+}
+default = "Unknown"
+
+table cipCmpcTgOperLastSeqNumFailureCause = ### The last CMPC TG sequence number failure cause.
+{
+    {"1","None"}, ### none - No sequence number errors have been detected.
+    {"2","I/O Block"}, ### blockSeqError - Sequence number received in a cmpc I/O block did not match the expected sequence number.
+    {"3","Sweep Message"} ### sweepSeqError - Sequence number received in a sweep message does not compare to the expected sequence number for this CMPC TG.
+}
+default = "Unknown"
+
+table ConfigCopyState = ### The state of a tftp config-copy operation.
+{
+    {"1","Waiting"}, ### Only one config-copy request can run at any time. A newly activated config-copy request is placed in this state if another request has already been activated.
+    {"2","Running"}, ### This state signifies that the config-copy request is running.
+    {"3","Successsful"}, ### The state when a config-copy request is    successfully completed.
+    {"4","Failed"} ### The config-copy request was unsuccesful.
+}
+default = "Unknown"
+
+table ConfigCopyFailCause = ### The reason a config-copy request failed.
+{
+    {"1","Unknown"}, ### unknown - very descriptive
+    {"2","Bad Filename"}, ### badFileName - check your file name/path/permissions
+    {"3","Timeout"}, ### timeout - the network may be overloaded, or the remote file server may not be responding.
+    {"4","Could Not Allocate Memory"}, ### noMem - the Agent wasn't able to allocate memory for the config-copy operation
+    {"5","Configuration Doesn't Exist"} ### noConfig - the agent-config selected as the source was non-existant.
+}
+default = "Unknown"
+
+table ccmHistoryEventCommandSource = ### The source of the command that instigated the event.
+{
+    {"1","Command Line"}, ### commandLine
+    {"2","SNMP"} ### snmp
+}
+default = "Unknown"
+
+table HistoryEventMedium = ### The source or destination of a configuration change, save, or copy.
+{
+    {"1","Erasing Destination"}, ### erase - erasing destination (source only)
+    {"2","Running Configuration"}, ### running - live operational data
+    {"3","Command Source"}, ### commandSource - the command source itself
+    {"4","Startup Configuration"}, ### startup - what the system will use next reboot
+    {"5","Local NVRAM or Flash"}, ### local - local NVRAM or flash
+    {"6","Network Host via TFTP"}, ### networkTftp - network host via Trivial File Transfer
+    {"7","Network Host via Remote Copy"} ### networkRcp - network host via Remote Copy
+}
+default = "Unknown"
+
+table ciscoDlswTConnOperState = 
+{
+    ##########
+    # The state of this transport connection. The transport connection enters
+    # `connecting' state when DLSW makes a connection request to the transport layer.
+    # Once initial Capabilities Exchange is sent, the transport connection enters
+    # enters `initCapExchange' state. When partner capabilities have been determined
+    # and the transport connection is ready for sending CanUReach (CUR) messages, it
+    # moves to the `connected' state. When DLSw is in the process of bringing down
+    # the connection, it is in the `disconnecting' state.  When the transport layer
+    # indicates one of its connections is disconnected, the transport connection
+    # moves to the `disconnected' state.
+    #
+    # Whereas all of the values will be returned in response to a management protocol
+    # retrieval operation, only two values may be specified in a management protocol
+    # set operation: `quiescing' and `disconnecting'.  Changing the value to
+    # `quiescing' prevents new circuits from being established, and will cause a
+    # transport disconnect when the last circuit on the connection goes away.
+    # Changing the value to `disconnecting' will force off all circuits immediately
+    # and bring the connection to `disconnected' state.
+    ##########
+    
+    {"1","Connecting"},
+    {"2","Initial Capabilities Exchange"},
+    {"3","Connected"},
+    {"4","Quiescing"},
+    {"5","Disconnecting"},
+    {"6","Disconnected"}
+}
+default = "Unknown"
+
+table ciscoDlswCircuitState =
+{
+    ##########
+    # The current state of this circuit. The implementation may choose to keep
+    # entries for some period of time after circuit disconnect, so the network
+    # management station can gather the time and cause of disconnection.
+    #
+    # While all of the specified values may be returned from a GET operation, the
+    # only SETable value is `disconnectPending'. When this value is set, DLSW should
+    # perform the appropriate action given its previous state (e.g., send HALT_DL if
+    # the state was `connected') to bring the circuit down to the `disconnected'
+    # state. Both the partner DLSW and local end station(s) should be notified as
+    # appropriate.
+    #
+    # This MIB provides no facility to re-establish a disconnected circuit, because
+    # in DLSW this should be an end station-driven function.
+    ##########
+    
+    {"1","Disconnected"}, ### disconnected
+    {"2","Circuit Starting"}, ### circuitStart
+    {"3","Resolve Pending"}, ### resolvePending
+    {"4","Circuit Pending"}, ### circuitPending
+    {"5","Circuit Established"}, ### circuitEstablished
+    {"6","Connect Pending"}, ### connectPending
+    {"7","Contact Pending"}, ### contactPending
+    {"8","Connected"}, ### connected
+    {"9","Disconnect Pending"}, ### disconnectPending
+    {"10","Halt Pending"}, ### haltPending
+    {"11","Halt Pending No Acknowledgement"}, ### haltPendingNoack
+    {"12","Circuit Restart"}, ### circuitRestart
+    {"13","Restart Pending"} ### restartPending
+}
+default = "Unknown"
+
+table cdxCmtsCmStatusValue = 
+{
+    ##########
+    # Current Cable Modem connectivity state. The object extends states in
+    # docsIfCmtsCmStatusValue in more details.
+    #
+    # FOR DOCSIS 1.0:
+    #
+    # The ranging, rangingAborted, rangingComplete, and ipComplete states in
+    # docsIfCmtsCmStatusValue is others in this object since this object is
+    # extension of docsIfCmtsCmStatusValue. 
+    #
+    # The registrationComplete state in docsIfCmtsCmStatusValue could be
+    # online, onlineNetAccessDisabled, onlineKekAssigned, or onlineTekAssigned
+    # in this object.  
+    #
+    # The accessDenied state in docsIfCmtsCmStatusValue could be rejectBadMic,
+    # rejectBadCos in this object for the possible reasons of cable modem
+    # registration abort.
+    #
+    # The states 15 to 25 are not applicable.
+    #
+    # FOR DOCSIS 1.1
+    #
+    # The registrationComplete state in docsIfCmtsCmStatusValue could be
+    # online, onlineNetAccessDisabled, onlineBpiKekAssigned, or
+    # onlineBpiTekAssigned in this object.
+    #
+    # The accessDenied state in docsIfCmtsCmStatusValue could be rejMicFail,
+    # rejStaleConfig, rejIpSpoof, rejClassFail, rejRegNack in this object for
+    # the possible reasons of cable modem registration abort.
+    #
+    # The CMTS only reports states it is able to detect. States Online(2) and
+    # rejectBadCos(9) are not applicable. 
+    ##########
+
+    {"1","offline"}, ### modem considered offline
+    {"2","others"}, ### states is in docsIfCmtsCmStatusValue
+    {"3","initRangingRcvd"}, ### modem sent initial ranging
+    {"4","initDhcpReqRcvd"}, ### dhcp request received
+    {"5","onlineNetAccessDisabled"}, ### modem registered, but network access for the CM is disabled
+    {"6","onlineKekAssigned"}, ### modem registered, BPI enabled and KEK assigned
+    {"7","onlineTekAssigned"}, ### modem registered, BPI enabled and TEK assigned
+    {"8","rejectBadMic"}, ### modem did attempt to register but registration was refused due to bad mic
+    {"9","rejectBadCos"}, ### modem did attempt to register but registration was refused due to bad COS
+    {"10","kekRejected"}, ### KEK modem key assignment rejected
+    {"11","tekRejected"} ### TEK modem key assignment rejected
+    {"12","online"}, ### modem registered, enabled for data
+    {"13","initTftpPacketRcvd"}, ### tftp packet received and option file tranfer started
+    {"14","initTodRequestRcvd"}, ### Time of the Day (TOD) request received
+    {"15","reset"}, ### modem is resetting
+    {"16","rangingInProgress"}, ### initial ranging is in progress
+    {"17","rangingCompleted"}, ### initial ranging is completed 
+    {"18","dhcpGotIpAddr"}, ### modem has got an IP address from the DHCP server
+    {"19","rejStaleConfig"}, ### modem did attempt to register but registration was refused due to stale Config
+    {"20","rejIpSpoof"}, ### modem did attempt to register but registration was refused due to IP Spoof
+    {"21","rejClassFail"}, ### modem did attempt to register but registration was refused due to Class failure
+    {"22","rejRegNack"}, ### modem did attempt to register but no acknowledgement was recieved
+    {"23","bpiKekExpired"}, ### KEK modem key assignment expired
+    {"24","bpiTekExpired"}, ### TEK modem key assignment expired     
+    {"25","shutdown"}, ### modem is in shutdown state
+}
+default = "Unknown"
+
+table cdspCardState = ### The object indicates the current state of DSP card being monitored.
+{
+    {"1","Normal"}, ### DSP card in normal condition.
+    {"2","Warning"}, ### DSP card has some problem and need attention.
+    {"3","Critical"}, ### DSP card has a major alarm.
+    {"4","Fatal"}, ### DSP card is not functional. DSP subsystem might reset DSP card to recover it from the fatal error condition. After the DSP card is reset successfully, the object cdspCardResourceUtilization and cdspCardLastHiWaterUtilization are reset to 0. If the fatal error is persistent in this object after card is reset, the card should be replaced.
+    {"5","Offline"} ### DSP card is in off-line maintenance state.
+}
+default = "Unknown"
+
+table dspuPuStatsLastActivationFailureReason = ### Reason for last activation failure of this PU.
+{
+    {"1","noError"}, ### No PU activation failure has been detected
+    {"2","otherError"}, ### Undefined error detected during PU activation
+    {"3","internalError"}, ### Internal resources error detected during PU activation
+    {"4","configurationError"} ### PU configuration error - PU could not be activated
+    {"5","puNegativeResponse"} ### Negative ACTPU response received from remote PU
+    {"6","puAlreadyActive"} ### PU is already active
+}
+default = "Unknown"
+
+table dspuPuStatsLastActivationFailureReasonExpanded = ### Expanded text version of dspuPuStatsLastActivationFailureReason.
+{
+    {"1","No PU activation failure has been detected"}, ### noError
+    {"2","Undefined error detected during PU activation"}, ### otherError
+    {"3","Internal resources error detected during PU activation"}, ### internalError
+    {"4","PU configuration error - PU could not be activated"} ### configurationError
+    {"5","Negative ACTPU response received from remote PU"} ### puNegativeResponse
+    {"6","PU is already active"} ### puAlreadyActive
+}
+default = "Unknown"
+
+table ciscoFlashCopyStatus = ### The status of the specified copy operation.
+{  
+    {"1","Copy In Progress"}, ### specified operation is active
+    {"2","Copy Operation Successful"}, ### specified operation is supported and    completed successfully
+    {"3","Copy Command Invalid"}, ### command invalid or command-protocol-device combination unsupported
+    {"4","Invalid Protocol"}, ### invalid protocol specified
+    {"5","Invalid Source Name"}, ### invalid source file name specified For the  copy from flash to lex operation, this error code will be returned when the source file    is not a valid lex image.
+    {"6","Invalid Destination Name"}, ### invalid target name (file or partition or device name) specified for the copy from flash to lex operation, this error code will be returned when no lex devices are connected to the router or when an invalid lex interface number has been specified in the destination string.
+    {"7","Invalid Server Address"}, ### invalid server address specified
+    {"8","Device Busy"}, ### specified device is in use and locked by another process
+    {"9","Device Open Error"}, ### invalid device name
+    {"10","Device Error"}, ### device read, write or erase error
+    {"11","Read-Only Device"}, ### device is read-only but a write or erase operation was specified
+    {"12","Device Full"}, ### device is filled to capacity
+    {"13","Invalid Filename"}, ### invalid file name; file not found in partition
+    {"14","File Transfer Error"}, ### file transfer was unsuccessfull; network failure
+    {"15","File Checksum Error"}, ### file checksum in Flash failed
+    {"16","No Memory"}, ### system running low on memory
+    {"17","Unknown Copy Failure"} ### failure unknown
+}
+default = "Unknown"
+
+table ciscoFlashPartitioningStatus = ### The status of the specified partitioning operation.
+{
+    {"1","Partitioning In Progress"}, ### specified operation is active
+    {"2","Partitioning Operation Successful"}, ### specified operation is supported and completed    successfully
+    {"3","Partitioning Operation Invalid"}, ### command invalid or command-protocol-device combination unsupported
+    {"4","Invalid Target Name"}, ### invalid target name (file or partition or    device name) specified
+    {"5","Invalid Partition Count"}, ### invalid partition count specified for the partitioning command
+    {"6","Invalid Partition Size"}, ### invalid partition size, or invalid count of partition sizes
+    {"7","Device Busy"}, ### specified device is in use and locked by another process
+    {"8","Invalid Device Name"}, ### invalid device name
+    {"9","Device Error"}, ### device read, write or erase error
+    {"10","No Memory"}, ### system running low on memory
+    {"11","Unknown Partitioning Failure"}, ### failure unknown
+}
+default = "Unknown"
+
+table ciscoFlashMiscOpStatus = ### The status of the specified operation.
+{  
+    {"1","Misc. Operation In Progress"}, ### specified operation is active
+    {"2","Misc. Operation Successful"}, ### specified operation is supported and completed successfully
+    {"3","Invalid Operation"}, ### command invalid or command-protocol-device combination unsupported
+    {"4","Invalid Destination Name"}, ### invalid target name (file or partition or device name) specified
+    {"5","Device Busy"}, ### specified device is in use and locked by another process
+    {"6","Invalid Device Name"}, ### invalid device name
+    {"7","Device Error"}, ### device read, write or erase error
+    {"8","Device Not Programmable"}, ### device is read-only but a write or erase operation was specified
+    {"9","Invalid File Name"}, ### invalid file name; file not found in partition
+    {"10","File Delete Failure"}, ### file could not be deleted; delete count exceeded
+    {"11","File Undelete Failure"}, ### file could not be undeleted; undelete count exceeded
+    {"12","File Checksum Error"}, ### file has a bad checksum
+    {"13","No Memory"}, ### system running low on memory
+    {"14","Unknown Failure"}, ### failure unknown
+    {"18","Squeeze Failure"}, ### the squeeze operation failed
+    {"19","No Such File"}, ### a valid but nonexistent file name was specified
+    {"20","Format Failure"}, ### the format operation failed
+}
+default = "Unknown"
+
+table tslineSesType = ### Type of session.
+{
+    {"1","Unknown"},
+    {"2","PAD"},
+    {"3","Stream"},
+    {"4","rlogin"},
+    {"5","Telnet"},
+    {"6","TCP"},
+    {"7","LAT"},
+    {"8","MOP"},
+    {"9","SLIP"},
+    {"10","X Remote"},
+    {"11","rshell"}
+}
+default = "Unknown"
+
+table HsrpState = ### The current state of the HSRP protocol for a given HSRP group entry.
+{
+    {"1","Initial"},
+    {"2","Learn"},
+    {"3","Listen"},
+    {"4","Speak"},
+    {"5","Standby"},
+    {"6","Active"}
+}
+default = "Unknown"
+
+table cieTestConnSessionStatus = ### Set to a value that indicates whether a crypto session was successfully established, failed or the connection establishment process is in progress.  If the specified crypto map is not configured, value is set to badCryptoMapName.
+{
+    {"1","In Progress"},
+    {"2","Fail"},
+    {"3","Fuccess"},
+    {"4","Bad Crypto Map Name"}
+}
+default = "Unknown"
+
+table demandNbrCallOrigin = ### Indication of outgoing or incoming call.
+{
+    {"1","Originate"},
+    {"2","Answer"},
+    {"3","Callback"}
+}
+default = "Unknown"
+
+table ciuIfLoopStatus = ### Current ISDN BRI integrated U interface Loop status and NT maintenance mode.
+{
+    ### REFERENCE: ANSI T1.601-1992: Sections 6.5 NT maintence modes
+    
+    {"1","None"}, ### The U interface is not in either Loopback or maintenance mode.
+    {"2","Type 2 Loopback"}, ### Type 2 (CO to U interface) Loopback mode; this mode is set to perform the loopback between CO and the ISDN BRI integrated U interface.
+    {"3","Type 3 Loopback"}, ### Type 3 (processor to U interface) Loopback mode; this mode is set by router to perform the loopback between the router processor and the ISDN BRI integrated U interface.
+    {"4","NT Quiet Mode"}, ### This mode is set by CO for metallic loop tests. In the NT quiet mode, the ISDN U interface will not attempt a start-up or will not initiate transmission during metallic loop tests conducted by the network.
+    {"5","Insertion Loss Measurement Test (ILMT) Mode"} ### Insertion loss measurement test (ILMT); this mode is set by CO for the Insertion loss measurement test. The insertion loss measurement test will cause a known test signal to be generated by the NT. This test will be used in network measurements of DSL (Digital Subscriber Line) transmission characteristics.
+}
+default = "Unknown"
+
+table cnrDHCPScopeFreeAddrUnits = ### The units associated with the value of cnrDHCPScopeFreeAddrValue.
+{
+    {"1","Value"},
+    {"2","Percent"}
+}
+default = "Unknown"
+
+table cnrNotifServerType = ### The type of server
+{
+    {"1","DNS"},
+    {"2","DHCP"},
+    {"3","LDAP"}
+}
+default = "Unknown"
+
+table cnrNotifDupIpAddressDetectedBy = ### For a ciscoNetRegDuplicateAddress notification, this object indicates whether the client or server detected the condition.
+{
+    {"1","DHCP Client"},
+    {"2","DHCP Server"}
+}
+default = "Unknown"
+
+table OperStatus = ### Operational status of a chassis component.
+{
+    ##########
+    # fanAlarm(4) is only applicable to the C5500 power supply. A fault(3) supercedes
+    # a fanAlarm(4).
+    #
+    # In the C6400, partialFault(5) & empty(6) values for the FanStatus object
+    # indicate partial fan failure and fan not present, respectively. A value of
+    # fault(3) indicates total fan failure.
+    ##########
+    
+    {"1","Unknown"}, ### none of the following
+    {"2","OK"}, ### status ok
+    {"3","Fault"}, ### major problem
+    {"4","Fan Alarm"}, ### for C5500 power supply
+    {"5","Partial Fault"}, ### partial failure
+    {"6","Empty"} ### not present
+}
+default = "Unknown"
+
+table ciscoLS1010Chassis12VoltStatus = ### The chassis 12V status.
+{ 
+    {"1","OK"}, 
+    {"2","Out of Tolerance"},
+    {"3","Unknown"} 
+}
+default = "Unknown"
+
+table ciscoLS1010ChassisTempStatus = ### The chassis temperature status.
+{
+    ##########
+    # The Cisco6400 reports values minorWarning(3),    majorWarning(4) and
+    # criticalWarning(5) to indicate the core temperature. The Cisco6400 will never
+    # report the value overTemperature(2). In the Cisco6400, which has two
+    # temperature sensors, this object refers to the core temperature, while the
+    # object ciscoLS1010ChassisInletTempStatus refers to the inlet temperature.
+    ##########
+    
+    {"1","OK"}, 
+    {"2","Over Temperature"},
+    {"3","Minor Warning"}, 
+    {"4","Major Warning"}, 
+    {"5","Critical Warning"}
+}
+default = "Unknown"
+
+table rsrbRemotePeerState = ### Current state of the RSRB session with the remote peer.
+{
+    {"1","Dead"},
+    {"2","Closed"},
+    {"3","Opening"},
+    {"4","Open Wait Xport"},
+    {"5","Wait Remote RSP"},
+    {"6","Remote Responded"},
+    {"7","Remote Opened"},
+    {"8","Draining"},
+    {"9","Connected"},
+}
+default = "Unknown"
+
+table convSdllcAddrState = ### Current state of the SDLLC connection.
+{
+    {"1","Session Disconnected"}, ### session disconnected 
+    {"2","SDLC Disconnecting"}, ### disconnect pending SDLC side
+    {"3","SDLC Primary Side Connecting"}, ### connect pending SDLC primary side
+    {"4","Network Side Disconnecting"}, ### disconnect pending network side
+    {"5","Network Side Connecting"}, ### connect pending network side
+    {"6","SDLC Secondary Side Connecting"}, ### connect pending SDLC secondary side
+    {"7","Session Connected"} ### session connected
+}
+default = "Unknown"
+
+table cssRepeaterPortLinkStatus = ### The current port link status.
+{
+    {"1","Link"},
+    {"2","No Link"}
+}
+default = "Unknown"
+
+table cssSwitchPortLinkStatus = ### Indicates the link STATUS of switch port.
+{
+    {"1","Link"},
+    {"2","No Link"}
+}
+default = "Unknown"
+
+table llcCcOperState =
+{
+    ##########
+    # This object describes the operational state of the LLC connection. If the
+    # connection component is disabled, llcCcOperState will transition to aDM(1).
+    # If the connection component is enabled, llcCcOperState will transition to
+    # normal(3).
+    #
+    # REFERENCE
+    #    ISO 8802-2 : 1989, ANSI/IEEE 802.2 - 1989
+    #    Section 7.9.2.1. Connection Component State Descriptions
+    ##########
+    
+    {"1","aDM"},
+    {"2","Setup"},
+    {"3","Normal"},
+    {"4","Busy"},
+    {"5","Reject"},
+    {"6","Waiting"},
+    {"7","Awaiting Busy"},
+    {"8","Awaiting Reject"},
+    {"9","dConn"},
+    {"10","Reset"},
+    {"11","Error"},
+    {"12","Connecting"},
+    {"13","Reset Check"},
+    {"14","Reset Wait"}
+}
+default = "Unknown"
+
+table llcCcOperLastFailCause = ### This enumerated object reflects the cause of the last failure of this LLC connection component. If the connection component has not failed, then this object will have a value of undefined(1).
+{
+    {"1","Undefined"},
+    {"2","Received FRMR"},
+    {"3","Transmitted FRMR"},
+    {"4","Disconnect Received"},
+    {"5","Disconnect Sent"},
+    {"6","Retries Expired"},
+    {"7","Forced Shutdown"}
+}
+default = "Unknown"
+
+table chassisMinorAlarm = ### The chassis minor alarm status.
+{
+    {"1","Off"},
+    {"2","On"}
+}
+default = "Unknown"
+
+table chassisMajorAlarm = ### The chassis major alarm status.
+{
+    {"1","Off"},
+    {"2","On"}
+}
+default = "Unknown"
+
+table chassisTempAlarm = ### The chassis temperature alarm status.
+{
+    {"1","Off"}, ### temperature within normal range
+    {"2","On"}, ### temperature too high
+    {"3","Critical"} ### critical temperature, system shut down imminent
+}
+default = "Unknown"
+
+table ipPermitDeniedAccess = ### The denied access type.
+{
+    {"1","Telnet"},
+    {"2","SNMP"},
+    {"3","SSH"}
+}
+default = "Unknown"
+
+table stpxInconsistentState = 
+{
+    ##########
+    # The types of inconsistency which have been discovered on this port for this
+    # VLAN's Spanning Tree. When this object exists, the value of the corresponding
+    # instance of the Bridge MIB's dot1dStpPortState object will be 'broken(6)'.
+    #
+    # REFERENCE - dot1dStpPortState is defined in RFC-1493.
+    ##########
+    
+    {"0","Type Inconsistent"},
+    {"1","PVID Inconsistent"}
+}
+default = "Unknown"
+
+table stunRoutePeerState = ### The state of the peer connection through the STUN tunnel.
+{
+    {"1","Dead"},
+    {"2","Closed"}, 
+    {"3","Opening"}, 
+    {"4","Open Waiting"}, ### openWait
+    {"5","Connected"},
+    {"6","Direct"},
+}
+default = "Unknown"
+
+table vtpVlanState = ### The state of this VLAN.
+{
+    ##########
+    # The state 'mtuTooBigForDevice' indicates that this device cannot participate in
+    # this VLAN because the VLAN's MTU is larger than the device can support.
+    #
+    # The state 'mtuTooBigForTrunk' indicates that while this VLAN's MTU is supported
+    # by this device, it is too large for one or more of the device's trunk ports.
+    ##########
+    
+    {"1","Operational"}, ### operational
+    {"2","Suspended"}, ### suspended
+    {"3","MTU Too Big for Device"}, ### mtuTooBigForDevice
+    {"4","MTU Too Big for Trunk"} ### mtuTooBigForTrunk
+}
+default = "Unknown"
+
+table vlanTrunkPortDynamicStatus = ### Indicates whether the specified interface is either acting as a trunk or not. This is a result of the vlanTrunkPortDynamicState and the ifOperStatus of the trunk port itself.
+{
+    {"1","Trunking"}, ### trunking
+    {"2","Not Trunking"} ### notTrunking
+}
+default = "Unknown"
+
+table ciscoEsProStackMatrixStatus = ### Active Matrix module in the stack. This object is set to none if the switch is not connected to a Matrix.
+{
+    {"1","Primary"},
+    {"2","Secondary"},
+    {"3","None"},
+    {"4","Failed"}
+}
+default = "Unknown"
+
+table ciscoEsStackSwitchTemperature = ### Temperature status of each switch.
+{
+    {"1","Normal"}, ### normal
+    {"2","Too High"}, ### toohigh
+    {"3","Unknown"} ### unknown
+}
+default = "Unknown"
+
+table ccMemberOperStatus =
+{
+    ##########
+    # The status of cluster management connectivity between the command switch and a
+    # cluster member. Cluster management connectivity is determined by the exchange of
+    # cluster management messages between the command switch and a cluster member. A
+    # member that has failed to exchange cluster management messages with the command
+    # switch is deemed to be inactive. Otherwise, it is deemed to be active.
+    ##########
+
+    {"1","Active"},
+    {"2","Inactive"}
+}
+default = "Unknown"
+
+table ciscoProducts = ### Product number extracted from OID .1.3.6.1.4.1.9.1.xxx
+{
+    ##########
+    # Newer devices return a sysObjectID value that corresponds to the device model
+    # number.
+    #
+    # Note well that an AGS+ must contain a cBus controller in order to know that it
+    # is an AGS+, otherwise it is unable to determine what kind of device it is, and
+    # returns one of the functionality-based sysObjectID values.
+    ##########
+    
+    {"1","GatewayServer"},
+    {"2","TerminalServer"},
+    {"3","Trouter"},
+    {"4","ProtocolTranslator"},
+    
+    {"5","IGS"},
+    {"6","3000"},
+    {"7","4000"},
+    {"8","7000"},
+    {"9","CS500"},
+    {"10","2000"},
+    {"11","AGSplus"},
+    {"12","7010"},
+    {"13","2500"},
+    {"14","4500"},
+    {"15","2102"},
+    {"16","2202"},
+    {"17","2501"},
+    {"18","2502"},
+    {"19","2503"},
+    {"20","2504"},
+    {"21","2505"},
+    {"22","2506"},
+    {"23","2507"},
+    {"24","2508"},
+    {"25","2509"},
+    {"26","2510"},
+    {"27","2511"},
+    {"28","2512"},
+    {"29","2513"},
+    {"30","2514"},
+    {"31","2515"},
+    {"32","3101"},
+    {"33","3102"},
+    {"34","3103"},
+    {"35","3104"},
+    {"36","3202"},
+    {"37","3204"},
+    {"38","AccessPro RC"},
+    {"39","AccessPro EC"},
+    {"40","1000"},
+    {"41","1003"},
+    {"42","2516"},
+    {"43","1020"},
+    {"44","1004"},
+    {"45","7507"},
+    {"46","7513"},
+    {"48","7505"},
+    {"49","1005"},
+    {"50","4700"},
+    {"51","Pro 1003"},
+    {"52","Pro 1004"},
+    {"53","Pro1005"},
+    {"55","Pro 2500 PCE"},
+    {"56","Pro 2501"},
+    {"57","Pro 2503"},
+    {"58","Pro 2505"},
+    {"59","Pro 2507"},
+    {"60","Pro 2509"},
+    {"61","Pro 2511"},
+    {"62","Pro 2514"},
+    {"63","Pro 2516"},
+    {"64","Pro 2519"},
+    {"66","Pro 4500"},
+    {"67","2517"},
+    {"68","2518"},
+    {"69","2519"},
+    {"70","2520"},
+    {"71","2521"},
+    {"72","2522"},
+    {"73","2523"},
+    {"74","2524"},
+    {"75","2525"},
+    {"76","Pro 751"},
+    {"77","Pro 752"},
+    {"78","Pro 753"},
+    {"81","751"},
+    {"82","752"},
+    {"83","753"},
+    {"92","Pro 765"},
+    {"93","Pro 766"},
+    {"98","761"},
+    {"99","762"},
+    {"102","765"},
+    {"103","766"},
+    {"104","Pro 2520"},
+    {"105","Pro 2522"},
+    {"106","Pro 2524"},
+    {"107","LS1010"},
+    {"108","7206"},
+    {"109","AS5200"},
+    {"110","3640"},
+    {"113","1601"},
+    {"114","1602"},
+    {"115","1603"},
+    {"116","1604"},
+    {"117","Pro 1601"},
+    {"118","Pro 1602"},
+    {"119","Pro 1603"},
+    {"120","Pro 1604"},
+    {"122","3620"},
+    {"125","7204"},
+    {"126","771"},    
+    {"127","772"},
+    {"128","775"},
+    {"129","776"},
+    {"130","Pro 2502"},
+    {"131","Pro 2504"},
+    {"132","Pro 2506"},
+    {"133","Pro 2508"},
+    {"134","Pro 2510"},
+    {"135","Pro 2512"},
+    {"136","Pro 2513"},
+    {"137","Pro 2515"},
+    {"138","Pro 2517"},
+    {"139","Pro 2518"},
+    {"140","Pro 2523"},
+    {"141","Pro 2525"},
+    {"142","Pro 4700"},
+    {"147","Pro 316T"},
+    {"148","Pro 316C"},
+    {"149","Pro 3116"},
+    {"150","Catalyst 116T"},
+    {"151","Catalyst 116C"},
+    {"152","Catalyst 1116"},
+    {"153","AS2509 RJ"},
+    {"154","AS2511 RJ"},
+    {"157","MC3810"},
+    {"160","1503"},
+    {"161","1502"},
+    {"162","AS5300"},
+    {"164","LS1015"},    
+    {"165","2501 FRAD FX"},
+    {"166","2501 LANFRAD FX"},
+    {"167","2502 LANFRAD FX"},
+    {"168","WSX5302"},
+    {"169","FastHub 216T"},
+    {"170","Catalyst 2908XL"}, ### Catalyst 2908XL switch with 8 10/100BaseTX ports 
+    {"171","Catalyst 2916M-XL"}, ### Catalyst 2916M-XL switch with 16 10/100BaseTX ports and 2 uplink slots
+    {"172","1605"},
+    {"173","12012"},
+    {"175","Catalyst 1912C"},
+    {"176","Micro Web Server 2"},
+    {"177","FastHub BMM TX"},
+    {"178","FastHub BMM FX"},
+    {"179","UBR7246"}, ### Universal Broadband Router
+    {"180","6400"},
+    {"181","12004"},
+    {"182","12008"},
+    {"183","Catalyst 2924XL"}, ### Catalyst 2924XL switch with 24 10/100BaseTX ports; doesn't support port-based VLANs.
+    {"184","Catalyst 2924CXL"}, ### Catalyst 2924C-XL switch; doesn't support port-based VLANs. 
+    {"185","2610"}, ### Cisco 2600 platform with 1 integrated ethernet interface
+    {"186","2611"}, ### Cisco 2600 platform with 2 integrated ethernet interfaces 
+    {"187","2612"}, ### Cisco 2600 platform with an integrated ethernet and token ring
+    {"188","AS5800"},
+    {"189","SC3640"},
+    {"190","8510"}, ### Cisco Catalyst 8510CSR (Campus Switching Router)
+    {"191","UBR904"}, ### Cisco Cable Modem (UBR - Universal Broadband Router)
+    {"192","6200"}, 
+    {"194","7202"}, ### Modular two slot router in the cisco7200 family 
+    {"195","2613"}, ### Cisco 2600 platform with 1 integrated token ring interface
+    {"196","8515"}, ### Cisco Catalyst 8515CSR (Campus Switching Router)
+    {"197","Catalyst 9006"}, 
+    {"198","Catalyst 9009"},
+    {"199","RPM"}, ### Router Processor Module
+    {"200","cisco1710"}, ### VPN (Virtual Private Network) Security Router with 1 FastEthernet and 1 Ethernet interface onboard
+    {"201","1720"},         
+    {"202","Catalyst 8540MSR"}, ### Catalyst 8540 Multiservice Switching Router
+    {"203","Catalyst 8540CSR"}, ### Catalyst 8540 Campus Switching Router
+    {"204","7576"}, ### Dual Independent RSP platform, 13 slots 
+    {"205","3660"}, ### Six slot MARs router 
+    {"206","1401"}, ### Router product with 1 ethernet and 1 ATM25 interface 
+    {"208","2620"}, ### Cisco 2600 chassis with 1 onboard FE
+    {"209","2621"}, ### Cisco 2600 chassis with 2 onboard 10/100 FE ports 
+    {"210","UBR7223"}, ### Universal Broadband Router
+    {"211","6400NRP"}, ### Cisco 6400 Network Routing Processor 
+    {"212","801"}, ### Cisco 800 platform with 1 ethernet and 1 BRI S/T
+    {"213","802"}, ### Cisco 800 platform with 1 ethernet and 1 BRI U 
+    {"214","803"}, ### Cisco 800 platform with 1 ethernet 4-port HUB, 1 BRI S/T, and 2 POTs 
+    {"215","804"}, ### Cisco 800 platform with 1 ethernet 4-port HUB, 1 BRI U, and 2 POTs
+    {"216","1750"}, ### VoIP (Voice over IP) capable Cisco 1700 platform with 2 WIC/VIC slots and 1 VIC-only slot
+    {"217","Catalyst 2924XLv"}, ### Catalyst 2924XL switch with 24 10BaseT/100BaseTX autosensing switch ports; supports port-based VLANs; can run Standard or Enterprise edition software.
+    {"218","Catalyst 2924C-XLv"}, ### Catalyst 2924C-XL switch with 22 10BaseT/100BaseTX and 2 100BaseFX autosensing switch ports; supports port-based VLANs; can run Standard or Enterprise edition software.
+    {"219","Catalyst 2912XL"}, ### Catalyst 2912XL switch with 12 autosensing 10/100BaseTX ports, can run Standard or Enterprise edition software. 
+    {"220","Catalyst 2924M-XL"}, ### Catalyst 2924M-XL switch with 24 autosensing 10/100BaseTX ports and 2 uplink slots, can run Standard or Enterprise edition software.
+    {"221","Catalyst 2912MF-XL"}, ### Catalyst 2912MF-XL switch with 12 100BaseFX ports and 2 uplink slots; can only run Enterprise edition software.
+    {"222","7206VXR"}, ### Cisco 7200 platform, VXR series chassis with 6 slots 
+    {"223","7204VXR"}, ### Cisco 7200 platform, VXR series chassis with 4 slots
+    {"224","1538M"}, ### Cisco Network Office 8-port 10/100 Repeater
+    {"225","1548M"}, ### Cisco Network Office 10/100 Switch
+    {"226","Fasthub 100"}, ### Cisco Fast Hub 100 Series 10/100 Repeater
+    {"227","PIX Firewall"}, ### Cisco PIX Firewall
+    {"228","MGX8850"}, ### Cisco Multiservice Gigabit Switch with 32 half height slots 
+    {"229","MGX8830"}, ### Cisco Multiservice Switch with 16 half-height slots
+    ### {"229","MGX 8820"}, ###  229 (Obsolete)
+    {"230","Catalyst 8510MSR"}, ### Catalyst ATM 8510 Multiservice Switching Router 
+    {"231","Catalyst 8515MSR"}, ### Catalyst ATM 8515 Multiservice Switching Router
+    {"232","IGX8410"}, ### Cisco IGX8400 (Integrated Gigabit eXchange) series wide-area switch with 8 slots 
+    {"233","IGX8420"}, ### Cisco IGX8400 (Integrated Gigabit eXchange) series wide-area switch with 16 slots 
+    {"234","IGX8430"}, ### Cisco IGX8400 (Integrated Gigabit eXchange) series wide-area switch with 32 slots
+    {"235","IGX8450"}, ### Cisco IGX8400 (Integrated Gigabit eXchange) series wide-area switch with integrated MGX feeder 
+    {"237","BPX8620"}, ### Cisco BPX8600 (Broadband Packet eXchange) series basic wide-area switch with 15 slots
+    {"238","BPX8650"}, ### Cisco BPX8600 (Broadband Packet eXchange) series wide-area switch with integrated tag switching controller and 15 slots 
+    {"239","BPX8680"}, ### Cisco BPX8600 (Broadband Packet eXchange) series wide-area switch with integrated MGX feeder and 15 slots 
+    {"240","Cache Engine"}, ### Cisco Cache Engine
+    {"241","Catalyst 6000"}, ### Cisco Catalyst 6000 
+    {"242","BPX SES"}, ### Cisco BPX (Broadband Packet eXchange) Service Expansion Slot controller
+    {"243","IGX Service Expansion Slot"}, ### Cisco IGX (Integrated Gigabit eXchange) Service Expansion Slot controller/feeder, used in IGX8410/IGX8420/IGX8430 switches. 
+    {"244","Local Director"}, ### Cisco Local Director
+    {"245","805"}, ### Cisco 800 platform with 1 ethernet and 1 serial WIC 
+    {"246","Catalyst 3508G-XL"}, ### Cisco Catalyst 3508G-XL switch with 8 GBIC Gigabit ports, can run Standard or Enterprise edition software. 
+    {"247","Catalyst 3512XL"}, ### Cisco Catalyst 3512XL switch with 12 10/100BaseTX ports and 2 GBIC Gigabit ports, can run Standard or Enterprise edition software. 
+    {"248","Catalyst 3524XL"}, ### Cisco Catalyst 3524XL switch with 24 10/100BaseTX ports and 2 GBIC Gigabit ports, can run Standard or Enterprise edition software. 
+    {"249","1407"}, ### Cisco 1400 series router with 1 Ethernet and 1 ADSL interface, with 1407 chipset
+    {"250","1417"}, ### Cisco 1400 series router with 1 Ethernet and 1 ADSL interface, with 1417 chipset 
+    {"251","6100"}, ### Cisco 6100 DSLAM Chassis
+    {"252","6130"}, ### Cisco 6130 DSLAM Chassis
+    {"253","6260"}, ### Cisco 6260 DSLAM Chassis
+    {"254","Optical Regenerator"}, ### Cisco Optical Regenerator 
+    {"255","UBR924"}, ### Cisco UBR Cable Modem which is a UBR904 with 2 FXS Voice ports 
+    {"256","WSX6302 MSM"}, ### Catalyst 6000 or 6500 Series Multilayer Switch Module WS-X6302-MSM that directly interfaces to the switch's backplane to provide layer 3 switching.
+    {"257","Catalyst 5000 RSM"}, ### Router Switching Feature Card for the Catalyst 5000 that is treated as a standalone system by the NMS 
+    {"258","Catalyst 6000 MSFC"}, ### Multilevel Switching Feature Card for Catalyst 6000 that is treated as a standalone system by the NMS
+    {"259","7120 Quad T1"}, ### 7120 Series chassis with 2 10/100 FE interfaces, 4 T1/E1 interfaces 
+    {"260","7120 T3"}, ### 7120 Series chassis with 2 10/100 FE interfaces, 1 T3 interface 
+    {"261","7120 E3"}, ### 7120 Series chassis with 2 10/100 FE interfaces, 1 E3 interface 
+    {"262","7120 ATM T3"}, ### 7120 Series chassis with 2 10/100 FE interfaces, 1 T3 ATM interface 
+    {"263","7120 ATM E3"}, ### 7120 Series chassis with 2 10/100 FE interfaces, 1 E3 ATM interface 
+    {"264","7120 OC3 SMI"}, ### 7120 Series chassis with 2 10/100 FE interfaces, 1 OC3SMI ATM interface 
+    {"265","7140 Dual T3"}, ### 7140 Series chassis with 2 10/100 FE interfaces, 2 T3 interfaces 
+    {"266","7140 Dual E3"}, ### 7140 Series chassis with 2 10/100 FE interfaces, 2 E3 interfaces 
+    {"267","7140 Dual ATM T3"}, ### 7140 Series chassis with 2 10/100 FE interfaces, 2 T3 ATM interfaces 
+    {"268","7140 Dual ATM E3"}, ### 7140 Series chassis with 2 10/100 FE interfaces, 2 E3 ATM interfaces 
+    {"269","7140 Dual OC3 MM"}, ### 7140 Series chassis with 2 10/100 FE interfaces, 2 OC3MM ATM interfaces 
+    {"270","827 QuadV"}, ### Cisco 800 platform with 1 ethernet, 1 ADSL DMT issue 2, and 4 voice POTS FXS ports
+    {"271","UBR7246 VXR"}, ### Cisco 7246 Universal Broadband Router, VXR series
+    {"272","10400"}, ### Cisco 10000 platform with 10 slots
+    {"273","12016"}, ### Cisco 12000 platform with 16 slots
+    {"274","AS5400"}, ### Cisco AS5400 platform
+    {"275","Catalyst 2948G-L3"}, ### Cisco Catalyst WS-C2948G-L3 48 port 10/100 Layer 3 switch with 2 GBIC ports
+    {"276","7140 Oct T1"}, ### 7140 Series chassis with 8 integrated T1/E1 serial ports
+    {"277","7140 Dual FE"}, ### 7140 Series chassis with 2 integrated 10/100 FE interfaces
+    {"278","Catalyst 3548XL"}, ### Catalyst 3548XL switch (WS-C3548-XL)
+    {"279","VG200"}, ### Cisco Voice Gateway 200 controlled by Cisco Call Manager
+    {"280","6006"}, ### Catalyst 6000 with 6 slots
+    {"281","6009"}, ### Catalyst 6000 with 9 slots
+    {"282","6506"}, ### Catalyst 6000 Plus with 6 slots
+    {"283","6509"}, ### Catalyst 6000 Plus with 9 slots
+    {"284","827"}, ### Cisco 800 platform with 1 ethernet, 1 ADSL DMT issue 2
+    {"285","Management Engine 1100"}, ### Cisco Management Engine 1100 for doing distributed SNMP polling
+    {"286","MC3810-V3"}, ### Cisco MC3810-V3, capable of data, voice and video.  Supports 2 additional ports than the MC3810-V, used for optional access cards.
+    {"287","Catalyst 3524T-XL-EN"}, ### Cisco Catalyst 3524 switch (WS-C3524T-XL-EN) with 24 10/100 ports and 2 GBIC gigabit ports.  Runs Enterprise edition software and provides telephony power to attached IP telephones.
+    {"288","7507z"}, ### Cisco 7507z chassis, Czbus capable, 7 slots
+    {"289","7513z"}, ### Cisco 7513z chassis, Czbus capable, 13 slots
+    {"290","7507mx"}, ### Cisco 7507mx chassis, Czbus capable, TDM (Time Division Multiplexing) backplane support, 7 slots
+    {"291","7513mx"}, ### Cisco 7513mx chassis, Czbus capable, TDM (Time Division Multiplexing) backplane support, 13 slots
+    {"292","uBR912-C"}, ### Cisco uBR912-C Cable Modem with CSU/DSU WIC
+    {"293","uBR912-S"}, ### Cisco uBR912-S Cable Modem with Serial WIC
+    {"294","uBR914"}, ### Cisco uBR914 Cable Modem with removable WIC
+    {"295","802J"}, ### Cisco 800 platform with 1 ethernet, 1 BRI S/T, and 1 Japanese BRI U
+    {"296","804J"}, ### Cisco 800 platform with 1 ethernet, 2 POTS, 1 BRI/ST, and 1 Japanese BRI U
+    {"297","6160"}, ### Cisco 6160 DSLAM chassis
+    {"298","4908G-L3"}, ### Catalyst 4908G-L3 (WS-C4908G-L3) Mid-range fixed configuration layer 3 switch with 6 GBIC based Gigabit Ethernet ports
+    {"299","6015"}, ### Cisco 6015 DSLAM chassis
+    {"300","Catalyst 4232-L3"}, ### Cisco Catalyst 4232-L3 layer 3 line card that is treated as a standalone system by the NMS
+    {"301","Catalyst 6000MSFC2"}, ### Multilevel Switching Feature Card Version 2 for Catalyst 6000 that is treated as a standalone system by the NMS
+    {"302","ICS 7750 MRP200"}, ### Cisco ICS 7750 Multiservice Route Processor 200
+    {"303","ICS 7750 SSP80"}, ### Cisco ICS 7750 System Switch Processor 80
+    {"306","CVA122"}, ### Cisco CVA122 Cable Voice Adapter (Residential Cable Modem with two Voice Ports)
+    {"307","CVA124"}, ### Cisco CVA124 Cable Voice Adapter (Residential Cable Modem with four Voice Ports)
+    {"308","AS5850"}, ### High End Dial Access Server
+    {"309","UBR7100"}, ### A lower end version of the UBR7223, designed for hotels, MDUs and smaller cable operators
+    {"310","Catalyst 6509SP"}, ### 9-slot Constellation+ vertical slot chassis
+    {"311","MGX8240"}, ### High Density Circuit Emulation Service Gateway for Private Line Service
+    {"312","Catalyst 4840G-L3"}, ### Catalyst 4840G-L3 (WS-C4840G) Layer 3 Ethernet Switching System with Server Load Balancing
+    {"313","AS5350"}, ### Cisco low end Access server platform
+    {"314","7750"}, ### Cisco Integrated Communication System (ICS) 7750
+    {"316","UBR925"}, ### Cisco UBR925 Cable Modem/Router with VOIP and hardware accelerated IPSEC
+    {"317","UBR10012"}, ### Cisco uBR10000 platform with 8 broadband slots and 4 WAN slots
+    {"318","Catalyst 4000 Gateway"}, ### Catalyst 4000 Access Gateway line card supporting voice and WAN (Wide Area Network) interfaces as well as conferencing and transcoding services for operation with the Cisco Call Manager
+    {"319","2650"}, ### c2650 platform with 1 integrated fast ethernet interface 
+    {"320","2651"}, ### c2650 platform with 2 integrated fast ethernet interfaces    
+    {"321","826 Quad V"}, ### Cisco 800 platform with 1 ethernet, 1 ADSL over ISDN and 4 voice POTS FXS ports
+    {"322","826"}, ### cisco826 - Cisco 800 platform with 1 ethernet, 1 ADSL over ISDN 
+    {"323","Catalyst 2950-12"}, ### catalyst295012 - Cisco Catalyst c2950 switch  with 12 10/100BaseTX ports (WS-c2950-12)
+    {"324","Catalyst 2950-24"}, ### catalyst295024 - Cisco Catalyst c2950 switch with 24 10/100 BaseTX ports (WS-c2950-24)
+    {"325","Catalyst 2950C-24"}, ### catalyst295024C - Cisco Catalyst c2950 switch with 24 10/100 BaseTX ports and 2 100BASE-FX uplink ports (WS-c2950C-24)
+    {"326","1751"}, ### cisco1751 - Digital voice capable 
+    {"329","626"}, ### Cisco 600 DSL CPE pltaform with ADSL, DMT issue 1, 25M ATM interface
+    {"330","627"}, ### Cisco 600 DSL CPE pltaform with ADSL, DMT issue 2, 25M ATM interface
+    {"331","633"}, ### Cisco 600 DSL CPE platform with SDSL, 2B1Q line coding, serial interface (V.35/X.21)
+    {"332","673"}, ### Cisco 600 DSL CPE platform with SDSL, 2B1Q line coding, ethernet interface
+    {"333","675"}, ### Cisco 600 DSL CPE platform with ADSL, CAP, ethernet interface, POTS connector
+    {"334","675e"}, ### Cisco 600 DSL CPE platform with ADSL, CAP, ethernet interface, universal power supply
+    {"335","676"}, ### Cisco 600 DSL CPE platform with ADSL, DMT issue 1, ethernet interface
+    {"336","677"}, ### Cisco 600 DSL CPE platform with ADSL, DMT issue 2, ethernet interface
+    {"337","678"}, ### Cisco 600 DSL CPE platform with ADSL, CAP/DMT/G.Lite, ethernet interface
+    {"338","3661AC"}, ### 1 Fast Ethernet version of c3660 with a AC power supply
+    {"339","3661DC"}, ### 1 Fast Ethernet version of c3660 with a DC power supply
+    {"340","3662AC"}, ### 2 Fast Ethernet version of c3660 with a AC power supply
+    {"341","3662DC"}, ### 2 Fast Ethernet version of c3660 with a DC power supply
+    {"342","3662ACCO"}, ### 2 Fast Ethernet version of c3660 with a AC power supply for Telco's
+    {"343","3662DCCO"}, ### 2 Fast Ethernet version of c3660 with a DC power supply for Telco's
+    {"344","UBR7111"}, ### Low-end version of the Universal Broadband Router with 1 PA slot, 1 fixed RF line card (MC11C) and integrated upconvertor, designed for hotels, MDUs and smaller cable operators
+    {"346","UBR7114"}, ### Low-end version of the Universal Broadband Router with 1 PA slot, 1 fixed RF line card (MC14C) and integrated upconvertor, designed for hotels, MDUs and smaller cable operators
+    {"348","12010"}, ### Cisco 12000 platform with 10 slots
+    {"349","8110"}, ### Cisco 8110 (ATM network termination device) with 3 Line Interface module slots
+    {"351","uBR905"}, ### Cisco uBR905 Cable Modem with hardware accelerated IPSEC
+    {"353","SOHO77"}, ### Cisco SOHO (Small Office Home Office) ADSL Router, 1 Ethernet and 1 ADSL G.992.1 (G.DMT) and G.992.2 (G.Lite) Interface
+    {"354","SOHO76"}, ### Cisco SOHO (Small Office Home Office) ADSL over ISDN Router, 1 Ethernet and 1 ADSL ETSI/ITU-T G.992.1 Annex B (G.DMT) Interface
+    {"355","7150 Dual FE"}, ### 7150 Series chassis with 2 integrated 10/100 FE interfaces
+    {"356","7150 Oct T1"}, ### 7150 Series chassis with 8 integrated T1/E1 serial ports
+    {"357","7150 Dual T3"}, ### 7150 Series chassis with 2 10/100 FE interfaces, 2 T3 interfaces
+    {"359","Catalyst 2950t-24"}, ### catalyst2950t24 - Cisco Catalyst c2950 switch with 24 10/100BaseT ports and 2 10/100/1000BaseT ports
+    {"360","VPS1110"}, ### Cisco VLAN Policy Server 1110 manages VLAN-based policies to control user access to a LAN, leveraging existing authentication mechanisms such as Windows Domain Controllers and Novell's NDS. This policy server is part of CiscoWorks2000 User Registration Tool product.
+    {"361","Content Engine"}, ### Cisco Content Engine.  The Cisco Content Engine is a Content Networking product that accelerates content delivery, ensuring maximum scalability and availability of content.  The Content Engines offer caching, Content Delivery Network (CDN) services, employee internet management (e.g., URL filtering) and proxy services
+    {"362","IAD2420"}, ### Integrated Access Device 2420 (IAD2420) chassis with Analog (8/16) FXS ports with T1 or ADSL (Asymmetrical Digital Subscriber Line) Uplinks
+    {"363","677i"}, ### Cisco 600 DSL CPE platform with ASDL, DMT issue 2 over ISDN, ethernet interface
+    {"364","674"}, ### Cisco 600 DSL CPE platform with G.SHDSL, ethernet interface
+    {"365","DPA7630"}, ### The Cisco Digital PBX Adapter (DPA) enables the integration of Cisco Call Manager with Octel voice mail systems
+    {"366","Catalyst 3550 24"}, ### catalyst355024 - Catalyst 3550 24 10/100 ports + 2 Gig uplinks fixed configuration Layer 2/Layer 3 Ethernet Switch 
+    {"367","Catalyst 3550 48"}, ### catalyst355048 - Catalyst 3550 48 10/100 ports + 2 Gig uplinks fixed configuration Layer 2/Layer 3 Ethernet Switch 
+    {"368","Catalyst 3550 12"}, ### catalyst355012T - Catalyst 3550 12 1000T ports fixed configuration Layer 2/Layer 3 Ethernet Switch
+    {"371","CVA122E"}, ### Cisco CVA122-e Cable Voice Adapter(Residential Cable Modem with two voice ports)- European version
+    {"372","CVA124E"}, ### Cisco CVA124-e Cable Voice Adapter(Residential Cable Modem with four voice ports)- European version
+    {"373","URM"}, ### Universal Router Module for the IGX platform
+    {"374","URM 2FE"}, ### Universal router module with 2 Fast Ethernet interfaces for IGX platform
+    {"375","URM 2FE 2V"}, ### Universal Router Module, with 2 Fast Ethernet ports, and 2 digital voice ports (T1 or E1)
+    {"379","CAP340"}, ### Aironet Wireless LAN Access Point 340 series
+    {"380","CAP350"}, ### ciscoCAP350 - Cisco Wireless LAN Access Point 350 series 
+    {"381","DPA7610"}, ### The Cisco Digital PBX Adapter (DPA) enables the integration of Cisco Call Manager with Octel voice mail systems.
+    {"385","12416"}, ### Cisco 12000 platform with 16 slots and 10G fabric card 
+    {"386","Catalyst 2948G-L3 DC"}, ### A fixed-configuration Layer 3 Ethernet switch featuring IP, IPX, and IP mulitcast with 48 10/100BaseTX ports using DC power
+    {"387","Catalyst 4908G-L3 DC"}, ### A fixed-configuration L3 Ethernet switch featuring IP,IPX and IP multicast with 8 GBIC ports using DC power
+    {"388","12406"}, ### Cisco 12400 platform with 6 slots
+    {"389","PIX Firewall 506"}, ### Cisco PIX Firewall 506
+    {"390","PIX Firewall 515"}, ### Cisco PIX Firewall 515
+    {"391","PIX Firewall 520"}, ### Cisco PIX Firewall 520
+    {"392","PIX Firewall 525"}, ### Cisco PIX Firewall 525
+    {"393","PIX Firewall 535"}, ### Cisco PIX Firewall 535
+    {"394","12410"}, ### Cisco 12410 platform with 10 slots
+    {"395","811"}, ### ISDN router for Japan with 1 10BaseT Ethernet port, 1 ISDN BRI(Basic Rate Interface) U, integrated DSU(Data Service Unit)
+    {"396","813"}, ### ISDN router forJapan with 10 BaseT 4 ports hub , 1 ISDN BRI(Basic Rate Interface) U, integrated DSU(Data Service Unit) and 2 RJ-11
+    {"397","10720"}, ### cisco10720 - IP + Optical Access Router
+    {"399","4224"}, ### A standalone 24 port powered Ethernet switch, router and voice gateway
+    {"400","Catalyst 6513"}, ### ciscoWSC6513 - Catalyst 6000 series chassis with 13 slots 
+    {"401","7603"}, ### cisco7603 - Cisco Optical Services Router 7600 Series Chassis with 3 slots 
+    {"402","7606"}, ### cisco7606 - Cisco Optical Services Router 7600 Series Chassis with 6 slots 
+    {"405","HSE1105"}, ### Cisco Hosting Solution Engine 1105 manages Cisco powered data centers and Points of Presence with routers, switches, server load balancers, firewalls, intrusion detection systems and other layer 4-7 content delivery products.
+    {"406","ONS15540ESP"}, ### Cisco ONS 15540 Extended Services Platform
+    {"409","CE507"}, ### Cisco Content Engine Model 507
+    {"410","CE560"}, ### Cisco Content Engine Model 560
+    {"411","CE590"}, ### Cisco Content Engine Model 590
+    {"412","CE7320"}, ### Cisco Content Engine Model 7320
+    {"413","2691"}, ### cisco2691 - One Network Module slot, three WIC slot, two Fast Ethernet port MARS router 
+    {"414","3725"}, ### cisco3725 - Two Network Module slot, three WIC slot, two Fast Ethernet port MARS router 
+    {"416","1760"}, ### cisco1760 - Analog/digital voice capable, 19" rack-mount (1RU) Cisco 1700 platform with 2 WIC/VIC slots and 2 VIC-only slots
+    {"417","PIX Firewall 501"}, ### Cisco PIX Firewall 501
+    {"418","2610M"}, ### c2600M with 1 integrated ethernet interface
+    {"419","2611M"}, ### c2600M with 2 integrated ethernet interfaces
+    {"423","12404"}, ### Cisco 12400 platform with 4 slots
+    {"424","9004"}, ### Cisco 9000 Chassis
+    {"432","CE507AV"}, ### Cisco Content Engine Model 507-AV
+    {"433","CE560AV"}, ### Cisco Content Engine Model 560-AV
+    {"434","IE2105"}, ### The Cisco Intelligence Engine 2100 series is a new form of network device that provides intelligent network interface to applications and users
+    {"436","3745"}, ### cisco3745	- 3700 family four slot modular router 
+    {"439","7304"}, ### Cisco 7304 Chassis
+    {"444","1721"}, ### cisco1721 - Enhanced 1720 with support for onboard Fast Ethernet and 2 WAN Interface cards and optional hardware encryption module 
+    {"446","827H"}, ### cisco827H - Cisco 800 platform with 4-port 10Base-T Ethernet, and 1 ADSL over POTS Interface, data only model 
+    {"449","Catalyst 6503"}, ### ciscoWSC6503 - Catalyst 6000 series chassis with 3 slots 
+    {"454","CE2636"}, ### ciscoCE2636 - Cisco Content Engine Module for 26xx and 36xx series platforms
+    {"455","DwCE"}, ### ciscoDwCE - Double Wide Cisco Content Engine Module for 26xx
+    {"457","RPM-PR"}, ### ciscoRPMPR - For RPM-PR router blade in MGX series switch
+    {"464","6400UAC"}, ### cisco6400UAC - Cisco 6400 Universal Access Concentrator
+    {"466","2610XM"}, ### cisco2610XM - Cisco c2610XM platform 1 integrated fast ethernet interface with SDRAM
+    {"467","2611XM"}, ### cisco2611XM - Cisco c2611XM platform 2 integrated fast ethernet interfaces with SDRAM
+    {"468","2620XM"}, ### cisco2620XM - Cisco c2620XM platform 1 integrated fast ethernet interface with SDRAM
+    {"469","2621XM"}, ### cisco2621XM - Cisco c2621XM platform 2 integrated fast ethernet interfaces with SDRAM
+    {"470","2650XM"}, ### cisco2650XM - Cisco c2650XM platform 1 integrated fast ethernet interface with SDRAM
+    {"471","2651XM"}, ### cisco2651XM - Cisco c2651XM platform 2 integrated fast ethernet interfaces with SDRAM
+    {"472","Catalyst 2950G-24 DC"}, ### catalyst295024GDC - Cisco Catalyst c2950 switch with 24 10/100 BaseTX ports and 2 GBIC (Gigabit Interface Converter) slots and DC power(WS-c2950G-24-DC)
+    {"481","ONS 15540 ESPx"}, ### ciscoONS15540ESPx - Cisco ONS 15540 Extended Services Platform with external optical patch system
+    {"486","CDM4630"}, ### ciscoCDM4630 - Cisco Content Distribution Manager Model 4630
+    {"487","CDM4650"}, ### ciscoCDM4650 - Cisco Content Distribution Manager Model 4650
+    {"490","CE508"}, ### ciscoCE508 - Cisco Content Engine Model 508
+    {"491","CE565"}, ### ciscoCE565 - Cisco Content Engine Model 565
+    {"492","CE7325"}, ### ciscoCE7325 - Cisco Content Engine Model 7325
+    {"504","CE7305"}, ### ciscoCE7305 - Cisco Content Engine Model 7305 
+    {"505","CE510"}, ### ciscoCE510 - Cisco Content Engine Model 510 
+    {"507","AP1100"}, ### ciscoAIRAP1100 - 1100 series WLAN Access Point with 1 10/100TX port, 1 IEEE 802.11 radio port.
+    {"509","7609"}, ### cisco7609 - Cisco 7600 Series Chassis with 9 slots 
+    {"517","GSS"}, ### ciscoGSS - The Global Site Selector (GSS) is a network appliance that performs global server load balancing for geographically dispersed server load balancers and caches using DNS resolution.
+    {"518","Primary GSSM"}, ### ciscoPrimaryGSSM - The Primary Global Site Selector Manager (GSSM) serves as the central management station for a Global Site Selector (GSS) Network.
+    {"519","Standby GSSM"}, ### ciscoStandbyGSSM - The Standby Global Site Selector Manager (GSSM) serves as the backup to the Primary GSSM in a Global Site Selector(GSS) Network.                                  
+    {"521","MDS 9216"}, ### ciscoDSC9216K9 - DS-C9216-K9 -  MDS 9216 16-port 2Gbps FC + 1-slot Modular Switch
+    {"522","Catalyst 6500 Series Firewall"}, ### cat6500FirewallSm - High performance firewall blade for Catalyst 6500 Series
+    {"524","CSM"}, ### ciscoCSM - Cisco Content Switching Module (CSM) which load balancing internet traffic based on the layer 4 through layer 7 information in the content.
+    {"525","AP1210"}, ### ciscoAIRAP1210 - 1200 series WLAN Access Point on Cisco IOS platform with 1 10/100TX port, 1 CardBus slot, 1 Mini PCI slot.
+    {"528","7613"}, ### cisco7613 - Cisco Internet router 7600 Series Chassis with 13 slots 
+    {"531","CR4430"}, ### ciscoCR4430 - Cisco Content Router Model 4430 
+    {"532","CR4450"}, ### ciscoCR4450 - Cisco Content Router Model 4450 
+    {"533","BR1410"}, ### ciscoAIRBR1410 - 1410 Series Wireless LAN Bridge on Cisco IOS platform with 1 10/100Tx port and 1 5-GHz radio
+    {"540","Catalyst 2940-8TT"}, ### catalyst29408TT - Catalyst 2940 L2 switch with 8 10/100 copper ports and 1 10/100/1000 copper uplink port.
+    {"542","Catalyst 2940-8TF"}, ### catalyst29408TF - Catalyst 2940 L2 switch with 8 10/100 copper ports, 1 100 FX Uplink port and 1 Gigabit SFP Module slot.
+    {"551","Catalyst 2950-St24-LRE997"}, ### catalyst2950St24LRE997 - Catalyst2950 Long Reach Ethernet switch that confirms to ETSI 997 with 24 LRE interfaces, 2 10/100/1000 Small form factor copper interfaces and DC power supply(WS-C2950ST-24-LRE-997)
+    {"552","AP350-IOS"}, ### ciscoAirAp350IOS - Cisco Wireless LAN Access Point 350 series on IOS platform with 1 10/100TX port, 1 IEEE 802.11 radio port
+    {"554","Catalyst 6000 Family SSL Termination Engine"}, ### cat6500SslSm - SSLSM is a High-Speed SSL Termination Engine for Catalyst 6000 family of platforms that terminates and accelarates Secure Socket Layer (SSL) transactions in Web server environement.
+    {"555","CiscoWorks Security Information Management Solution Engine"}, ### ciscoSIMSE - ciscoSIMSE is an appliance - CiscoWorks Security Information Management Solution Engine
+    {"556","Ethernet Subscriber Solution Engine"} ### ciscoESSE - Cisco Ethernet Subscriber Solution Engine
+}
+default = "Unknown"
+
+table workgroupProducts = ### From CISCO-STACK-MIB (CISCO-RHINO-MIB.my)
+{
+    {"1","Cisco Stack MIB"}, ### ciscoStackMIB
+    {"2","Adapter Card"}, ### adapterCard
+    {"3","WSC 1000"}, ### wsc1000sysID
+    {"4","WSC 1100"}, ### wsc1100sysID
+    {"5","WSC 1200"}, ### wsc1200sysID
+    {"6","WSC 1400"}, ### wsc1400sysID
+    {"7","WSC 5000"}, ### wsc5000sysID
+    {"8","WSC 1600"}, ### wsc1600sysID
+    {"9","CPW 1600"}, ### cpw1600sysID
+    {"10","WSC 3000"}, ### wsc3000sysID
+    {"11","Rhino"}, ### -- rhino
+    {"12","WSC 2900"}, ### wsc2900sysID
+    {"13","CPW 2200"}, ### cpw2200sysID
+    {"14","ES STACK"}, ### esStack
+    {"15","WSC 3200"}, ### wsc3200sysID
+    {"16","CPW 1900"}, ### cpw1900sysID
+    {"17","WSC 5500"}, ### wsc5500sysID
+    {"18","WSC 1900"}, ### wsc1900sysID
+    {"19","CPW 1220"}, ### cpw1220sysID
+    {"20","WSC 2820"}, ### wsc2820sysID
+    {"21","CPW 1420"}, ### cpw1420sysID
+    {"22","DCD"}, ### dcd
+    {"23","WSC 3100"}, ### wsc3100sysID
+    {"24","CPW 1800"}, ### cpw1800sysID
+    {"25","CPW 1601"}, ### cpw1601sysID
+    {"26","WSC 3001"}, ### wsc3001sysID
+    {"27","CPW 1220c"}, ### cpw1220csysID
+    {"28","WSC 1900c"}, ### wsc1900csysID
+    {"29","WSC 5002"}, ### wsc5002sysID
+    {"30","CPW 1220i"}, ### cpw1220isysID
+    {"31","WSC 1900i"}, ### wsc1900isysID
+    {"32","TS Stack"}, ### tsStack
+    {"33","WSC 3900"}, ### wsc3900sysID
+    {"34","WSC 5505"}, ### wsc5505sysID
+    {"35","WSC 2926"}, ### wsc2926sysID
+    {"36","WSC 5509"}, ### wsc5509sysID
+    {"37","WSC 3920"}, ### wsc3920sysID
+    {"38","WSC 6006"}, ### wsc6006sysID
+    {"39","WSC 6009"}, ### wsc6009sysID
+    {"40","WSC 4003"}, ### wsc4003sysID
+    {"41","WSC 4912g"}, ### wsc4912gsysID
+    {"42","WSC 2948g"}, ### wsc2948gsysID
+    {"44","WSC 6509"}, ### wsc6509sysID
+    {"45","WSC 6506"}, ### wsc6506sysID
+    {"46","WSC 4006"}, ### wsc4006sysID
+    {"47","WSC 6509 NEB"}, ### wsc6509nebsysID
+    {"48","WSC 6000 NAM"}, ### wsc6knamsysID
+    {"49","WSC 2980g"}, ### wsc2980gsysID
+    {"50","WSC 6513"}, ### wsc6513sysID
+    {"51","WSC 2980"}, ### wsc2980gasysID
+    {"175","WSC 1900 LiteFX"} ### wsc1900LiteFxsysID
+}
+default = "Unknown"
+
+table alpsCktBaseDownReason = ### Reports the reason why this ALPS Circuit is down, if it is down.
+{ 
+    {"1","Unknown"},
+    {"2","No Reason"},
+    {"3","Host Link Down"},
+    {"4","Circuit Disabled"},
+    {"5","Host Link Disabled"},
+    {"6","No Host Link Matched"},
+    {"7","No HLD Matched"},
+    {"8","Circuit Name In Use"},
+    {"9","PVC LCN Out Of Range"},
+    {"10","X.25 Parameter Invalid"},
+    {"11","Circuit Opening Timeout"},
+    {"12","X.25 Clear DTE No Reason"},
+    {"13","Configuration Mismatch"},
+    {"14","No Resources Available"},
+    {"15","Incompatible A1 A2"},
+    {"16","Circuit Idle"},
+    {"17","Peer Down"},
+    {"18","No ASCUS Configured"},
+    {"19","X.25 Clear, Host Unknown"},
+    {"20","X.25 Clear, Host Down"},
+    {"21","X.25 Clear, Host Disabled"},
+    {"22","X.25 Clear, Host Saturated"},
+    {"23","X.25 Clear, Caller Unknown"},
+    {"24","X.25 Clear, Caller Unauthorized"},
+    {"25","X.25 Clear, Configuration Rejected"},
+    {"26","X.25 Clear, Configuration Fallback"},
+    {"27","X.25 Clear, Configuration Incompatible"},
+    {"28","X.25 Clear, HLD Unknown"},
+    {"29","X.25 Clear, PID Unknown"},
+    {"30","X.25 Clear, Facility Rejected"},
+    {"31","X.25 Clear, Network No Reason"},
+    {"32","PVC LCN In Use"},
+    {"33","No SVC LCN Available"},
+    {"34","Peer Idle"},
+    {"35","Pres. Unknown"},
+    {"36","Pres. Mismatch"},
+    {"37","Open Msg Too Short"},
+    {"38","MPX Unknown"},
+    {"39","MPX Header Mismatch"},
+    {"40","Traffic Type Mismatch"},
+    {"41","Coding Mismatch"},
+    {"42","ASCU In Session"}
+}
+default = "Unknown"
+
+table CctCallCategory = ### Represents possible call categories or types.
+{
+    {"1","None"}, ### No call category associated with call
+    {"2","Other"}, ### None of the following
+    {"3","Modem"}, ### Modem call
+    {"4","ISDN Sync"}, ### ISDN sync digital call
+    {"5","V.110"}, ### V110 Call
+    {"6","V.120"}, ### V120 Call
+    {"7","CAS 56k Data"} ### Channel Associated Signaling (CAS) 56k data call
+}
+default = "Unknown"
+
+table ccmFailCauseCode =
+{
+    ##########
+    # The Cause code of the failure. This cause is derived from a monitoring
+    # thread in the CallManager or from a heartbeat monitoring process.
+    ##########
+
+    {"1","Unknown"}, ### Unknown
+    {"2","Heartbeat Stopped"}, ### The CallManager stops generating a heartbeat
+    {"3","Router thread Died"}, ### The CallManager detects the death of the router thread
+    {"4","Timer Thread Died"}, ### The CallManager detects the death of the timer thread
+    {"5","Critical Thread Died"}, ### The CallManager detects the death of one of its critical threads
+    {"6","Device Manager Init Failed"}, ### The CallManager fails to start its device manager subsystem
+    {"7","Digital Analysis Init Failed"}, ### The CallManager fails to start its digit analysis subsystem
+    {"8","Call Control Init Failed"}, ### The CallManager fails to start its call control subsystem
+    {"9","Link Manager Init Failed"}, ### The CallManager fails to start its link manager subsystem
+    {"10","DB Manager Init Failed"}, ### The CallManager fails to start its database manager subsystem
+    {"11","Message Translator Init Failed"}, ### The CallManager fails to start its message translation manager subsystem
+    {"12","Supplementary Services Init Failed"} ### The CallManager fails to start its supplementary services subsystem
+}
+default = "Unknown"
+
+table CcmDevFailCauseCode =
+{
+    ##########
+    # This syntax is used as means of identifying the reasons for a device
+    # communication error. The devices that this syntax is trying to address is
+    # an IP Phone or a Gateway.
+    ##########
+    
+    {"1","Unknown"}, ### Unknown error cause.
+    {"2","No Entry In Database"}, ### Device not configured properly in the CCM database.
+    {"3","Database Configuration Eror"}, ### Device configuration error in the CCM database.
+    {"4","Device Name Unresolveable"}, ### The CallManager is unable to resolve the device name to an IP Address internally.
+    {"5","Max Device Registration Reached"}, ### Maximum number of device registrations have been reached.
+    {"6","Connectivity Error"}, ### CallManager is unable to establish communication with the device during registration.
+    {"7","Initialization Error"} ### Indicates an error occured when the CallManager tries to initialize the device.
+}
+default = "Unknown"
+
+table ccmMediaResourceType = ### Resource Types in a CallManager System.
+{
+    {"1","Unknown Resource Type"},
+    {"2","Media Termination Point"},
+    {"3","Transcoder"},
+    {"4","Conference Bridge"},
+    {"5","Music On Hold"}
+}
+default = "Unknown Resource Type"
+
+table SecurityEvent =
+{
+    ##########
+    # This textual convention is used to describe various security-related
+    # events and statistics on a firewall.
+    ##########
+
+    {"1","Generic Attack Event"}, ### other - Generic attack event.
+    {"2","No Attack is Occurring, Informational Event"}, ### none - No attack is occurring, an informational event.
+    {"3","Denial of Service Attack Detected"}, ### dos - A denial of service attack has been detected.
+    {"4","Pattern of Reconnaissance Activity Detected"}, ### recon - A pattern of reconnaissance activity has been detected.
+    {"5","Packet Forwarding Attack Detected"}, ### pakFwd - A packet forwarding attack has been detected.
+    {"6","Spoofed Address Detected"}, ### addrSpoof - A spoofed address has been detected.
+    {"7","Spoofed Service Detected"}, ### svcSpoof - A spoofed service (eg., DNS) has been detected.
+    {"8","Site Being Used for Attack on Another Network"}, ### thirdParty - This site is being used as a third-party for an attack on another network. For example, the 'smurf' attack or email spamming.
+    {"9","Attack Terminated"}, ### complete - An attack has terminated
+    {"10","Invalid Packet with Attack Characteristics Detected"}, ### invalPak - An invalid packet with attack characteristics has been detected.
+    {"11","Illegal Command Found"}, ### illegCom - An illegal command has been found.
+    {"12","Attempt Made to Violate a Security Policy"} ### policy - An attempt has reen made to violate a security policy.
+}
+default = "Unknown"
+
+table ContentInspectionEvent =
+{
+    ##########
+    # Content inspection events, these events report that something was found
+    # in the application payload. The details entry in the event can report on
+    # what was found (eg., virus, company private info., etc), what it was
+    # found in (eg., html, win32 executable, e-mail), and what was done with it
+    # (eg., the quarantine location).
+    ##########
+
+    {"1","Content Inpection Event"}, ### other - A content inspection event. Used to indicate that some content inspection has occurred that is not covered by the other content inspection enumerations.
+    {"2","Content Check OK"}, ### okay - The check of the content was okay, nothing 'bad' was found.
+    {"3","Error while Checking Content"}, ### error - There was an error while checking the content.
+    {"4","Content Merits Attention"}, ### found - Something was found that the content inspection engine has determined merits attention.
+    {"5","Content Neutralized, Violated Security Policy"}, ### clean - The content inspection engine has found something that violates the security policy and has neutralized the content in the data flow.
+    {"6","Content Discarded, Violated Security Policy"}, ### reject - The content inspection engine has found something that violates the security policy and has discarded the content.
+    {"7","Content Quarantined, Violated Security Policy"} ### saved - The content inspection engine has found something that violates the security policy and has stored it in a quarantine storage area.
+}
+default = "Unknown"
+
+table ConnectionEvent =
+{
+    ##########
+    # This textual convention is used to describe various events and statistics
+    # that are related to the connections that occur on a firewall.
+    ##########
+        
+    {"1","Generic Connection Event"}, ### other - A generic connection event.
+    {"2","Connection Has Been Accepted"}, ### accept - A connection has been acccepted.
+    {"3","Connection Error"}, ### error - An error has occurred for a connection.
+    {"4","Connection Dropped"}, ### drop - The connection has been dropped.
+    {"5","Connection Closed"}, ### close - A connection has been closed.
+    {"6","Connection Timed Out"}, ### timeout - A connection has been timed out.
+    {"7","Connection Refused"}, ### refused - A connection has been refused.
+    {"8","Connection Reset"}, ### reset - A connection has been reset.
+    {"9","Connection Received No Response"} ### noResp - A connection has received no response.
+}
+default = "Unknown"
+
+table AccessEvent =
+{
+    ##########
+    # This textual convention is used to describe various events and statistics
+    # that are related to the access control on a firewall.
+    ##########
+
+    {"1","Miscellaneous Access Event"}, ### other - Miscellaneous access event.
+    {"2","Service Access Allowed"}, ### grant - A service has allowed access based on all of its access checks.
+    {"3","Service Access Denied"}, ### deny - A client was denied use of a service.
+    {"4","Multiple Service Access Denials"}, ### denyMult - A client was denied use of a service multiple times.
+    {"5","Error During Access Control Process"} ### error - An error has ocurred during the access control process.
+}
+default = "Unknown"
+
+table AuthenticationEvent =
+{
+    ##########
+    # This textual convention is used to describe various events and statistics
+    # that are related to authorization.
+    ##########
+    
+    {"1","Miscellaneous Authentication Event"}, ### other - Miscellaneous authentication event.
+    {"2","Client Successfuly Authenticated"}, ### succ - A client successfuly authenticated.
+    {"3","Error While Authenticating"}, ### error - Error while authenticating.
+    {"4","Client Failed Authentication"}, ### fail - A client failed an authenticating.
+    {"5","Client Granted Special Privileges"}, ### succPriv - A client accessed a service with special privileges.
+    {"6","Client Denied Special Privileges."}, ### failPriv - A client failed to access a service with special privileges.
+    {"7","Client Failed Multiple Authentication Attempts"} ### failMult - Multiple failed authentication attempts by a client.
+}
+default = "Unknown"
+
+table GenericEvent =
+{
+    ##########
+    # Generic Events - events for which there is no more specific enumeration.
+    ##########
+
+    {"1","Abnormal Event"}, ### abnormal - An abnormal event has occurred that is neither 'okay' nor an 'error'.
+    {"2","Event Cleared"}, ### okay - A normal event occurred or the system has changed from an abnormal state to a normal state.
+    {"3","Error Occured"} ### error - An error event occurred.
+}
+default = "Unknown"
+
+table CgkNAddressTag =
+{
+    ##########
+    # A tag to identify the type of the network address contained in the
+    # CgkNAddress textual convention defined in this specification.  All
+    # CgkNAddress values are in network byte order.
+    ########## 
+
+    {"0","Other"}, ### other
+    {"1","IPv4"}, ### ipv4
+    {"2","IPv6"}, ### ipv6
+    {"3","IPX"}, ### ipx
+    {"4","NSAP"} ### nsap
+}
+default = "Unknown"
+
+table cgkHistoryEventEndpointType =
+{
+    ##########
+    # The type of the endpoint that triggered the register or unregister event.
+    #
+    #   none       - No endpoint is associated with this event.
+    #   other      - An endpoint type other than the ones listed below.
+    #   gatekeeper - The endpoint is a Gatekeeper.
+    #   gateway    - The endpoint is a Gateway (and not a proxy).
+    #   mcu        - The endpoint is a Multipoint Control Unit.
+    #   terminal   - The endpoint is an H.323 terminal.
+    #   proxy      - The endpoint is a Proxy.
+    ##########
+    
+    {"1","None"},
+    {"2","Other"},
+    {"3","Gatekeeper"},
+    {"4","Gateway"},
+    {"5","Multipoint Control Unit"},
+    {"6","H.323 Terminal"},
+    {"7","Proxy"}
+}
+default = "Unknown"
+
+table cgkHistoryEventType =
+{
+    {"1","Other Event"}, ### other - An event other than the ones listed below.
+    {"2","Registered"}, ### register - A full RRQ was received by the gatekeeper to register a previously unregistered endpoint.
+    {"3","Unregistered"}, ### unregister - An endpoint was unregistered because it sent a URQ to the gatekeeper.
+    {"4","Unregister Forced"}, ### unregisterForced - The gatekeeper sent a URQ to the endpoint.
+    {"5","Overload"} ### overload - The gatekeeper has detected sustained overload. A sustained overload condition will cause the gatekeeper to reject calls.
+}
+default = "Unknown"
+
+table CifthThresholdSeverity =
+{
+    ##########
+    # The severity of the condition when the threshold is fired. A smaller
+    # enumerated integer value indicates that the threshold exceeded condition
+    # is more severe.
+    #
+    # The value 'fail' indicates a hard failure condition where no data can be
+    # received, or where the data received has a large number of errors which
+    # makes it impossible to recover most of the data.
+    #
+    # The value 'degrade' indicates a soft failure condition in which data
+    # received on this interface is affected, but a significant portion of the
+    # data can be recovered.
+    #
+    # The value 'info' is used to raise attention to a condition that could
+    # possibly be an impending problem or to notify the customer of an event
+    # that improves operation.
+    ##########
+
+    {"1","Fail"},
+    {"2","Degrade"},
+    {"3","Info"},
+    {"4","Other"}
+}
+default = "Unknown"
+
+table cItpSpLinkStateReason = ### This object provides additional information on the state of a link as follows.
+{  
+    {"1","Local Inhibit"}, ### localInhibit - Link has been inhibited by a local management operation.
+    {"2","Remote Inhibit"}, ### remoteInhibit - Link has been inhibited by a remote management operation.
+    {"4","Blocked, Remote Processor Outage"} ### blocked - Link is blocked because of a remote processor outage.
+}
+default = "Unknown"
+
+table cpimRPMappingChangeType =
+{
+    ##########
+    # Describes the operation that resulted in generation of
+    # cpimRPMappingChange notification.
+    #
+    # newMapping - as the name suggests indicates that a new mapping has been
+    #   added into the pimRPSetTable.
+    # deletedMapping - indicates that a mapping has been deleted from the
+    #   pimRPSetTable.
+    # modifiedXXXMapping - indicates that an RP mapping (which already existed
+    #   in the table) has been modified. The two modifications types i.e.
+    #   modifiedOldMapping and modifiedNewMapping, are defined to differentiate
+    #   the notification generated before modification from that generated
+    #   after modification.
+    ##########
+    
+    {"1","New Rendezvous Point Mapping"}, ### newMapping
+    {"2","Rendezvous Point Mapping Deleted"}, ### deletedMapping
+    {"3","Rendezvous Point Mapping Modified"}, ### modifiedOldMapping
+    {"4","Rendezvous Point Mapping Modified"} ### modifiedNewMapping
+}
+default = "Unknown"
+
+table RFSwactReasonType =
+{
+    ##########
+    # Reason codes for the switch of activity from an active redundant unit to
+    # its standby peer unit.
+    ##########
+    
+    {"1","Unsupported"}, ### unsupported - the 'reason code' is an unsupported feature
+    {"2","No SWACT Occurred"}, ### none - no SWACT has occurred
+    {"3","Unknown"}, ### notKnown - reason is unknown
+    {"4","User Initiated"}, ### userInitiated - a safe, manual SWACT was initiated by user
+    {"5","User Forced"}, ### userForced - a manual SWACT was forced by user; ignoring pre-conditions, warnings and safety checks
+    {"6","Unit Failure"}, ### activeUnitFailed - active unit failure caused an auto SWACT
+    {"7","Unit Removed"} ### activeUnitRemoved - active unit removal caused an auto SWACT
+}
+default = "Unknown"
+
+Table RFState =
+{
+    ##########
+    # The current state of the RF subsystem.
+    ##########
+
+    {"1","Unknown"}, ### notKnown - state is unknown
+    {"2","Disabled"}, ### disabled - RF is not operational on this unit
+    {"3","Initialization"}, ### initialization - establish necessary system services
+    {"4","Negotiation"}, ### negotiation - peer unit discovery and negotiation
+    {"5","Standby Cold"}, ### standbyCold - client notification on standby unit
+    {"6","Standby Cold Config"}, ### standbyColdConfig - standby cfg is updated from active cfg
+    {"7","Standby Cold File System"}, ### standbyColdFileSys - standby file system (FS) is updated from the active FS
+    {"8","Standby Cold Bulk"}, ### standbyColdBulk - clients sync data from active to standby
+    {"9","Standby Hot"}, ### standbyHot - incremental client data sync continues. This unit is ready to take over activity.
+    {"10","Active Fast"}, ### activeFast - call maintenance efforts during a SWACT
+    {"11","Active Drain"}, ### activeDrain - client clean-up phase
+    {"12","Active Pre-Config"}, ### activePreconfig - unit is active but has not read its configuration
+    {"13","Active Post-Config"}, ### activePostconfig - unit is active and is post-processing its configuration
+    {"14","Active"}, ### active - unit is active and processing calls
+    {"15","Active Extra Load"}, ### activeExtraload - unit is active and processing calls for all feature boards in the system
+    {"16","Active Handback"} ### activeHandback - unit is active, processing calls and is in the process of handing some resources to the other unit in the system
+}
+default = "Unknown"
+
+table IpsMode =
+{
+    ##########
+    # An Intelligent Protection Switching mode.
+    #
+    # An SRP ring provides redundancy and protection from a failed node or a
+    # link/fiber cut through the use of IPS modes that are automatic or
+    # operator/user-configured.  Automatic IPS modes take effect when the ring
+    # detects an event, a fiber cut, or a node failure and remain in effect
+    # until the wait-to-restore value expires.  As the protection requests
+    # travel around the ring, the protection hierarchy is applied.  All modes
+    # are signalled on the IPS messaging channel. If an node or fiber facility
+    # failure is detected, traffic going toward or coming from the failure
+    # direction is wrapped (looped) back to go in opposite direction on the
+    # other ring.  The wrap around takes place on the nodes adjacent to the
+    # failure.  This way the traffic is re-routed from the failed span.
+    #
+    # The ISP modes starting from the highest to the lowest level in the IPS
+    # protection hierarchy are:
+    #
+    # (1)noRequest(normal) - a mode which can be configured by an operator, and/or is in
+    #      effect when no other mode has been automatically detected/invoked.
+    # (2)waitToRestore - an automatically-invoked mode which results in a
+    #      waiting period after the working channel meets the restoration
+    #      criteria after a signal fail or signal degrade condition disappears
+    #      to prevent protection switch oscilation.
+    # (3)manualSwitch - an operator-configured mode which causes a low-priority
+    #      protection switch wrap on each end of a specified span.
+    # (4)signalDegrade - an automatically-detected mode which causes protection
+    #      switch wraps on a span when a media signal degrade is detected due
+    #      to excessive Bit Error Rate.
+    # (5)signalFail - an automatically-detected mode which causes a protection
+    #      switch wrap on a span when a media signal failure is detected.
+    # (6)forcedSwitch - an operator-configured mode which causes a
+    #      high-priority protection switch wrap on each end of a specified
+    #      span.
+    ##########
+    
+    {"1","No Request"}, ### noRequest - lowest priority protection request
+    {"2","Wait to Restore"}, ### waitToRestore
+    {"3","Manual"}, ### manualSwitch
+    {"4","Signal Degraded"}, ### signalDegrade
+    {"5","Signal Failed"}, ### signalFail
+    {"6","Forced Switch"} ### forcedSwitch - highest priority protection request
+}
+default = "Unknown"
+
+table stpxSpanningTreeType =
+{
+    ##########
+    # The actual mode of spanning tree protocol runs on the  device. It can be
+    # either PVST+ (Per VLAN Spanning Tree+ Protocol), MISTP (Multi Instance
+    # Spanning Tree Protocol) or MISTP with the tunneling scheme enabled for
+    # PVST+. When the value of this MIB object gets changed, all ports will
+    # start with blocking state under the new spanning tree mode and the 
+    # network connectivity would be affected and the connectivity to this
+    # device would also be lost temporarily.
+    ##########
+    
+    {"1","PVST+"}, ### pvstPlus
+    {"2","MISTP"}, ### mistp
+    {"3","MISTP with PVST+ Tunneling"} ### mistpPvstPlus
+}
+default = "Unknown"
+
+table ciscoTsStackSwitchPwrSupplyStatus =
+{
+    ##########
+    # The status of the power supply of the switch. The values have the
+    # following meanings:
+    #
+    # unknown(1) - The status is not known.
+    #
+    # internal-only(2) - The switch is not capable of redundant power.
+    #
+    # internal-no-backup(3) - The switch is capable of redundant power, but is
+    #   currently operating on the internal supply with no RPS attached.
+    #
+    # internal-backup-will-reset(4) - The switch is capable of redundant power
+    #   and is currently opertaing on the internal supply. A RPS is attached,
+    #   but if the internal supply fails there will be a reset.
+    #
+    # external-no-backup(5) - The switch is capable of redundant power and is
+    #   currently operating on a single external RPS connection.
+    #
+    # external-backup-no-reset(6) - The switch is capable of redundant power
+    #   and is currently operating with a y-connected external RPS. If one
+    #   supply in the RPS fails there will be no interuption of operation.
+    ##########
+    
+    {"1","Unknown"}, ### unknown
+    {"2","Internal Only"}, ### internal-only
+    {"3","Internal-No Backup"}, ### internal-no-backup
+    {"4","Internal-Backup will Reset"}, ### internal-backup-will-reset
+    {"5","External-No Backup"}, ### external-no-backup
+    {"6","External-Backup no Reset"} ### external-backup-no-reset
+}
+default = "Unknown"
+
+table cvaModuleFailureCause =
+{
+    ##########
+    # The application module failure cause code.  This is used by cvaModuleStop
+    # to indicate reason of module stop if known.
+    ##########
+  
+    {"1","Other Failure"}, ### other - Other unspecified failure cause.
+    {"2","Graceful Shutdown"}, ### gracefulShutDown - Module is gracefully shutdown.
+    {"3","Heartbeat Failure"}, ### heartBeatFailure - Module heartbeat stopped is detected.
+    {"4","Initialization Failure"}, ### initFailure - Module is failed during initialization.
+    {"5","Out of Resource"}, ### outOfResource - Module is failed due to out of resource.
+    {"6","Partial Failure"} ### partialFailure - Module partially failure is detected.
+}
+default = "Unknown"
+
+table cvaModuleRunTimeFailureCause =
+{
+    ##########
+    # The application module run-time failure cause code.
+    ##########
+    
+    {"1","Failure, Other"}, ### other - Other or unspecified failure.
+    {"2","Read Access Failure"}, ### readAccessFailure - Read Access failure.
+    {"3","Write Access Failure"}, ### writeAccessFailure - Write Access failure.
+    {"4","Resource Create Failure"}, ### createFailure - Resource Creation failure.
+    {"5","Resource Delete Failure"}, ### deleteFailure - Resource Deletion failure.
+    {"6","Update Failure"}, ### updateFailure - Update failure.
+    {"7","Initialization Failure"}, ### initFailure - Initialization failure.
+    {"8","Resource Load Failure"}, ### loadFailure - Resource Load failure.
+    {"9","Out of Resource"}, ### outOfResource - Out of Resource.
+    {"10","Call Processing Failure"}, ### callProcessFailure - Call Processing failure.
+    {"11","Registration Failure"}, ### registrationFailure - Registration failure.
+    {"12","De-Registration Failure"}, ### deRegistrationFailure - De-Registration failure.
+    {"13","Connection Failure"}, ### connectionFailure - Connection failure.
+    {"14","Disconnection Failure"}, ### disconnectionFailure - Disconnection failure.
+    {"15","Unknown Target"}, ### unknownTarget - Unknown Target/destination.
+    {"16","Unreachable Target"} ### unReacheableTarget - UnReacheable Target/destination.
+}
+default = "Unknown"
+
+table CvcCoderTypeRate =
+{
+    ##########
+    # Represents the coder type-rate for voice/fax compression used during a
+    # call.
+    ##########
+
+    {"1","Other"}, ### other - none of the following
+    {"2","Fax 2400bps"}, ### fax2400
+    {"3","Fax 4800bps"}, ### fax4800
+    {"4","Fax 7200bps"}, ### fax7200
+    {"5","Fax 9600bps"}, ### fax9600
+    {"6","Fax 14400bps"}, ### fax14400
+    {"7","Fax 12000bps"}, ### fax12000
+    {"10","G.729 8000bps"}, ### g729r8000
+    {"11","G.729 ANNEX-A 8000bps"}, ### g729Ar8000
+    {"12","G.726 16000bps"}, ### g726r16000
+    {"13","G.726 24000bps"}, ### g726r24000
+    {"14","G.726 32000bps"}, ### g726r32000
+    {"15","G.711 u-Law 64000bps"}, ### g711ulawr64000
+    {"16","G.711 A-Law 64000bps"}, ### g711Alawr64000
+    {"17","G.728 16000bps"}, ### g728r16000
+    {"18","G.723.1 6300bps"}, ### g723r6300
+    {"19","G.723.1 5300bps"}, ### g723r5300
+    {"20","GSM 13200bps"}, ### gsmr13200 - GSM Full Rate 13200bps
+    {"21","G.729 ANNEX-B 8000bps"}, ### g729Br8000
+    {"22","G.729 ANNEX-A & B 8000bps"}, ### g729ABr8000
+    {"23","G.723.1 Annex-A 6300bps"}, ### g723Ar6300
+    {"24","G.723.1 Annex-A 5300bps"}, ### g723Ar5300
+    {"25","G.729 8000bps"} ### ietfg729r8000
+}
+default = "Unknown"
+
+table cwdxHeSuStatusValue = 
+{
+    ##########
+    # Current Subscriber-unit connectivity state. The object extends states in
+    # cwdIfHeSuStatusValue in more detail.
+    #
+    # The ranging, rangingAborted, rangingComplete, and ipComplete states in
+    # cwdIfHeSuStatusValue are all represented by the 'others' value in this
+    # object. The registrationComplete state in cwdIfHeSuStatusValue could be
+    # online, onlineNetAccessDisabled, onlineKekAssigned, or onlineTekAssigned
+    # in this object. The accessDenied state in cwdIfHeSuStatusValue could be
+    # rejectBadMic, rejectBadCos in this object for the possible reasons of
+    # Subscriber-unit registration abort. The HE only reports states it is able
+    # to detect.
+    ##########
+    
+    {"1","Offline"}, ### offline - SU considered offline.
+    {"2","Others"}, ### others - states is in cwdIfHeSuStatusValue.
+    {"3","Sent Initial Ranging"}, ### initRangingRcvd - SU sent initial ranging.
+    {"4","Sent DHCP Request"}, ### initDhcpReqRcvd - dhcp request received.
+    {"5","Online, Network Access Disabled"}, ### onlineNetAccessDisabled - SU registered, but network access for the SU is disabled.
+    {"6","Online, BPI enabled and KEK assigned"}, ### onlineKekAssigned - SU registered, BPI enabled and KEK assigned.
+    {"7","Online, BPI enabled and TEK assigned"}, ### onlineTekAssigned - SU registered, BPI enabled and TEK assigned.
+    {"8","Rejected, Bad MIC"}, ### rejectBadMic - SU did attempt to register but registration was refused due to bad MIC (Message Integrity Check).
+    {"9","Rejected, Bad COS"}, ### rejectBadCos - SU did attempt to register but registration was refused due to bad COS (Class of Service).
+    {"10","KEK Key Assignment Rejected"}, ### kekRejected - KEK (Key Encryption Key) SU key assignment rejected.
+    {"11","TEK Key Assignment Rejected"}, ### tekRejected - TEK (Traffic Encryption Key) SU key assignment rejected.
+    {"12","Online"}, ### online - SU registered, enabled for data.
+    {"13","TFTP File Transfer Started"}, ### initTftpPacketRcvd - tftp packet received and option file transfer started.
+    {"14","Sent Time of Day Request"} ### initTodRquestRcvd - Time of the Day (TOD) request received.
+}
+default = "Unknown"     
+
+table cwdxHeSuChOverState =
+{
+    ##########
+    # The status of the specified channel override operation.
+    #
+    # messageSent(1) - the HE has sent a RNG-RSP message with channel override
+    #   to the Subscriber-unit.
+    # commandNotActive(2) - the command is not in active mode due to this
+    #   entry's row status is not in active yet.
+    # noOpNeeded(3) - The downstream frequency and the upstream channel Id in
+    #   this entry are the same as original ones when this entry's row status
+    #   is set to active, so HE does not need to do any operation.  
+    # SuNotFound(4) - The SU is not found in the HE at the time when the
+    #   command becomes active.
+    # waitToSendMessage(5) - specified the operation is active and HE is
+    #   waiting to send a RNG-RSP message with channel override to the
+    #   Subscriber-unit.
+    # timeOut(6) - specified the operation is timed out. That is, the HE cannot
+    #   send a RNG-RSP message with channel override to the Subscriber-unit
+    #   within the time specified in the object of
+    #   cwdxHeSuChOverTimeExpiration. The possible reason is that the
+    #   Subscriber-unit does not repeat the initial ranging. 
+    #
+    # The possible state change diagram is as below: 
+    #   [commandNotActive ->] waitToSendMessage -> messageSent or timeOut. 
+    #   [commandNotActive ->] noOpNeeded or SuNotFound.
+    #
+    # REFERENCE - Data-Over-Cable Service Interface Specifications (DOCSIS)
+    #   Radio Frequency Interface Specification (SP-RFI-I04-980724), 6.3.2.5.3
+    #   Overriding Channels.
+    ##########
+    
+    {"1","Message Sent"}, ### messageSent
+    {"2","Command Not Active"}, ### commandNotActive
+    {"3","No Operation Needed"}, ### noOpNeeded
+    {"4","Not Found"}, ### suNotFound
+    {"5","Wait to Send Message"}, ### waitToSendMessage
+    {"6","Timeout"} ### timeOut
+}
+default = "Unknown"
+
+table CwrRfType =
+{
+    ##########
+    # Indicates if the outdoor RF unit is being used as the main RF unit or the
+    # diversity RF unit.  The main RF unit is used to receive and transmit data
+    # whereas the diversity unit is used to receive only.
+    ##########
+    
+    {"0","Main"}, ### main
+    {"1","Diversity"} ### diversity
+}
+default = "Unknown"
+
+table dspuLuOperLastActivationFailureReason =
+{
+    ##########
+    # Reason for last activation failure of this PU as follows:
+    ##########
+    
+    {"1","No LU Activation Failure"}, ### noError - No LU activation failure has been detected
+    {"2","Undefined Error"}, ### otherError - Undefined error detected during LU activation
+    {"3","Negative ACTLU Response"}, ### luNegativeResponse - Negative ACTLU response received from remote LU
+}
+default = "Unknown"
+
+table ModuleOperType =
+{
+    ##########
+    # Operational module states. Valid values are:
+    #
+    # unknown(1) - Module is not in one of other states
+    # ok(2) - Module is operational.
+    # disabled(3) - Module is administratively disabled.
+    # okButDiagFailed(4) - Module is operational but there is some diagnostic
+    #   information available.
+    # boot(5) - Module is currently in the process of bringing up image. After
+    #   boot, it starts its operational software and transitions to the
+    #   appropriate state.
+    # selfTest(6) - Module is performing selfTest.
+    # failed(7) - Module has failed due to some condition not stated above.
+    # missing(8) - Module has been provisioned, but it is missing.
+    # mismatchWithParent(9) - Module is not compatible with parent entity.
+    #   Module has not been provisioned and wrong type of module is plugged in.
+    #   This state can be cleared by plugging in the appropriate module.
+    # mismatchConfig(10) - Module is not compatible with the current
+    #   configuration. Module was correctly provisioned earlier, however the
+    #   module was replaced by an incompatible module. This state can be
+    #   resolved by clearing the configuration, or replacing with the
+    #   appropriate module.
+    # diagFailed(11) - Module diagnostic test failed due to some hardware
+    #   failure.
+    # dormant(12) - Module is waiting for an external or internal event to
+    #   become operational
+    # outOfServiceAdmin(13) - module is administratively set to be powered on
+    #   but out of service.
+    # outOfServiceEnvTemp(14) - Module is powered on but out of service, due to
+    #   environmental temperature problem. An out-of-service module consumes
+    #   less power thus will cool down the board.
+    ##########
+    
+    {"1","Unknown"}, ### unknown(1),
+    {"2","OK"}, ### ok(2),
+    {"3","Administratively Disabled"}, ### disabled(3),
+    {"4","Operational, but Diagnostics Failed"}, ### okButDiagFailed(4),
+    {"5","Booting"}, ### boot(5),              
+    {"6","Performing Self-Test"}, ### selfTest(6),          
+    {"7","Failed"}, ### failed(7),            
+    {"8","Provisioned, but Missing"}, ### missing(8),           
+    {"9","Mismatch with Parent"}, ### mismatchWithParent(9),
+    {"10","Configuration Mismatch"}, ### mismatchConfig(10),
+    {"11","Diagnostic Test Failed, Hardware Failure"}, ### diagFailed(11),
+    {"12","Dormant, Waiting for External or Internal Event"}, ### dormant(12),
+    {"13","Out of Service, Administratively"}, ### outOfServiceAdmin(13),
+    {"14","Out Of Service, Environmental Temperature Problem"} ### outOfServiceEnvTemp(14)
+}
+default = "Unknown"
+
+table PowerOperType =
+{
+    ##########
+    # Operational FRU Status types. valid values are:
+    #
+    # offEnvOther(1) - FRU is powered off because of a problem not listed
+    #   below.
+    # on(2) - FRU is powered on.
+    # offAdmin(3) - Administratively off.
+    # offDenied(4) - FRU is powered off because available system power is
+    #   insufficient.
+    # offEnvPower(5) - FRU is powered off because of power problem in the FRU.
+    #   for example, the FRU's power translation (DC-DC converter) or
+    #   distribution failed.
+    # offEnvTemp(6) - FRU is powered off because of temperature problem.
+    # offEnvFan(7) - FRU is powered off because of fan problems.
+    ##########
+
+    {"1","Other, Powered Off"}, ### offEnvOther
+    {"2","Powered On"}, ### on
+    {"3","Powered Off, Administratively"}, ### offAdmin
+    {"4","Powered Off, Insufficient System Power"}, ### offDenied
+    {"5","Powered Off, Internal Power Problem"}, ### offEnvPower
+    {"6","Powered Off, Temperature Problem"}, ### offEnvTemp
+    {"7","Powered Off, Fan Problem"} ### offEnvFan
+}
+default = "Unknown"
+
+table PowerAdminType =
+{
+    ##########
+    # Administratively desired FRU power state types. Valid values are:
+    #
+    # on(1) - Turn FRU on.
+    # off(2) - Turn FRU off.
+    #
+    # The inline power means that the FRU itself won't cost any power, but the
+    # external device connecting to the FRU will drain the power from FRU. For
+    # example, the IP phone device. The FRU is a port of a switch with voice
+    # ability and IP phone will cost power from the port once it connects to
+    # the port.
+    #
+    # inlineAuto(3) - Turn FRU inline power to auto mode. It means that the FRU
+    #   will try to detect whether the connecting device needs power or not. If
+    #   it needs power, the FRU will supply power. If it doesn't, the FRU will
+    #   treat the device as a regular network device.
+    # inlineOn(4) - Turn FRU inline power to on mode. It means that once the
+    #   device connects to the FRU, the FRU will always supply power to the
+    #   device no matter the device needs the power or not.
+    ##########
+    
+    {"1","On"}, ### on
+    {"2","Off"}, ### off
+    {"3","Inline Power Automatic"}, ### inlineAuto
+    {"4","Inline Power On"} ### inlineOn
+}
+default = "Unknown"
+
+table cefcPhysicalStatus =
+{
+    ##########
+    # The status of this physical entity.
+    #
+    # other(1) - the status is not any of the listed below.
+    # supported(2) - this entity is supported.
+    # unsupported(3) - this entity is unsupported.
+    # incompatible(4) - this entity is incompatible.
+    #
+    # It would be unsupported(3), if the ID read from Serial EPROM is not
+    # supported. It would be incompatible(4), if in the present configuration
+    # this FRU is not supported.
+    ##########
+    
+    {"1","Other"}, ### other
+    {"2","Supported"}, ### supported
+    {"3","Unsupported"}, ### unsupported
+    {"4","Incompatible"} ### incompatible
+}
+default = "Unknown"
+
+table cefcFanTrayOperStatus =
+{
+    ##########
+    # The operational Fan Tray state.
+    #
+    # unknown(1) - Fan Tray state unknown.
+    # up(2) - Fan Tray is powered on.
+    # down(3) - Fan Tray is powered down.
+    ##########
+    
+    {"1","Unknown"}, ### unknown
+    {"2","Up"}, ### up
+    {"3","Down"} ### down           
+}
+default = "Unknown"
+
+table ciscoExtScsiLunDiscStatus =
+{
+    ##########
+    # This object indicates the outcome of the LUN discovery on the local
+    # switch. This object contains the status of the most recent discovery.
+    #
+    # inProgress(1) - indicates that the discovery is still in progress.
+    # completed(2)  - indicates that the discovery is complete.
+    # failure(3)    - indicates that the discovery encountered a failure.
+    ##########
+    
+    {"1","In Progress"}, ### inProgress
+    {"2","Completed"}, ### completed
+    {"3","Failure"} ### failure
+}
+default = "Unknown"
+
+table fcTrunkIfOperStatus =
+{
+    ##########
+    # The operational state of a VSAN on this port. If the port is in trunking
+    # mode, it is possible that the port state may be 'down(2)' only in some
+    # VSANs. If this port is down in this VSAN only then port state shown by
+    # 'ifOperStatus' may not be 'down(2)', but this object will show 'down(2)'.
+    # The 'fcTrunkIfOperStatusCause' object shows the reason for port being
+    # 'down(2)'.
+    ##########
+    
+    {"1","Up"}, ### up
+    {"2","Down"} ### down
+}
+default = "Unknown"
+
+table FcIfOperStatusReason =
+{
+    ##########
+    # The cause of current operational state of the port.
+    #
+    # 'other(1)' - reasons other than defined here.
+    # 'none(2)' - no failure
+    # 'hwFailure(3)' - hardware failure.
+    # 'loopbackDiagFailure(4)' - loopback diagnostics failure.
+    # 'errorDisabled(5)' - the port is not operational due to some error
+    #   conditions that require administrative attention.
+    # 'swFailure(6)' - software failure.
+    # 'linkFailure(7)' - physical link failure.
+    # 'offline(8)' -  physical link is in offline state as defined in the FC-FS
+    #   standards.
+    # 'nonParticipating(9)' - during loop initialization, the port is not
+    #   allowed to participate in loop operations.
+    # 'initializing(10)' - port is being initialized.
+    # 'vsanInactive(11)' - port VSAN is inactive. The port becomes operational
+    #   again when the port VSAN is active.
+    # 'adminDown(12)' - 'ifAdminStatus' is down(2).
+    # 'channelAdminDown(13)' - this port is a member of a port channel and that
+    #   port channel's ifAdminStatus is 'down(2)'.
+    # 'channelOperSuspended(14)' - this port is a member of a port channel and
+    #   its operational parameters are incompatible with the port channel
+    #   parameters.
+    # 'channelConfigurationInProgress(15)' - this port is undergoing a port
+    #   channel configuration.
+    # 'rcfInProgress(16)' -  an isolated xE_port is transmiting an reconfigure
+    #   fabric, requesting a disruptive reconfiguration in an attempt to build
+    #   a single, non-isolated fabric. Only the Interconnect_Ports can become
+    #   isolated.
+    # 'elpFailureIsolation(17)' - during a port initialization the prospective
+    #   Interconnect_Ports find incompatible link parameters.
+    # 'escFailureIsolation(18) - during a port initialization the prospective
+    #   Interconnect_Ports are unable to proceed with initialization as a
+    #   result of Exchange Switch Capabilities (ESC).
+    # 'domainOverlapIsolation(19)' - there is a overlap in domains while
+    #   attempting to connect two existing fabrics.
+    # 'domainAddrAssignFailureIsolation(20)' - the elected principal switch is
+    #   not capable of performing domain address manager functions so no
+    #   Nx_port traffic can be forwarded across switches, hence all
+    #   Interconnect_Ports in the switch are isolated.
+    # 'domainOtherSideEportIsolation(21)' - the peer e-port is isolated.
+    # 'domainInvalidRCFReceived(22)' - Invalid rcf received.
+    # 'domainManagerDisabled(23) - domain manager is disabled.
+    # 'zoneMergeFailureIsolation(24)' - the two Interconnect_Ports cannot merge
+    #   zoning configuration after having exchanged merging request for zoning.
+    # 'vsanMismatchIsolation(25)' - this vsan is not configured on both sides
+    #   of a trunk port.
+    # 'parentDown(26)' - the physical port to which this interface is bound is
+    #   down.
+    # 'srcPortNotBound(27)'- no source port is specified for this interface.
+    # 'interfaceRemoved(28)' - interface is being removed.
+    # 'fcotNotPresent(29)' - fcot(GBIC) not present.
+    # 'fcotVendorNotSupported(30)' - fcot(GBIC) vendor is not supported. 
+    # 'incompatibleAdminMode(31)' - port admin mode is incompatible with port
+    #   capabilities. 
+    # 'incompatibleAdminSpeed(32)' - port speed is incompatible with port
+    #   capabilities. 
+    # 'suspendedByMode(33)' - port that belongs to a  port channel is suspended
+    #   due to incompatible operational mode.                         
+    # 'suspendedBySpeed(34)' - port that belongs to a port channel is suspended
+    #   due to incompatible operational speed.
+    # 'suspendedByWWN(35)' - port that belongs to a port channel is suspended
+    #   due to incompatible remote switch WWN.
+    # 'domainMaxReTxFailure(36)' - domain manager failure after maximum retries.
+    # 'eppFailure(37)' - trunk negotiation protocol failure after maximum
+    #   retries.
+    # 'portVsanMismatchIsolation(38)' - an attempt is made to connect two
+    #   switches using non-trunking ports having different port VSANs. 
+    # 'loopbackIsolation(39)' - port is connected to another port in the same
+    #   switch.
+    # 'upgradeInProgress(40)' - linecard upgrade in progress.
+    # 'incompatibleAdminRxBBCredit(41)' - receive BB credit is incompatible.
+    # 'incompatibleAdminRxBufferSize(42)' - receive buffer size is
+    #   incompatible.
+    # 'portChannelMembersDown(43)' - no operational members.
+    # 'zoneRemoteNoRespIsolation(44)' - isolation due to remote zone server not
+    #   responding.
+    # 'firstPortUpAsEport(45)' - in a over subscribed line card, when the first
+    #   port in a group is up in E mode, other ports in that group cannot be
+    #   brought up.
+    # 'firstPortNotUp(46)' - in a over subscribed line card, first port cannot
+    #   be brought up in E-mode when the other ports in the group are up.
+    # 'peerFCIPPortClosedConnection(47)' - port went down because peer FCIP
+    #   port closed TCP connection.    
+    # 'peerFCIPPortResetConnection(48)' - port went down because the TCP
+    #   connection was reset by the peer fcip port.
+    # 'fcipPortMaxReTx(49)' - fcip port went down due to max tcp
+    #   re-transmissions reached the configured limit.
+    # 'fcipPortKeepAliveTimerExpire(50)' - fcip port went down due to TCP keep
+    #   alive timer expired.
+    # 'fcipPortPersistTimerExpire(51)' - fcip port went down due to TCP persist
+    #   timer expired.
+    # 'fcipPortSrcLinkDown(52)' - fcip port went down due to ethernet link
+    #   down.
+    # 'fcipPortSrcAdminDown(53)' - fcip port went down because the source
+    #   ethernet link was administratively shutdown.
+    # 'fcipPortAdminCfgChange(54)' - fcip port went down due to configuration
+    #   change.
+    # 'fcipSrcPortRemoved(55)' - fcip port went down due to source port
+    #   removal.
+    # 'fcipSrcModuleNotOnline(56)' - fcip port went down due to source module
+    #   not online.
+    # 'invalidConfig(57)' - this port has a misconfiguration with respect to
+    #   port channels.
+    # 'portBindFailure(58)' - port got isolated due to port bind failure.  
+    # 'portFabricBindFailure(59)' - port got isolated due to fabric bind
+    #   failure.
+    # 'noCommonVsanIsolation(60)' - trunk is isolated because there are no
+    #   common vsans with peer.
+    ##########
+    
+    {"1","Other"}, ### other
+    {"2","None"}, ### none
+    {"3","Hardware Failure"}, ### hwFailure
+    {"4","Loopback Diagnostic Failure"}, ### loopbackDiagFailure
+    {"5","Error Disabled"}, ### errorDisabled
+    {"6","Software Failure"}, ### swFailure
+    {"7","Link Failure"}, ### linkFailure
+    {"8","Offline"}, ### offline
+    {"9","Non-Participating"}, ### nonParticipating
+    {"10","Initializing"}, ### initializing
+    {"11","VSAN Inactive"}, ### vsanInactive
+    {"12","Administratively Down"}, ### adminDown
+    {"13","Channel Administratively Down"}, ### channelAdminDown
+    {"14","Channel Operation Suspended"}, ### channelOperSuspended
+    {"15","Channel Configuration In Progress"}, ### channelConfigurationInProgress
+    {"16","Reconfigure Fabric In Progress"}, ### rcfInProgress
+    {"17","Exchange Link Parameters Failure Isolation"}, ### elpFailureIsolation
+    {"18","Exchange Switch Capabilities Failure Isolation"}, ### escFailureIsolation
+    {"19","Domain Overlap Isolation"}, ### domainOverlapIsolation
+    {"20","Domain Address Assignment Failure Isolation"}, ### domainAddrAssignFailureIsolation
+    {"21","Domain Peer E-Port Isolation"}, ### domainOtherSideEportIsolation
+    {"22","Domain Invalid Reconfigure Fabric Received"}, ### domainInvalidRCFReceived
+    {"23","Domain Manager Disabled"}, ### domainManagerDisabled
+    {"24","Zone Merge Failure Isolation"}, ### zoneMergeFailureIsolation
+    {"25","VSAN Mismatch Isolation"}, ### vsanMismatchIsolation
+    {"26","Parent Down"}, ### parentDown
+    {"27","Source Port Not Bound"}, ### srcPortNotBound
+    {"28","Interface Removed"}, ### interfaceRemoved
+    {"29","FCOT(GBIC) Not Present"}, ### fcotNotPresent
+    {"30","FCOT(GBIC) Vendor Not Supported"}, ### fcotVendorNotSupported
+    {"31","Incompatible Administration Port Mode"}, ### incompatibleAdminMode
+    {"32","Incompatible Administration Port Speed"}, ### incompatibleAdminSpeed
+    {"33","Suspended Incompatible Mode"}, ### suspendedByMode
+    {"34","Suspended Incompatible Speed"}, ### suspendedBySpeed
+    {"35","Suspended Incompatible WWN"}, ### suspendedByWWN
+    {"36","Domain Maximum Retransmission Failure"}, ### domainMaxReTxFailure
+    {"37","Trunk Negotiation Protocol Failure"}, ### eppFailure
+    {"38","Port VSAN Mismatch Isolation"}, ### portVsanMismatchIsolation
+    {"39","Loopback Isolation"}, ### loopbackIsolation
+    {"40","Upgrade In Progress"}, ### upgradeInProgress
+    {"41","Incompatible Receive BB Credit"}, ### incompatibleAdminRxBBCredit
+    {"42","Incompatible Receive Buffer Size"}, ### incompatibleAdminRxBufferSize
+    {"43","Port Channel Members Down"}, ### portChannelMembersDown
+    {"44","Zone Remote No Response Isolation"}, ### zoneRemoteNoRespIsolation
+    {"45","First Port Up As E-Port"}, ### firstPortUpAsEport
+    {"46","First Port Not Up"}, ### firstPortNotUp
+    {"47","Peer FCIP Port Closed Connection"}, ### peerFCIPPortClosedConnection
+    {"48","Peer FCIP Port Reset Connection"}, ### peerFCIPPortResetConnection
+    {"49","FCIP Port Maximum Retransmission"}, ### fcipPortMaxReTx
+    {"50","FCIP Port Keep Alive Timer Expired"}, ### fcipPortKeepAliveTimerExpire
+    {"51","FCIP Port Persist Timer Expired"}, ### fcipPortPersistTimerExpire
+    {"52","FCIP Port Source Link Down"}, ### fcipPortSrcLinkDown
+    {"53","FCIP Port Source Administratively Down"}, ### fcipPortSrcAdminDown
+    {"54","FCIP Administrative Port Configuration Changed"}, ### fcipPortAdminCfgChange
+    {"55","FCIP Source Port Removed"}, ### fcipSrcPortRemoved
+    {"56","FCIP Source Module Not Online"}, ### fcipSrcModuleNotOnline
+    {"57","Invalid Configuration"}, ### invalidConfig
+    {"58","Port Bind Failure"}, ### portBindFailure
+    {"59","Port Fabric Bind Failure"}, ### portFabricBindFailure
+    {"60","No Common VSAN Isolation"} ### noCommonVsanIsolation
+}
+default = "Unknown"
+
+table FcGs3RejectReasonCode =
+{
+    ##########
+    # The GS-3 reject reason code for a request.
+    #
+    # none(1)  - no error.
+    # invalidCmdCode(2) - req contains an invalid command code.
+    # invalidVerLevel(3) - req contains an invalid version number.
+    # logicalError(4) - there is a logical error.
+    # invalidIUSize(5) - Information Unit (IU) size is invalid.
+    # logicalBusy(6) - the module is busy.
+    # protocolError(7) - there is a protocol error.
+    # unableToPerformCmdReq(8) - the command specified in the req could not be
+    #   executed. The details of exactly what failed will be in the
+    #   corresponding reason code explanation.
+    # cmdNotSupported(9) - the command is not supported.
+    # vendorError(10) - specific vendor error.
+    ##########
+    
+    {"1","None"}, ### none(1),
+    {"2","Invalid Command Code"}, ### invalidCmdCode(2),
+    {"3","Invalid Version Level"}, ### invalidVerLevel(3),
+    {"4","Logical Error"}, ### logicalError(4),
+    {"5","Invalid Information Unit Size"}, ### invalidIUSize(5),
+    {"6","Logical Busy"}, ### logicalBusy(6),
+    {"7","Protocol Error"}, ### protocolError(7),
+    {"8","Unable To Perform Command Request"}, ### unableToPerformCmdReq(8),
+    {"9","Command Not Supported"}, ### cmdNotSupported(9),
+    {"10","Vendor Error"} ### vendorError(10)
+}
+default = "Unknown"
+
+table fcTraceRouteOperStatus =
+{
+    ##########
+    # This object indicates the operational status of this fcTraceRouteEntry.
+    #
+    # inProgress(1) -  Indicates that the trace route test as defined by this
+    #   instance of fcTraceRouteEntry is currently running.
+    # success(2) -  Indicates that the trace route test as defined by this
+    #   instance of fcTraceRouteEntry is currently complete and the whole path
+    #   to the destination has been traced.
+    # partialSuccess(3) - Indicates that the trace route test as defined by
+    #   this instance of fcTraceRouteEntry is currently partially successful.
+    # failure(4) -  Indicates that the trace route test as defined by this
+    #   instance of fcTraceRouteEntry has currently failed due to resource
+    #   limitations.
+    # disabled(5) -  Indicates that the trace route test as defined by this
+    #   instance of fcTraceRouteEntry is currently disabled.
+    #
+    # Initially the value of this object will be 'inProgress' when the test is
+    # being executed. Once the test completes, the value of this object will be
+    # 'success' or 'partialSuccess' depending on the outcome of the test.
+    #
+    # If the value of this object is 'success', then the route to the target as
+    # determined by this test will be available in the fcTraceRouteHopsTable.
+    #
+    # If the value of this object is 'partialSuccess', then the
+    # fcTraceRouteHopsTable will contain that portion of the route that was
+    # traced by the test.
+    #
+    # If the value of this object is 'failure', then the test was not carried
+    # out and the fcTraceRouteHopsTable will not have any entries corresponding
+    # to this test.
+    #
+    # If the value of the corresponding instance of fcTraceRouteAdminStatus is
+    # 'disable', then this object will have a value of 'disabled'.
+    ##########
+    
+    {"1","In Progress"}, ### inProgress - traceroute in progress
+    {"2","Success"}, ### success - traceroute success
+    {"3","Partial Success"}, ### partialSuccess - traceroute partial success
+    {"4","Failure"}, ### failure - traceroute failure
+    {"5","Disabled"} ### disabled - traceroute is disabled
+}
+default = "Unknown"
+                 
+table FspfInterfaceState =
+{
+    ##########
+    # State of FSPF. The possible values are:
+    #
+    # down (1) - Down 
+    # init (2) - Init
+    # dbExchange (3) - Database Exchange
+    # dbAckwait (4) - Database AckWait
+    # dbWait (5) - Database Wait
+    # full (6) - Full (Conneted)
+    #
+    # REFERENCE: FC-SW2, Switch Fabric-2, Rev 5.4, June 26, 2001, section 8.7.
+    ##########
+    
+    {"1","Down"}, ### down
+    {"2","Initializing"}, ### init
+    {"3","Database Exchange"}, ### dbExchange
+    {"4","Waiting for Database Acknowledgement"}, ### dbAckwait
+    {"5","Waiting for Database"}, ### dbWait
+    {"6","Full (Connected)"} ### full
+}
+default = "Unknown"
+
+table cHcAlarmSampleType =
+{
+    ##########
+    # The method of sampling the selected variable and calculating the value to
+    # be compared against the thresholds. If the value of this object is
+    # absoluteValue(1), the value of the selected variable will be compared
+    # directly with the thresholds at the end of the sampling interval. If the
+    # value of this object is deltaValue(2), the value of the selected variable
+    # at the last sample will be subtracted from the current value, and the
+    # difference compared with the thresholds.
+    #
+    # If the associated cHcAlarmVariable instance could not be obtained at the
+    # previous sample interval, then a delta sample is not possible, and the
+    # value of the associated cHcAlarmValueStatus object for this interval will
+    # be valueNotAvailable(1).
+    ##########
+    
+    {"1","Absolute Value"}, ### absoluteValue
+    {"2","Delta Value"} ### deltaValue
+}
+default = "Unknown"
+
+table CHcValueStatus =
+{
+    ##########
+    # This data type indicates the validity and sign of the data in associated
+    # object instances which represent the absolute value of a high capacity
+    # numeric quantity. Such an object may be represented with one or more
+    # object instances. An object of type CHcValueStatus MUST be defined within
+    # the same structure as the object(s) representing the high capacity
+    # absolute value.
+    #
+    # If the associated object instance(s) representing the high capacity
+    # absolute value could not be accessed during the sampling interval, and is
+    # therefore invalid, then the associated CHcValueStatus object will contain
+    # the value 'valueNotAvailable(1)'.
+    #
+    # If the associated object instance(s) representing the high capacity
+    # absolute value are valid and actual value of the sample is greater than
+    # or equal to zero, then the associated CHcValueStatus object will contain
+    # the value 'valuePositive(2)'.
+    #
+    # If the associated object instance(s) representing the high capacity
+    # absolute value are valid and the actual value of the sample is less than
+    # zero, then the associated CHcValueStatus object will contain the value
+    # 'valueNegative(3)'. The associated absolute value should be multiplied by
+    # -1 to obtain the true sample value.
+    ##########
+    
+    {"1","Value Not Available"}, ### valueNotAvailable
+    {"2","Value Positive"}, ### valuePositive
+    {"3","Value Negative"} ### valueNegative
+}
+default = "Unknown"
+
+table ciscoScsiTgtDeviceStatus =
+{
+    ##########
+    # This object represents the status of this SCSI device, summarizing the
+    # state of both the addressable devices (i.e., the logical units) and the
+    # non-addressable devices within this SCSI device:
+    #
+    # - unknown(1): This value is used when the status cannot be determined
+    # - available(2): All addressable and non-addressable devices within the
+    #     SCSI device are fully operational (i.e., no logical units have an
+    #     abnormal status).
+    # - broken(3): The SCSI device is not operational and cannot be made
+    #     operational without external intervention.
+    # - readying(4): One or more logical units within the SCSI device are
+    #     being initialized and access to the SCSI device is temporarily
+    #     limited (i.e., one or more of the logical unit have a readying
+    #     status).
+    # - abnormal(5): One or more addressable devices within the SCSI device are
+    #     indicating a status other than available; nevertheless, the SCSI
+    #     device is operational (i.e., one or more of the logical units have an
+    #     abnormal status).
+    # - nonAddrFailure(6): One or more non-addressable devices within the SCSI
+    #     device have failed; nevertheless, the SCSI device is operational
+    #     (i.e., no logical units have an abnormal or readying status).
+    # - nonAddrFailReadying(7): One or more non-addressable devices within the
+    #     SCSI device have failed; nevertheless,one or more logical units
+    #     within the SCSI device are being initialized and access to the SCSI
+    #     device is temporarily limited.
+    # - nonAddrFailAbnormal(8): One or more non-addressable devices within the
+    #     SCSI device have failed and one or more addressable devices within
+    #     the SCSI device are indicating a status other than available however
+    #     the SCSI device is operational.
+    #
+    # REFERENCE: SCSI Controller Commands-2 (SCC-2) standard NCITS.318-1998
+    #   6.3.1.8 REPORT STATES service action.
+    ##########
+    
+    {"1","Unknown"}, ### unknown
+    {"2","Available"}, ### available
+    {"3","Broken"}, ### broken
+    {"4","Readying"}, ### readying
+    {"5","Abnormal"}, ### abnormal
+    {"6","Non-Addressable Device Failure"}, ### nonAddrFailure
+    {"7","Non-Addressable Device Failure, Readying"}, ### nonAddrFailReadying
+    {"8","Non-Addressable Device Failure, Abnormal"} ### nonAddrFailAbnormal
+}
+default = "Unknown"
+
+table ciscoScsiLuStatus =
+{
+    ##########
+    # The status of a SCSI logical unit:
+    #
+    # - unknown(1): The status of this logical unit cannot be determined.
+    # - available(2): The logical unit is fully operational (i.e., accepts
+    #     media access SCSI commands and has no state information to report).
+    # - notAvailable(3): The logical unit is capable of being supported but not
+    #     available (i.e., no logical unit is currently present or the logical
+    #     unit is present but not configured for use).
+    # - broken(4): The logical unit has failed and cannot respond to SCSI
+    #     commands.
+    # - readying(5): The logical unit is being initialized and access is
+    #     temporarily limited.
+    # - abnormal(6): The logical unit has state information available that
+    #     indicates it is operating with limits. The ciscoScsiLuState indicates
+    #     what those limits are.
+    #
+    # REFERENCE: SCSI Controller Commands-2 (SCC-2) standard NCITS.318-1998
+    #   6.3.1.8 REPORT STATES service action
+    ##########
+     
+    {"1","Unknown"}, ### unknown
+    {"2","Available"}, ### available
+    {"3","Not Available"}, ### notAvailable
+    {"4","Broken"}, ### broken
+    {"5","Readying"}, ### readying
+    {"6","Abnormal"} ### abnormal
+}
+default = "Unknown"
+
+table SyslogSeverity =
+{
+    ##########
+    # The severity of a syslog message. The enumeration values are equal to the
+    # values that syslog uses + 1. For example, with syslog, emergency=0.
+    ##########
+    
+    {"1","Emergency"}, ### emergency
+    {"2","Alert"}, ### alert
+    {"3","Critical"}, ### critical
+    {"4","Error"}, ### error
+    {"5","Warning"}, ### warning
+    {"6","Notice"}, ### notice
+    {"7","Info"}, ### info
+    {"8","Debug"} ### debug
+}
+default = "Unknown"
+
+table CseHaRestartReason =
+{
+    ##########
+    # Reason codes for the restart of a service.
+    ##########
+    
+    {"1","Unknown"}, ### unknown - ungraceful exit
+    {"2","Ungraceful Exit"}, ### ungracefulExit - ungraceful exit
+    {"3","Other Signal"}, ### otherSignal - service got some other signal
+    {"4","Received SIGTERM"}, ### sigterm - received SIGTERM
+    {"5","Software Upgrade"}, ### softwareUpgrade - software upgrade
+    {"6","Configuration Update"}, ### configUpdate - config update
+    {"7","Configuration Removal"}, ### configRemove - config removal
+    {"8","Shutdown"}, ### shutdown - manually shutdown
+    {"9","Aborted"}, ### aborted - aborted
+    {"10","Heartbeat Failure"}, ### heartbeatFailure - heartbeat failure
+    {"11","User Terminated"}, ### userTerminate - user termnation
+    {"12","Graceful Exit"} ### gracefulExit - graceful exit
+}
+default = "Unknown"
+
+table virtualNwIfType =
+{
+    ##########
+    # If the virtualNwIfType is vsan(1) and if the corresponding virtual
+    # interface is enabled ( ifAdminStatus='up' ), then the operational state
+    # of virtual interface will become active ( ifOperStatus='up' ) only if the
+    # VSAN state is active and a FCID is obtained through a successful FLOGI.
+    # Even if the desired state of the virtual interface is enabled
+    # ( ifAdminStatus='up' ), but if the VSAN state is non-active or FCID has
+    # not been obtained, then the virtual interface is
+    # disabled(ifOperStatus='down'). Only when the VSAN state becomes active
+    # and an FCID is obtained will the virtual interface be enabled
+    # ( ifOperStatus='up' ). An interface can be disabled while its VSAN exists
+    # by setting ifAdminStatus='down'. When an VSAN is deleted, the
+    # corresponding interface ( if created ) is also deleted.
+    #
+    # If the virtualNwIfType is vlan(2) and if the corresponding virtual
+    # interface is enabled ( ifAdminStatus='up' ), then the virtual interface
+    # will become active ( ifOperStatus='up' ) only if the VLAN state is
+    # active. Even if the desired state of the virtual interface is
+    # enabled(ifAdminStatus='up'), but if the VLAN state is non-active, then
+    # the virtual interface is disabled ( ifOperStatus='down' ). Only when the
+    # VLAN state becomes active will the virtual interface be enabled
+    # ( ifOperStatus='up' ). An interface can be disabled while its VLAN exists
+    # by setting ifAdminStatus='down'. When an VLAN is deleted, the
+    # corresponding interface ( if created ) is also deleted.
+    ##########
+    
+    {"1","VSAN"}, ### vsan
+    {"2","VLAN"} ### vlan
+}
+default = "Unknown"
+
+table VsanAdminState =
+{
+    ##########
+    # State of the VSAN.
+    #
+    # active - the VSAN is active
+    # suspended - VSAN is de-activated but the configuration is retained.
+    ##########
+    
+    {"1","Active"}, ### active
+    {"2","Suspended"} ### suspended
+}
+default = "Unknown"    
+                                              
+table VsanOperationalState =
+{
+    ##########
+    # State of the VSAN.
+    #
+    # up - the VSAN is up.
+    # down - VSAN is down. No traffic running on the VSAN.
+    ##########
+    
+    {"1","Up"}, ### up
+    {"2","Down"} ### down
+}
+default = "Unknown"    
+
+table ZoneMemberType =
+{
+    ##########
+    # Represents the addressing mechanism by which a member is identified.
+    ##########
+    
+    {"1","Port WWN"}, ### wwn - The Port World Wide Name (PWWN).
+    {"3","FC-ID"}, ### fcAddr - FC-ID.
+    {"4","Fabric Port WWN"}, ### fwwn - Fabric Port World Wide Name. This is used for Port based zoning.
+    {"5","Symbolic Node Name"} ### symNodeName - Symbolic Node Name used for iSCSI zoning.
+}
+default = "Unknown"
+
+table zoneMemberTypeIndex =
+{
+    ##########
+    # This object determines whether this member belongs to a zone or an alias.
+    ##########
+    
+    {"1","Zone"}, ### zone - member belongs to a zone
+    {"2","Alias"}, ### alias - member belongs to an alias
+}
+default = "Unknown"
+
+table zoneDefaultZoneBehaviour =
+{
+    ##########
+    # This object controls the behaviour of the default zone on this VSAN.
+    #
+    # If this object is set to 'permit', then the members of the default zone
+    # on this VSAN can communicate with each other.
+    #
+    # If this object is set to 'deny', then the members of the default zone on
+    # this VSAN cannot communicate with each other.
+    #
+    # Default: Deny
+    ##########
+    
+    {"1","Permit"}, ### permit - allow communication
+    {"2","Deny"}, ### deny - deny communication
+}
+default = "Unknown"
+
+
+
+## added back in by toby.
+table tcpConnState = ### The state of this TCP connection.
+{
+    {"1", "Closed"}, ### closed
+    {"2", "Listening"}, ### listen
+    {"3", "SYN Sent"}, ### synSent
+    {"4", "SYN Received"}, ### synReceived
+    {"5", "Established"}, ### established
+    {"6", "Waiting for FIN Acknowledgement"}, ### finWait1
+    {"7", "Waiting for FIN from Remote Host"}, ### finWait2
+    {"8", "Waiting for Termination Request"}, ### closeWait
+    {"9", "Waiting for Termination Acknowledgement"}, ### lastAck
+    {"10", "Closing"}, ### closing
+    {"11", "Waiting to Close"}, ### timeWait
+    {"12", "Transmission Control Block Deleted"} ### deleteTCB
+}
+default = "Unknown"
+
+
+
+
+
+
+
+
+table PhysicalClass =
+{
+    ##########
+    # An enumerated value which provides an indication of the general hardware
+    # type of a particular physical entity. There are no restrictions as to the
+    # number of entPhysicalEntries of each entPhysicalClass, which must be
+    # instantiated by an agent.
+    #
+    # The enumeration 'other' is applicable if the physical entity class is
+    # known, but does not match any of the supported values.
+    #
+    # The enumeration 'unknown' is applicable if the physical entity class is
+    # unknown to the agent.
+    #
+    # The enumeration 'chassis' is applicable if the physical entity class is
+    # an overall container for networking equipment. Any class of physical
+    # entity except a stack may be contained within a chassis, and a chassis
+    # may only be contained within a stack.
+    #
+    # The enumeration 'backplane' is applicable if the physical entity class is
+    # some sort of device for aggregating and forwarding networking traffic,
+    # such as a shared backplane in a modular ethernet switch. Note that an
+    # agent may model a backplane as a single physical entity, which is
+    # actually implemented as multiple discrete physical components (within a
+    # chassis or stack).
+    #
+    # The enumeration 'container' is applicable if the physical entity class is
+    # capable of containing one or more removable physical entities, possibly
+    # of different types. For example, each (empty or full) slot in a chassis
+    # will be modeled as a container. Note that all removable physical entities
+    # should be modeled within a container entity, such as field-replaceable
+    # modules, fans, or power supplies. Note that all known containers should
+    # be modeled by the agent, including empty containers.
+    #
+    # The enumeration 'powerSupply' is applicable if the physical entity class
+    # is a power-supplying component.
+    #
+    # The enumeration 'fan' is applicable if the physical entity class is a fan
+    # or other heat-reduction component.
+    #
+    # The enumeration 'sensor' is applicable if the physical entity class is
+    # some sort of sensor, such as a temperature sensor within a router
+    # chassis.
+    #
+    # The enumeration 'module' is applicable if the physical entity class is
+    # some sort of self-contained sub-system. If it is removable, then it
+    # should be modeled within a container entity, otherwise it should be
+    # modeled directly within another physical entity (e.g., a chassis or
+    # another module).
+    #
+    # The enumeration 'port' is applicable if the physical entity class is some
+    # sort of networking port, capable of receiving and/or transmitting
+    # networking traffic.
+    #
+    # The enumeration 'stack' is applicable if the physical entity class is
+    # some sort of super-container (possibly virtual), intended to group
+    # together multiple chassis entities. A stack may be realized by a
+    # 'virtual' cable, a real interconnect cable, attached to multiple chassis,
+    # or may in fact be comprised of multiple interconnect cables. A stack
+    # should not be modeled within any other physical entities, but a stack may
+    # be contained within another stack. Only chassis entities should be
+    # contained within a stack.
+    ##########
+
+    {"1","Other"}, ### other
+    {"2","Unknown"}, ### unknown
+    {"3","Chassis"}, ### chassis
+    {"4","Backplane"}, ### backplane
+    {"5","Container"}, ### container - e.g., chassis slot or daughter-card holder
+    {"6","Power Supply"}, ### powerSupply
+    {"7","Fan"}, ### fan
+    {"8","Sensor"}, ### sensor
+    {"9","Module"}, ### module - e.g., plug-in card or daughter-card
+    {"10","Port"}, ### port
+    {"11","Stack"} ### stack - e.g., stack of multiple chassis entities
+
+}
+default = "Unknown"
+
+table InetAddressType =
+{
+    ##########
+    # A value that represents a type of Internet address:
+    #
+    # unknown(0) - An unknown address type. This value MUST be used if the
+    #   value of the corresponding InetAddress object is a zero-length string.
+    #   It may also be used to indicate an IP address which is not in one of
+    #   the formats defined below.
+    # ipv4(1) - An IPv4 address as defined by the InetAddressIPv4 textual
+    #   convention.
+    # Ipv6(2) - An IPv6 address as defined by the InetAddressIPv6 textual
+    #   convention.
+    # dns(16) - A DNS domain name as defined by the InetAddressDNS textual
+    #   convention.
+    #
+    # Each definition of a concrete InetAddressType value must be accompanied
+    # by a definition of a textual convention for use with that
+    # InetAddressType. The InetAddressType textual convention SHOULD NOT be
+    # subtyped in object type definitions to support future extensions. It MAY
+    # be subtyped in compliance statements in order to require only a subset of
+    # these address types for a compliant implementation.
+    ##########
+
+    {"0","Unknown"}, ### unknown
+    {"1","IPv4"}, ### ipv4
+    {"2","IPv6"}, ### ipv6
+    {"16","DNS"} ### dns
+}
+default = "Unknown"
+
+table TruthValue = ### Represents a boolean value
+{
+    {"1","True"},
+    {"2","False"}
+}
+default = "Unknown"
+
+

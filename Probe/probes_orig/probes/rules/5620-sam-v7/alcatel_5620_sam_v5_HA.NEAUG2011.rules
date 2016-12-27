@@ -1,0 +1,888 @@
+#######################################################################
+#       Copyright (C) 2006 Micromuse Ltd.
+#       All Rights Reserved
+#
+#       RESTRICTED RIGHTS:
+#
+#       This file may have been supplied under a license.
+#       It may be used, disclosed, and/or copied only as permitted
+#       under such license agreement.  Any copy must contain the
+#       above copyright notice and this restricted rights notice.
+#       Use, copying, and/or disclosure of the file is strictly
+#       prohibited unless otherwise provided in the license agreement.
+#
+#
+#
+#
+#######################################################################
+#
+#######################################################################
+#
+#
+# This lookup will only work if the probe is run from $OMNIHOME/probes
+# If the probe is run elsewhere this path will need to be customised.
+#
+
+#include "../includes/alcatel_5620_sam_v5.lookup"
+include "$NCHOME/custom/probes/rules/5620-sam-v7/lookup/alcatel_5620_sam_v6.lookup"
+table SAM5620 =  "$NCHOME/custom/probes/rules/5620-sam-v7/lookup/5620sam.lookup"
+default = {"1", "UNKNOWN", "UNKNOWN", "UNKNOWN", "UNKNOWN","UNKNOWN"}
+
+
+table AlarmCategory_JMS =
+{
+ {"0","general"},
+ {"1","fault"},
+ {"2","statistics"},
+ {"3","accounting"},
+ {"4","database"},
+ {"5","service"},
+ {"6","equipment"},
+ {"7","software"}
+}
+default = "Unknown Alarm Category"
+
+# delete table Severity_JMS and Severity_OS as it is included in lookup table
+
+#Define arrays:
+array objects;
+
+if( match( @Manager, "ProbeWatch" ) ) 
+{
+
+        switch(@Summary)
+        {
+        case "Running ...":
+                #@Severity = 1
+                @Severity = 2
+                @AlertGroup = "probestat"
+                @Type = 2
+                
+        case "Unable to get events":
+		@Severity = 5
+		@AlertGroup = "probestat"
+		@Type = 1
+		
+        case "Going Down ...":
+                @Severity = 5
+                @AlertGroup = "probestat"
+                @Type = 1
+		
+        case "START SYNCHRONIZATION":
+		@Severity = 3
+		#@Type = 1
+		@Type = 8
+		@AlertGroup = "Resync"                      
+	
+	case "END SYNCHRONIZATION":
+		#@Severity = 1
+		@Severity = 2
+		@Type = 7
+		@AlertGroup = "Resync"
+		            
+        default:
+                @Severity = 1
+        }
+	
+        @AlertKey = @Agent
+        @Summary = @Agent + " probe on " + @Node + ": " + @Summary
+	#### added by Toby
+        @Identifier = @Summary
+#log(WARNING,"Identifier = " + @Identifier)
+}
+
+else
+{
+        #Toby modified agent and manager ....
+        @Manager = "alcatel_5620_sam"
+	@Agent = @Manager + " probe running on " + hostname()
+	#@Agent = "Alcatel 5620 SAM"
+	@Class = 4955
+	
+
+	#Set Severity:
+	if (exists($MTOSI_perceivedSeverity))
+	{
+		$severity = $MTOSI_perceivedSeverity
+	}
+	
+	if (exists($alarmStatus))
+	{
+      		$severity = lookup($alarmStatus, Severity_JMS)
+     	}
+  	else if (exists($aggregatedAlarmStatus))
+    	{
+      		$severity = lookup($aggregatedAlarmStatus, Severity_JMS)
+  	}
+	     
+        switch($severity)
+        {
+            case "critical":
+                 @Severity = 5
+                 @Type = 1
+            case "major":
+                 @Severity = 4
+                 @Type = 1
+            case "minor":
+                 @Severity = 3
+                 @Type = 1
+            case "warning" :
+	 	 @Severity = 2
+	 	 @Type = 1
+	    case "condition" :
+                 @Severity = 2
+                 @Type = 1
+	    case "info":
+	 	 @Severity = 2
+	 	 @Type = 13
+            case "indeterminate":
+                 #@Severity = 1
+                 @Severity = 2
+                 @Type = 1
+            case "cleared":
+## modified by toby
+	 	 #@Severity = 0
+	 	 #@Severity = 1
+	 	 @Severity = 2
+	 	 @Type = 2
+	    case "unspecified":
+                 #@Severity = 1
+                 @Severity = 2
+                 @Type = 1
+      	    case "noalarm":
+                 #@Severity = 1
+                 @Severity = 2
+                 @Type = 2
+            default:
+                 @Severity = 2
+                 @Type = 1       
+        }
+     
+  	if (exists($MTOSI_perceivedSeverity))
+	{
+		update(@Severity,true)
+	}
+	 
+        
+ 	
+
+	#Setting Node and NodeAlias:
+	#Also swapping Node and NodeAlias for generic clear
+	if (!exists($nodeId))
+	{	
+      		if (exists($MTOSI_objectName))
+        	{  
+          		if( regmatch($MTOSI_objectName, ".*[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+.*"))
+            		{       
+		                $nodeip = extract($MTOSI_objectName, "([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+).*")            
+              		}
+            		else
+              		{ 
+                		$nodeip = "Unknown Node"
+            		}
+        	}
+      		else if (exists($AlarmPropagationEvent_alarmedObject))
+		{
+			if( regmatch($AlarmPropagationEvent_alarmedObject, "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+.*"))
+            		{       
+		                $nodeip = extract($AlarmPropagationEvent_alarmedObject, "([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+).*")            
+              		}
+            		else
+              		{ 
+                		$nodeip = "Unknown Node"
+            		}
+		}
+		else
+          	{
+            		$nodeip = hostname()
+          	}        
+    	}
+            
+## node , nodealias swapped by Toby,...     		 
+	if (exists($nodeName))
+	{
+        	@NodeAlias = $nodeip
+        	@Node = $nodeName
+      	}
+	else if (exists($nodeId))
+        {
+                @Node = $nodeId
+                @NodeAlias = $nodeip
+        }
+        else
+        {
+                @Node = $nodeip
+### added node alias - toby
+                @NodeAlias = $nodeip
+        }
+
+
+# Changed under Patch 3.101 by Tarun
+	#if (exists($nodeName))
+	#{
+        #	@NodeAlias = $nodeName
+      	#}
+     	#else
+      	#{
+        #	@Node = $nodeip
+    	#}
+     
+  	#if (exists($nodeId))
+    	#{
+        #  	@Node = $nodeId
+      	#}
+	#else
+	#{
+        #	@NodeAlias = $nodeip
+    	#}
+		 
+
+  	#Extract AlarmName, Type, ProbCause and assign AlertKey:
+   
+  	if (exists($objectFullName) && !exists($MTOSI_objectName))
+    	{
+      		$MTOSI_objectName = $objectFullName
+    	}
+    
+  	if (exists($MTOSI_objectName) && regmatch($MTOSI_objectName, ".*\|alarm\-[0-9]+\-[0-9]+\-[0-9]+"))
+    	{       
+    		$type = extract($MTOSI_objectName, ".*\|alarm\-[0-9]+\-([0-9]+)\-[0-9]+")
+		$probableCause = extract($MTOSI_objectName, ".*\|alarm\-[0-9]+\-[0-9]+\-([0-9]+)")
+		$alarmName = extract($MTOSI_objectName, ".*\|alarm\-([0-9]+)\-[0-9]+\-[0-9]+")
+    	}     
+		
+		
+  	if (exists($affectedObjectFullName))
+  	{
+		$NumElm = split($affectedObjectFullName, objects, ":")
+		$alertkey = objects[1] + " " + objects[2] +  " " + objects[3] + " " + objects[4] + " " + objects[5] + " " + objects[6] + " " + objects[7] + " " + objects[8] + " " + objects[9] + " " + objects[10]
+	}
+  	else if(regmatch($objectFullName, "faultManager.*@.*\|alarm\-[0-9]+\-[0-9]+\-[0-9]+"))
+	{
+		$ObjDet = extract($objectFullName, "faultManager:(.*)\|alarm\-[0-9]+\-[0-9]+\-[0-9]+")
+		$NumElm = split($ObjDet, objects, "@")
+		$alertkey = objects[1] + " " + objects[2] +  " " + objects[3] + " " + objects[4] + " " + objects[5] + " " + objects[6] + " " + objects[7] + " " + objects[8] + " " + objects[9] + " " + objects[10]
+  	}
+  	else if(regmatch($MTOSI_objectName, "faultManager.*@.*\|alarm\-[0-9]+\-[0-9]+\-[0-9]+"))
+	{
+		$ObjDet = extract($MTOSI_objectName, "faultManager:(.*)\|alarm\-[0-9]+\-[0-9]+\-[0-9]+")
+		$NumElm = split($ObjDet, objects, "@")
+		$alertkey = objects[1] + " " + objects[2] +  " " + objects[3] + " " + objects[4] + " " + objects[5] + " " + objects[6] + " " + objects[7] + " " + objects[8] + " " + objects[9] + " " + objects[10]
+	}
+  	else if(regmatch($objectFullName, "faultManager.*\|alarm\-[0-9]+\-[0-9]+\-[0-9]+"))
+	{
+		$ObjDet = extract($objectFullName, "faultManager:(.*)\|alarm\-[0-9]+\-[0-9]+\-[0-9]+")
+		$NumElm = split($ObjDet, objects, ":")
+		$alertkey = objects[1] + " " + objects[2] +  " " + objects[3] + " " + objects[4] + " " + objects[5] + " " + objects[6] + " " + objects[7] + " " + objects[8] + " " + objects[9] + " " + objects[10]
+  	}
+  	else if(regmatch($objectFullName, ".*:.*"))
+	{
+		$NumElm = split($objectFullName, objects, ":")
+		$alertkey = objects[1] + " " + objects[2] +  " " + objects[3] + " " + objects[4] + " " + objects[5] + " " + objects[6] + " " + objects[7] + " " + objects[8] + " " + objects[9] + " " + objects[10]
+	}
+  	else if(regmatch($MTOSI_objectName, ".*:.*"))
+	{
+		$NumElm = split($MTOSI_objectName, objects, ":")
+		$alertkey = objects[1] + " " + objects[2] +  " " + objects[3] + " " + objects[4] + " " + objects[5] + " " + objects[6] + " " + objects[7] + " " + objects[8] + " " + objects[9] + " " + objects[10]
+  	} 
+		
+  
+  
+	#Set AlertGroup and AlertKey:
+	
+	if (exists($ALA_alarmType))
+	{
+        	$AlarmType = $ALA_alarmType
+       	}
+     	else if (exists($type))
+        {
+        	$AlarmType = lookup($type, AlarmType_t)
+        }
+     	else
+       	{
+        	$AlarmType = $MTOSI_NTType
+    	}
+  
+  
+  	if (exists($AlarmType) && !match($AlarmType, "NT_OBJECTDELETION") && !match($AlarmType, "NT_OBJECTCREATION"))
+  	{
+        	@AlertGroup = $AlarmType  	 
+      	}
+    	else if (exists($ALA_category))
+      	{
+        	@AlertGroup = $ALA_category
+      	}
+    	else if (exists($MTOSI_objectType))
+      	{
+       		@AlertGroup = $MTOSI_objectType
+      	}
+    	else if (exists($objectClassName))
+      	{
+        	@AlertGroup = $objectClassName
+      	}
+    	else if (exists($intendedClass))
+      	{
+        	@AlertGroup = $intendedClass
+  	}
+  
+  
+  	if (match($alertkey, ""))
+  	{
+    		if(exists($objectFullName))
+     		{
+  			@AlertKey = $objectFullName
+     		}
+    		else if(exists($MTOSI_objectType))
+     		{
+     			@AlertKey = $MTOSI_objectType
+     		}
+    		else if(exists($intendedClass))
+     		{
+     			@AlertKey = $intendedClass
+     		}
+    		else
+     		{
+     			@AlertKey = "Unknown AlertKey"
+     		}						 
+  	}
+  	else
+  	{
+    		if (exists($type) && exists($probableCause) && exists($alarmName))
+    		{
+    			@AlertKey = rtrim($alertkey) + "  [alarm-" + $alarmName + "-" + $type + "-" + $probableCause + "]"
+    		}
+    		else
+    		{
+  			@AlertKey = $alertkey
+    		}
+  	}
+  
+  
+  	if (exists($probableCause))
+    	{  
+        	$ProbableCause_T = lookup($probableCause, ProbableCause_t)     
+    	}
+
+
+	#Discard those unwanted events:
+  	if (regmatch($MTOSI_objectName, "logger:"))
+	{
+		log(DEBUG,"discarding event on " + $MTOSI_objectName)
+		discard	
+	}
+
+
+	#Handling alarms:
+	
+	#XML alarms:	 
+  	if (exists($alarmName)) 
+	{
+		$AlarmName_T = lookup($alarmName, AlarmName_t)
+		@FirstOccurrence = real($firstTimeDetected)/1000
+		@LastOccurrence = real($lastTimeDetected)/1000
+	}
+		 
+		 
+  	#JMS alarms:
+	if (exists($eventName)) 
+	{	
+		$objectName = $MTOSI_objectName
+		$intendedClass = $MTOSI_objectType
+		$timeIssued = $MTOSI_osTime
+			
+		switch($eventName)
+		{
+			case "AttributeValueChange":
+				if(match($isAlarm, "true"))
+				{
+					[$name] = scanformat($objectName, "faultManager:%s")
+					@AlertKey = $name
+				}
+				if(match($AlarmType, "NT_ATTRIBUTE_VALUE_CHANGE"))
+				{
+					@Type = 13
+					@ExpireTime = 1500
+				}
+				
+				@Summary = $eventName + " :  " + $intendedClass + " on ( " + $objectName + " ) "
+				
+	
+							
+			case "ObjectCreation":
+			   	if (!exists($AlarmName_T))
+			   	{
+### modified by Toby - to make jms alarms consistent with xml alarms
+			     		#@Summary = "ObjectCreation on " + $MTOSI_objectType + " ( " + $objectName + " ) "
+			     		@Summary =  $MTOSI_objectType + " ( " + $objectName + " ) "
+			   	}
+			     	@Type = 1
+					
+			case "ObjectDeletion":
+				if (match($isAlarm, "true"))
+				{
+					[$name] = scanformat($objectName, "faultManager:%s")
+### modified by Toby - to make jms alarms consistent with xml alarms
+					#@Summary = "ObjectDeletion on " + $MTOSI_objectType + " ( " + $name + " )"
+					@Summary = $MTOSI_objectType + " ( " + $name + " )"
+					
+					if (exists($previousSeverity))
+					{
+						@Severity = lookup($previousSeverity, Severity_OS)
+					}
+					else if (exists($severity))
+					{
+                  				@Severity = lookup($severity, Severity_OS)
+                			}
+              				else if (exists($originalSeverity))
+                			{
+                  				@Severity = lookup($originalSeverity, Severity_OS)
+              				}
+					@Type = 2
+				}
+				else
+				{
+### modified by Toby - to make jms alarms consistent with xml alarms
+					#@Summary = "ObjectDeletion on " + $MTOSI_objectType + " ( " + $objectName + " ) "
+					@Summary = "ObjectDeletion on " + $MTOSI_objectType + " ( " + $objectName + " ) "
+										 
+            				if (exists($previousSeverity) && !match($previousSeverity,"indeterminate"))
+					{
+						@Severity = lookup($previousSeverity, Severity_OS)
+					}
+					else if (exists($severity))
+					{
+                  				@Severity = lookup($severity, Severity_OS)
+                			}
+              				else if (exists($originalSeverity))
+                			{
+                  				@Severity = lookup($originalSeverity, Severity_OS)
+              				}
+              
+					@Type = 2
+				}
+   			
+			case "generic.ObjectDeletion":
+				if (match($isAlarm, "true"))
+				{
+					[$name] = scanformat($objectName, "faultManager:%s")
+					#@Summary = "ObjectDeletion on " + $MTOSI_objectType + " ( " + $name + " )"
+					@Summary = $MTOSI_objectType + " ( " + $name + " )"
+					
+					if (exists($previousSeverity))
+					{
+					       	@Severity = lookup($previousSeverity, Severity_OS)
+					}
+					else if (exists($severity))
+					{
+                  				@Severity = lookup($severity, Severity_OS)
+                			}
+              				else if (exists($originalSeverity))
+                			{
+                  				@Severity = lookup($originalSeverity, Severity_OS)
+              				}
+			
+					@Type = 2
+						
+				}
+				else
+				{
+				  	if (exists($type) && exists($probableCause) && exists($alarmName))
+				    	{
+                				@Summary = $AlarmType + " :  " + $AlarmName_T + " -  " + $ProbableCause_T + " on ( " + $displayedName + " ) "
+              				}
+            				else
+              				{
+					      	#@Summary = "ObjectDeletion on " + $MTOSI_objectType + " ( " + $objectName + " ) "
+					      	@Summary = $MTOSI_objectType + " ( " + $objectName + " ) "
+					}
+										 
+            				if (exists($previousSeverity) && !match($previousSeverity,"indeterminate"))
+					{
+					       	@Severity = lookup($previousSeverity, Severity_OS)
+					}
+					else if (exists($severity))
+					{
+                  				@Severity = lookup($severity, Severity_OS)
+                			}
+              				else if (exists($originalSeverity))
+                			{
+                  				@Severity = lookup($originalSeverity, Severity_OS)
+              				}
+
+						@Type = 2
+						
+				}
+     
+				
+			case "AlarmPropagationChange":
+				discard
+				#if (exists($AlarmPropagationEvent_type))
+				#{
+				#	$eventName = $eventName + "." + $AlarmPropagationEvent_type
+				#}
+				
+				if (exists($AlarmPropagationEvent_alarmedObject))
+				{	
+				  	if (exists($ProbableCause_T) && exists($AlarmName_T))
+				  	{       
+						@Summary = $eventName + " :  " + $AlarmName_T + " ( " + $ProbableCause_T + " ) on [ " + $AlarmPropagationEvent_alarmedObject + " ]"       
+		                  	}
+				  	else
+				  	{
+				  		@Summary = $eventName + " on ( " + $AlarmPropagationEvent_alarmedObject + " )"
+				  	}
+				}
+				else if (exists($objectFullName) && exists($nodeName))
+				{
+				# Changed under patch x.xx 25 March 2009					
+					@NodeAlias = $nodeName
+					#@NodeAlias = $nodeId
+					@Node = $nodeId
+					#@Node = $nodeName
+					@Summary = $eventName + " on ( " + $objectFullName + " )"
+				}		  
+           			else if (exists($MTOSI_objectName))
+                		{
+					@Summary = $eventName + " on ( " + $MTOSI_objectName + " )"
+				}
+				  
+				if (exists($ProbableCause_T) && exists($AlarmName_T))
+				{       
+					@Summary = $eventName + " :  " + $AlarmName_T + " ( " + $ProbableCause_T + " ) on [ " +	@Summary + " ]"       
+		                }
+				else
+				{
+				  	@Summary = $eventName + " on ( " + @Summary + " )"
+				}				
+				
+				#@Type = 13
+				@Type = 1
+				# modified by Toby - delete after 5 minutes
+				#@ExpireTime = 1500
+				#@ExpireTime = 300
+				
+			case "KeepAlive":	
+				@Summary = $eventName + " (" + $AlarmType + ")"
+				#@Severity = 1
+				@Severity = 2
+				@Type = 13
+			  	@AlertKey = $intendedClass
+			  	@ExpireTime = 10	
+			
+			case "DBErrorEvent":
+				@AlertGroup = $eventName
+				@Node = "PrimarySAMServer"
+				
+				if(exists($state) && !match($state, ""))
+				{
+					@Summary = "DB Connection State is " + $state + " , error : " + $error
+				}
+				else
+				{
+					@Summary = "DB Error (see details)"
+					#details($*)
+				}
+				
+			case "DBActivityChange":
+			case "DBProxyStateChange":
+				@AlertGroup = $eventName
+				@Node = "PrimarySAMServer"
+				
+				if(exists($state) && !match($state, ""))
+				{
+					@Summary = "DB Connection State is " + $state
+				}
+				else
+				{
+					@Summary = "DB Connection State has changed (see details)"
+					#details($*)
+				}
+				
+			case "JmsMissedEvents":	
+				@AlertGroup = $eventName
+				@Node = $ALA_clientId
+				@Summary = "Client : " + $ALA_clientId + " has missed some JMS events (see details)"
+				#details($*)
+					
+			case "DBConnectionStateChange":	
+				@AlertGroup = "DBConnectionStateChange"
+				@Node = "PrimarySAMServer"
+				
+				if(exists($state) && !match($state, ""))
+				{
+					@Summary = "DB Connection State is " + $state
+				}
+				else
+				{
+					switch ($DBConnectionState)
+					{
+					  case "1":
+						$State = "Up"
+						@Type = 2
+					  case "2":
+						$State = "Down"
+						@Type = 1
+					  case "3":
+						$State = "Partially Down"
+						@Type = 1
+					  default:
+						$State = "Unknown"
+						@Type = 1
+					}
+						
+					@Summary = "DB Connection State is " + $State
+				}
+				
+					
+			case "RelationshipChange":
+				if (exists($changeType) && exists($fromObjectClass) && exists($fromObjectName) && exists($toObjectClass) &&
+				exists($toObjectName))
+				{
+					@Summary = $eventName + "(" + $changeType + ") from [ " + $fromObjectClass + " ( " +
+					$fromObjectName + " ) ] to [ " + $toObjectClass + " ( " + $toObjectName + " ) ]"
+				}
+				else
+				{
+					@Summary = $eventName + " on " + $objectClass + " ( " + $objectName + " ) "
+				}
+				
+				@Type = 13
+				@ExpireTime = 1500
+				
+			case "termination":
+				@Summary = $eventName + " on ClientId: " + $clientId + " ( Instruction received from Alcatel SAM )"
+				@Type = 1
+				@Severity = 5
+				@AlertKey = $intendedClass
+			
+			case "TerminateClientSession":
+				@Summary = $eventName + " on ClientId: " + $clientId + " ( Instruction received from Alcatel SAM )"
+				@Type = 1
+				@Severity = 5
+				@AlertKey = $intendedClass
+
+			case "SystemInfoEvent":
+				@Summary = $eventName + " : start time (" + $sysStartTime + "), type (" + $sysType + ")"
+            			@Node = $sysPrimaryIp
+				@NodeAlias = $sysPrimaryIp
+                		@AlertKey = $intendedClass
+                		#@Severity = 1
+                		@Severity = 2
+                		@Type = 13
+          	
+			case "AlarmCountChanged":
+				@Summary = "Alarm Count Changed " + $objectName	+ ": " + $state
+		            	@AlertKey = $intendedClass	
+          
+			default:
+				@Summary = "Unknown eventName (see details) " + $eventName
+				@Type = 1
+				#details($*)	
+		}
+			
+			
+		# The JMS sends time values in ms (13 digits), so divide by 1000 to have the time in s (10 digits).
+		@LastOccurrence = real($timeIssued)/1000
+		@FirstOccurrence = real($timeIssued)/1000
+		
+	 		
+	}
+	
+	#Build Summary:
+	if (exists($displayedName))
+	{
+		if (exists($AlarmName_T) && exists($eventName)) 
+	       	{
+	        	@Summary = $eventName + " :  " + $AlarmName_T + " ( " + $ProbableCause_T + " ) on [ " + $displayedName + " ] "
+               	}
+           	else if (exists($AlarmName_T))
+	       	{
+	        	@Summary = $AlarmName_T + " ( " + $ProbableCause_T + " ) on [ " + $displayedName + " ] "
+               	}
+      	}
+  	else if (exists($objectFullName))
+      	{
+     	   	if (exists($AlarmName_T) && exists($eventName)) 
+	       	{
+	        	@Summary = $eventName + " :  " + $AlarmName_T + " ( " + $ProbableCause_T + " ) on [ " + $objectFullName + " ] "
+               	}
+           	else if (exists($AlarmName_T))
+	       	{
+	        	@Summary =  $AlarmName_T + " ( " + $ProbableCause_T + " ) on [ " + $objectFullName + " ] "
+               	}
+        }
+	else if (exists($MTOSI_objectName))
+      	{
+     	   	if (exists($AlarmName_T) && exists($eventName)) 
+	       	{
+	        	@Summary = $eventName + " :  " + $AlarmName_T + " ( " + $ProbableCause_T + " ) on [ " + $MTOSI_objectName + " ] "
+               	}
+           	else if (exists($AlarmName_T))
+	       	{
+	        	@Summary =  $AlarmName_T + " ( " + $ProbableCause_T + " ) on [ " + $MTOSI_objectName + " ] "
+               	}
+        }
+    	else
+        {
+            	@Summary = @Summary
+    	}
+		
+ 
+
+	#Extract acknowledgement details from alarm:   
+ 	if (match( $eventName,"AttributeValueChange" ))
+  	{
+		if (regmatch( $Attribute1, "isAcknowledged.*"))
+		{
+			$isAcknowledged = extract($Attribute1,"^isAcknowledged.*New value\((.*)\)")
+		}
+		else if (regmatch( $Attribute2, "isAcknowledged.*"))
+		{
+		    	$isAcknowledged = extract($Attribute2,"^isAcknowledged.*New value\((.*)\)")
+		}
+				
+		if (regmatch( $Attribute2, "wasAcknowledged.*"))
+		{
+		    	$wasAcknowledged = extract($Attribute2,"^wasAcknowledged.*New value\((.*)\)")
+		}
+		else if (regmatch( $Attribute3, "wasAcknowledged.*"))
+		{
+		    	$wasAcknowledged = extract($Attribute3,"^wasAcknowledged.*New value\((.*)\)")
+		}
+		
+		if (regmatch( $Attribute3, "acknowldegedBy.*"))
+		{
+			$acknowledgedBy = extract($Attribute3,"^acknowldegedBy.*New value\((.*)\)")
+		}
+		else if (regmatch( $Attribute4, "acknowldegedBy.*"))
+		{
+			$acknowledgedBy = extract($Attribute4,"^acknowldegedBy.*New value\((.*)\)")
+		}
+	}
+
+  
+	#Set acknowledgement status from SAM: 
+  	if( exists( $wasAcknowledged))
+	{
+		switch($wasAcknowledged)
+		{
+         		case "false":
+		             	@Acknowledged = 0
+         		case "true":
+		             	@Acknowledged = 1
+         		default:
+         			@Acknowledged = 0         
+		}
+		update(@Acknowledged)
+    	}
+  
+	if( exists( $isAcknowledged))
+	{
+		switch($isAcknowledged)
+		{
+          		case "false":
+		             	@Acknowledged = 0
+          		case "true":
+		             	@Acknowledged = 1
+          		default:
+          			@Acknowledged = 0         
+		}
+		update(@Acknowledged)
+	}  
+  	
+	if (match(@Node,"Unknown Node"))
+	{
+		if( regmatch(@AlertKey, ".*[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+.*"))
+        	{
+        	@Node = extract(@AlertKey, "([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+).*")
+		@NodeAlias = @Node	
+        	}
+	}
+
+### toby
+#### for this project first and last raise time set from event but first and lastoccurrence from netcool
+
+@FirstRaiseTime = @FirstOccurrence
+@LastRaiseTime = @LastOccurrence
+@FirstOccurrence = getdate
+@LastOccurrence = getdate
+
+### used for setting event id for parent child.
+if(exists($AlarmName_T))
+{
+        @X733SpecificProb = $AlarmName_T
+        @AlarmClass     = $AlarmName_T
+### do the lookup for service affecting etc.
+        [$Severity,$ActionRequired, $ServiceAffecting, $ResilienceAffecting, $CorrelationFlag,$ProbableCause] = lookup($AlarmName_T,"SAM5620")
+        @ActionRequired = $ActionRequired
+        if (int(@ActionRequired) > 1)
+                {
+                @ActionRequired = 1
+                }
+        @ServiceAffecting = $ServiceAffecting
+        @ResilienceAffecting = $ResilienceAffecting
+        @CorrelationFlag = $CorrelationFlag
+
+}
+if(exists($probableCause))
+{
+        @X733ProbableCause = $probableCause
+}
+### Generic clear compares cleartime for type 2 events to lastraisetime,...
+### Toby
+if(match(@Type,"2"))
+{
+	#log(WARNING,"Type = " + @Type)
+        @ClearTime = @LastRaiseTime
+        update(@ClearTime)
+}
+
+## Added by Giles Blake to set PhysicalCard value
+if(exists($affectedObjectDisplayedName))
+        {
+        if(regmatch($affectedObjectDisplayedName,".* [0-9]+/[0-9]+/[0-9]+.*"))
+                {
+                @PhysicalCard = extract($affectedObjectDisplayedName,".* ([0-9]+/[0-9]+/[0-9]+).*")
+                }
+        }
+
+## Added by Giles Blake to set EquipmentFailure alarm class only for Card failure
+if(match(@AlarmClass,"EquipmentFailure"))
+        {
+        if(exists($probableCause))
+                {
+                if(match($probableCause,"123"))
+                        {
+                        @AlarmClass = @AlarmClass + "Card"
+                        }
+                }
+        }
+#### added by Toby for LSP events
+if(regmatch(@AlertKey,"lsp.*id\-[0-9]+ .*$"))
+        {
+                @PhysicalCard = extract(@AlertKey,"lsp.*id\-([0-9]+) .*$")
+        }
+
+
+#Remove hash below for alarm debugging:
+#details($*)
+
+	#Set Identifier for dedup:
+	#if (exists($AlarmPropagationEvent_alarmedObject))
+	#{
+		# Putting the AlarmedObject in the front of the Identifier, so that it doesn't get truncated.
+	#	@Identifier = $AlarmPropagationEvent_alarmedObject + " "
+	#}
+	
+  	#@Identifier = @Identifier + @Node + " " + @AlertKey + " " + @AlertGroup + " " + @Type + " " + @Agent + " " + @Manager + " " + $type +	" " + $probableCause + " " + $alarmName
+  	#@Identifier = @Identifier + @Node + " " + @AlertKey + " " + @AlertGroup + " " + @Type + " " + $alarmName + " " +  $type + " " + $probableCause
+	#if(match(@Type,"2") or match(@Type, "1"))
+	#{
+  	#@Identifier = @Node + " " + @AlertKey + " " + @AlertGroup + " " + $alarmName + " " +  $type + " " + $probableCause
+	#}
+	#else
+	#{
+  	@Identifier = @Node + " " + @AlertKey + " " + @AlertGroup + " " + @Type + " " + $alarmName + " " +  $type + " " + $probableCause
+	#}
+		
+}

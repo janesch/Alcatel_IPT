@@ -1,0 +1,9 @@
+AlmNam	Sev	Alm 	AlmCl	SiteVisEvnt	SrvAffEvnt	ResAffEvent	CorEvnt
+OV_AppUngracefulExit	4	Process Stopped Abnormally	Application Alert	2	2	2	2
+OV_DaemonTerminated	4	Unexpected Process Stop	Application Alert	2	2	2	2
+OV_ovspmdAutoResume	3	Process Resumed (Dependency)	Application Alert	2	2	2	2
+OV_ovspmdPostTimeoutRes	3	Process Resumed (Timed Out)	Application Alert	2	2	2	2
+OV_LicNodeViolation	4	Element Licence Limit Reached	Application Alert	2	2	2	2
+OV_LicNodeWarn	2	Element Licence Limit Nearly Reached	Application Alert	2	2	2	2
+OV_LicExpire	4	Licence Expired	Application Alert	2	2	2	2
+OV_LicExpireWarn	4	Temporary Licence	Application Alert	2	2	2	2

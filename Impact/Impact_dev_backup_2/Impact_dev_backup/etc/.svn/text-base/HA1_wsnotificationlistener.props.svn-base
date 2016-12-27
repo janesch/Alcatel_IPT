@@ -1,0 +1,7 @@
+#This file was written by Impact Server.
+#Tue Sep 08 11:29:13 EDT 2009
+impact.wsnotificationlistener.count=0
+impact.wsnotificationlistener.logtofile=true
+impact.wsnotificationlistener.map_all_topic_to_one_policy=true
+impact.wsnotificationlistener.policyname=XmlFileTestPolicy
+impact.wsnotificationlistener.subscriptionepr=http\://localhost\:9080/WSNotifications/services/WsResource

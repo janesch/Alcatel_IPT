@@ -1,0 +1,6 @@
+#This file was written by Impact Server.
+#Fri Nov 12 11:19:29 GMT 2010
+impact.circee_query_test.policyname=Circee_Query_Test
+impact.circee_query_test.logtofile=true
+impact.circee_query_test.autostartup=true
+impact.circee_query_test.interval=600

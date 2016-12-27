@@ -1,0 +1,29 @@
+Alarm Name	Severity	Summary	AlertKey	Action Required	Service Affecting	Resilience Affecting	Correlated Event
+Alarm Name 		Summary	AlertKey				
+Node Isolation	5	Node Isolation	Equipment domain	1	2	2	0
+Replaceable Unit Problem	4	Repleacable Unit Problem (RUP)	Hardware Failure	1	2	1	0
+Replaceable Unit Missing	4	Replaceable Unit Missing (RUM)	Hardware Failure	1	2	1	0
+Replaceable Unit Type Mismatch	4	Replaceable Unit Type Mismatch (RUTM)	Hardware Failure	0	2	1	0
+Unconfigured Equipment Present	2	Unconfigured Equipment Present (UEP)	Maintenance Indication	0	2	2	0
+LanFailure	4	LanFailure (LF) Min / Min	Hardware Failure	1	2	2	0
+High Temperature	4	High Temperature	HW degradation	1	2	2	0
+Serial Communication Problem	3	Serial Communication Problem (SCP)	Hardware Failure	1	2	2	0
+Version Mismatch	2	Version Mismatch (VM)	Software Failure	0	2	2	0
+Battery Failure	4	Battery Failure (BF)	HW degradation	1	2	2	0
+Transmitter Degraded	2	Transmitter Degraded (TD)	HW degradation	1	2	1	0
+Input Power Loss	5	Input Power Loss (IPL)	Signal Failure	1	2	1	0
+Input Power Loss,2nd stage input	5	Input Power Loss (IPL)	Signal Failure	1	2	1	0
+Output Power Loss	4	Output Power Loss (OPL)	Hardware Failure	1	2	1	0
+Output Power Loss,1st stage output	4	Output Power Loss (OPL) output 1st stage	Hardware Failure	1	2	1	0
+Output Power Loss,2nd stage output	4	Output Power Loss (OPL) output 2nd stage	Hardware Failure	1	2	1	0
+Configuration or Customization Error	4	Configuration Or Customization Error (COCE)	Signal Degradation	1	2	1	0
+Loss Of Signal	5	Loss Of Signal (LOS)	Signal Failure	1	2	1	0
+Low Threshold Corrected Error Rate	2	Low Threshold Corrected Error Rate	Signal Degradation	1	2	2	0
+High Threshold Corrected Error Rate	2	High Threshold Corrected Error Rate	Signal Degradation	1	2	1	0
+Loss Of Frame	4	Loss Of Frame (LOF)	Signal Failure	1	2	1	0
+Loss Of MultiFrame	4	Loss Of MultiFrame (LOMF)	Signal Failure	1	2	1	0
+AIS	4	Alarm Indication-Signal (AIS)	Signal Failure	1	2	1	0
+Low BER	3	Low BER (LBER)	Signal Degradation	1	2	1	0
+Server Signal Failure	4	Server Signal Failure	Communications	0	2	1	0
+Underlying Resource Unavailable	4	Underlying Resource Unavailable	Communications	0	2	2	0
+Loss Of Multiplex Section	4	Loss of Multiplex Section	Communications	1	2	1	0

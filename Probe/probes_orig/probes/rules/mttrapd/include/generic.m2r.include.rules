@@ -1,0 +1,2229 @@
+case ".1.3.6.1.2.1.68": # - vrrpMIB
+	switch($specific-trap) {
+		case "1": ### - vrrpTrapNewMaster
+			# SNMPv2
+			# The newMaster trap indicates that the sending agent
+			# has transitioned to 'Master' state.
+			$vrrpOperMasterIpAddr = $1
+			@AlertGroup = "vrrpTrapNewMaster"
+			@Agent = "VRRP-MIB"
+			@Summary = "vrrpTrapNewMaster " + $vrrpOperMasterIpAddr
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($vrrpOperMasterIpAddr)
+
+		case "2": ### - vrrpTrapAuthFailure
+			# SNMPv2
+			# A vrrpAuthFailure trap signifies that a packet has
+			# been received from a router whose authentication key
+			# or authentication type conflicts with this router's
+			# authentication key or authentication type. Implementation
+			# of this trap is optional.
+			$vrrpTrapPacketSrc = $1
+				$vrrpTrapAuthErrorTypelook = "vrrpTrapAuthErrorType." + $2
+				$vrrpTrapAuthErrorType = lookup($vrrpTrapAuthErrorTypelook,VarbindValTable)
+				if(match($vrrpTrapAuthErrorType,"UNKNOWN")) {
+					$vrrpTrapAuthErrorType = $2
+				} else {
+					$vrrpTrapAuthErrorType = $vrrpTrapAuthErrorType + " ( " + $2 + " )"
+				}
+			@AlertGroup = ""
+			@AlertGroup = "vrrpTrapAuthFailure" 
+			@Agent = "VRRP-MIB"
+			@Summary = "vrrpTrapAuthFailure " + $vrrpTrapAuthErrorType + " from source " + $vrrpTrapPacketSrc
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($vrrpTrapPacketSrc,$vrrpTrapAuthErrorType)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.3.61.1": # - pimMIBObjects
+	switch($specific-trap) {
+		case "1": ### - pimNeighborLoss
+			# SNMPv2
+			# A pimNeighborLoss trap signifies the loss of an adjacency
+			# with a neighbor.  This trap should be generated when the
+			# neighbor timer expires, and the router has no other
+			# neighbors on the same interface with a lower IP address than
+			# itself.
+			$pimNeighborIfIndex = $1
+			@AlertGroup = ""
+			@Agent = "PIM-MIB"
+			@Summary = "pimNeighborLoss"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($pimNeighborIfIndex)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+
+
+case ".1.3.6.1.2.1.10.20.2": # - isdnMibConformance;isdnMibTrapPrefix;isdnMibTrapPrefix
+	switch($specific-trap) {
+		case "1": ### - isdnMibCallInformation
+			# SNMPv2
+			# This trap/inform is sent to the manager under the
+			# following condidions:
+			# - on incoming calls for each call which is rejected for
+			# policy reasons (e.g. unknown neighbor or access
+			# violation)
+			# - on outgoing calls whenever a call attempt is determined
+			# to have ultimately failed. In the event that call retry
+			# is active, then this will be after all retry attempts
+			# have failed.
+			# - whenever a call connects. In this case, the object
+			# isdnBearerCallConnectTime should be included in the
+			# trap.
+			# 
+			# Only one such trap is sent in between successful or
+			# unsuccessful call attempts from or to a single neighbor;
+			# subsequent call attempts result in no trap.
+			# 
+			# If the Dial Control MIB objects dialCtlNbrCfgId and
+			# dialCtlNbrCfgIndex are known by the entity generating
+			# this trap, both objects should be included in the trap
+			# as well. The receipt of this trap with no dial neighbor
+			# information indicates that the manager must poll the
+			# callHistoryTable of the Dial Control MIB to see what
+			# changed.
+			$ifIndex = $1
+				$isdnBearerOperStatuslook = "isdnBearerOperStatus." + $2
+				$isdnBearerOperStatus = lookup($isdnBearerOperStatuslook,VarbindValTable)
+				if(match($isdnBearerOperStatus,"UNKNOWN")) {
+					$isdnBearerOperStatus = $2
+				} else {
+					$isdnBearerOperStatus = $isdnBearerOperStatus + " ( " + $2 + " )"
+				}
+			$isdnBearerPeerAddress = $3
+			$isdnBearerPeerSubAddress = $4
+			$isdnBearerCallSetupTime = $5
+				$isdnBearerInfoTypelook = "isdnBearerInfoType." + $6
+				$isdnBearerInfoType = lookup($isdnBearerInfoTypelook,VarbindValTable)
+				if(match($isdnBearerInfoType,"UNKNOWN")) {
+					$isdnBearerInfoType = $6
+				} else {
+					$isdnBearerInfoType = $isdnBearerInfoType + " ( " + $6 + " )"
+				}
+				$isdnBearerCallOriginlook = "isdnBearerCallOrigin." + $7
+				$isdnBearerCallOrigin = lookup($isdnBearerCallOriginlook,VarbindValTable)
+				if(match($isdnBearerCallOrigin,"UNKNOWN")) {
+					$isdnBearerCallOrigin = $7
+				} else {
+					$isdnBearerCallOrigin = $isdnBearerCallOrigin + " ( " + $7 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "ISDN-MIB"
+			@Summary = "isdnMibCallInformation"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($ifIndex,$isdnBearerOperStatus,$isdnBearerPeerAddress,$isdnBearerPeerSubAddress,$isdnBearerCallSetupTime,$isdnBearerInfoType,$isdnBearerCallOrigin)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+
+case ".1.3.6.1.2.1.10.44.2": # - frnetservTraps
+	switch($specific-trap) {
+		case "2": ### - frPVCConnectStatusNotif
+			# SNMPv2
+			# This notification indicates that the indicated
+			# PVC has changed state.
+			# 
+			# This notification is not sent if an FR-UNI changes
+			# state; a linkDown or linkUp notification should be
+			# sent instead.  The first instance of
+			# frPVCEndptRcvdSigStatus is for the endpoint with
+			# LowIfIndex, LowDLCIIndex.  The second instance of
+			# frPVCEndptRcvdSigStatus is for the endpoint with
+			# HighIfIndex, HighDLCIIndex
+				$frPVCConnectL2hOperStatuslook = "frPVCConnectL2hOperStatus." + $1
+				$frPVCConnectL2hOperStatus = lookup($frPVCConnectL2hOperStatuslook,VarbindValTable)
+				if(match($frPVCConnectL2hOperStatus,"UNKNOWN")) {
+					$frPVCConnectL2hOperStatus = $1
+				} else {
+					$frPVCConnectL2hOperStatus = $frPVCConnectL2hOperStatus + " ( " + $1 + " )"
+				}
+				$frPVCConnectH2lOperStatuslook = "frPVCConnectH2lOperStatus." + $2
+				$frPVCConnectH2lOperStatus = lookup($frPVCConnectH2lOperStatuslook,VarbindValTable)
+				if(match($frPVCConnectH2lOperStatus,"UNKNOWN")) {
+					$frPVCConnectH2lOperStatus = $2
+				} else {
+					$frPVCConnectH2lOperStatus = $frPVCConnectH2lOperStatus + " ( " + $2 + " )"
+				}
+				$frPVCEndptRcvdSigStatuslook = "frPVCEndptRcvdSigStatus." + $3
+				$frPVCEndptRcvdSigStatus = lookup($frPVCEndptRcvdSigStatuslook,VarbindValTable)
+				if(match($frPVCEndptRcvdSigStatus,"UNKNOWN")) {
+					$frPVCEndptRcvdSigStatus = $3
+				} else {
+					$frPVCEndptRcvdSigStatus = $frPVCEndptRcvdSigStatus + " ( " + $3 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "FRNETSERV-MIB"
+			@Summary = "frPVCConnectStatusNotif"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($frPVCConnectL2hOperStatus,$frPVCConnectH2lOperStatus,$frPVCEndptRcvdSigStatus)
+
+		case "1": ### - frPVCConnectStatusChange
+			# SNMPv2
+			# Refer to the description of the
+			# frPVCConnectStatusNotif notification that has
+			# replaced this notification.  The notification is
+			# deprecated due to the incorrect inclusion of index
+			# values and to take advantage of the trap prefix
+			# for automatic conversion from SMIv2 to SMIv1 by
+			# making the one but last sub-ID a zero (i.e. the
+			# so-called trap prefix).
+			$frPVCConnectIndex = $1
+			$frPVCConnectLowIfIndex = $2
+			$frPVCConnectLowDLCIIndex = $3
+			$frPVCConnectHighIfIndex = $4
+			$frPVCConnectHighDLCIIndex = $5
+				$frPVCConnectL2hOperStatuslook = "frPVCConnectL2hOperStatus." + $6
+				$frPVCConnectL2hOperStatus = lookup($frPVCConnectL2hOperStatuslook,VarbindValTable)
+				if(match($frPVCConnectL2hOperStatus,"UNKNOWN")) {
+					$frPVCConnectL2hOperStatus = $6
+				} else {
+					$frPVCConnectL2hOperStatus = $frPVCConnectL2hOperStatus + " ( " + $6 + " )"
+				}
+				$frPVCConnectH2lOperStatuslook = "frPVCConnectH2lOperStatus." + $7
+				$frPVCConnectH2lOperStatus = lookup($frPVCConnectH2lOperStatuslook,VarbindValTable)
+				if(match($frPVCConnectH2lOperStatus,"UNKNOWN")) {
+					$frPVCConnectH2lOperStatus = $7
+				} else {
+					$frPVCConnectH2lOperStatus = $frPVCConnectH2lOperStatus + " ( " + $7 + " )"
+				}
+				$frPVCEndptRcvdSigStatuslook = "frPVCEndptRcvdSigStatus." + $8
+				$frPVCEndptRcvdSigStatus = lookup($frPVCEndptRcvdSigStatuslook,VarbindValTable)
+				if(match($frPVCEndptRcvdSigStatus,"UNKNOWN")) {
+					$frPVCEndptRcvdSigStatus = $8
+				} else {
+					$frPVCEndptRcvdSigStatus = $frPVCEndptRcvdSigStatus + " ( " + $8 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "FRNETSERV-MIB"
+			@Summary = "frPVCConnectStatusChange"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($frPVCConnectIndex,$frPVCConnectLowIfIndex,$frPVCConnectLowDLCIIndex,$frPVCConnectHighIfIndex,$frPVCConnectHighDLCIIndex,$frPVCConnectL2hOperStatus,$frPVCConnectH2lOperStatus,$frPVCEndptRcvdSigStatus)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.2.1.10.46.2": # - ipoaNotifications
+	switch($specific-trap) {
+		case "1": ### - ipoaMtuExceeded
+			# SNMPv2
+			# A frame was received that exceeds the negotiated
+			# MTU size.  The VPI and VCI of the VC for which this
+			# condition was detected can be determined from the
+			# index values for ipoaVcNegotiatedMtu.  In addition,
+			# the ifIndex and IP Address can be determined as
+			# well (refer to the ipoaVcTable).
+			$ipoaVcNegotiatedMtu = $1
+			@AlertGroup = ""
+			@Agent = "IPOA-MIB"
+			@Summary = "ipoaMtuExceeded"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($ipoaVcNegotiatedMtu)
+
+		case "2": ### - ipoaDuplicateIpAddress
+			# SNMPv2
+			# The ATMARP Server has detected more than one ATM end
+			# point attempting to associate the same IP address with
+			# different ATM addresses.
+			$ipNetToMediaIfIndex = $1
+			$ipNetToMediaNetAddress = $2
+			$ipNetToMediaPhysAddress = $3
+			$ipNetToMediaPhysAddress = $4
+			@AlertGroup = ""
+			@Agent = "IPOA-MIB"
+			@Summary = "ipoaDuplicateIpAddress"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($ipNetToMediaIfIndex,$ipNetToMediaNetAddress,$ipNetToMediaPhysAddress,$ipNetToMediaPhysAddress)
+
+		case "3": ### - ipoaLisCreate
+			# SNMPv2
+			# Generation of this trap occurs when an ipoaLisEntry is
+			# created while the ipoaLisTrapEnable.0 object has the
+			# value enabled(1).
+			$ipoaLisSubnetAddr = $1
+			@AlertGroup = ""
+			@Agent = "IPOA-MIB"
+			@Summary = "ipoaLisCreate"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($ipoaLisSubnetAddr)
+
+		case "4": ### - ipoaLisDelete
+			# SNMPv2
+			# Generation of this trap occurs when an ipoaLisEntry is
+			# deleted while the ipoaLisTrapEnable.0 object has the
+			# value enabled(1).
+			$ipoaLisSubnetAddr = $1
+			@AlertGroup = ""
+			@Agent = "IPOA-MIB"
+			@Summary = "ipoaLisDelete"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($ipoaLisSubnetAddr)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.2.1.10.48": # - hdsl2ShdslMIB
+	switch($specific-trap) {
+		case "1": ### - hdsl2ShdslLoopAttenCrossing
+			# SNMPv2
+			# This notification indicates that the loop attenuation
+			# threshold (as per the hdsl2ShdslEndpointThreshLoopAttenuation
+			# value) has been reached/exceeded for the HDSL2/SHDSL segment
+			# endpoint.
+			$hdsl2ShdslEndpointCurrAtn = $1
+			$hdsl2ShdslEndpointThreshLoopAttenuation = $2
+			@AlertGroup = ""
+			@Agent = "HDSL2-SHDSL-LINE-MIB"
+			@Summary = "hdsl2ShdslLoopAttenCrossing"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($hdsl2ShdslEndpointCurrAtn,$hdsl2ShdslEndpointThreshLoopAttenuation)
+
+		case "2": ### - hdsl2ShdslSNRMarginCrossing
+			# SNMPv2
+			# This notification indicates that the SNR margin threshold (as
+			# per the hdsl2ShdslEndpointThreshSNRMargin value) has been
+			# reached/exceeded for the HDSL2/SHDSL segment endpoint.
+			$hdsl2ShdslEndpointCurrSnrMgn = $1
+			$hdsl2ShdslEndpointThreshSNRMargin = $2
+			@AlertGroup = ""
+			@Agent = "HDSL2-SHDSL-LINE-MIB"
+			@Summary = "hdsl2ShdslSNRMarginCrossing"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($hdsl2ShdslEndpointCurrSnrMgn,$hdsl2ShdslEndpointThreshSNRMargin)
+
+		case "3": ### - hdsl2ShdslPerfESThresh
+			# SNMPv2
+			# This notification indicates that the errored seconds threshold
+			# (as per the hdsl2ShdslEndpointThreshES value) has been reached/
+			# exceeded for the HDSL2/SHDSL segment endpoint.
+			$hdsl2ShdslEndpointCurr15MinES = $1
+			$hdsl2ShdslEndpointThreshES = $2
+			@AlertGroup = ""
+			@Agent = "HDSL2-SHDSL-LINE-MIB"
+			@Summary = "hdsl2ShdslPerfESThresh"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($hdsl2ShdslEndpointCurr15MinES,$hdsl2ShdslEndpointThreshES)
+
+		case "4": ### - hdsl2ShdslPerfSESThresh
+			# SNMPv2
+			# This notification indicates that the severely errored seconds
+			# threshold (as per the hdsl2ShdslEndpointThreshSES value) has
+			# been reached/exceeded for the HDSL2/SHDSL Segment Endpoint.
+			$hdsl2ShdslEndpointCurr15MinSES = $1
+			$hdsl2ShdslEndpointThreshSES = $2
+			@AlertGroup = ""
+			@Agent = "HDSL2-SHDSL-LINE-MIB"
+			@Summary = "hdsl2ShdslPerfSESThresh"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($hdsl2ShdslEndpointCurr15MinSES,$hdsl2ShdslEndpointThreshSES)
+
+		case "5": ### - hdsl2ShdslPerfCRCanomaliesThresh
+			# SNMPv2
+			# This notification indicates that the CRC anomalies threshold
+			# (as per the hdsl2ShdslEndpointThreshCRCanomalies value) has
+			# been reached/exceeded for the HDSL2/SHDSL Segment Endpoint.
+			$hdsl2ShdslEndpointCurr15MinCRCanomalies = $1
+			$hdsl2ShdslEndpointThreshCRCanomalies = $2
+			@AlertGroup = ""
+			@Agent = "HDSL2-SHDSL-LINE-MIB"
+			@Summary = "hdsl2ShdslPerfCRCanomaliesThresh"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($hdsl2ShdslEndpointCurr15MinCRCanomalies,$hdsl2ShdslEndpointThreshCRCanomalies)
+
+		case "6": ### - hdsl2ShdslPerfLOSWSThresh
+			# SNMPv2
+			# This notification indicates that the LOSW seconds threshold
+			# (as per the hdsl2ShdslEndpointThreshLOSWS value) has been
+			# reached/exceeded for the HDSL2/SHDSL segment endpoint.
+			$hdsl2ShdslEndpointCurr15MinLOSWS = $1
+			$hdsl2ShdslEndpointThreshLOSWS = $2
+			@AlertGroup = ""
+			@Agent = "HDSL2-SHDSL-LINE-MIB"
+			@Summary = "hdsl2ShdslPerfLOSWSThresh"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($hdsl2ShdslEndpointCurr15MinLOSWS,$hdsl2ShdslEndpointThreshLOSWS)
+
+		case "7": ### - hdsl2ShdslPerfUASThresh
+			# SNMPv2
+			# This notification indicates that the unavailable seconds
+			# threshold (as per the hdsl2ShdslEndpointThreshUAS value) has
+			# been reached/exceeded for the HDSL2/SHDSL segment endpoint.
+			$hdsl2ShdslEndpointCurr15MinUAS = $1
+			$hdsl2ShdslEndpointThreshUAS = $2
+			@AlertGroup = ""
+			@Agent = "HDSL2-SHDSL-LINE-MIB"
+			@Summary = "hdsl2ShdslPerfUASThresh"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($hdsl2ShdslEndpointCurr15MinUAS,$hdsl2ShdslEndpointThreshUAS)
+
+		case "8": ### - hdsl2ShdslSpanInvalidNumRepeaters
+			# SNMPv2
+			# This notification indicates that a mismatch has been detected
+			# between the number of repeater/regenerator units configured
+			# for a HDSL2/SHDSL line via the hdsl2ShdslSpanConfNumRepeaters
+			# object and the actual number of repeater/regenerator units
+			# discovered via the EOC.
+			$hdsl2ShdslSpanConfNumRepeaters = $1
+			@AlertGroup = ""
+			@Agent = "HDSL2-SHDSL-LINE-MIB"
+			@Summary = "hdsl2ShdslSpanInvalidNumRepeaters"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($hdsl2ShdslSpanConfNumRepeaters)
+
+		case "9": ### - hdsl2ShdslLoopbackFailure
+			# SNMPv2
+			# This notification indicates that an endpoint maintenance
+			# loopback command failed for an HDSL2/SHDSL segment.
+				$hdsl2ShdslMaintLoopbackConfiglook = "hdsl2ShdslMaintLoopbackConfig." + $1
+				$hdsl2ShdslMaintLoopbackConfig = lookup($hdsl2ShdslMaintLoopbackConfiglook,VarbindValTable)
+				if(match($hdsl2ShdslMaintLoopbackConfig,"UNKNOWN")) {
+					$hdsl2ShdslMaintLoopbackConfig = $1
+				} else {
+					$hdsl2ShdslMaintLoopbackConfig = $hdsl2ShdslMaintLoopbackConfig + " ( " + $1 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "HDSL2-SHDSL-LINE-MIB"
+			@Summary = "hdsl2ShdslLoopbackFailure"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($hdsl2ShdslMaintLoopbackConfig)
+
+		case "10": ### - hdsl2ShdslpowerBackoff
+			# SNMPv2
+			# This notification indicates that the bit setting for
+			# powerBackoff in the hdsl2ShdslEndpointCurrStatus object for
+			# this endpoint has changed.
+			$hdsl2ShdslEndpointCurrStatus = $1
+			@AlertGroup = ""
+			@Agent = "HDSL2-SHDSL-LINE-MIB"
+			@Summary = "hdsl2ShdslpowerBackoff"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			##details($hdsl2ShdslEndpointCurrStatus)
+
+		case "11": ### - hdsl2ShdsldeviceFault
+			# SNMPv2
+			# This notification indicates that the bit setting for
+			# deviceFault in the hdsl2ShdslEndpointCurrStatus object for
+			# this endpoint has changed.
+			$hdsl2ShdslEndpointCurrStatus = $1
+			@AlertGroup = ""
+			@Agent = "HDSL2-SHDSL-LINE-MIB"
+			@Summary = "hdsl2ShdsldeviceFault"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($hdsl2ShdslEndpointCurrStatus)
+
+		case "12": ### - hdsl2ShdsldcContinuityFault
+			# SNMPv2
+			# This notification indicates that the bit setting for
+			# dcContinuityFault in the hdsl2ShdslEndpointCurrStatus object
+			# for this endpoint has changed.
+			$hdsl2ShdslEndpointCurrStatus = $1
+			@AlertGroup = ""
+			@Agent = "HDSL2-SHDSL-LINE-MIB"
+			@Summary = "hdsl2ShdsldcContinuityFault"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($hdsl2ShdslEndpointCurrStatus)
+
+		case "13": ### - hdsl2ShdslconfigInitFailure
+			# SNMPv2
+			# This notification indicates that the bit setting for
+			# configInitFailure in the hdsl2ShdslEndpointCurrStatus object
+			# for this endpoint has changed.
+			$hdsl2ShdslEndpointCurrStatus = $1
+			@AlertGroup = ""
+			@Agent = "HDSL2-SHDSL-LINE-MIB"
+			@Summary = "hdsl2ShdslconfigInitFailure"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($hdsl2ShdslEndpointCurrStatus)
+
+		case "14": ### - hdsl2ShdslprotocolInitFailure
+			# SNMPv2
+			# This notification indicates that the bit setting for
+			# protocolInitFailure in the hdsl2ShdslEndpointCurrStatus
+			# object for this endpoint has changed.
+			$hdsl2ShdslEndpointCurrStatus = $1
+			@AlertGroup = ""
+			@Agent = "HDSL2-SHDSL-LINE-MIB"
+			@Summary = "hdsl2ShdslprotocolInitFailure"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($hdsl2ShdslEndpointCurrStatus)
+
+		case "15": ### - hdsl2ShdslnoNeighborPresent
+			# SNMPv2
+			# This notification indicates that the bit setting for
+			# noNeighborPresent in the hdsl2ShdslEndpointCurrStatus object
+			# for this endpoint has changed.
+			$hdsl2ShdslEndpointCurrStatus = $1
+			@AlertGroup = ""
+			@Agent = "HDSL2-SHDSL-LINE-MIB"
+			@Summary = "hdsl2ShdslnoNeighborPresent"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($hdsl2ShdslEndpointCurrStatus)
+
+		case "16": ### - hdsl2ShdslLocalPowerLoss
+			# SNMPv2
+			# This notification indicates impending unit failure due to
+			# loss of local power (last gasp).
+			$hdsl2ShdslInvVendorID = $1
+			@AlertGroup = ""
+			@Agent = "HDSL2-SHDSL-LINE-MIB"
+			@Summary = "hdsl2ShdslLocalPowerLoss"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($hdsl2ShdslInvVendorID)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.2.1.17": # - dot1dBridge
+	switch($specific-trap) {
+		case "1": ### - newRoot
+			# SNMPv1
+			# The newRoot trap indicates that the sending agent
+			# has become the new root of the Spanning Tree; the
+			# trap is sent by a bridge soon after its election
+			# as the new root, e.g., upon expiration of the
+			# Topology Change Timer immediately subsequent to
+			# its election.  Implementation of this trap is
+			# optional.
+			@AlertGroup = ""
+			@Agent = "BRIDGE-MIB"
+			@Summary = "newRoot"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		case "2": ### - topologyChange
+			# SNMPv1
+			# A topologyChange trap is sent by a bridge when
+			# any of its configured ports transitions from the
+			# Learning state to the Forwarding state, or from
+			# the Forwarding state to the Blocking state.  The
+			# trap is not sent if a newRoot trap is sent for the
+			# same transition.  Implementation of this trap is
+			# optional.
+			@AlertGroup = ""
+			@Agent = "BRIDGE-MIB"
+			@Summary = "topologyChange"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.2.1.22": # - snmpDot3RptrMgt
+	switch($specific-trap) {
+		case "1": ### - rptrHealth
+			# SNMPv2
+			# ********* THIS OBJECT IS DEPRECATED **********
+			# 
+			# In a system containing a single managed repeater,
+			# the rptrHealth notification conveys information
+			# related to the operational status of the repeater.
+			# It is sent either when the value of
+			# rptrOperStatus changes, or upon completion of a
+			# non-disruptive test.
+			# 
+			# The rptrHealth notification must contain the
+			# rptrOperStatus object.  The agent may optionally
+			# include the rptrHealthText object in the varBind
+			# list.  See the rptrOperStatus and rptrHealthText
+			# objects for descriptions of the information that
+			# is sent.
+			# 
+			# The agent must throttle the generation of
+			# consecutive rptrHealth traps so that there is at
+			# least a five-second gap between traps of this
+			# type.  When traps are throttled, they are dropped,
+			# not queued for sending at a future time.  (Note
+			# that 'generating' a trap means sending to all
+			# configured recipients.)
+				$rptrOperStatuslook = "rptrOperStatus." + $1
+				$rptrOperStatus = lookup($rptrOperStatuslook,VarbindValTable)
+				if(match($rptrOperStatus,"UNKNOWN")) {
+					$rptrOperStatus = $1
+				} else {
+					$rptrOperStatus = $rptrOperStatus + " ( " + $1 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "SNMP-REPEATER-MIB"
+			@Summary = "rptrHealth"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($rptrOperStatus)
+
+		case "2": ### - rptrGroupChange
+			# SNMPv2
+			# ********* THIS OBJECT IS DEPRECATED **********
+			# 
+			# In a system containing a single managed repeater,
+			# this notification is sent when a change occurs in the
+			# group structure of the repeater.  This occurs only
+			# when a group is logically or physically removed
+			# from or added to a repeater.  The varBind list
+			# contains the identifier of the group that was
+			# removed or added.
+			# 
+			# The agent must throttle the generation of
+			# consecutive rptrGroupChange traps for the same
+			# group so that there is at least a five-second gap
+			# between traps of this type.  When traps are
+			# throttled, they are dropped, not queued for
+			# sending at a future time.  (Note that 'generating'
+			# a trap means sending to all configured
+			# recipients.)
+			$rptrGroupIndex = $1
+			@AlertGroup = ""
+			@Agent = "SNMP-REPEATER-MIB"
+			@Summary = "rptrGroupChange"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($rptrGroupIndex)
+
+		case "3": ### - rptrResetEvent
+			# SNMPv2
+			# ********* THIS OBJECT IS DEPRECATED **********
+			# 
+			# In a system containing a single managed repeater-unit,
+			# the rptrResetEvent notification conveys information
+			# related to the operational status of the repeater.
+			# This trap is sent on completion of a repeater
+			# reset action.  A repeater reset action is defined
+			# as an a transition to the START state of Fig 9-2
+			# in section 9 [IEEE 802.3 Std], when triggered by a
+			# management command (e.g., an SNMP Set on the
+			# rptrReset object).
+			# 
+			# The agent must throttle the generation of
+			# consecutive rptrResetEvent traps so that there is
+			# at least a five-second gap between traps of this
+			# type.  When traps are throttled, they are dropped,
+			# not queued for sending at a future time.  (Note
+			# that 'generating' a trap means sending to all
+			# configured recipients.)
+			# 
+			# The rptrResetEvent trap is not sent when the agent
+			# restarts and sends an SNMP coldStart or warmStart
+			# trap.  However, it is recommended that a repeater
+			# agent send the rptrOperStatus object as an
+			# optional object with its coldStart and warmStart
+			# trap PDUs.
+			# 
+			# The rptrOperStatus object must be included in the
+			# varbind list sent with this trap.  The agent may
+			# optionally include the rptrHealthText object as
+			# well.
+				$rptrOperStatuslook = "rptrOperStatus." + $1
+				$rptrOperStatus = lookup($rptrOperStatuslook,VarbindValTable)
+				if(match($rptrOperStatus,"UNKNOWN")) {
+					$rptrOperStatus = $1
+				} else {
+					$rptrOperStatus = $rptrOperStatus + " ( " + $1 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "SNMP-REPEATER-MIB"
+			@Summary = "rptrResetEvent"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($rptrOperStatus)
+
+		case "4": ### - rptrInfoHealth
+			# SNMPv2
+			# In a system containing multiple managed repeaters,
+			# the rptrInfoHealth notification conveys information
+			# related to the operational status of a repeater.
+			# It is sent either when the value of rptrInfoOperStatus
+			# changes, or upon completion of a non-disruptive test.
+			# 
+			# The agent must throttle the generation of
+			# consecutive rptrInfoHealth notifications for
+			# the same repeater so that there is at least
+			# a five-second gap between notifications of this type.
+			# When notifications are throttled, they are dropped,
+			# not queued for sending at a future time.  (Note
+			# that 'generating' a notification means sending
+			# to all configured recipients.)
+				$rptrInfoOperStatuslook = "rptrInfoOperStatus." + $1
+				$rptrInfoOperStatus = lookup($rptrInfoOperStatuslook,VarbindValTable)
+				if(match($rptrInfoOperStatus,"UNKNOWN")) {
+					$rptrInfoOperStatus = $1
+				} else {
+					$rptrInfoOperStatus = $rptrInfoOperStatus + " ( " + $1 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "SNMP-REPEATER-MIB"
+			@Summary = "rptrInfoHealth"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($rptrInfoOperStatus)
+
+		case "5": ### - rptrInfoResetEvent
+			# SNMPv2
+			# In a system containing multiple managed
+			# repeaters, the rptrInfoResetEvent notification
+			# conveys information related to the operational
+			# status of a repeater. This notification is sent
+			# on completion of a repeater reset action.  A
+			# repeater reset action is defined as a transition
+			# to the START state of Fig 9-2 in section 9 of
+			# [IEEE 802.3 Std], when triggered by a management
+			# command (e.g., an SNMP Set on the rptrInfoReset
+			# object).
+			# 
+			# The agent must throttle the generation of
+			# consecutive rptrInfoResetEvent notifications for
+			# a single repeater so that there is at least
+			# a five-second gap between notifications of
+			# this type.  When notifications are throttled,
+			# they are dropped, not queued for sending at
+			# a future time.  (Note that 'generating' a
+			# notification means sending to all configured
+			# recipients.)
+			# 
+			# The rptrInfoResetEvent is not sent when the
+			# agent restarts and sends an SNMP coldStart or
+			# warmStart trap.  However, it is recommended that
+			# a repeater agent send the rptrInfoOperStatus
+			# object as an optional object with its coldStart
+			# and warmStart trap PDUs.
+				$rptrInfoOperStatuslook = "rptrInfoOperStatus." + $1
+				$rptrInfoOperStatus = lookup($rptrInfoOperStatuslook,VarbindValTable)
+				if(match($rptrInfoOperStatus,"UNKNOWN")) {
+					$rptrInfoOperStatus = $1
+				} else {
+					$rptrInfoOperStatus = $rptrInfoOperStatus + " ( " + $1 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "SNMP-REPEATER-MIB"
+			@Summary = "rptrInfoResetEvent"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($rptrInfoOperStatus)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.2.1.26": # - snmpDot3MauMgt
+	switch($specific-trap) {
+		case "1": ### - rpMauJabberTrap
+			# SNMPv2
+			# This trap is sent whenever a managed repeater
+			# MAU enters the jabber state.
+			# 
+			# The agent MUST throttle the generation of
+			# consecutive rpMauJabberTraps so that there is at
+			# least a five-second gap between them.
+				$rpMauJabberStatelook = "rpMauJabberState." + $1
+				$rpMauJabberState = lookup($rpMauJabberStatelook,VarbindValTable)
+				if(match($rpMauJabberState,"UNKNOWN")) {
+					$rpMauJabberState = $1
+				} else {
+					$rpMauJabberState = $rpMauJabberState + " ( " + $1 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "MAU-MIB"
+			@Summary = "rpMauJabberTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($rpMauJabberState)
+
+		case "2": ### - ifMauJabberTrap
+			# SNMPv2
+			# This trap is sent whenever a managed interface
+			# MAU enters the jabber state.
+			# 
+			# The agent MUST throttle the generation of
+			# consecutive ifMauJabberTraps so that there is at
+			# least a five-second gap between them.
+				$ifMauJabberStatelook = "ifMauJabberState." + $1
+				$ifMauJabberState = lookup($ifMauJabberStatelook,VarbindValTable)
+				if(match($ifMauJabberState,"UNKNOWN")) {
+					$ifMauJabberState = $1
+				} else {
+					$ifMauJabberState = $ifMauJabberState + " ( " + $1 + " )"
+				}
+			@AlertGroup = "ifMauJabberTrap"
+			@Agent = "MAU-MIB"
+			@Summary = "ifMauJabberTrap " + $ifMauJabberState
+			@Severity = 1
+			@Type = 1
+
+### section added by toby as a clear message for this trap is 
+### ifMauJabberState = noJabber is the clear
+			if(match($ifMauJabberState,"noJabber"))
+			{
+				@Type = 2
+				@Identifier = @Identifier + $ifMauJabberState
+			} else {
+# modified so that all other states deduplicate.
+			@Identifier = @Node + "ifMauJabberTrap"
+			}
+			#details($ifMauJabberState)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.2.1.86.2": # - frAtmIwfTraps
+	switch($specific-trap) {
+		case "1": ### - frAtmIwfConnStatusChange
+			# SNMPv2
+			# An indication that the status of this
+			# interworking connection has changed.
+				$frAtmIwfConnAdminStatuslook = "frAtmIwfConnAdminStatus." + $1
+				$frAtmIwfConnAdminStatus = lookup($frAtmIwfConnAdminStatuslook,VarbindValTable)
+				if(match($frAtmIwfConnAdminStatus,"UNKNOWN")) {
+					$frAtmIwfConnAdminStatus = $1
+				} else {
+					$frAtmIwfConnAdminStatus = $frAtmIwfConnAdminStatus + " ( " + $1 + " )"
+				}
+				$frAtmIwfConnAtm2FrOperStatuslook = "frAtmIwfConnAtm2FrOperStatus." + $2
+				$frAtmIwfConnAtm2FrOperStatus = lookup($frAtmIwfConnAtm2FrOperStatuslook,VarbindValTable)
+				if(match($frAtmIwfConnAtm2FrOperStatus,"UNKNOWN")) {
+					$frAtmIwfConnAtm2FrOperStatus = $2
+				} else {
+					$frAtmIwfConnAtm2FrOperStatus = $frAtmIwfConnAtm2FrOperStatus + " ( " + $2 + " )"
+				}
+				$frAtmIwfConnFr2AtmOperStatuslook = "frAtmIwfConnFr2AtmOperStatus." + $3
+				$frAtmIwfConnFr2AtmOperStatus = lookup($frAtmIwfConnFr2AtmOperStatuslook,VarbindValTable)
+				if(match($frAtmIwfConnFr2AtmOperStatus,"UNKNOWN")) {
+					$frAtmIwfConnFr2AtmOperStatus = $3
+				} else {
+					$frAtmIwfConnFr2AtmOperStatus = $frAtmIwfConnFr2AtmOperStatus + " ( " + $3 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "FR-ATM-PVC-SERVICE-IWF-MIB"
+			@Summary = "frAtmIwfConnStatusChange"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($frAtmIwfConnAdminStatus,$frAtmIwfConnAtm2FrOperStatus,$frAtmIwfConnFr2AtmOperStatus)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.6.3.1.1.5": # - snmpTraps
+	switch($specific-trap) {
+		case "1": ### - coldStart
+			# SNMPv2
+			# A coldStart trap signifies that the SNMPv2 entity, acting
+			# in an agent role, is reinitializing itself and that its
+			# configuration may have been altered.
+			@AlertGroup = ""
+			@Agent = "SNMPv2-MIB"
+			@Summary = "coldStart"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		case "2": ### - warmStart
+			# SNMPv2
+			# A warmStart trap signifies that the SNMPv2 entity, acting
+			# in an agent role, is reinitializing itself such that its
+			# configuration is unaltered.
+			@AlertGroup = ""
+			@Agent = "SNMPv2-MIB"
+			@Summary = "warmStart"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		case "3": ### - linkDown
+			# SNMPv2
+			# A linkDown trap signifies that the SNMPv2 entity,
+			# acting in an agent role, has detected that the
+			# ifOperStatus object for one of its communication links
+			# is about to transition into the down state.
+			$ifIndex = $1
+				$ifAdminStatuslook = "ifAdminStatus." + $2
+				$ifAdminStatus = lookup($ifAdminStatuslook,VarbindValTable)
+				if(match($ifAdminStatus,"UNKNOWN")) {
+					$ifAdminStatus = $2
+				} else {
+					$ifAdminStatus = $ifAdminStatus + " ( " + $2 + " )"
+				}
+				$ifOperStatuslook = "ifOperStatus." + $3
+				$ifOperStatus = lookup($ifOperStatuslook,VarbindValTable)
+				if(match($ifOperStatus,"UNKNOWN")) {
+					$ifOperStatus = $3
+				} else {
+					$ifOperStatus = $ifOperStatus + " ( " + $3 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "IF-MIB"
+			@Summary = "linkDown"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($ifIndex,$ifAdminStatus,$ifOperStatus)
+
+		case "4": ### - linkUp
+			# SNMPv2
+			# A linkUp trap signifies that the SNMPv2 entity,
+			# acting in an agent role, has detected that the
+			# ifOperStatus object for one of its communication links
+			# has transitioned out of the down state.
+			$ifIndex = $1
+				$ifAdminStatuslook = "ifAdminStatus." + $2
+				$ifAdminStatus = lookup($ifAdminStatuslook,VarbindValTable)
+				if(match($ifAdminStatus,"UNKNOWN")) {
+					$ifAdminStatus = $2
+				} else {
+					$ifAdminStatus = $ifAdminStatus + " ( " + $2 + " )"
+				}
+				$ifOperStatuslook = "ifOperStatus." + $3
+				$ifOperStatus = lookup($ifOperStatuslook,VarbindValTable)
+				if(match($ifOperStatus,"UNKNOWN")) {
+					$ifOperStatus = $3
+				} else {
+					$ifOperStatus = $ifOperStatus + " ( " + $3 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "IF-MIB"
+			@Summary = "linkUp"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($ifIndex,$ifAdminStatus,$ifOperStatus)
+
+		case "5": ### - authenticationFailure
+			# SNMPv2
+			# An authenticationFailure trap signifies that the SNMPv2
+			# entity, acting in an agent role, has received a protocol
+			# message that is not properly authenticated.  While all
+			# implementations of the SNMPv2 must be capable of generating
+			# this trap, the snmpEnableAuthenTraps object indicates
+			# whether this trap will be generated.
+			@AlertGroup = ""
+			@Agent = "SNMPv2-MIB"
+			@Summary = "authenticationFailure"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+######
+# generic include file
+######
+case ".1.3.6.1.2.1.10.18.15": # - ds1Traps
+	switch($specific-trap) {
+		case "1": ### - dsx1LineStatusChange
+			# SNMPv1
+			# A dsx1LineStatusChange trap is sent when the
+			# value of an instance dsx1LineStatus changes. It
+			# can be utilized by an NMS to trigger polls.  When
+			# the line status change results from a higher level
+			# line status change (i.e. ds3), then no traps for
+			# the ds1 are sent.
+			$dsx1LineStatus = $1
+			$dsx1LineStatusLastChange = $2
+			@AlertGroup = ""
+			@Agent = "RFC1406-MIB"
+			@Summary = "dsx1LineStatusChange"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($dsx1LineStatus,$dsx1LineStatusLastChange)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.2.1.10.20.2.0": # - isdnMibTraps
+	switch($specific-trap) {
+		case "1": ### - isdnMibCallInformation
+			# SNMPv1
+			# This trap/inform is sent to the manager under the
+			# following condidions:
+			# - on incoming calls for each call which is rejected for
+			# policy reasons (e.g. unknown neighbor or access
+			# violation)
+			# - on outgoing calls whenever a call attempt is determined
+			# to have ultimately failed. In the event that call retry
+			# is active, then this will be after all retry attempts
+			# have failed.
+			# - whenever a call connects. In this case, the object
+			# isdnBearerCallConnectTime should be included in the
+			# trap.
+			# 
+			# 
+			# Only one such trap is sent in between successful or
+			# unsuccessful call attempts from or to a single neighbor;
+			# subsequent call attempts result in no trap.
+			# 
+			# 
+			# If the Dial Control MIB objects dialCtlNbrCfgId and
+			# dialCtlNbrCfgIndex are known by the entity generating
+			# this trap, both objects should be included in the trap
+			# as well. The receipt of this trap with no dial neighbor
+			# information indicates that the manager must poll the
+			# callHistoryTable of the Dial Control MIB to see what
+			# changed.
+			$ifIndex = $1
+				$isdnBearerOperStatuslook = "isdnBearerOperStatus." + $2
+				$isdnBearerOperStatus = lookup($isdnBearerOperStatuslook,VarbindValTable)
+				if(match($isdnBearerOperStatus,"UNKNOWN")) {
+					$isdnBearerOperStatus = $2
+				} else {
+					$isdnBearerOperStatus = $isdnBearerOperStatus + " ( " + $2 + " )"
+				}
+			$isdnBearerPeerAddress = $3
+			$isdnBearerPeerSubAddress = $4
+			$isdnBearerCallSetupTime = $5
+				$isdnBearerInfoTypelook = "isdnBearerInfoType." + $6
+				$isdnBearerInfoType = lookup($isdnBearerInfoTypelook,VarbindValTable)
+				if(match($isdnBearerInfoType,"UNKNOWN")) {
+					$isdnBearerInfoType = $6
+				} else {
+					$isdnBearerInfoType = $isdnBearerInfoType + " ( " + $6 + " )"
+				}
+				$isdnBearerCallOriginlook = "isdnBearerCallOrigin." + $7
+				$isdnBearerCallOrigin = lookup($isdnBearerCallOriginlook,VarbindValTable)
+				if(match($isdnBearerCallOrigin,"UNKNOWN")) {
+					$isdnBearerCallOrigin = $7
+				} else {
+					$isdnBearerCallOrigin = $isdnBearerCallOrigin + " ( " + $7 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "ISDN-MIB"
+			@Summary = "isdnMibCallInformation"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($ifIndex,$isdnBearerOperStatus,$isdnBearerPeerAddress,$isdnBearerPeerSubAddress,$isdnBearerCallSetupTime,$isdnBearerInfoType,$isdnBearerCallOrigin)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.2.1.10.21.2.0": # - dialControlMibTraps
+	switch($specific-trap) {
+		case "1": ### - dialCtlPeerCallInformation
+			# SNMPv1
+			# This trap/inform is sent to the manager whenever
+			# a successful call clears, or a failed call attempt
+			# is determined to have ultimately failed. In the
+			# event that call retry is active, then this is after
+			# all retry attempts have failed. However, only one such
+			# trap is sent in between successful call attempts;
+			# subsequent call attempts result in no trap.
+			# ifOperStatus will return the operational status of the
+			# virtual interface associated with the peer to whom
+			# this call was made to.
+			$callHistoryPeerId = $1
+			$callHistoryPeerIfIndex = $2
+			$callHistoryLogicalIfIndex = $3
+				$ifOperStatuslook = "ifOperStatus." + $4
+				$ifOperStatus = lookup($ifOperStatuslook,VarbindValTable)
+				if(match($ifOperStatus,"UNKNOWN")) {
+					$ifOperStatus = $4
+				} else {
+					$ifOperStatus = $ifOperStatus + " ( " + $4 + " )"
+				}
+			$callHistoryPeerAddress = $5
+			$callHistoryPeerSubAddress = $6
+			$callHistoryDisconnectCause = $7
+			$callHistoryConnectTime = $8
+			$callHistoryDisconnectTime = $9
+				$callHistoryInfoTypelook = "callHistoryInfoType." + $10
+				$callHistoryInfoType = lookup($callHistoryInfoTypelook,VarbindValTable)
+				if(match($callHistoryInfoType,"UNKNOWN")) {
+					$callHistoryInfoType = $10
+				} else {
+					$callHistoryInfoType = $callHistoryInfoType + " ( " + $10 + " )"
+				}
+				$callHistoryCallOriginlook = "callHistoryCallOrigin." + $11
+				$callHistoryCallOrigin = lookup($callHistoryCallOriginlook,VarbindValTable)
+				if(match($callHistoryCallOrigin,"UNKNOWN")) {
+					$callHistoryCallOrigin = $11
+				} else {
+					$callHistoryCallOrigin = $callHistoryCallOrigin + " ( " + $11 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "DIAL-CONTROL-MIB"
+			@Summary = "dialCtlPeerCallInformation"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($callHistoryPeerId,$callHistoryPeerIfIndex,$callHistoryLogicalIfIndex,$ifOperStatus,$callHistoryPeerAddress,$callHistoryPeerSubAddress,$callHistoryDisconnectCause,$callHistoryConnectTime,$callHistoryDisconnectTime,$callHistoryInfoType,$callHistoryCallOrigin)
+
+		case "2": ### - dialCtlPeerCallSetup
+			# SNMPv1
+			# This trap/inform is sent to the manager whenever
+			# a call setup message is received or sent.
+			# ifOperStatus will return the operational status of the
+			# virtual interface associated with the peer to whom
+			# this call was made to.
+			$callActivePeerId = $1
+			$callActivePeerIfIndex = $2
+			$callActiveLogicalIfIndex = $3
+				$ifOperStatuslook = "ifOperStatus." + $4
+				$ifOperStatus = lookup($ifOperStatuslook,VarbindValTable)
+				if(match($ifOperStatus,"UNKNOWN")) {
+					$ifOperStatus = $4
+				} else {
+					$ifOperStatus = $ifOperStatus + " ( " + $4 + " )"
+				}
+			$callActivePeerAddress = $5
+			$callActivePeerSubAddress = $6
+				$callActiveInfoTypelook = "callActiveInfoType." + $7
+				$callActiveInfoType = lookup($callActiveInfoTypelook,VarbindValTable)
+				if(match($callActiveInfoType,"UNKNOWN")) {
+					$callActiveInfoType = $7
+				} else {
+					$callActiveInfoType = $callActiveInfoType + " ( " + $7 + " )"
+				}
+				$callActiveCallOriginlook = "callActiveCallOrigin." + $8
+				$callActiveCallOrigin = lookup($callActiveCallOriginlook,VarbindValTable)
+				if(match($callActiveCallOrigin,"UNKNOWN")) {
+					$callActiveCallOrigin = $8
+				} else {
+					$callActiveCallOrigin = $callActiveCallOrigin + " ( " + $8 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "DIAL-CONTROL-MIB"
+			@Summary = "dialCtlPeerCallSetup"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($callActivePeerId,$callActivePeerIfIndex,$callActiveLogicalIfIndex,$ifOperStatus,$callActivePeerAddress,$callActivePeerSubAddress,$callActiveInfoType,$callActiveCallOrigin)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.2.1.10.30.15": # - ds3Traps
+	switch($specific-trap) {
+		case "1": ### - dsx3LineStatusChange
+			# SNMPv1
+			# A dsx3LineStatusChange trap is sent when the
+			# value of an instance dsx3LineStatus changes. It
+			# can be utilized by an NMS to trigger polls.  When
+			# the line status change results in a lower level
+			# line status change (i.e. ds1), then no traps for
+			# the lower level are sent.
+			$dsx3LineStatus = $1
+			$dsx3LineStatusLastChange = $2
+			@AlertGroup = ""
+			@Agent = "RFC1407-MIB"
+			@Summary = "dsx3LineStatusChange"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($dsx3LineStatus,$dsx3LineStatusLastChange)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.2.1.10.32": # - frame-relay
+	switch($specific-trap) {
+		case "1": ### - frDLCIStatusChange
+			# SNMPv1
+			# This trap indicates that the indicated Virtual Circuit
+			# has changed state.  It has either been created or
+			# invalidated, or has toggled between the active and
+			# inactive states.  If, however, the reason for the state
+			# change is due to the DLCMI going down, per-DLCI traps
+			# should not be generated.
+			$frCircuitIfIndex = $1
+			$frCircuitDlci = $2
+				$frCircuitStatelook = "frCircuitState." + $3
+				$frCircuitState = lookup($frCircuitStatelook,VarbindValTable)
+				if(match($frCircuitState,"UNKNOWN")) {
+					$frCircuitState = $3
+				} else {
+					$frCircuitState = $frCircuitState + " ( " + $3 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "FRAME-RELAY-DTE-MIB"
+			@Summary = "frDLCIStatusChange"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($frCircuitIfIndex,$frCircuitDlci,$frCircuitState)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.2.1.10.39.1.5": # - sonetTraps
+	switch($specific-trap) {
+		case "1": ### - sonetMediumStatusChange
+			# SNMPv1
+			# A sonetMediumStatusChange trap is sent when the
+			# value of an instance sonetSectionCurrentStatus or
+			# sonetLineCurrentStatus changes. It
+			# can be utilized by an NMS to trigger polls.
+			$sonetSectionCurrentStatus = $1
+			$sonetLineCurrentStatus = $2
+			@AlertGroup = ""
+			@Agent = "SONET-MIB"
+			@Summary = "sonetMediumStatusChange"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($sonetSectionCurrentStatus,$sonetLineCurrentStatus)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.2.1.11": # - snmp
+	switch($specific-trap) {
+		case "0": ### - coldStart
+			# SNMPv1
+			# A coldStart trap signifies that the sending
+			# protocol entity is reinitializing itself such
+			# that the agent's configuration or the protocol
+			# entity implementation may be altered.
+			@AlertGroup = ""
+			@Agent = "RFC1215-MIB"
+			@Summary = "coldStart"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		case "1": ### - warmStart
+			# SNMPv1
+			# A warmStart trap signifies that the sending
+			# protocol entity is reinitializing itself such
+			# that neither the agent configuration nor the
+			# protocol entity implementation is altered.
+			@AlertGroup = ""
+			@Agent = "RFC1215-MIB"
+			@Summary = "warmStart"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		case "2": ### - linkDown
+			# SNMPv1
+			# A linkDown trap signifies that the sending
+			# protocol entity recognizes a failure in one of
+			# the communication links represented in the
+			# agent's configuration.
+			$ifIndex = $1
+			@AlertGroup = ""
+			@Agent = "RFC1215-MIB"
+			@Summary = "linkDown"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($ifIndex)
+
+		case "3": ### - linkUp
+			# SNMPv1
+			# A linkUp trap signifies that the sending
+			# protocol entity recognizes that one of the
+			# communication links represented in the agent's
+			# configuration has come up.
+			$ifIndex = $1
+			@AlertGroup = ""
+			@Agent = "RFC1215-MIB"
+			@Summary = "linkUp"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($ifIndex)
+
+		case "4": ### - authenticationFailure
+			# SNMPv1
+			# An authenticationFailure trap signifies that
+			# the sending protocol entity is the addressee
+			# of a protocol message that is not properly
+			# authenticated.  While implementations of the
+			# SNMP must be capable of generating this trap,
+			# they must also be capable of suppressing the
+			# emission of such traps via an implementation-
+			# specific mechanism.
+			@AlertGroup = ""
+			@Agent = "RFC1215-MIB"
+			@Summary = "authenticationFailure"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		case "5": ### - egpNeighborLoss
+			# SNMPv1
+			# An egpNeighborLoss trap signifies that an EGP
+			# neighbor for whom the sending protocol entity
+			# was an EGP peer has been marked down and the
+			# peer relationship no longer obtains.
+			$egpNeighAddr = $1
+			@AlertGroup = ""
+			@Agent = "RFC1215-MIB"
+			@Summary = "egpNeighborLoss"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($egpNeighAddr)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.2.1.14.16.2": # - ospfTraps
+	switch($specific-trap) {
+		case "1": ### - ospfVirtIfStateChange
+			# SNMPv2
+			# An ospfIfStateChange trap signifies that there
+			# has  been a change in the state of an OSPF vir-
+			# tual interface.
+			# This trap should be generated when  the  inter-
+			# face  state  regresses  (e.g., goes from Point-
+			# to-Point to Down) or progresses to  a  terminal
+			# state (i.e., Point-to-Point).
+			$ospfRouterId = $1
+			$ospfVirtIfAreaId = $2
+			$ospfVirtIfNeighbor = $3
+				$ospfVirtIfStatelook = "ospfVirtIfState." + $4
+				$ospfVirtIfState = lookup($ospfVirtIfStatelook,VarbindValTable)
+				if(match($ospfVirtIfState,"UNKNOWN")) {
+					$ospfVirtIfState = $4
+				} else {
+					$ospfVirtIfState = $ospfVirtIfState + " ( " + $4 + " )"
+				}
+			@AlertGroup = "ospfVirtIfStateChange"
+			@Agent = "OSPF-TRAP-MIB"
+			@Summary = "ospfVirtIfStateChange"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($ospfRouterId,$ospfVirtIfAreaId,$ospfVirtIfNeighbor,$ospfVirtIfState)
+
+		case "2": ### - ospfNbrStateChange
+			# SNMPv2
+			# An  ospfNbrStateChange  trap  signifies   that
+			# there  has been a change in the state of a non-
+			# virtual OSPF neighbor.   This  trap  should  be
+			# generated  when  the  neighbor  state regresses
+			# (e.g., goes from Attempt or Full  to  1-Way  or
+			# Down)  or progresses to a terminal state (e.g.,
+			# 2-Way or Full).  When an  neighbor  transitions
+			# from  or  to Full on non-broadcast multi-access
+			# and broadcast networks, the trap should be gen-
+			# erated  by the designated router.  A designated
+			# router transitioning to Down will be  noted  by
+			# ospfIfStateChange.
+			$ospfRouterId = $1
+			$ospfNbrIpAddr = $2
+			$ospfNbrAddressLessIndex = $3
+			$ospfNbrRtrId = $4
+				$ospfNbrStatelook = "ospfNbrState." + $5
+				$ospfNbrState = lookup($ospfNbrStatelook,VarbindValTable)
+				if(match($ospfNbrState,"UNKNOWN")) {
+					$ospfNbrState = $5
+				} else {
+					$ospfNbrState = $ospfNbrState + " ( " + $5 + " )"
+				}
+			@AlertGroup = "ospfNbrStateChange"
+			@Agent = "OSPF-TRAP-MIB"
+			@Summary = "ospfNbrStateChange, routerId " + $ospfRouterId + ", nbr ip address " + $ospfNbrIpAddr + ", nbr router ID " + $ospfNbrRtrId + ", State " + $ospfNbrState + ", nbr address less index " + $ospfNbrAddressLessIndex 
+			@Severity = 1
+			@Type = 0
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			#details($ospfRouterId,$ospfNbrIpAddr,$ospfNbrAddressLessIndex,$ospfNbrRtrId,$ospfNbrState)
+
+		case "3": ### - ospfVirtNbrStateChange
+			# SNMPv2
+			# An ospfIfStateChange trap signifies that there
+			# has  been a change in the state of an OSPF vir-
+			# tual neighbor.  This trap should  be  generated
+			# when  the  neighbor state regresses (e.g., goes
+			# from Attempt or  Full  to  1-Way  or  Down)  or
+			# progresses to a terminal state (e.g., Full).
+			$ospfRouterId = $1
+			$ospfVirtNbrArea = $2
+			$ospfVirtNbrRtrId = $3
+				$ospfVirtNbrStatelook = "ospfVirtNbrState." + $4
+				$ospfVirtNbrState = lookup($ospfVirtNbrStatelook,VarbindValTable)
+				if(match($ospfVirtNbrState,"UNKNOWN")) {
+					$ospfVirtNbrState = $4
+				} else {
+					$ospfVirtNbrState = $ospfVirtNbrState + " ( " + $4 + " )"
+				}
+			@AlertGroup = "ospfVirtNbrStateChange"
+			@Agent = "OSPF-TRAP-MIB"
+			@Summary = "ospfVirtNbrStateChange, routerID " + $ospfRouterId + ", nbr router Id " + $ospfVirtNbrRtrId + ", Nbr Area " + $ospfVirtNbrArea + ", state " + $ospfVirtNbrState
+			@Severity = 1
+			@Type = 0
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			#details($ospfRouterId,$ospfVirtNbrArea,$ospfVirtNbrRtrId,$ospfVirtNbrState)
+
+		case "4": ### - ospfIfConfigError
+			# SNMPv2
+			# An ospfIfConfigError  trap  signifies  that  a
+			# packet  has  been received on a non-virtual in-
+			# terface  from  a  router  whose   configuration
+			# parameters  conflict  with this router's confi-
+			# guration parameters.  Note that the  event  op-
+			# tionMismatch  should  cause  a  trap only if it
+			# prevents an adjacency from forming.
+			$ospfRouterId = $1
+			$ospfIfIpAddress = $2
+			$ospfAddressLessIf = $3
+			$ospfPacketSrc = $4
+				$ospfConfigErrorTypelook = "ospfConfigErrorType." + $5
+				$ospfConfigErrorType = lookup($ospfConfigErrorTypelook,VarbindValTable)
+				if(match($ospfConfigErrorType,"UNKNOWN")) {
+					$ospfConfigErrorType = $5
+				} else {
+					$ospfConfigErrorType = $ospfConfigErrorType + " ( " + $5 + " )"
+				}
+				$ospfPacketTypelook = "ospfPacketType." + $6
+				$ospfPacketType = lookup($ospfPacketTypelook,VarbindValTable)
+				if(match($ospfPacketType,"UNKNOWN")) {
+					$ospfPacketType = $6
+				} else {
+					$ospfPacketType = $ospfPacketType + " ( " + $6 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "OSPF-TRAP-MIB"
+			@Summary = "ospfIfConfigError"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($ospfRouterId,$ospfIfIpAddress,$ospfAddressLessIf,$ospfPacketSrc,$ospfConfigErrorType,$ospfPacketType)
+
+		case "5": ### - ospfVirtIfConfigError
+			# SNMPv2
+			# An ospfConfigError trap signifies that a pack-
+			# et  has  been  received  on a virtual interface
+			# from a router  whose  configuration  parameters
+			# conflict   with   this  router's  configuration
+			# parameters.  Note that the event optionMismatch
+			# should  cause a trap only if it prevents an ad-
+			# jacency from forming.
+			$ospfRouterId = $1
+			$ospfVirtIfAreaId = $2
+			$ospfVirtIfNeighbor = $3
+				$ospfConfigErrorTypelook = "ospfConfigErrorType." + $4
+				$ospfConfigErrorType = lookup($ospfConfigErrorTypelook,VarbindValTable)
+				if(match($ospfConfigErrorType,"UNKNOWN")) {
+					$ospfConfigErrorType = $4
+				} else {
+					$ospfConfigErrorType = $ospfConfigErrorType + " ( " + $4 + " )"
+				}
+				$ospfPacketTypelook = "ospfPacketType." + $5
+				$ospfPacketType = lookup($ospfPacketTypelook,VarbindValTable)
+				if(match($ospfPacketType,"UNKNOWN")) {
+					$ospfPacketType = $5
+				} else {
+					$ospfPacketType = $ospfPacketType + " ( " + $5 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "OSPF-TRAP-MIB"
+			@Summary = "ospfVirtIfConfigError"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($ospfRouterId,$ospfVirtIfAreaId,$ospfVirtIfNeighbor,$ospfConfigErrorType,$ospfPacketType)
+
+		case "6": ### - ospfIfAuthFailure
+			# SNMPv2
+			# An ospfIfAuthFailure  trap  signifies  that  a
+			# packet  has  been received on a non-virtual in-
+			# terface from a router whose authentication  key
+			# or  authentication  type  conflicts  with  this
+			# router's authentication key  or  authentication
+			# type.
+			$ospfRouterId = $1
+			$ospfIfIpAddress = $2
+			$ospfAddressLessIf = $3
+			$ospfPacketSrc = $4
+				$ospfConfigErrorTypelook = "ospfConfigErrorType." + $5
+				$ospfConfigErrorType = lookup($ospfConfigErrorTypelook,VarbindValTable)
+				if(match($ospfConfigErrorType,"UNKNOWN")) {
+					$ospfConfigErrorType = $5
+				} else {
+					$ospfConfigErrorType = $ospfConfigErrorType + " ( " + $5 + " )"
+				}
+				$ospfPacketTypelook = "ospfPacketType." + $6
+				$ospfPacketType = lookup($ospfPacketTypelook,VarbindValTable)
+				if(match($ospfPacketType,"UNKNOWN")) {
+					$ospfPacketType = $6
+				} else {
+					$ospfPacketType = $ospfPacketType + " ( " + $6 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "OSPF-TRAP-MIB"
+			@Summary = "ospfIfAuthFailure"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($ospfRouterId,$ospfIfIpAddress,$ospfAddressLessIf,$ospfPacketSrc,$ospfConfigErrorType,$ospfPacketType)
+
+		case "7": ### - ospfVirtIfAuthFailure
+			# SNMPv2
+			# An ospfVirtIfAuthFailure trap signifies that a
+			# packet has been received on a virtual interface
+			# from a router whose authentication key  or  au-
+			# thentication  type conflicts with this router's
+			# authentication key or authentication type.
+			$ospfRouterId = $1
+			$ospfVirtIfAreaId = $2
+			$ospfVirtIfNeighbor = $3
+				$ospfConfigErrorTypelook = "ospfConfigErrorType." + $4
+				$ospfConfigErrorType = lookup($ospfConfigErrorTypelook,VarbindValTable)
+				if(match($ospfConfigErrorType,"UNKNOWN")) {
+					$ospfConfigErrorType = $4
+				} else {
+					$ospfConfigErrorType = $ospfConfigErrorType + " ( " + $4 + " )"
+				}
+				$ospfPacketTypelook = "ospfPacketType." + $5
+				$ospfPacketType = lookup($ospfPacketTypelook,VarbindValTable)
+				if(match($ospfPacketType,"UNKNOWN")) {
+					$ospfPacketType = $5
+				} else {
+					$ospfPacketType = $ospfPacketType + " ( " + $5 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "OSPF-TRAP-MIB"
+			@Summary = "ospfVirtIfAuthFailure"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($ospfRouterId,$ospfVirtIfAreaId,$ospfVirtIfNeighbor,$ospfConfigErrorType,$ospfPacketType)
+
+		case "8": ### - ospfIfRxBadPacket
+			# SNMPv2
+			# An ospfIfRxBadPacket trap  signifies  that  an
+			# OSPF  packet has been received on a non-virtual
+			# interface that cannot be parsed.
+			$ospfRouterId = $1
+			$ospfIfIpAddress = $2
+			$ospfAddressLessIf = $3
+			$ospfPacketSrc = $4
+				$ospfPacketTypelook = "ospfPacketType." + $5
+				$ospfPacketType = lookup($ospfPacketTypelook,VarbindValTable)
+				if(match($ospfPacketType,"UNKNOWN")) {
+					$ospfPacketType = $5
+				} else {
+					$ospfPacketType = $ospfPacketType + " ( " + $5 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "OSPF-TRAP-MIB"
+			@Summary = "ospfIfRxBadPacket"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($ospfRouterId,$ospfIfIpAddress,$ospfAddressLessIf,$ospfPacketSrc,$ospfPacketType)
+
+		case "9": ### - ospfVirtIfRxBadPacket
+			# SNMPv2
+			# An ospfRxBadPacket trap signifies that an OSPF
+			# packet has been received on a virtual interface
+			# that cannot be parsed.
+			$ospfRouterId = $1
+			$ospfVirtIfAreaId = $2
+			$ospfVirtIfNeighbor = $3
+				$ospfPacketTypelook = "ospfPacketType." + $4
+				$ospfPacketType = lookup($ospfPacketTypelook,VarbindValTable)
+				if(match($ospfPacketType,"UNKNOWN")) {
+					$ospfPacketType = $4
+				} else {
+					$ospfPacketType = $ospfPacketType + " ( " + $4 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "OSPF-TRAP-MIB"
+			@Summary = "ospfVirtIfRxBadPacket"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($ospfRouterId,$ospfVirtIfAreaId,$ospfVirtIfNeighbor,$ospfPacketType)
+
+		case "10": ### - ospfTxRetransmit
+			# SNMPv2
+			# An ospfTxRetransmit  trap  signifies  than  an
+			# OSPF  packet  has  been retransmitted on a non-
+			# virtual interface.  All packets that may be re-
+			# transmitted  are associated with an LSDB entry.
+			# The LS type, LS ID, and Router ID are  used  to
+			# identify the LSDB entry.
+			$ospfRouterId = $1
+			$ospfIfIpAddress = $2
+			$ospfAddressLessIf = $3
+			$ospfNbrRtrId = $4
+				$ospfPacketTypelook = "ospfPacketType." + $5
+				$ospfPacketType = lookup($ospfPacketTypelook,VarbindValTable)
+				if(match($ospfPacketType,"UNKNOWN")) {
+					$ospfPacketType = $5
+				} else {
+					$ospfPacketType = $ospfPacketType + " ( " + $5 + " )"
+				}
+				$ospfLsdbTypelook = "ospfLsdbType." + $6
+				$ospfLsdbType = lookup($ospfLsdbTypelook,VarbindValTable)
+				if(match($ospfLsdbType,"UNKNOWN")) {
+					$ospfLsdbType = $6
+				} else {
+					$ospfLsdbType = $ospfLsdbType + " ( " + $6 + " )"
+				}
+			$ospfLsdbLsid = $7
+			$ospfLsdbRouterId = $8
+			@AlertGroup = ""
+			@Agent = "OSPF-TRAP-MIB"
+			@Summary = "ospfTxRetransmit"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($ospfRouterId,$ospfIfIpAddress,$ospfAddressLessIf,$ospfNbrRtrId,$ospfPacketType,$ospfLsdbType,$ospfLsdbLsid,$ospfLsdbRouterId)
+
+		case "11": ### - ospfVirtIfTxRetransmit
+			# SNMPv2
+			# An ospfTxRetransmit  trap  signifies  than  an
+			# OSPF packet has been retransmitted on a virtual
+			# interface.  All packets that may be retransmit-
+			# ted  are  associated with an LSDB entry. The LS
+			# type, LS ID, and Router ID are used to identify
+			# the LSDB entry.
+			$ospfRouterId = $1
+			$ospfVirtIfAreaId = $2
+			$ospfVirtIfNeighbor = $3
+				$ospfPacketTypelook = "ospfPacketType." + $4
+				$ospfPacketType = lookup($ospfPacketTypelook,VarbindValTable)
+				if(match($ospfPacketType,"UNKNOWN")) {
+					$ospfPacketType = $4
+				} else {
+					$ospfPacketType = $ospfPacketType + " ( " + $4 + " )"
+				}
+				$ospfLsdbTypelook = "ospfLsdbType." + $5
+				$ospfLsdbType = lookup($ospfLsdbTypelook,VarbindValTable)
+				if(match($ospfLsdbType,"UNKNOWN")) {
+					$ospfLsdbType = $5
+				} else {
+					$ospfLsdbType = $ospfLsdbType + " ( " + $5 + " )"
+				}
+			$ospfLsdbLsid = $6
+			$ospfLsdbRouterId = $7
+			@AlertGroup = ""
+			@Agent = "OSPF-TRAP-MIB"
+			@Summary = "ospfVirtIfTxRetransmit"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($ospfRouterId,$ospfVirtIfAreaId,$ospfVirtIfNeighbor,$ospfPacketType,$ospfLsdbType,$ospfLsdbLsid,$ospfLsdbRouterId)
+
+		case "12": ### - ospfOriginateLsa
+			# SNMPv2
+			# An ospfOriginateLsa trap signifies that a  new
+			# LSA  has  been originated by this router.  This
+			# trap should not be invoked for simple refreshes
+			# of  LSAs  (which happesn every 30 minutes), but
+			# instead will only be invoked  when  an  LSA  is
+			# (re)originated due to a topology change.  Addi-
+			# tionally, this trap does not include LSAs  that
+			# are  being  flushed  because  they have reached
+			# MaxAge.
+			$ospfRouterId = $1
+			$ospfLsdbAreaId = $2
+				$ospfLsdbTypelook = "ospfLsdbType." + $3
+				$ospfLsdbType = lookup($ospfLsdbTypelook,VarbindValTable)
+				if(match($ospfLsdbType,"UNKNOWN")) {
+					$ospfLsdbType = $3
+				} else {
+					$ospfLsdbType = $ospfLsdbType + " ( " + $3 + " )"
+				}
+			$ospfLsdbLsid = $4
+			$ospfLsdbRouterId = $5
+			@AlertGroup = ""
+			@Agent = "OSPF-TRAP-MIB"
+			@Summary = "ospfOriginateLsa"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($ospfRouterId,$ospfLsdbAreaId,$ospfLsdbType,$ospfLsdbLsid,$ospfLsdbRouterId)
+
+		case "13": ### - ospfMaxAgeLsa
+			# SNMPv2
+			# An ospfMaxAgeLsa trap signifies  that  one  of
+			# the LSA in the router's link-state database has
+			# aged to MaxAge.
+			$ospfRouterId = $1
+			$ospfLsdbAreaId = $2
+				$ospfLsdbTypelook = "ospfLsdbType." + $3
+				$ospfLsdbType = lookup($ospfLsdbTypelook,VarbindValTable)
+				if(match($ospfLsdbType,"UNKNOWN")) {
+					$ospfLsdbType = $3
+				} else {
+					$ospfLsdbType = $ospfLsdbType + " ( " + $3 + " )"
+				}
+			$ospfLsdbLsid = $4
+			$ospfLsdbRouterId = $5
+			@AlertGroup = ""
+			@Agent = "OSPF-TRAP-MIB"
+			@Summary = "ospfMaxAgeLsa"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($ospfRouterId,$ospfLsdbAreaId,$ospfLsdbType,$ospfLsdbLsid,$ospfLsdbRouterId)
+
+		case "14": ### - ospfLsdbOverflow
+			# SNMPv2
+			# An ospfLsdbOverflow trap  signifies  that  the
+			# number of LSAs in the router's link-state data-
+			# base has exceeded ospfExtLsdbLimit.
+			$ospfRouterId = $1
+			$ospfExtLsdbLimit = $2
+			@AlertGroup = ""
+			@Agent = "OSPF-TRAP-MIB"
+			@Summary = "ospfLsdbOverflow"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($ospfRouterId,$ospfExtLsdbLimit)
+
+		case "15": ### - ospfLsdbApproachingOverflow
+			# SNMPv2
+			# An ospfLsdbApproachingOverflow trap  signifies
+			# that  the  number of LSAs in the router's link-
+			# state database has exceeded ninety  percent  of
+			# ospfExtLsdbLimit.
+			$ospfRouterId = $1
+			$ospfExtLsdbLimit = $2
+			@AlertGroup = ""
+			@Agent = "OSPF-TRAP-MIB"
+			@Summary = "ospfLsdbApproachingOverflow"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($ospfRouterId,$ospfExtLsdbLimit)
+
+		case "16": ### - ospfIfStateChange
+			# SNMPv2
+			# An ospfIfStateChange trap signifies that there
+			# has been a change in the state of a non-virtual
+			# OSPF interface. This trap should  be  generated
+			# when  the interface state regresses (e.g., goes
+			# from Dr to Down) or progresses  to  a  terminal
+			# state  (i.e.,  Point-to-Point, DR Other, Dr, or
+			# Backup).
+			$ospfRouterId = $1
+			$ospfIfIpAddress = $2
+			$ospfAddressLessIf = $3
+				$ospfIfStatelook = "ospfIfState." + $4
+				$ospfIfState = lookup($ospfIfStatelook,VarbindValTable)
+				if(match($ospfIfState,"UNKNOWN")) {
+					$ospfIfState = $4
+				} else {
+					$ospfIfState = $ospfIfState + " ( " + $4 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "OSPF-TRAP-MIB"
+			@Summary = "ospfIfStateChange"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($ospfRouterId,$ospfIfIpAddress,$ospfAddressLessIf,$ospfIfState)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.2.1.15.7": # - bgpTraps
+	switch($specific-trap) {
+		case "1": ### - bgpEstablished
+			# SNMPv1
+			# The BGP Established event is generated when
+			# the BGP FSM enters the ESTABLISHED state.
+			$bgpPeerLastError = $1
+				$bgpPeerStatelook = "bgpPeerState." + $2
+				$bgpPeerState = lookup($bgpPeerStatelook,VarbindValTable)
+				if(match($bgpPeerState,"UNKNOWN")) {
+					$bgpPeerState = $2
+				} else {
+					$bgpPeerState = $bgpPeerState + " ( " + $2 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "BGP4-MIB"
+			@Summary = "bgpEstablished"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($bgpPeerLastError,$bgpPeerState)
+
+		case "2": ### - bgpBackwardTransition
+			# SNMPv1
+			# The BGPBackwardTransition Event is generated
+			# when the BGP FSM moves from a higher numbered
+			# state to a lower numbered state.
+			$bgpPeerLastError = $1
+				$bgpPeerStatelook = "bgpPeerState." + $2
+				$bgpPeerState = lookup($bgpPeerStatelook,VarbindValTable)
+				if(match($bgpPeerState,"UNKNOWN")) {
+					$bgpPeerState = $2
+				} else {
+					$bgpPeerState = $bgpPeerState + " ( " + $2 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "BGP4-MIB"
+			@Summary = "bgpBackwardTransition"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($bgpPeerLastError,$bgpPeerState)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.2.1.16": # - rmon
+	switch($specific-trap) {
+		case "1": ### - risingAlarm
+			# SNMPv1
+			# The SNMP trap that is generated when an alarm
+			# entry crosses its rising threshold and generates
+			# an event that is configured for sending SNMP
+			# traps.
+			$alarmIndex = $1
+			$alarmVariable = $2
+				$alarmSampleTypelook = "alarmSampleType." + $3
+				$alarmSampleType = lookup($alarmSampleTypelook,VarbindValTable)
+				if(match($alarmSampleType,"UNKNOWN")) {
+					$alarmSampleType = $3
+				} else {
+					$alarmSampleType = $alarmSampleType + " ( " + $3 + " )"
+				}
+			$alarmValue = $4
+			$alarmRisingThreshold = $5
+			@Agent = "RMON-MIB"
+			@AlertGroup = "risingAlarm"
+			@Summary = "risingAlarm " + $alarmIndex + " " + $alarmVariable + " " + $alarmSampleType + " " + $alarmValue + " " + $alarmFallingThreshold
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($alarmIndex,$alarmVariable,$alarmSampleType,$alarmValue,$alarmRisingThreshold)
+
+		case "2": ### - fallingAlarm
+			# SNMPv1
+			# The SNMP trap that is generated when an alarm
+			# entry crosses its falling threshold and generates
+			# an event that is configured for sending SNMP
+			# traps.
+			$alarmIndex = $1
+			$alarmVariable = $2
+				$alarmSampleTypelook = "alarmSampleType." + $3
+				$alarmSampleType = lookup($alarmSampleTypelook,VarbindValTable)
+				if(match($alarmSampleType,"UNKNOWN")) {
+					$alarmSampleType = $3
+				} else {
+					$alarmSampleType = $alarmSampleType + " ( " + $3 + " )"
+				}
+			$alarmValue = $4
+			$alarmFallingThreshold = $5
+			@Agent = "RMON-MIB"
+			@AlertGroup = "fallingAlarm"
+			@Summary = "fallingAlarm " + $alarmIndex + " " + $alarmVariable + " " + $alarmSampleType + " " + $alarmValue + " " + $alarmFallingThreshold
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($alarmIndex,$alarmVariable,$alarmSampleType,$alarmValue,$alarmFallingThreshold)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+
+case ".1.3.6.1.2.1.37.1.14.2.1.0": # - atmPvcTrapsPrefix
+	switch($specific-trap) {
+		case "1": ### - atmIntfPvcFailuresTrap
+			# SNMPv1
+			# A notification indicating that one or more PVPLs or
+			# PVCLs on this interface has failed since the last
+			# atmPvcFailuresTrap was sent.  If this trap has not been
+			# sent for the last atmIntfPvcNotificationInterval, then
+			# it will be sent on the next increment of
+			# atmIntfPvcFailures.
+			$ifIndex = $1
+			$atmIntfPvcFailures = $2
+			$atmIntfCurrentlyFailingPVpls = $3
+			$atmIntfCurrentlyFailingPVcls = $4
+			@AlertGroup = ""
+			@Agent = "ATM2-MIB"
+			@Summary = "atmIntfPvcFailuresTrap"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($ifIndex,$atmIntfPvcFailures,$atmIntfCurrentlyFailingPVpls,$atmIntfCurrentlyFailingPVcls)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.2.1.47.2": # - entityMIBTraps
+	switch($specific-trap) {
+		case "1": ### - entConfigChange
+			# SNMPv2
+			# An entConfigChange notification is generated when the value
+			# of entLastChangeTime changes. It can be utilized by an NMS
+			# to trigger logical/physical entity table maintenance polls.
+			# 
+			# An agent should not generate more than one entConfigChange
+			# 'notification-event' in a given time interval (five seconds
+			# is the suggested default).  A 'notification-event' is the
+			# transmission of a single trap or inform PDU to a list of
+			# notification destinations.
+			# 
+			# If additional configuration changes occur within the
+			# throttling period, then notification-events for these
+			# changes should be suppressed by the agent until the current
+			# throttling period expires.  At the end of a throttling
+			# period, one notification-event should be generated if any
+			# configuration changes occurred since the start of the
+			# throttling period. In such a case, another throttling period
+			# is started right away.
+			# 
+			# An NMS should periodically check the value of
+			# entLastChangeTime to detect any missed entConfigChange
+			# notification-events, e.g., due to throttling or transmission
+			# loss.
+			@AlertGroup = "entConfigChange"
+			@Agent = "ENTITY-MIB"
+			@Summary = "entConfigChange"
+			@Severity = 1
+			#@Type = 0
+			@Type = 13
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.2.1.51.3.0": # - rsvpNotifications
+	switch($specific-trap) {
+		case "1": ### - newFlow
+			# SNMPv1
+			# The newFlow trap indicates that the  originat-
+			# ing  system  has  installed  a  new flow in its
+			# classifier, or (when reservation  authorization
+			# is  in view) is prepared to install such a flow
+			# in the classifier and is requesting  authoriza-
+			# tion.   The objects included with the Notifica-
+			# tion may be used to  read  further  information
+			# using  the  Integrated  Services and RSVP MIBs.
+			# Authorization  or  non-authorization   may   be
+			# enacted by a write to the variable intSrvFlowS-
+			# tatus.
+			$intSrvFlowStatus = $1
+			$rsvpSessionDestAddr = $2
+			$rsvpResvFwdStatus = $3
+			$rsvpResvStatus = $4
+			$rsvpSenderStatus = $5
+			@AlertGroup = ""
+			@Agent = "RSVP-MIB"
+			@Summary = "newFlow"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($intSrvFlowStatus,$rsvpSessionDestAddr,$rsvpResvFwdStatus,$rsvpResvStatus,$rsvpSenderStatus)
+
+		case "2": ### - lostFlow
+			# SNMPv1
+			# The lostFlow trap indicates that the originat-
+			# ing system has removed a flow from its classif-
+			# ier.
+			$intSrvFlowStatus = $1
+			$rsvpSessionDestAddr = $2
+			$rsvpResvFwdStatus = $3
+			$rsvpResvStatus = $4
+			$rsvpSenderStatus = $5
+			@AlertGroup = ""
+			@Agent = "RSVP-MIB"
+			@Summary = "lostFlow"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($intSrvFlowStatus,$rsvpSessionDestAddr,$rsvpResvFwdStatus,$rsvpResvStatus,$rsvpSenderStatus)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.2.1.55.2": # - ipv6Notifications
+	switch($specific-trap) {
+		case "1": ### - ipv6IfStateChange
+			# SNMPv2
+			# An ipv6IfStateChange notification signifies
+			# that there has been a change in the state of
+			# an ipv6 interface.  This notification should
+			# be generated when the interface's operational
+			# status transitions to or from the up(1) state.
+			$ipv6IfDescr = $1
+				$ipv6IfOperStatuslook = "ipv6IfOperStatus." + $2
+				$ipv6IfOperStatus = lookup($ipv6IfOperStatuslook,VarbindValTable)
+				if(match($ipv6IfOperStatus,"UNKNOWN")) {
+					$ipv6IfOperStatus = $2
+				} else {
+					$ipv6IfOperStatus = $ipv6IfOperStatus + " ( " + $2 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "IPV6-MIB"
+			@Summary = "ipv6IfStateChange"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($ipv6IfDescr,$ipv6IfOperStatus)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.2.1.68.1.3.1": # - vrrpTraps
+	switch($specific-trap) {
+		case "3": ### - vrrpTrapNewMaster
+			# SNMPv1
+			# The newMaster trap indicates that the sending agent
+			# has transitioned from 'Backup' state to 'Master' state.
+			$ifIndex = $1
+			$vrrpOperVrId = $2
+			@AlertGroup = "vrrpTrapNewMaster"
+			@Agent = "VRRP-MIB"
+			@Summary = "vrrpTrapNewMaster " + $vrrpOperVrId + " " + $ifIndex
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($ifIndex,$vrrpOperVrId)
+
+		case "4": ### - vrrpTrapAuthFailure
+			# SNMPv1
+			# A vrrpAuthFailure trap signifies that a packet has
+			# been received from a router whose authentication key
+			# or authentication type conflicts with this router's
+			# authentication key or authentication type. Implementation
+			# of this trap is optional.
+			$ifIndex = $1
+			$vrrpOperVrId = $2
+			$vrrpTrapPacketSrc = $3
+				$vrrpTrapAuthErrorTypelook = "vrrpTrapAuthErrorType." + $4
+				$vrrpTrapAuthErrorType = lookup($vrrpTrapAuthErrorTypelook,VarbindValTable)
+				if(match($vrrpTrapAuthErrorType,"UNKNOWN")) {
+					$vrrpTrapAuthErrorType = $4
+				} else {
+					$vrrpTrapAuthErrorType = $vrrpTrapAuthErrorType + " ( " + $4 + " )"
+				}
+			@AlertGroup = "vrrpTrapAuthFailure"
+			@Agent = "VRRP-MIB"
+			@Summary = "vrrpTrapAuthFailure"
+			@Summary = "vrrpTrapAuthFailure " + $vrrpTrapAuthErrorType + " from source " + $vrrpTrapPacketSrc
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($ifIndex,$vrrpOperVrId,$vrrpTrapPacketSrc,$vrrpTrapAuthErrorType)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+
+case ".1.3.6.1.3.9876.2.0": # - mplsLdpNotificationPrefix
+	switch($specific-trap) {
+		case "1": ### - mplsLdpFailedInitSessionThresholdExceeded
+			# SNMPv1
+			# This notification is generated whenever the value
+			# of mplsLdpEntityFailedInitSessionThreshold is
+			# exceeded.
+			$mplsLdpEntityFailedInitSessionThreshold = $1
+			@AlertGroup = ""
+			@Agent = "MPLS-LDP-MIB"
+			@Summary = "mplsLdpFailedInitSessionThresholdExceeded"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($mplsLdpEntityFailedInitSessionThreshold)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.6.3.1.1.5": # - snmpTraps
+	switch($specific-trap) {
+		case "1": ### - coldStart
+			# SNMPv2
+			# A coldStart trap signifies that the SNMPv2 entity, acting
+			# in an agent role, is reinitializing itself and that its
+			# configuration may have been altered.
+			@AlertGroup = ""
+			@Agent = "SNMPv2-MIB"
+			@Summary = "coldStart"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		case "2": ### - warmStart
+			# SNMPv2
+			# A warmStart trap signifies that the SNMPv2 entity, acting
+			# in an agent role, is reinitializing itself such that its
+			# configuration is unaltered.
+			@AlertGroup = ""
+			@Agent = "SNMPv2-MIB"
+			@Summary = "warmStart"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		case "5": ### - authenticationFailure
+			# SNMPv2
+			# An authenticationFailure trap signifies that the SNMPv2
+			# entity, acting in an agent role, has received a protocol
+			# message that is not properly authenticated.  While all
+			# implementations of the SNMPv2 must be capable of generating
+			# this trap, the snmpEnableAuthenTraps object indicates
+			# whether this trap will be generated.
+			@AlertGroup = ""
+			@Agent = "SNMPv2-MIB"
+			@Summary = "authenticationFailure"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+

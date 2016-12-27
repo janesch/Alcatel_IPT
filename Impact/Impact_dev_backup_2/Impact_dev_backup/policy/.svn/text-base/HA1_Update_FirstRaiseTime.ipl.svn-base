@@ -1,0 +1,89 @@
+// Policy Name: Update_FirstRaiseTime
+//  Description: This policy updates the FirstRaiseTime of the ultimate parent alarm
+//  to be the earliest LastOccurrence of all its Child alarms.
+// 
+// Version    Date        Name        Description
+// 1.0        14-09-10    -        Baseline
+// 1.1        14-09-10    Tony Nisbet    Capture ServerSerial with logging (patch 4.22)
+//
+
+// DB - LOGGING ADDED 
+log ("**** Update_FirstRaiseTime: Start. Serial=" + @Serial + " ChildID=" + @ChildID + " Node= " + @Node); 
+log("Update_FirstRaiseTime: IQLOGSTART: ServerSerial=" + @ServerSerial + " EventId=" + @EventId); 
+
+// Case 1: The ultimate parent alarm (ParentChild in (5,7))
+
+if ((@ParentChildFlag == 5) || (@ParentChildFlag == 7)) {
+
+    log("Update_FirstRaiseTime: Ultimate parent: " + @Serial);
+
+    // If the UltimateParentSerial is not already populated
+    if (@UltimateParentSerial == 0) {
+        // Copy the Serial of the parent to the UltimateParentSerial
+        @UltimateParentSerial = @Serial;
+        ReturnEvent(EventContainer);
+    }
+
+    // If we have child alarms populate the UltimateParenSerial
+    if ('' <> @ChildID) {
+        DataType = "ha_ncoms_impact_events";
+        // If we have any children that are already ultimate parents then just copy their minimum FirstRaiseTime
+        Filter = "Serial in ("+ @ChildID +") and UltimateParentSerial = Serial";
+        OtherParents = GetByFilter( DataType, Filter, False );
+        If ( Num > 0 ) {
+            NumOtherParents = Num;
+            CurrentParent = 0;
+            While ( CurrentParent < NumOtherParents ) {
+                If ( @FirstRaiseTime > OtherParents[CurrentParent].FirstRaiseTime ) {
+                    @FirstRaiseTime = OtherParents[CurrentParent].FirstRaiseTime;
+                }
+                CurrentParent = CurrentParent + 1;
+            }
+            ReturnEvent(EventContainer);
+        }
+        
+        //Call BatchUpdate to update UltimateParentSerial of child alarms with Serial of parent alarm
+        Filter = "Serial in ("+ @ChildID +") and UltimateParentSerial <> Serial and UltimateParentSerial <> "+ @Serial;
+        UpdateExpression = "ImpactFlag = 6, UltimateParentSerial = "+ @Serial;
+        
+        BatchUpdate(DataType, Filter, UpdateExpression);
+    }
+}
+
+// Case 2: A child alarm
+
+else {
+
+    log("Update_FirstRaiseTime: child: " + @Serial);
+    @ImpactFlag = 5;
+    ReturnEvent(EventContainer);
+    
+    // Update the FirstRaiseTime of the ultimate parent if required...
+    DataType = "ha_ncoms_impact_events";
+    Filter = "Serial = "+ @UltimateParentSerial +" and FirstRaiseTime > "+ @FirstRaiseTime;
+    UltimateParent = GetByFilter( DataType, Filter, False );
+    If ( Num > 0 ) {
+        // The FirstRaiseTime of the ultimate parent is older than this child event so update it...
+        UltimateParent[0].FirstRaiseTime = @FirstRaiseTime;
+    }
+    
+    // If we have child alarms populate the UltimateParenSerial
+    if ('' <> @ChildID) {
+        //Call BatchUpdate to update UltimateParentSerial of child alarms with Serial of parent alarm
+        DataType = "ha_ncoms_impact_events";
+        Filter = "Serial in ("+ @ChildID +") and UltimateParentSerial <> "+ @Serial;
+        UpdateExpression = "UltimateParentSerial = "+ @UltimateParentSerial;
+        
+        BatchUpdate(DataType, Filter, UpdateExpression);
+    }
+}
+
+
+
+//log("Update_FirstRaiseTime: End: " + @Serial);
+
+// DB - LOGGING ADDED
+log("Update_FirstRaiseTime: IQLOGFINISH: ServerSerial=" + @ServerSerial + " EventId=" + @EventId);
+log ("**** Update_FirstRaiseTime: Start. Serial=" + @Serial + " ChildID=" + @ChildID + " Node= " + @Node); 
+
+

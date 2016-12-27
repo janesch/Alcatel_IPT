@@ -1,0 +1,29 @@
+Inbound Utilization CritBurstViolationThr	1	2	2
+Inbound Utilization WarnBurstViolationThr	0	2	2
+Inbound Errors CritBurstViolationThr	0	2	2
+Inbound Errors WarnBurstViolationThr	0	2	2
+Outbound Errors CritBurstViolationThr	0	2	2
+Outbound Errors WarnBurstViolationThr	0	2	2
+Inbound Discarded CritBurstViolationThr	0	2	2
+Inbound Discarded WarnBurstViolationThr	0	2	2
+Outbound Discarded CritBurstViolationThr	0	2	2
+Outbound Discarded WarnBurstViolationThr	0	2	2
+Interface Availability CritBurstViolationThr	0	2	2
+Interface Availability WarnBurstViolationThr	0	2	2
+GoodPutRatio CritBurstViolationThr	0	2	2
+GoodPutRatio WarnBurstViolationThr	0	2	2
+OneWayLatency CritBurstViolationThr	0	2	2
+OneWayLatency WarnBurstViolationThr	0	2	2
+Probe Availability CritBurstViolationThr	0	2	2
+Probe Availability WarnBurstViolationThr	0	2	2
+LIMO_transmissions CritBurstViolationThr	0	2	2
+LIMO_transmissions WarnBurstViolationThr	0	2	2
+RetriesAttemptsPercent CritBurstViolationThr	0	2	2
+RetriesAttemptsPercent WarnBurstViolationThr	0	2	2
+RetriesAttemptsPercent CritSLAViolationThr	0	2	2
+RetriesAttemptsPercent WarnSLAViolationThr	0	2	2
+RetriesAttemptsPercent WarnAutoViolationThr	0	2	2
+SignalNoise WarnAutoViolationThr	0	2	2
+LineAttenuation WarnAutoViolationThr	0	2	2
+SevErrSecs WarnAutoViolationThr	0	2	2
+CyclicRedundancyCheck WarnAutoViolationThr	0	2	2

@@ -1,0 +1,1611 @@
+// Policy Name: New_Network_Enrichment
+// Description: Policy to enrich new network device information
+// 
+// Version	Date        Name        Description
+// 1.0        14-09-10    -        Baseline
+// 1.1        14-09-10    Tony Nisbet    Capture ServerSerial with logging (patch 4.22)
+// 1.2        01-03-11     Nick Evans    10g WP150 new enrichment rules
+
+log("New_Network_Enrichment: start policy.");
+log("New_Network_Enrichment: IQLOGSTART: ServerSerial=" + @ServerSerial + " EventId=" + @EventId);
+
+// Section to generate an event in the ObjectServer if we can't talk to Circee
+Handle java.lang.Exception
+        {
+        //if((ErrorMessage LIKE "Could not connect to databases") OR (ErrorMessage LIKE "JDBC Connection Pool could not connect to either data source"))
+
+    //if(ErrorMessage LIKE "Could not connect to databases") 
+    //{
+        //MyErrorMessage = "Could not connect to databases";
+    //}
+    //elseif (ErrorMessage LIKE "JDBC Connection Pool could not connect to either data source")
+    //{
+        //MyErrorMessage = "JDBC Connection Pool could not connect to either data source";
+    //}
+
+    if (ErrorMessage LIKE "JDBC Connection Pool could not connect to either data source")
+    {
+        MyErrorMessage = "JDBC Connection Pool could not connect to either data source";
+    }
+    elseif(ErrorMessage LIKE "Could not connect to databases") 
+    {
+        MyErrorMessage = "Could not connect to databases";
+    }
+
+    if((ErrorMessage LIKE "Could not connect to databases") OR (ErrorMessage LIKE "JDBC Connection Pool could not connect to either data source"))
+
+             {
+            Log("My error occured in policy: " + ErrorMessage);
+                     objNewEvent = NewObject();
+                    objNewEvent.ClearTime = 0;
+                    objNewEvent.FirstRaiseTime = GetDate();
+                    objNewEvent.LastRaiseTime = GetDate();
+                    //objNewEvent.Manager = 'Impact';
+            objNewEvent.Manager = 'Netcool Impact';
+                    objNewEvent.Severity = 5;
+                    objNewEvent.FirstOccurrence = GetDate();
+                    objNewEvent.LastOccurrence = GetDate();
+                    objNewEvent.Type = 1;
+                    //objNewEvent.ParentChildFlag = 100;
+            objNewEvent.ParentChildFlag = 8;
+                    //objNewEvent.ImpactFlag = 100;
+            objNewEvent.ImpactFlag = 1;
+                    objNewEvent.Flash = 1;
+                    objNewEvent.Node = "Circee Database";
+                    // Added by SK for the Vega# 200807016286
+              objNewEvent.OwnerUID = 65534;
+            objNewEvent.TTFlag = 1;
+            objNewEvent.ActionRequired = 1;
+            objNewEvent.ExpireTime = 259200;
+                    objNewEvent.AlertGroup = "Database Unavailable";
+            //objNewEvent.Identifier = "Circee_Database_Unavailable - error " + ErrorMessage;
+                    objNewEvent.Identifier = "Circee_Database_Unavailable - error " + MyErrorMessage;
+                    objNewEvent.Summary = "Circee Database unavailable from Impact " + ErrorMessage;
+                    objMyEvent = AddDataItem('ha_ncoms_impact_events', objNewEvent);
+                }
+        }
+
+// Set the ImpactFlag to processing
+//@ImpactFlag = 4;
+log("New_Network_Enrichment: Node: " + @Node + " ServerSerial: " + @ServerSerial + " EquipmentType: " + @EquipmentType);
+DataType = "ha_ncoms_impact_events";
+Filter = "ServerSerial = " + @ServerSerial;
+UpdateExpression = "ImpactFlag = 4";
+log("UpdateExpression = " + UpdateExpression);
+BatchUpdate(DataType,Filter,UpdateExpresssion);
+//STI_Flag = 0;
+
+log("New_Network_Enrichment: Node: " + @Node + " ServerSerial: " + @ServerSerial + " EquipmentType: " + @EquipmentType);
+
+Filter = "(SYSNAME='"+@Node+"')";
+
+// Added to OmniVista events to allow for extract of Node name
+// Giles Blake, 24/02/2010
+If (@Manager = 'OmniVista4760')
+    {
+    If (@Node like '^.*\\.*')
+        {
+        If (@Node like '^.*[a-zA-Z0-9].*\\Domain.*')
+            {
+            myNode = RExtract(@Node, "(.*)\\Domain.*");
+            Filter = "(SYSNAME='"+myNode+"')";
+            }
+        Else
+            {
+            myNode = RExtract(@Node, "(.*)\\.*");
+            Filter = "(SYSNAME='"+myNode+"')";
+            }
+        }
+
+    if (@Node like '.*OXE.* or .*OXE.*')
+            {
+log("New_Network_Enrichment: OXE Event found");
+            If (@Node like 'DRCOXE.* or .*OXE.*')
+                {
+                myNode = RExtract(@Node, "(DRCOXE.*) or .*OXE.*");
+                Filter = "(SYSNAME='"+myNode+"')";
+                }
+            else
+                {
+                myNode = RExtract(@Node, "^.*OXE.* or (.*OXE.*)");
+                Filter = "(SYSNAME='"+myNode+"')";
+                }    
+            }
+    }
+// End of amendment 24/02/2010
+
+If (@Node like '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+') 
+    {
+    If (@Node like '-1$')
+    {
+        myNode = RExtract(@Node, "(.*)-1$");
+            Filter = "(IP_ADDRESS='"+myNode +"')";
+//        If (@Node='10.50.48.100-1')
+//        {
+//            Filter = "(SYSNAME='BAMBSR1201')";
+//        }
+//        If (@Node='10.50.32.100-1')
+//        {
+//            Filter = "(SYSNAME='NWCCSR1201')";
+//        }
+    }
+    else
+    {
+            Filter = "(IP_ADDRESS='"+@Node+"')";
+    }
+}
+
+If ((@Node like '[0-9]+\/[0-9]+\/[0-9]+\/[0-9]+') and (@Manager = 'PROVISO'))
+{
+    Filter = "(SYSNAME like '" + @Node + "%')";
+}
+
+// added to populate event with RU rather than EU events for Kenton events
+// Giles Blake, 18/03/2010
+if (@Manager = 'Kenton' and @AlertGroup = 'POTS')
+    {
+    log("New_Network_Enrichment: Reset enrichment values for POTS events");    
+    EventContainer.NodeAlias = '';
+    EventContainer.AssetID = '';
+    EventContainer.EquipmentType = '';
+    EventContainer.AssetElectronicAddress = '';
+    EventContainer.AssetGeographicAddress = '';
+    EventContainer.AssetMotorway = '';
+    EventContainer.RCCArea = '';
+    EventContainer.TSA = '';
+    EventContainer.TSB = '';
+    EventContainer.Cab = '';
+    EventContainer.InServiceStatus = '';
+    EventContainer.ServiceType = '';
+    EventContainer.ServiceCategory = '';
+    EventContainer.SDPLocation = '';
+    EventContainer.TPRLocation = '';
+    EventContainer.AssetType = '';
+    EventContainer.AssetBarCode = '';
+    EventContainer.AssetCategory = '';
+    EventContainer.AssetVariant = '';
+    }
+
+if (@Manager = 'Kenton' and @PhysicalCard like '^[0-9][0-9] [0-9][0-9] RU')
+    {
+    log("New_Network_Enrichment: Pre-processing RU event");
+
+    //if((@AlertGroup = 'POTS') and (@AlarmClass = 'POTS-Terminated_OffHk' and @AlarmClass = 'POTS-Terminated_NotTerminated'))
+        //{
+        if(@Node like '.*PGEU.*')
+            {
+            upperNode=ToUpper(@Node);
+            ruNode1=RExtract(upperNode, "^([A-Z0-9]+)PGEU[0-9][0-9]");
+            ruNode2=RExtract(upperNode, "^[A-Z0-9]+PGEU([0-9][0-9])");
+            ruCard=RExtract(@PhysicalCard, "^([0-9][0-9]) [0-9][0-9] RU");
+            ruRemoteNode=""+ruNode1+"PGRU"+ruNode2+ruCard;
+            Filter = "(SYSNAME='"+ruRemoteNode+"')";
+            }
+        else
+            {
+            Filter="(SYSNAME='"+@Node+"')";
+            }
+        //}
+    //else
+        //{
+        //Filter="(SYSNAME='"+@Node+"')";
+        //}
+    }
+// end of amendment 18/03/2010
+
+log("Filter = " + Filter);
+
+EndOrgNodes = GetByFilter('Circee_Host_Table', Filter, false);
+// EndOrgNodes = GetByFilter('Reporter_Host_Table', Filter, false);
+EndNum = length(EndOrgNodes);
+log("New_Network_Enrichment: GetByFilter successful. Found "+EndNum+" dataItem(s).");
+if (EndNum > 0) {
+if ((@Manager != 'Kenton' and @PhysicalCard not like '^[0-9][0-9] [0-9][0-9] RU') and (@Node not like '.*OXE.* or .*OXE.*'))
+    {
+// Change to force clear events back through generic clear if their Node name has changed
+// Giles Blake, 20/05/2010
+    if (@Node != EndOrgNodes[0].SYSNAME)
+        {
+        EventContainer.Node = '' + EndOrgNodes[0].SYSNAME;
+        if(@Type = 2)
+            {
+            EventContainer.Severity = 1;
+            }
+        }
+// End of change
+// Giles Blake, 20/05/2010
+    }
+if (@Manager not like 'alcatel_5620_corba' && @Manager not like 'OmniVista4760')
+    {
+       EventContainer.NodeAlias = '' + EndOrgNodes[0].IP_ADDRESS;
+       }
+if(EventContainer.NodeAlias = '')
+        {
+        EventContainer.NodeAlias = '' + EndOrgNodes[0].IP_ADDRESS;
+        }
+
+if(EventContainer.AssetID = '')
+    {
+    EventContainer.AssetID = '' + EndOrgNodes[0].ASSET_ID;
+    }
+
+if(EventContainer.EquipmentType = '' && EventContainer.Manager != 'Halogen')
+        {
+        EventContainer.EquipmentType = '' + EndOrgNodes[0].EQUIP_TYPE;
+        }
+
+if(EventContainer.AssetElectronicAddress = '')
+    {
+    EventContainer.AssetElectronicAddress = '' + EndOrgNodes[0].ASSET_ELECTRONIC_ADDRESS;
+    }
+
+if(EventContainer.AssetGeographicAddress = '')
+    {
+    EventContainer.AssetGeographicAddress = '' + EndOrgNodes[0].ASSET_GEOG_ADDRESS;
+    }
+
+if(EventContainer.AssetMotorway = '')
+    {
+    EventContainer.AssetMotorway = '' + EndOrgNodes[0].MOTORWAY_REF;
+    }
+
+
+if(EventContainer.RCCArea = '')
+    {
+    EventContainer.RCCArea = '' + EndOrgNodes[0].RCC_AREA_ABBR;
+    }
+
+if(EventContainer.TSA = '')
+    {
+    EventContainer.TSA = '' + EndOrgNodes[0].TS_A;
+    }
+
+if(EventContainer.TSA != '' && EventContainer.AssetMotorway != '')
+        {
+        // Now lookup TSA geographic address for the road extracted
+        tsaInfo = GetByFilter('Circee_TS_Table', "TRANSMISSION_STATION = '"+EventContainer.TSA+"' and MOTORWAY_REF = '"+EventContainer.AssetMotorway+"'",false);
+        numTSAInfo = Length(tsaInfo);
+        if(numTSAInfo > 0)
+                {
+                EventContainer.TSA_Geo = tsaInfo[0].GEOG_ADDRESS;
+                }
+        }
+
+if(EventContainer.TSB = '')
+    {
+    EventContainer.TSB = '' + EndOrgNodes[0].TS_B;
+    }
+
+if(EventContainer.Cab = '')
+    {
+    EventContainer.Cab = '' + EndOrgNodes[0].CAB;
+    }
+
+if(EventContainer.InServiceStatus = '')
+    {
+    EventContainer.InServiceStatus = EndOrgNodes[0].ASSET_STATUS_DESC;
+    }
+
+//if(EventContainer.InServiceStatus = 'Planned')
+if(EventContainer.InServiceStatus = 'In Service - Planned Outage')
+    {
+    if(EventContainer.PlannedOutageFlag = 0)
+        {
+        EventContainer.PlannedOutageFlag = 1;
+        }
+    }
+
+if(EventContainer.ServiceType = '')
+    {
+    EventContainer.ServiceType = '' + EndOrgNodes[0].SERVICE_TYPE_ID;
+    }
+
+if(EventContainer.ServiceCategory = '')
+    {
+    EventContainer.ServiceCategory = "Not found";
+    }
+
+if ( @ServiceType like "^[0-9]+.*" )
+        {
+        @ServiceCategory = RExtract(@ServiceType, "^([0-9]+).*");
+        }
+
+if(EventContainer.SDPLocation = '')
+    {
+    EventContainer.SDPLocation = '' + EndOrgNodes[0].SDP_LOCATION;
+    }
+
+if(EventContainer.TPRLocation = '')
+    {
+    EventContainer.TPRLocation = '' + EndOrgNodes[0].TPR_LOCATION;
+    }
+
+if(EventContainer.AssetType = '')
+    {
+    EventContainer.AssetType = '' + EndOrgNodes[0].TYPE_ABBR;
+    }
+
+if(EventContainer.AssetBarCode = '')
+    {
+    EventContainer.AssetBarCode = '' + EndOrgNodes[0].ASSET_BARCODE_NO;
+    }
+
+if(EventContainer.AssetCategory = '')
+    {
+    EventContainer.AssetCategory = '' + EndOrgNodes[0].CATEGORY_ABBR;
+    }
+
+if(EventContainer.AssetVariant = '')
+    {
+    EventContainer.AssetVariant = '' + EndOrgNodes[0].VARIANT_ABBR;
+    }
+
+EventContainer.ImpactFlag = 2;
+//EventContainer.ParentChildFlag =0;
+}else {
+log("New_Network_Enrichment: device not found in host table");
+
+if(EventContainer.AssetID = '')
+    {
+    EventContainer.AssetID = 'Not found';
+    }
+if(EventContainer.EquipmentType = '' && EventContainer.Manager != 'Halogen')
+        {
+        EventContainer.EquipmentType = '' + EndOrgNodes[0].EQUIP_TYPE;
+        }
+if(EventContainer.AssetElectronicAddress = '')
+    {
+    EventContainer.AssetElectronicAddress = 'Not found';
+    }
+if(EventContainer.AssetGeographicAddress = '')
+    {
+    EventContainer.AssetGeographicAddress = 'Not found';
+    }
+if(EventContainer.RCCArea = '')
+    {
+    EventContainer.RCCArea = 'Not found';
+    }
+if(EventContainer.TSA = '')
+    {
+    EventContainer.TSA = 'Not found';
+    }
+if(EventContainer.TSA_Geo = '')
+    {
+    EventContainer.TSA_Geo = 'Not found';
+    }
+if(EventContainer.TSB = '')
+    {
+    EventContainer.TSB = 'Not found';
+    }
+if(EventContainer.Cab = '')
+    {
+    EventContainer.Cab = 'Not found';
+    }
+if(EventContainer.InServiceStatus = '')
+    {
+    EventContainer.InServiceStatus = 'Not found';
+    }
+if(EventContainer.ServiceType = '')
+    {
+    EventContainer.ServiceType = 'Not found';
+    }
+if(EventContainer.ServiceCategory = '')
+    {
+    EventContainer.ServiceCategory = 'Not found';
+    }
+if(EventContainer.SDPLocation = '')
+    {
+    EventContainer.SDPLocation = 'Not found';
+    }
+if(EventContainer.TPRLocation = '')
+    {
+    EventContainer.TPRLocation = 'Not found';
+    }
+if(EventContainer.AssetType = '')
+    {
+    EventContainer.AssetType = 'Not found';
+    }
+if(EventContainer.AssetBarCode = '')
+    {
+    EventContainer.AssetBarCode = 'Not found';
+    }
+if(EventContainer.AssetCategory = '')
+    {
+    EventContainer.AssetCategory = 'Not found';
+    }
+if(EventContainer.AssetVariant = '')
+    {
+    EventContainer.AssetVariant = 'Not found';
+    }
+// EventContainer.PlannedOutageFlag = 0;
+EventContainer.ImpactFlag = 1;
+}
+
+//Added by Nick Evans Mar 2011 for WP150 10g Alarms
+if (@Node LIKE '.*96C.*'){
+Log("1696 Enrichment Start Check:"+@Node+ ":" +@EquipmentType+":"+@PhysicalCard);
+Activate(NULL, "TenG_1696_Enrichment");
+
+}else{
+if((@Node LIKE ".*MSE.*" && @EnrichmentSource = "Interface,Lambda") or (@EnrichmentSource = "" && @PhysicalCard <> ''))
+{
+Log(@Node+":"+@EnrichmentSource);
+@EnrichmentSource = "Interface";
+}
+// Check if the event is associated with and interface
+if(@PhysicalCard<>'' && @RemoteNode = '' && @RemoteCard = '')
+        {
+// Added for SC11B, Giles Blake, 17/02/10
+     if (@EnrichmentSource = "")
+        {
+        if((@ServiceAffecting = 1 or @ServiceAffecting = 3) and (PhysicalCard <> "") and (@Manager = "Kenton" or @Manager = "OmniVista4760"))
+            {
+            @EnrichmentSource = "InterfaceSTIonly";
+            }
+        }
+// end of amendment
+        if (@EnrichmentSource = "Interface")
+                {
+                // Set a value for STI_Flag to stop reprocessing of the event by the generic STI calculations
+                // later in the policy
+                // STI_Flag = 1;
+                // First try Interface table...
+                Filter = "(L1_SYSNAME='"+@Node+"') and (L1_IF_ID='"+@PhysicalCard+"')";
+// Added to OmniVista events to allow for extract of Node name
+// Giles Blake, 24/02/2010
+            myNode = "";
+            If ((@Manager = 'OmniVista4760') and (@Node like '^.*\\.*'))
+                {
+                If (@Node like '^.*[a-zA-Z0-9].*\\Domain.*')
+                    {
+                    myNode = RExtract(@Node, "(.*)\\Domain.*");
+                    Filter = "(L1_SYSNAME='"+myNode+"') and (L1_IF_ID='"+@PhysicalCard+"')";
+                    }
+                Else
+                    {
+                    myNode = RExtract(@Node, "(.*)\\.*");
+                    Filter = "(L1_SYSNAME='"+myNode+"') and (L1_IF_ID='"+@PhysicalCard+"')";
+                    }
+                }    
+// End of amendment 24/02/2010
+// Added for SLI-16 2042 and 2019 event handling
+// Giles Blake, 19/03/2010
+            If ((@Manager = 'OmniVista4760') and (@AlarmClass = '2042SLI-16N' or @AlarmClass = '2019SLI-16N'))
+                {
+                If(myNode='')
+                    {
+                    myNode = @Node;
+                    }
+                Filter = "(L1_SYSNAME='"+myNode+"') and (L1_IF_ID like '"+@PhysicalCard+"%')";
+                }
+// End of amendment 19/03/2010
+// Added for RU POTS events
+// Giles Blake, 18/03/2010
+            if (@Manager = 'Kenton' and (@AlarmClass = 'POTS-Terminated_OffHk' or @AlarmClass = 'POTS-Terminated_NotTerminated') and @PhysicalCard like '^[0-9][0-9] [0-9][0-9] RU')
+                {
+                myCard=RExtract(@PhysicalCard, "^([0-9][0-9] [0-9][0-9]) RU");
+                Filter = "(L1_SYSNAME='"+@Node+"') and (L1_IF_ID='"+myCard+"')";
+                RuLookup = 1;
+                }
+// End of amendment 18/03/2010
+                log("New_Network_Enrichment: Interface Filter = " + Filter);
+                RemoteEnd = GetByFilter('Circee_Interface_Table', Filter, false);
+          //RemoteEnd = GetByFilter('Reporter_Interface_Table', Filter, false);    
+                numRemoteEnd = Length(RemoteEnd);
+          log("New_Network_Enrichment: Interface GetByFilter successful. Found "+numRemoteEnd+" dataItem(s).");
+                if(numRemoteEnd>0)
+                        {
+// Added for Kenton POTS events handling
+// Giles Blake, 09/02/10
+            x = 0;
+            if(@Manager='Kenton')
+                {
+                if(@AlertGroup = 'POTS')
+                    {
+                    if(RemoteEnd[0].L2_SYSNAME like '^TEL-.*')
+                        {
+                        x = 1;
+                        ERTvalue = RemoteEnd[0].L2_SYSNAME;
+                        }
+                    else
+                        {
+                        x = 0;
+                        if(RemoteEnd[1].L2_SYSNAME like '^TEL-.*')
+                            {
+                            ERTvalue = RemoteEnd[1].L2_SYSNAME;
+                            }
+                        else
+                            {
+                            ERTvalue = "TEL-Unknown";
+                            }
+                        }
+                    EventContainer.Summary = @Summary + ", " + ERTvalue;
+                    }
+//                if(EventContainer.PhysicalCard like '^[0-9][0-9] [0-9][0-9] RU')
+//                    {
+//                    EventContainer.Summary = @Summary + ", " + EventContainer.AssetMotorway + "/" + EventContainer.AssetGeographicAddress;
+//                    }
+                }
+//End of amendments - apart from replacing [0] with [x] below
+// Added for RU double node name lookup
+// Giles Blake, 18/03/2010
+                if(RuLookup = 1)
+                    {
+                    EventContainer.RemoteNode = ""+ruRemoteNode;
+                                EventContainer.RemoteCard = "";
+                    }
+                else
+                    {
+                                EventContainer.RemoteNode = RemoteEnd[x].L2_SYSNAME;
+                                EventContainer.RemoteCard = RemoteEnd[x].L2_IF_ID;
+                    }
+// end of amendment 18/03/2010
+                            ifdesc = RemoteEnd[x].L1_IF_DESC;
+                            log("New_Network_Enrichment: ifdesc = " + ifdesc);
+                            if (ifdesc like '.*D[0-9][0-9][0-9][0-9].*')
+                                       {
+                                    @DesignatedLink = 1;
+                                    }
+
+                            // Calculate STI info for interface
+                            Delimiter = ",";    
+                            InterfaceSTIarray = Split(RemoteEnd[x].L1_STI_ID, Delimiter);
+                            DistinctInterfaceSTIs = distinct(InterfaceSTIarray);
+                            NumDistinctInterface = length(DistinctInterfaceSTIs);
+
+                                // Now build up a comma separated list of them
+                                if(EventContainer.STIRef = '' or EventContainer.STIRef = 'Not found')
+                        {    
+                        EventContainer.STINum = NumDistinctInterface;
+                                    EventContainer.STIRef = '' + DistinctInterfaceSTIs[0];
+                                    a = 1;
+                                    while (a < NumDistinctInterface)
+                                        {
+                                        EventContainer.STIRef = EventContainer.STIRef + "," + DistinctInterfaceSTIs[a];
+                                        a = a + 1;
+                                        }
+                                    }
+
+                            log("New_Network_Enrichment: Find highest impact STI value");
+                            if(EventContainer.STI_HA_Impact = 0)
+                                {
+                                Delimiter = ",";    
+                                Interface_STI_HA_Array = Split(RemoteEnd[x].L1_STI_HA_IMPACT, Delimiter);
+                                numInterfaceSTIs = length(Interface_STI_HA_Array);
+                                if(numInterfaceSTIs > 0)
+                                    {
+                                    b = 0;
+                                    highestInterfaceSTI = 0;
+                                    while (b < numInterfaceSTIs)
+                                        {
+                                        if(int(Interface_STI_HA_Array[b]) > highestInterfaceSTI)
+                                            {
+                                            highestInterfaceSTI = int(Interface_STI_HA_Array[b]);
+                                            }
+                                        b = b + 1;
+                                        }
+                                    }
+                                EventContainer.STI_HA_Impact = highestInterfaceSTI;
+                                }
+            }
+                // if we didn't find it under L1 we must look under L2
+                else
+                        {
+                          Filter = "(L2_SYSNAME='"+@Node+"') and (L2_IF_ID='"+@PhysicalCard+"')";
+// Added to OmniVista events to allow for extract of Node name
+// Giles Blake, 24/02/2010
+                myNode = "";
+                If ((@Manager = 'OmniVista4760') and (@Node like '^.*\\.*'))
+                    {
+                    If (@Node like '^.*[a-zA-Z0-9].*\\Domain.*')
+                        {
+                        myNode = RExtract(@Node, "(.*)\\Domain.*");
+                        Filter = "(L2_SYSNAME='"+myNode+"') and (L2_IF_ID='"+@PhysicalCard+"')";
+                        }
+                    Else
+                        {
+                        myNode = RExtract(@Node, "(.*)\\.*");
+                        Filter = "(L2_SYSNAME='"+myNode+"') and (L2_IF_ID='"+@PhysicalCard+"')";
+                        }
+                    }
+                
+// End of amendment 24/02/2010
+// Giles Blake, 19/03/2010
+            If ((@Manager = 'OmniVista4760') and (@AlarmClass = '2042SLI-16N' or @AlarmClass = '2019SLI-16N'))
+                {
+                If(myNode='')
+                    {
+                    myNode = @Node;
+                    }
+                Filter = "(L2_SYSNAME='"+myNode+"') and (L2_IF_ID like '"+@PhysicalCard+"%')";
+                }
+// End of amendment 19/03/2010
+// Added for RU POTS events
+// Giles Blake, 18/03/2010
+            if (@Manager = 'Kenton' and (@AlarmClass = 'POTS-Terminated_OffHk' or @AlarmClass = 'POTS-Terminated_NotTerminated') and @PhysicalCard like '^[0-9][0-9] [0-9][0-9] RU')
+                {
+                myCard=RExtract(@PhysicalCard, "^([0-9][0-9] [0-9][0-9]) RU");
+                Filter = "(L2_SYSNAME='"+@Node+"') and (L2_IF_ID='"+myCard+"')";
+                }
+// End of amendment 18/03/2010
+                          log("New_Network_Enrichment: Interface Filter = " + Filter);
+                       RemoteEnd = GetByFilter('Circee_Interface_Table', Filter, false);
+              // RemoteEnd = GetByFilter('Reporter_Interface_Table', Filter, false);
+                        numRemoteEnd = Length(RemoteEnd);
+               log("New_Network_Enrichment: Interface GetByFilter successful. Found "+numRemoteEnd+" dataItem(s).");
+                        if(numRemoteEnd>0)
+                                {
+                                EventContainer.RemoteNode = RemoteEnd[0].L1_SYSNAME;
+                                EventContainer.RemoteCard = RemoteEnd[0].L1_IF_ID;
+                                ifdesc = RemoteEnd[0].L2_IF_DESC;
+                                log("New_Network_Enrichment: ifdesc = " + ifdesc);
+                                if (ifdesc like '.*D[0-9][0-9][0-9][0-9].*')
+                                  {
+                                  @DesignatedLink = 1;
+                                  }
+                               // Calculate STI info for interface
+                                Delimiter = ",";    
+                                InterfaceSTIarray = Split(RemoteEnd[0].L2_STI_ID, Delimiter);
+                                DistinctInterfaceSTIs = distinct(InterfaceSTIarray);
+                                NumDistinctInterface = length(DistinctInterfaceSTIs);
+
+                                // Now build up a comma separated list of them
+                                if(EventContainer.STIRef = '' or EventContainer.STIRef = 'Not found')
+                        {    
+                        EventContainer.STINum = NumDistinctInterface;
+                                    EventContainer.STIRef = '' + DistinctInterfaceSTIs[0];
+                                    a = 1;
+                                    while (a < NumDistinctInterface)
+                                        {
+                                        EventContainer.STIRef = EventContainer.STIRef + "," + DistinctInterfaceSTIs[a];
+                                        a = a + 1;
+                                        }
+                                    }
+
+                                log("New_Network_Enrichment: Find highest impact STI value");
+                                if(EventContainer.STI_HA_Impact = 0)
+                                    {
+                                    Delimiter = ",";    
+                                    Interface_STI_HA_Array = Split(RemoteEnd[0].L2_STI_HA_IMPACT, Delimiter);
+                                    numInterfaceSTIs = length(Interface_STI_HA_Array);
+                                    if(numInterfaceSTIs > 0)
+                                        {
+                                        b = 0;
+                                        highestInterfaceSTI = 0;
+                                        while (b < numInterfaceSTIs)
+                                            {
+                                            if(int(Interface_STI_HA_Array[b]) > highestInterfaceSTI)
+                                                {
+                                                highestInterfaceSTI = int(Interface_STI_HA_Array[b]);
+                                                }
+                                            b = b + 1;
+                                            }
+                                        }
+                                    EventContainer.STI_HA_Impact = highestInterfaceSTI;
+                                }
+                }
+                           else
+                                   {
+                                   EventContainer.RemoteNode = 'Not found';
+                                   EventContainer.RemoteCard = 'Not found';
+                                   EventContainer.STIRef = 'Not found';
+                                   EventContainer.STINum = 0;
+                                   EventContainer.STI_HA_Impact = 1;
+                                   }
+            }
+// Added for SLI16 STI calculations
+// Giles Blake, 12/04/2010
+        if(@AlarmClass = '2042SLI-16N')
+            {
+            log("New_Network_Enrichment: Interface - SLI-16 event handling."); 
+            STIList = "";
+            STIimpactList = "";
+            //Find all possible EUs associated with SLI16 Board
+            SLIfilter1 = "(L1_SYSNAME='"+@Node+"') and (L1_IF_ID like '"+@PhysicalCard+"%')";
+            SLI1 = GetByFilter('Circee_Interface_Table', SLIfilter1, false);
+            numSLI1 = length(SLI1);
+            log("New_Network_Enrichment: Interface - SLI-16 Number of L1 entries matched " + numSLI1);
+            if(numSLI1 > 0)
+                {
+                m = 0;
+                while (m < numSLI1)
+                    {
+                    STIList = SLI1[m].L1_STI_ID + "," + STIList;
+                    STIimpactList = SLI1[m].L1_STI_HA_IMPACT + "," + STIimpactList;
+                    m = m + 1;
+                    }
+                }
+
+            SLIfilter2 = "(L2_SYSNAME='"+@Node+"') and (L2_IF_ID like '"+@PhysicalCard+"%')";
+            SLI2 = GetByFilter('Circee_Interface_Table', SLIfilter2, false);
+            numSLI2 = length(SLI2);
+            log("New_Network_Enrichment: Interface - SLI-16 Number of L2 entries matched " + numSLI2);
+            if(numSLI2 > 0)
+                {
+                m = 0;
+                while (m < numSLI2)
+                    {
+                    STIList = SLI2[m].L2_STI_ID + "," + STIList;
+                    STIimpactList = SLI2[m].L2_STI_HA_IMPACT + "," + STIimpactList;
+                    m = m + 1;
+                    }
+                }
+
+            Delimiter = ",";
+                            SLISTIarray = Split(STIList,Delimiter);
+                            DistinctSLISTIs = distinct(SLISTIarray);
+                            NumDistinctSLI = length(DistinctSLISTIs);
+
+                            // Now build up a comma separated list of them
+                            EventContainer.STINum = NumDistinctSLI;
+                            EventContainer.STIRef = '' + DistinctSLISTIs[0];
+            a = 1;
+            while (a < NumDistinctSLI)
+                                {
+                                EventContainer.STIRef = EventContainer.STIRef + "," + DistinctSLISTIs[a];
+                                a = a + 1;
+                                }
+
+                            SLI_STI_HA_Array = Split(STIimpactList,Delimiter);
+            numSLISTIs = length(SLI_STI_HA_Array);
+            if(numSLISTIs > 0)
+                {
+                                n = 0;
+                                highestSLISTI = 0;
+                                while (n < numSLISTIs)
+                                    {
+                                    if(int(SLI_STI_HA_Array[n]) > highestSLISTI)
+                                        {
+                                        highestSLISTI = int(SLI_STI_HA_Array[n]);
+                                        }
+                                    n = n + 1;
+                                    }
+                                }
+            EventContainer.STI_HA_Impact = highestSLISTI;
+            // Added for specific remote node values
+            // Giles Blake, 11/04/2010
+            if(@Node = "DRCPCX301" and @PhysicalCard = "BOARD 05")
+                {
+                EventContainer.RemoteNode = "CMDTEB2001";
+                EventContainer.RemoteCard = "";
+                }
+            if(@Node = "DRCPCX302" and @PhysicalCard = "BOARD 05")
+                {
+                EventContainer.RemoteNode = "CMDTEA1001";
+                EventContainer.RemoteCard = "";
+                }
+            // End of amendments, 11/04/2010
+            }
+// End for SLI16 STI calculations
+// Giles Blake, 12/04/2010
+                }
+        elseif (@EnrichmentSource = "InterfaceSTIonly")
+                {
+                // Set a value for STI_Flag to stop reprocessing of the event by the generic STI calculations
+                // later in the policy
+                // STI_Flag = 1;
+                // First try Interface table...
+                Filter = "(L1_SYSNAME='"+@Node+"') and (L1_IF_ID='"+@PhysicalCard+"')";
+// Added to OmniVista events to allow for extract of Node name
+// Giles Blake, 24/02/2010
+            myNode = "";
+            If ((@Manager = 'OmniVista4760') and (@Node like '^.*\\.*'))
+                {
+                If (@Node like '^.*[a-zA-Z0-9].*\\Domain.*')
+                    {
+                    myNode = RExtract(@Node, "(.*)\\Domain.*");
+                    Filter = "(L1_SYSNAME='"+myNode+"') and (L1_IF_ID='"+@PhysicalCard+"')";
+                    }
+                Else
+                    {
+                    myNode = RExtract(@Node, "(.*)\\.*");
+                    Filter = "(L1_SYSNAME='"+myNode+"') and (L1_IF_ID='"+@PhysicalCard+"')";
+                    }
+                }    
+// End of amendment 24/02/2010
+// Added for SLI-16 2042 and 2019 event handling
+// Giles Blake, 19/03/2010
+            If ((@Manager = 'OmniVista4760') and (@AlarmClass = '2042SLI-16N' or @AlarmClass = '2019SLI-16N'))
+                {
+                If(myNode='')
+                    {
+                    myNode = @Node;
+                    }
+                Filter = "(L1_SYSNAME='"+myNode+"') and (L1_IF_ID like '"+@PhysicalCard+"%')";
+                }
+// End of amendment 19/03/2010
+// Added for RU POTS events
+// Giles Blake, 18/03/2010
+            if (@Manager = 'Kenton' and (@AlarmClass = 'POTS-Terminated_OffHk' or @AlarmClass = 'POTS-Terminated_NotTerminated') and @PhysicalCard like '^[0-9][0-9] [0-9][0-9] RU')
+                {
+                myCard=RExtract(@PhysicalCard, "^([0-9][0-9] [0-9][0-9]) RU");
+                Filter = "(L1_SYSNAME='"+@Node+"') and (L1_IF_ID='"+myCard+"')";
+                RuLookup = 1;
+                }
+// End of amendment 18/03/2010
+                log("New_Network_Enrichment: InterfaceSTIonly Filter = " + Filter);
+                RemoteEnd = GetByFilter('Circee_Interface_Table', Filter, false);
+          //RemoteEnd = GetByFilter('Reporter_Interface_Table', Filter, false);    
+                numRemoteEnd = Length(RemoteEnd);
+          log("New_Network_Enrichment: InterfaceSTIonly GetByFilter successful. Found "+numRemoteEnd+" dataItem(s).");
+                if(numRemoteEnd>0)
+                        {
+// Added for Kenton POTS events handling
+// Giles Blake, 09/02/10
+            x = 0;
+            if(@Manager='Kenton')
+                {
+                if(@AlertGroup = 'POTS')
+                    {
+                    if(RemoteEnd[0].L2_SYSNAME like '^TEL-.*')
+                        {
+                        x = 1;
+                        ERTvalue = RemoteEnd[0].L2_SYSNAME;
+                        }
+                    else
+                        {
+                        x = 0;
+                        if(RemoteEnd[1].L2_SYSNAME like '^TEL-.*')
+                            {
+                            ERTvalue = RemoteEnd[1].L2_SYSNAME;
+                            }
+                        else
+                            {
+                            ERTvalue = "TEL-Unknown";
+                            }
+                        }
+                    EventContainer.Summary = @Summary + ", " + ERTvalue;
+                    }
+//                if(EventContainer.PhysicalCard like '^[0-9][0-9] [0-9][0-9] RU')
+//                    {
+//                    EventContainer.Summary = @Summary + ", " + EventContainer.AssetMotorway + "/" + EventContainer.AssetGeographicAddress;
+//                    }
+                }
+//End of amendments - apart from replacing [0] with [x] below
+// Added for RU double node name lookup
+// Giles Blake, 18/03/2010
+                if(RuLookup = 1)
+                    {
+                    EventContainer.RemoteCard = RExtract(EventContainer.PhysicalCard, "^([0-9][0-9] [0-9][0-9]) RU");
+                    RuFilter = "(L1_SYSNAME='"+@Node+"') and (L1_IF_ID='01 01 RU')";
+                    RuNode = GetByFilter('Circee_Interface_Table', RuFilter, false);
+                    numRuNode = length(RuNode);
+                    if(numRuNode > 0)
+                        {
+                        //EventContainer.RemoteNode = RuNode[0].L2_SYSNAME;
+                        }
+                    else
+                        {
+                        RuFilter = "(L2_SYSNAME='"+@Node+"') and (L2_IF_ID='01 01 RU')";
+                        RuNode = GetByFilter('Circee_Interface_Table', RuFilter, false);
+                        numRuNode = length(RuNode);
+                        if(numRuNode > 0)
+                            {
+                            //EventContainer.RemoteNode = RuNode[0].L1_SYSNAME;
+                            }
+                        else
+                            {
+                            //EventContainer.RemoteNode = "Unknown";
+                            }
+                        }                    
+                    }
+                else
+                    {
+                                //EventContainer.RemoteNode = RemoteEnd[x].L2_SYSNAME;
+                                //EventContainer.RemoteCard = RemoteEnd[x].L2_IF_ID;
+                    }
+// end of amendment 18/03/2010
+                            ifdesc = RemoteEnd[x].L1_IF_DESC;
+                            log("New_Network_Enrichment: InterfaceSTIonly ifdesc = " + ifdesc);
+                            if (ifdesc like '.*D[0-9][0-9][0-9][0-9].*')
+                                       {
+                                    @DesignatedLink = 1;
+                                    }
+
+                            // Calculate STI info for interface
+                            Delimiter = ",";    
+                            InterfaceSTIarray = Split(RemoteEnd[x].L1_STI_ID, Delimiter);
+                            DistinctInterfaceSTIs = distinct(InterfaceSTIarray);
+                            NumDistinctInterface = length(DistinctInterfaceSTIs);
+
+                                // Now build up a comma separated list of them
+                                if(EventContainer.STIRef = '' or EventContainer.STIRef = 'Not found')
+                        {    
+                        EventContainer.STINum = NumDistinctInterface;
+                                    EventContainer.STIRef = '' + DistinctInterfaceSTIs[0];
+                                    a = 1;
+                                    while (a < NumDistinctInterface)
+                                        {
+                                        EventContainer.STIRef = EventContainer.STIRef + "," + DistinctInterfaceSTIs[a];
+                                        a = a + 1;
+                                        }
+                                    }
+
+                            log("New_Network_Enrichment: InterfaceSTIonly Find highest impact STI value");
+                            if(EventContainer.STI_HA_Impact = 0)
+                                {
+                                Delimiter = ",";    
+                                Interface_STI_HA_Array = Split(RemoteEnd[x].L1_STI_HA_IMPACT, Delimiter);
+                                numInterfaceSTIs = length(Interface_STI_HA_Array);
+                                if(numInterfaceSTIs > 0)
+                                    {
+                                    b = 0;
+                                    highestInterfaceSTI = 0;
+                                    while (b < numInterfaceSTIs)
+                                        {
+                                        if(int(Interface_STI_HA_Array[b]) > highestInterfaceSTI)
+                                            {
+                                            highestInterfaceSTI = int(Interface_STI_HA_Array[b]);
+                                            }
+                                        b = b + 1;
+                                        }
+                                    }
+                                EventContainer.STI_HA_Impact = highestInterfaceSTI;
+                                }
+            }
+                // if we didn't find it under L1 we must look under L2
+                else
+                        {
+                          Filter = "(L2_SYSNAME='"+@Node+"') and (L2_IF_ID='"+@PhysicalCard+"')";
+// Added to OmniVista events to allow for extract of Node name
+// Giles Blake, 24/02/2010
+                myNode = "";
+                If ((@Manager = 'OmniVista4760') and (@Node like '^.*\\.*'))
+                    {
+                    If (@Node like '^.*[a-zA-Z0-9].*\\Domain.*')
+                        {
+                        myNode = RExtract(@Node, "(.*)\\Domain.*");
+                        Filter = "(L2_SYSNAME='"+myNode+"') and (L2_IF_ID='"+@PhysicalCard+"')";
+                        }
+                    Else
+                        {
+                        myNode = RExtract(@Node, "(.*)\\.*");
+                        Filter = "(L2_SYSNAME='"+myNode+"') and (L2_IF_ID='"+@PhysicalCard+"')";
+                        }
+                    }    
+// End of amendment 24/02/2010
+// Giles Blake, 19/03/2010
+            If ((@Manager = 'OmniVista4760') and (@AlarmClass = '2042SLI-16N' or @AlarmClass = '2019SLI-16N'))
+                {
+                If(myNode='')
+                    {
+                    myNode = @Node;
+                    }
+                Filter = "(L2_SYSNAME='"+myNode+"') and (L2_IF_ID like '"+@PhysicalCard+"%')";
+                }
+// End of amendment 19/03/2010
+// Added for RU POTS events
+// Giles Blake, 18/03/2010
+            if (@Manager = 'Kenton' and (@AlarmClass = 'POTS-Terminated_OffHk' or @AlarmClass = 'POTS-Terminated_NotTerminated') and @PhysicalCard like '^[0-9][0-9] [0-9][0-9] RU')
+                {
+                myCard=RExtract(@PhysicalCard, "^([0-9][0-9] [0-9][0-9]) RU");
+                Filter = "(L2_SYSNAME='"+@Node+"') and (L2_IF_ID='"+myCard+"')";
+                }
+// End of amendment 18/03/2010
+                          log("New_Network_Enrichment: InterfaceSTIonly Filter = " + Filter);
+                       RemoteEnd = GetByFilter('Circee_Interface_Table', Filter, false);
+              // RemoteEnd = GetByFilter('Reporter_Interface_Table', Filter, false);
+                        numRemoteEnd = Length(RemoteEnd);
+               log("New_Network_Enrichment: InterfaceSTIonly GetByFilter successful. Found "+numRemoteEnd+" dataItem(s).");
+                        if(numRemoteEnd>0)
+                                {
+                                //EventContainer.RemoteNode = RemoteEnd[0].L1_SYSNAME;
+                                //EventContainer.RemoteCard = RemoteEnd[0].L1_IF_ID;
+                                ifdesc = RemoteEnd[0].L2_IF_DESC;
+                                log("New_Network_Enrichment: InterfaceSTIonly ifdesc = " + ifdesc);
+                                if (ifdesc like '.*D[0-9][0-9][0-9][0-9].*')
+                                  {
+                                  @DesignatedLink = 1;
+                                  }
+                               // Calculate STI info for interface
+                                Delimiter = ",";    
+                                InterfaceSTIarray = Split(RemoteEnd[0].L2_STI_ID, Delimiter);
+                                DistinctInterfaceSTIs = distinct(InterfaceSTIarray);
+                                NumDistinctInterface = length(DistinctInterfaceSTIs);
+
+                                // Now build up a comma separated list of them
+                                if(EventContainer.STIRef = '' or EventContainer.STIRef = 'Not found')
+                        {    
+                        EventContainer.STINum = NumDistinctInterface;
+                                    EventContainer.STIRef = '' + DistinctInterfaceSTIs[0];
+                                    a = 1;
+                                    while (a < NumDistinctInterface)
+                                        {
+                                        EventContainer.STIRef = EventContainer.STIRef + "," + DistinctInterfaceSTIs[a];
+                                        a = a + 1;
+                                        }
+                                    }
+
+                                log("New_Network_Enrichment: InterfaceSTIonly Find highest impact STI value");
+                                if(EventContainer.STI_HA_Impact = 0)
+                                    {
+                                    Delimiter = ",";    
+                                    Interface_STI_HA_Array = Split(RemoteEnd[0].L2_STI_HA_IMPACT, Delimiter);
+                                    numInterfaceSTIs = length(Interface_STI_HA_Array);
+                                    if(numInterfaceSTIs > 0)
+                                        {
+                                        b = 0;
+                                        highestInterfaceSTI = 0;
+                                        while (b < numInterfaceSTIs)
+                                            {
+                                            if(int(Interface_STI_HA_Array[b]) > highestInterfaceSTI)
+                                                {
+                                                highestInterfaceSTI = int(Interface_STI_HA_Array[b]);
+                                                }
+                                            b = b + 1;
+                                            }
+                                        }
+                                    EventContainer.STI_HA_Impact = highestInterfaceSTI;
+                                }
+                }
+                           else
+                                   {
+                                   EventContainer.RemoteNode = 'Not found';
+                                   EventContainer.RemoteCard = 'Not found';
+                                   EventContainer.STIRef = 'Not found';
+                                   EventContainer.STINum = 0;
+                                   EventContainer.STI_HA_Impact = 1;
+                                   }
+            }
+// Added for SLI16 STI calculations
+// Giles Blake, 12/04/2010
+        if(@AlarmClass = '2042SLI-16N')
+            {
+            log("New_Network_Enrichment: Interface - SLI-16 event handling");
+            STIList = "";
+            STIimpactList = "";
+            //Find all possible EUs associated with SLI16 Board
+            SLIfilter1 = "(L1_SYSNAME='"+@Node+"') and (L1_IF_ID like'"+@PhysicalCard+"%')";
+            SLI1 = GetByFilter('Circee_Interface_Table', SLIfilter1, false);
+            numSLI1 = length(SLI1);
+            log("New_Network_Enrichment: Interface - SLI-16 Number of L1 entries matched " + numSLI1);
+            if(numSLI1 > 0)
+                {
+                m = 0;
+                while (m < numSLI1)
+                    {
+                    STIList = SLI1[m].L1_STI_ID + "," + STIList;
+                    STIimpactList = SLI1[m].L1_STI_HA_IMPACT + "," + STIimpactList;
+                    m = m + 1;
+                    }
+                }
+
+            SLIfilter2 = "(L2_SYSNAME='"+@Node+"') and (L2_IF_ID like'"+@PhysicalCard+"%')";
+            SLI2 = GetByFilter('Circee_Interface_Table', SLIfilter2, false);
+            numSLI2 = length(SLI2);
+            log("New_Network_Enrichment: Interface - SLI-16 Number of L2 entries matched " + numSLI2);
+            if(numSLI2 > 0)
+                {
+                m = 0;
+                while (m < numSLI2)
+                    {
+                    STIList = SLI2[m].L2_STI_ID + "," + STIList;
+                    STIimpactList = SLI2[m].L2_STI_HA_IMPACT + "," + STIimpactList;
+                    m = m + 1;
+                    }
+                }
+
+            Delimiter = ",";
+                            SLISTIarray = Split(STIList,Delimiter);
+                            DistinctSLISTIs = distinct(SLISTIarray);
+                            NumDistinctSLI = length(DistinctSLISTIs);
+
+                            // Now build up a comma separated list of them
+                            EventContainer.STINum = NumDistinctSLI;
+                            EventContainer.STIRef = '' + DistinctSLISTIs[0];
+            a = 1;
+            while (a < NumDistinctSLI)
+                                {
+                                EventContainer.STIRef = EventContainer.STIRef + "," + DistinctSLISTIs[a];
+                                a = a + 1;
+                                }
+
+                            SLI_STI_HA_Array = Split(STIimpactList,Delimiter);
+            numSLISTIs = length(SLI_STI_HA_Array);
+            if(numSLISTIs > 0)
+                {
+                                n = 0;
+                                highestSLISTI = 0;
+                                while (n < numSLISTIs)
+                                    {
+                                    if(int(SLI_STI_HA_Array[n]) > highestSLISTI)
+                                        {
+                                        highestSLISTI = int(SLI_STI_HA_Array[n]);
+                                        }
+                                    n = n + 1;
+                                    }
+                                }
+            EventContainer.STI_HA_Impact = highestSLISTI;
+            // Added for specific remote node values
+            // Giles Blake, 11/04/2010
+            if(@Node = "DRCPCX301" and @PhysicalCard = "BOARD 05")
+                {
+                EventContainer.RemoteNode = "CMDTEB2001";
+                EventContainer.RemoteCard = "";
+                }
+            if(@Node = "DRCPCX302" and @PhysicalCard = "BOARD 05")
+                {
+                EventContainer.RemoteNode = "CMDTEA1001";
+                EventContainer.RemoteCard = "";
+                }
+            // End of amendments, 11/04/2010
+            }
+// End for SLI16 STI calculations
+// Giles Blake, 12/04/2010
+                }
+        elseif (@EnrichmentSource = "E1")
+                {
+                RemoteEnd = GetByFilter('Circee_E1_Table', "(RCC_SYSNAME='"+@Node+"') and (RCC_INTERFACE_ID='"+@PhysicalCard+"')", false);
+                numRemoteEnd = Length(RemoteEnd);
+                log("New_Network_Enrichment: number of E1 matches found = " + numRemoteEnd);
+                if(numRemoteEnd>0)
+                        {
+                        EventContainer.RemoteNode = '' + RemoteEnd[0].ROADSIDE_SYSNAME;
+                        EventContainer.RemoteCard = '' + RemoteEnd[0].ROADSIDE_INTERFACE_ID;
+                        }
+                else
+                        {
+                        RemoteEnd = GetByFilter('Circee_E1_Table', "(ROADSIDE_SYSNAME='"+@Node+"') and (ROADSIDE_INTERFACE_ID='"+@PhysicalCard+"')", false);
+                        numRemoteEnd = Length(RemoteEnd);
+                        log("New_Network_Enrichment: number of E1 matches found = " + numRemoteEnd);
+                        if(numRemoteEnd>0)
+                                {
+                                EventContainer.RemoteNode = '' + RemoteEnd[0].RCC_SYSNAME;
+                                EventContainer.RemoteCard = '' + RemoteEnd[0].RCC_INTERFACE_ID;
+                                }
+                        // still not found
+                        else
+                                {
+                                EventContainer.RemoteNode = 'Not found';
+                                EventContainer.RemoteCard = 'Not found';
+                                }
+                        }
+
+        // get STI_Num, STI_Ref, and STI_HA_Impact from Netcool_L1_L2 table
+                Filter = "(L1_SYSNAME='"+@Node+"') and (L1_IF_ID='"+@PhysicalCard+"')";
+                log("New_Network_Enrichment: Filter = " + Filter);
+                RemoteEnd = GetByFilter('Circee_Interface_Table', Filter, false);
+                numRemoteEnd = Length(RemoteEnd);
+
+             if(numRemoteEnd>0)
+
+                        {
+                        // Calculate STI info for interface
+                        Delimiter = ",";    
+                        InterfaceSTIarray = Split(RemoteEnd[0].L1_STI_ID, Delimiter);
+                        DistinctInterfaceSTIs = distinct(InterfaceSTIarray);
+                        NumDistinctInterface = length(DistinctInterfaceSTIs);
+
+                        // Now build up a comma separated list of them
+                        EventContainer.STINum = NumDistinctInterface;
+                        if(EventContainer.STIRef = '')
+                            {
+                            EventContainer.STIRef = '' + DistinctInterfaceSTIs[0];
+                            a = 1;
+                            while (a < NumDistinctInterface)
+                                {
+                                EventContainer.STIRef = EventContainer.STIRef + "," + DistinctInterfaceSTIs[a];
+                                a = a + 1;
+                                }
+                            }
+                      
+                 log("New_Network_Enrichment: Find highest impact STI value");
+
+                        if(EventContainer.STI_HA_Impact = 0)
+                            {
+                            Delimiter = ",";    
+                            Interface_STI_HA_Array = Split(RemoteEnd[0].L1_STI_HA_IMPACT, Delimiter);
+                            numInterfaceSTIs = length(Interface_STI_HA_Array);
+                            if(numInterfaceSTIs > 0)
+                                {
+                                b = 0;
+                                highestInterfaceSTI = 0;
+                                while (b < numInterfaceSTIs)
+                                    {
+                                    if(int(Interface_STI_HA_Array[b]) > highestInterfaceSTI)
+                                        {
+                                        highestInterfaceSTI = int(Interface_STI_HA_Array[b]);
+                                        }
+                                    b = b + 1;
+                                    }
+                                }
+                            EventContainer.STI_HA_Impact = highestInterfaceSTI;
+                            }
+                        } 
+                // if we didn't find it under L1 we must look under L2
+                else
+                        {
+                          Filter = "(L2_SYSNAME='"+@Node+"') and (L2_IF_ID='"+@PhysicalCard+"')";
+                          log("New_Network_Enrichment: Filter = " + Filter);
+                        RemoteEnd = GetByFilter('Circee_Interface_Table', Filter, false);
+                        numRemoteEnd = Length(RemoteEnd);
+                        if(numRemoteEnd>0)
+                                {
+                          
+                               // Calculate STI info for interface
+                                Delimiter = ",";    
+                                InterfaceSTIarray = Split(RemoteEnd[0].L2_STI_ID, Delimiter);
+                                DistinctInterfaceSTIs = distinct(InterfaceSTIarray);
+                                NumDistinctInterface = length(DistinctInterfaceSTIs);
+
+                                // Now build up a comma separated list of them
+                                EventContainer.STINum = NumDistinctInterface;
+                                if(EventContainer.STIRef = '')
+                                    {
+                                    EventContainer.STIRef = '' + DistinctInterfaceSTIs[0];
+                                    a = 1;
+                                    while (a < NumDistinctInterface)
+                                        {
+                                        EventContainer.STIRef = EventContainer.STIRef + "," + DistinctInterfaceSTIs[a];
+                                        a = a + 1;
+                                        }
+                                    }
+
+                                log("New_Network_Enrichment: Find highest impact STI value");
+                                if(EventContainer.STI_HA_Impact = 0)
+                                    {
+                                    Delimiter = ",";    
+                                    Interface_STI_HA_Array = Split(RemoteEnd[0].L2_STI_HA_IMPACT, Delimiter);
+                                    numInterfaceSTIs = length(Interface_STI_HA_Array);
+                                    if(numInterfaceSTIs > 0)
+                                        {
+                                        b = 0;
+                                        highestInterfaceSTI = 0;
+                                        while (b < numInterfaceSTIs)
+                                            {
+                                            if(int(Interface_STI_HA_Array[b]) > highestInterfaceSTI)
+                                                {
+                                                highestInterfaceSTI = int(Interface_STI_HA_Array[b]);
+                                                }
+                                            b = b + 1;
+                                            }
+                                        }
+                                    EventContainer.STI_HA_Impact = highestInterfaceSTI;
+                                    }
+                    } 
+                else
+                {
+                        log("New_Network_Enrichment: STIRef Not Found");
+                    if(EventContainer.STIRef = '')
+                    {
+                        EventContainer.STIRef = 'Not found';
+                        EventContainer.STINum = 0;
+                        EventContainer.STI_HA_Impact = 1;
+                    }
+                  }
+                                     
+                        } 
+                }
+        elseif (@EnrichmentSource = "Lambda")
+                {
+                RemoteEnd = GetByFilter('Circee_Lambda_Table', "(L1_SYSNAME='"+@Node+"') and (L1_INTERFACE_ID='"+@PhysicalCard+"')", false);
+                numRemoteEnd = Length(RemoteEnd);
+//          log("Sharan numRemoteEnd = " + numRemoteEnd);
+                if(numRemoteEnd>0)
+                        {
+                        EventContainer.RemoteNode = RemoteEnd[0].L2_SYSNAME;
+                        EventContainer.RemoteCard = RemoteEnd[0].L2_INTERFACE_ID;
+                        EventContainer.URL = RemoteEnd[0].L2_INTERFACE_ID;
+                        }
+                else
+                        {
+                        RemoteEnd = GetByFilter('Circee_Lambda_Table', "(L2_SYSNAME='"+@Node+"') and (L2_INTERFACE_ID='"+@PhysicalCard+"')", false);
+                        numRemoteEnd = Length(RemoteEnd);
+                        if(numRemoteEnd>0)
+                                {
+                                EventContainer.RemoteNode = RemoteEnd[0].L1_SYSNAME;
+                                EventContainer.RemoteCard = RemoteEnd[0].L1_INTERFACE_ID;
+                                }
+                        // No data found...
+                        else
+                                {
+                                EventContainer.RemoteNode = 'Not found';
+                                EventContainer.RemoteCard = 'Not found';
+                                }
+                        }
+
+        // get STI_Num, STI_Ref, and STI_HA_Impact from Netcool_L1_L2 table
+                Filter = "(L1_SYSNAME='"+@Node+"') and (L1_IF_ID='"+@PhysicalCard+"')";
+                log("New_Network_Enrichment: Filter = " + Filter);
+                RemoteEnd = GetByFilter('Circee_Interface_Table', Filter, false);
+                numRemoteEnd = Length(RemoteEnd);
+
+             if(numRemoteEnd>0)
+
+                        {
+                        // Calculate STI info for interface
+                        Delimiter = ",";    
+                        InterfaceSTIarray = Split(RemoteEnd[0].L1_STI_ID, Delimiter);
+                        DistinctInterfaceSTIs = distinct(InterfaceSTIarray);
+                        NumDistinctInterface = length(DistinctInterfaceSTIs);
+
+                        // Now build up a comma separated list of them
+                        EventContainer.STINum = NumDistinctInterface;
+                        if(EventContainer.STIRef = '')
+                            {
+                            EventContainer.STIRef = '' + DistinctInterfaceSTIs[0];
+                            a = 1;
+                            while (a < NumDistinctInterface)
+                                {
+                                EventContainer.STIRef = EventContainer.STIRef + "," + DistinctInterfaceSTIs[a];
+                                a = a + 1;
+                                }
+                            }
+                    
+                 log("New_Network_Enrichment: Find highest impact STI value");
+
+                        if(EventContainer.STI_HA_Impact = 0)
+                            {
+                            Delimiter = ",";    
+                            Interface_STI_HA_Array = Split(RemoteEnd[0].L1_STI_HA_IMPACT, Delimiter);
+                            numInterfaceSTIs = length(Interface_STI_HA_Array);
+                            if(numInterfaceSTIs > 0)
+                                {
+                                b = 0;
+                                highestInterfaceSTI = 0;
+                                while (b < numInterfaceSTIs)
+                                    {
+                                    if(int(Interface_STI_HA_Array[b]) > highestInterfaceSTI)
+                                        {
+                                        highestInterfaceSTI = int(Interface_STI_HA_Array[b]);
+                                        }
+                                    b = b + 1;
+                                    }
+                                }
+                            EventContainer.STI_HA_Impact = highestInterfaceSTI;
+                            }
+                        } 
+                // if we didn't find it under L1 we must look under L2
+                else
+                        {
+                          Filter = "(L2_SYSNAME='"+@Node+"') and (L2_IF_ID='"+@PhysicalCard+"')";
+                          log("New_Network_Enrichment: Filter = " + Filter);
+                         //RemoteEnd = GetByFilter('Circee_Interface_Table', Filter, false);
+               RemoteEnd = GetByFilter('Reporter_Interface_Table', Filter, false);
+                        numRemoteEnd = Length(RemoteEnd);
+                        if(numRemoteEnd>0)
+                                {
+                          
+                               // Calculate STI info for interface
+                                Delimiter = ",";    
+                                InterfaceSTIarray = Split(RemoteEnd[0].L2_STI_ID, Delimiter);
+                                DistinctInterfaceSTIs = distinct(InterfaceSTIarray);
+                                NumDistinctInterface = length(DistinctInterfaceSTIs);
+
+                                // Now build up a comma separated list of them
+                                EventContainer.STINum = NumDistinctInterface;
+                                if(EventContainer.STIRef = '')
+                                    {
+                                    EventContainer.STIRef = '' + DistinctInterfaceSTIs[0];
+                                    a = 1;
+                                    while (a < NumDistinctInterface)
+                                        {
+                                        EventContainer.STIRef = EventContainer.STIRef + "," + DistinctInterfaceSTIs[a];
+                                        a = a + 1;
+                                        }
+                                    }
+
+                                log("New_Network_Enrichment: Find highest impact STI value");
+                                if(EventContainer.STI_HA_Impact = 0)
+                                    {
+                                    Delimiter = ",";    
+                                    Interface_STI_HA_Array = Split(RemoteEnd[0].L2_STI_HA_IMPACT, Delimiter);
+                                    numInterfaceSTIs = length(Interface_STI_HA_Array);
+                                    if(numInterfaceSTIs > 0)
+                                        {
+                                        b = 0;
+                                        highestInterfaceSTI = 0;
+                                        while (b < numInterfaceSTIs)
+                                            {
+                                            if(int(Interface_STI_HA_Array[b]) > highestInterfaceSTI)
+                                                {
+                                                highestInterfaceSTI = int(Interface_STI_HA_Array[b]);
+                                                }
+                                            b = b + 1;
+                                            }
+                                        }
+                                    EventContainer.STI_HA_Impact = highestInterfaceSTI;
+                                    }
+                } 
+                else
+                {
+                        log("New_Network_Enrichment: STIRef Not Found");
+                    if(EventContainer.STIRef = '')
+                    {
+                        EventContainer.STIRef = 'Not found';
+                        EventContainer.STINum = 0;
+                        EventContainer.STI_HA_Impact = 1;
+                    }
+                  }
+                                     
+                        } 
+                }
+        elseif (@EnrichmentSource = "LSP")
+                {
+                RemoteEnd=GetByFilter('Circee_LSP_Table', "(LSP_ID='"+@PhysicalCard+"') AND (HOST_ID_LOC='"+ @Node +"')", false);
+                numRemoteEnd = Length(RemoteEnd);
+                if(numRemoteEnd>0)
+                        {
+                        EventContainer.RemoteNode = RemoteEnd[0].HOST_ID_REM;
+                        EventContainer.RemoteCard = @PhysicalCard;
+                        }
+                else
+                        {
+                        RemoteEnd=GetByFilter('Circee_LSP_Table', "(LSP_ID='"+@PhysicalCard+"') AND (HOST_ID_REM='"+ @Node +"')", false);
+                        numRemoteEnd = Length(RemoteEnd);
+                        if(numRemoteEnd>0)
+                                {
+                                EventContainer.RemoteNode = RemoteEnd[0].HOST_ID_LOC;
+                                EventContainer.RemoteCard = @PhysicalCard;
+                                }
+                        // No data found...
+                        else
+                                {
+                                EventContainer.RemoteNode = 'Not found';
+                                EventContainer.RemoteCard = 'Not found';
+                                }
+                        }
+
+        // get STI_Num, STI_Ref, and STI_HA_Impact from VIEW_ASSETT_STI table
+
+        Filter = "ASSET_NAME='"+EventContainer.Node+"'";
+          EndOrgNodes = GetByFilter('Circee_Asset_STI_Table', Filter, false);
+          EndNum = length(EndOrgNodes); 
+          If ( EndNum > 0 )
+            {
+            // Create array of STIs from EndOrgNodes
+            EndOrgSTIs = {};
+            a = 0;
+            while (a < EndNum)
+            {
+                EndOrgSTIs = EndOrgSTIs + EndOrgNodes[a].STI_ID;
+                a = a + 1;
+            }
+    
+            // Create distinct array of the STI IDs
+            DistinctSTIs = distinct(EndOrgSTIs);
+            NumDistinct = length(DistinctSTIs);
+    
+                log("New_Network_Enrichment: STIRef " + EndOrgNodes[0].STI_ID );
+                log("New_Network_Enrichment: distinct STIRef " + DistinctSTIs[0] );
+    
+            // Now build up a comma separated list of them
+                EventContainer.STINum = NumDistinct;
+            if(EventContainer.STIRef = '')
+                {
+                EventContainer.STIRef = '' + DistinctSTIs[0];
+                a = 1;
+                while (a < NumDistinct)
+                    {
+                    EventContainer.STIRef = EventContainer.STIRef + "," + DistinctSTIs[a];
+                    a = a + 1;
+                    }
+                }
+    
+            log("New_Network_Enrichment: Find highest impact STI value");
+
+            if(EventContainer.STI_HA_Impact = 0)
+                {
+                Delimiter = ",";    
+                STI_HA_Array = Split(EndOrgNodes[0].STI_Impact, Delimiter);
+                numSTIs = length(STI_HA_Array);
+                if(numSTIs > 0)
+                    {
+                    b = 0;
+                    highestSTI = 0;
+                    while (b < numSTIs)
+                        {
+                        if(int(STI_HA_Array[b]) > highestSTI)
+                            {
+                            highestSTI = int(STI_HA_Array[b]);
+                            }
+                        b = b + 1;
+                        }
+                    }
+                EventContainer.STI_HA_Impact = highestSTI;
+                }
+            }
+
+            else
+            {
+                    log("New_Network_Enrichment: STIRef Not Found");
+                if(EventContainer.STIRef = '')
+                    {
+                        EventContainer.STIRef = 'Not found';
+                        EventContainer.STINum = 0;
+                        EventContainer.STI_HA_Impact = 1;
+                    }
+              }
+                }
+        }
+
+    //If physical card null and remotenode null and remoatecard null
+
+    elseif (@PhysicalCard ='' && @RemoteNode = '' && @RemoteCard = '')
+        {
+        Filter = "ASSET_NAME='"+EventContainer.Node+"'";
+          EndOrgNodes = GetByFilter('Circee_Asset_STI_Table', Filter, false);
+          EndNum = length(EndOrgNodes); 
+          If ( EndNum > 0 )
+            {
+            // Create array of STIs from EndOrgNodes
+            EndOrgSTIs = {};
+            a = 0;
+            while (a < EndNum)
+            {
+                EndOrgSTIs = EndOrgSTIs + EndOrgNodes[a].STI_ID;
+                a = a + 1;
+            }
+    
+            // Create distinct array of the STI IDs
+            DistinctSTIs = distinct(EndOrgSTIs);
+            NumDistinct = length(DistinctSTIs);
+    
+                log("New_Network_Enrichment: STIRef " + EndOrgNodes[0].STI_ID );
+                log("New_Network_Enrichment: distinct STIRef " + DistinctSTIs[0] );
+    
+            // Now build up a comma separated list of them
+                EventContainer.STINum = NumDistinct;
+            if(EventContainer.STIRef = '')
+                {
+                EventContainer.STIRef = '' + DistinctSTIs[0];
+                a = 1;
+                while (a < NumDistinct)
+                    {
+                    EventContainer.STIRef = EventContainer.STIRef + "," + DistinctSTIs[a];
+                    a = a + 1;
+                    }
+                }
+    
+            log("New_Network_Enrichment: Find highest impact STI value");
+            if(EventContainer.STI_HA_Impact = 0)
+                {
+                Delimiter = ",";    
+                STI_HA_Array = Split(EndOrgNodes[0].STI_Impact, Delimiter);
+                numSTIs = length(STI_HA_Array);
+                if(numSTIs > 0)
+                    {
+                    b = 0;
+                    highestSTI = 0;
+                    while (b < numSTIs)
+                        {
+                        if(int(STI_HA_Array[b]) > highestSTI)
+                            {
+                            highestSTI = int(STI_HA_Array[b]);
+                            }
+                        b = b + 1;
+                        }
+                    }
+                EventContainer.STI_HA_Impact = highestSTI;
+                }
+    
+            }
+              else
+            {
+                    log("New_Network_Enrichment: STIRef Not Found");
+                if(EventContainer.STIRef = '')
+                {
+                    EventContainer.STIRef = 'Not found';
+                    EventContainer.STINum = 0;
+                    EventContainer.STI_HA_Impact = 1;
+                }
+              }
+        }
+}
+//Update the event with enrichment data
+ReturnEvent(EventContainer);
+
+// EventContainer.RCCArea = 'KKT'; --- to be removed
+
+log("New_Network_Enrichment: IQLOGFINISH: ServerSerial=" + @ServerSerial + " EventId=" + @EventId + " AlarmClass="+ @AlarmClass +" ActionRequired="+@ActionRequired);
+log("New_Network_Enrichment: enrichment complete");
+
+
+
+
+
+
+
+
+
+

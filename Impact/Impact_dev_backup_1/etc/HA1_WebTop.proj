@@ -1,0 +1,15 @@
+#This file was written by Impact Server.
+#Mon Apr 13 10:01:25 EDT 2009
+impact.datasrc.numdatasrc=0
+impact.policy.numpolicy=8
+impact.datatype.numdatatype=0
+impact.service.numservice=0
+
+impact.policy.0=NGF
+impact.policy.1=PSML
+impact.policy.2=UTIL
+impact.policy.3=WEBTOP
+impact.policy.4=ngfExamples
+impact.policy.5=psmlExamples
+impact.policy.6=webtop13Examples
+impact.policy.7=webtop2xExamples

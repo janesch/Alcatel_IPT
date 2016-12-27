@@ -1,0 +1,47 @@
+/********************************************************* {COPYRIGHT-TOP-RM} ***
+* Licensed Materials - Property of IBM
+* "Restricted Materials of IBM"
+*
+* 5724-S43
+* (C) Copyright IBM Corp. 2009
+*
+* US Government Users Restricted Rights - Use, duplication, or
+* disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+********************************************************* {COPYRIGHT-END-RM} **/
+//use this example policy as a template for building policies of your own
+
+log("wsc message received");
+log(a + ". " + b + ". " + c +".");
+
+
+//NOW SENDING RESPONSE TO UNIVERSIAL MESSAGE CONSOLE VIA WEB SERVICES
+//
+
+//PKGName depends on name used when you compiled WSDL file
+	WSSetDefaultPKGName("com.ibm.tivoli.netcool.impact.integrations.itm");
+
+	WebServiceName = "ITMSOAP";
+	WebServicePort = "ITMSOAPPort";
+	Method = "WTO";
+	ca = WSNewObject("CT_WTO");
+
+//USE AUTH INFO FOR YOUR INSTALLATION
+	ca.userid = "sysadmin";
+	ca.password = "netcool";
+
+//YOUR MESSAGE SPECIFICS HERE
+	ca.data = "Test response from Impact";
+	ca.category = "Netcool_IMPACT";
+	ca.severity = "1";
+
+	Params = { ca };
+
+
+//YOUR SOAP INFO HERE
+	EndPoint = "http://sandman:1920///cms/soap";
+
+	Results = WSInvoke(WebServiceName, WebServicePort, EndPoint, Method, Params);
+
+//
+//END
+

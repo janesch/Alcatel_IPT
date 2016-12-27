@@ -1,0 +1,79 @@
+if ( regmatch ( $line_00, "Link2_Transmissions" ) ) { 
+$Link2_Transmissions= extract($line_00, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_01, "Link2_Transmissions" ) ) { 
+$Link2_Transmissions= extract($line_01, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_02, "Link2_Transmissions" ) ) { 
+$Link2_Transmissions= extract($line_02, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_03, "Link2_Transmissions" ) ) { 
+$Link2_Transmissions= extract($line_03, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_04, "Link2_Transmissions" ) ) { 
+$Link2_Transmissions= extract($line_04, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_05, "Link2_Transmissions" ) ) { 
+$Link2_Transmissions= extract($line_05, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_06, "Link2_Transmissions" ) ) { 
+$Link2_Transmissions= extract($line_06, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_07, "Link2_Transmissions" ) ) { 
+$Link2_Transmissions= extract($line_07, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_08, "Link2_Transmissions" ) ) { 
+$Link2_Transmissions= extract($line_08, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_09, "Link2_Transmissions" ) ) { 
+$Link2_Transmissions= extract($line_09, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_10, "Link2_Transmissions" ) ) { 
+$Link2_Transmissions= extract($line_10, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_11, "Link2_Transmissions" ) ) { 
+$Link2_Transmissions= extract($line_11, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_12, "Link2_Transmissions" ) ) { 
+$Link2_Transmissions= extract($line_12, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_13, "Link2_Transmissions" ) ) { 
+$Link2_Transmissions= extract($line_13, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_14, "Link2_Transmissions" ) ) { 
+$Link2_Transmissions= extract($line_14, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_15, "Link2_Transmissions" ) ) { 
+$Link2_Transmissions= extract($line_15, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_16, "Link2_Transmissions" ) ) { 
+$Link2_Transmissions= extract($line_16, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_17, "Link2_Transmissions" ) ) { 
+$Link2_Transmissions= extract($line_17, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_18, "Link2_Transmissions" ) ) { 
+$Link2_Transmissions= extract($line_18, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_19, "Link2_Transmissions" ) ) { 
+$Link2_Transmissions= extract($line_19, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_20, "Link2_Transmissions" ) ) { 
+$Link2_Transmissions= extract($line_20, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_21, "Link2_Transmissions" ) ) { 
+$Link2_Transmissions= extract($line_21, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_22, "Link2_Transmissions" ) ) { 
+$Link2_Transmissions= extract($line_22, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_23, "Link2_Transmissions" ) ) { 
+$Link2_Transmissions= extract($line_23, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_24, "Link2_Transmissions" ) ) { 
+$Link2_Transmissions= extract($line_24, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_25, "Link2_Transmissions" ) ) { 
+$Link2_Transmissions= extract($line_25, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_26, "Link2_Transmissions" ) ) {
+$Link2_Transmissions= extract($line_26, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_27, "Link2_Transmissions" ) ) {
+$Link2_Transmissions= extract($line_27, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_28, "Link2_Transmissions" ) ) {
+$Link2_Transmissions= extract($line_28, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_29, "Link2_Transmissions" ) ) {
+$Link2_Transmissions= extract($line_29, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_30, "Link2_Transmissions" ) ) {
+$Link2_Transmissions= extract($line_30, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_31, "Link2_Transmissions" ) ) {
+$Link2_Transmissions= extract($line_31, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_32, "Link2_Transmissions" ) ) {
+$Link2_Transmissions= extract($line_32, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_33, "Link2_Transmissions" ) ) {
+$Link2_Transmissions= extract($line_33, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_34, "Link2_Transmissions" ) ) {
+$Link2_Transmissions= extract($line_34, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_35, "Link2_Transmissions" ) ) {
+$Link2_Transmissions= extract($line_35, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_36, "Link2_Transmissions" ) ) {
+$Link2_Transmissions= extract($line_36, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_37, "Link2_Transmissions" ) ) {
+$Link2_Transmissions= extract($line_37, "Link2_Transmissions=(.*)")
+} else if ( regmatch ( $line_38, "Link2_Transmissions" ) ) {
+$Link2_Transmissions= extract($line_38, "Link2_Transmissions=(.*)")
+}   

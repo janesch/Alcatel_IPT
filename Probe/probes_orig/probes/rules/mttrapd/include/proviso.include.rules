@@ -1,0 +1,649 @@
+#######################################################################
+#
+#       Copyright (C) 1994 - 1997 Omnibus Transport Technologies Ltd.
+#       All Rights Reserved
+#
+#       RESTRICTED RIGHTS:
+#
+#       This file may have been supplied under a license.
+#       It may be used, disclosed, and/or copied only as permitted
+#       under such license agreement.  Any copy must contain the
+#       above copyright notice and this restricted rights notice.
+#       Use, copying, and/or disclosure of the file is strictly
+#       prohibited unless otherwise provided in the license agreement.
+#
+#
+#       Ident: $Id: trapd.rules 1.7 1999/06/10 11:24:37 vince Release $
+#
+#######################################################################
+
+#	   if (match($enterprise, ".1.3.6.1.4.1.2929"))
+#           {
+              @Class   = 40268
+              @Manager = "PROVISO"
+      	      @Agent = "PROVISO"   
+	      #@AlertGroup = "Enterprise"
+              @NodeAlias = $PeerIPaddress
+
+	      if (	(match($specific-trap, "1110")) || 
+			(match($specific-trap, "1111"))||
+			(match($specific-trap, "1120"))||
+			(match($specific-trap, "1121"))||
+			(match($specific-trap, "1210"))||
+			(match($specific-trap, "1211"))||
+			(match($specific-trap, "1220"))||
+			(match($specific-trap, "1221"))||
+			(match($specific-trap, "1310"))||
+			(match($specific-trap, "1311"))||
+			(match($specific-trap, "1320"))||
+			(match($specific-trap, "1321"))||
+			(match($specific-trap, "1410"))||
+			(match($specific-trap, "1411"))
+		)
+		{
+		@provisoSubElementIndex = $1
+		$provisoElementName = $2
+		$provisoSubElementName = $3
+		$provisoSubElementLabel = $4
+		$provisoSubElementCustomerLabel = $5
+		$provisoSubElementFamily = $6
+		$provisoFormulaName = $7
+		$provisoThresholdValue = $8
+		$provisoFormulaValue = $9
+		@provisoViolationTime = $10
+## added by Toby to use the project consistent time stamps
+## first and last raise time must be set from the source.
+		@FirstRaiseTime = $10
+		@LastRaiseTime = $10
+##
+		$provisoDurationLimit = $11
+		$provisoDurationValue = $12
+		$provisoSLAPeriod = $13
+		$provisoThresholdMode = $14
+		$provisoPollingPeriod = $15
+		$provisoSubElementPropertyCustomer = $16
+		$provisoSubElementPropertyLocation = $17
+		$provisoSubElementPropertyArea = $18
+		$provisoSubElementPropertyCoS = $19
+		$provisoSubElementPropertyCIR = $20
+		$provisoSubElementPropertySpeed = $21
+		$provisoSubElementPropertyGeneric = $22
+		@provisoSubElementGrpIndex = $23
+
+		switch($provisoThresholdMode) {
+			case "1": 
+				$provisoThresholdModeAscii="cross under"
+			case "2": 
+				$provisoThresholdModeAscii="cross over"
+			case "3": 
+				$provisoThresholdModeAscii="Band in"
+			default:
+		}
+
+                # we should have a FULL formula path of the "thresholded" formula -
+                # every hop on a path is separated by "~". For the summary field we just
+                # need the LAST hop [to make Summary succinct].
+                # Extract the LAST hop on the formula path if the path contains least 2
+                # hops [1 "~" separator. If the formula path is just ONE hop - just get it. 
+                if (regmatch($provisoFormulaName,"^.*[~].*")) 
+                   $leafFormula = extract($provisoFormulaName, ".*[~](.*)")
+                else 
+                   $leafFormula = $provisoFormulaName
+
+	        @Node = "" +  $2 + ""
+                @AlertKey = "" + $3 + ""
+
+
+# Note: In the switch statement below, it is important not to change the Type values from what they are set to
+#       below.  These values are used by the Object Server to match up 'set' events with 'reset' events, and
+#       thus remove events that have been reset from the Alert Status Table, and hence the Event List.
+#       Severity values can be change to a customer's preference for 'set' events.  'Reset' events should
+#       have a Severity of 1 or 0.
+
+	      switch($specific-trap) {
+
+	      		case "1120" : 
+					#@Severity = 3 
+					@Severity = 5 
+					@Type = 1
+					#$provisoThresholdTypeAscii = "Critical Burst Violation" 
+					$provisoThresholdTypeAsciiNew = "Burst Violation" 
+					@provisoThresholdType = int($specific-trap)
+					
+			case "1121" :
+					#@Severity = 1
+					@Severity = 2
+					@Type = 2
+					#$provisoThresholdTypeAscii = "Reset Critical Burst Violation"
+					$provisoThresholdTypeAsciiNew = "Reset Burst Violation"
+					@provisoThresholdType = int($specific-trap)
+			case "1110" :
+					@Severity = 2
+					@Type = 1
+					#$provisoThresholdTypeAscii = "Warning Burst Violation"
+					$provisoThresholdTypeAsciiNew = "Burst Violation"
+					@provisoThresholdType = int($specific-trap)
+			case "1111" :
+					#@Severity = 1
+					@Severity = 2
+					@Type = 2
+					#$provisoThresholdTypeAscii = "Reset Warning Burst Violation"
+					$provisoThresholdTypeAsciiNew = "Reset Burst Violation"
+					@provisoThresholdType = int($specific-trap)
+			case "1210" :
+					@Severity = 2
+					@Type = 1
+					#$provisoThresholdTypeAscii = "Warning SLA Violation"
+					$provisoThresholdTypeAsciiNew = "SLA Violation"
+					@provisoThresholdType = int($specific-trap)
+			case "1211" :
+					#@Severity = 1
+					@Severity = 2
+					@Type = 2
+					#$provisoThresholdTypeAscii = "Reset Warning SLA Violation"
+					$provisoThresholdTypeAsciiNew = "Reset SLA Violation"
+					@provisoThresholdType = int($specific-trap)
+			case "1220" :
+					#@Severity = 3
+					@Severity = 5
+					@Type = 1
+					#$provisoThresholdTypeAscii = "Critical SLA Violation"
+					$provisoThresholdTypeAsciiNew = "SLA Violation"
+					@provisoThresholdType = int($specific-trap)
+			case "1221" :
+					#@Severity = 1
+					@Severity = 2
+					@Type = 2
+					#$provisoThresholdTypeAscii = "Reset Critical SLA Violation"
+					$provisoThresholdTypeAsciiNew = "Reset SLA Violation"
+					@provisoThresholdType = int($specific-trap)
+			case "1310" :
+					@Severity = 2
+					@Type = 1
+					#$provisoThresholdTypeAscii = "Warning Proactive SLA Violation"
+					$provisoThresholdTypeAsciiNew = "Proactive SLA Violation"
+					@provisoThresholdType = int($specific-trap)
+			case "1311" :
+					#@Severity = 1
+					@Severity = 2
+					@Type = 2
+					#$provisoThresholdTypeAscii = "Reset Warning Proactive SLA Violation"
+					$provisoThresholdTypeAsciiNew = "Reset Proactive SLA Violation"
+					@provisoThresholdType = int($specific-trap)
+			case "1320" :
+					#@Severity = 3
+					@Severity = 5
+					@Type = 1
+					#$provisoThresholdTypeAscii = "Critical Proactive SLA Violation"
+					$provisoThresholdTypeAsciiNew = "Proactive SLA Violation"
+					@provisoThresholdType = int($specific-trap)
+			case "1321" :
+					#@Severity = 1
+					@Severity = 2
+					@Type = 2
+					#$provisoThresholdTypeAscii = "Reset Critical Proactive SLA Violation"
+					$provisoThresholdTypeAsciiNew = "Reset Proactive SLA Violation"
+					@provisoThresholdType = int($specific-trap)
+
+
+			case "1410" :
+                                        @Severity = 2
+                                        @Type = 1
+                                        #$provisoThresholdTypeAscii = "Auto Violation" 
+                                        $provisoThresholdTypeAsciiNew = "Auto Violation" 
+                                        @provisoThresholdType = int($specific-trap)
+					#details($*)
+
+			case "1411" :
+                                        #@Severity = 1
+                                        @Severity = 2
+                                        @Type = 2
+                                        #$provisoThresholdTypeAscii = "Reset Auto Violation"
+                                        $provisoThresholdTypeAsciiNew = "Reset Auto Violation"
+                                        @provisoThresholdType = int($specific-trap)
+					#details($*)
+
+			default:
+					@Severity = 1
+					@Type = 1
+					#$provisoThresholdTypeAscii = "Unknown Violation"
+					$provisoThresholdTypeAsciiNew = "Unknown Violation"
+					@provisoThresholdType = int($specific-trap)
+		}
+
+# Definition of the Identifier below determines how the AEL treats events with respect to de-duplication.
+# Current implementation shows events on a 'set' trap.  When a 'reset' trap of the same type arrives, the
+# 'set' trap and the 'reset trap have their Severity changed to 0 (green), which causes them to be 
+#  automatically removed from the AEL after 
+# a configurable amount of time set by the Netcool policy.  If it is desired that the 'set' events are not 
+# removed until they are acknowledged, then the clear automation will need to be changed on the Object Server
+# Admin function by the Netcool Administrator.
+
+	       @Identifier = "" + $2 + "" + @Agent + "" + $3 + "" + $provisoFormulaName + "" + $23 + "" + $specific-trap + ""
+
+               $durationValueH = int($provisoDurationValue) / 3600
+               $durationValueM = (int($provisoDurationValue) - (int($durationValueH) * 3600)) / 60
+               $durationValueS = int($provisoDurationValue) - (int($durationValueH) * 3600) - (int($durationValueM) * 60) 
+
+               $duration = $durationValueS + "s"
+
+               if ((int($durationValueM) > 0) and (int($durationValueS) >= 0)) {
+                  $duration = $durationValueM + "m:" + $duration
+               }
+               if ( int($durationValueH) > 0 ) {
+                  $duration = $durationValueH + "h:" + $duration
+               }
+
+               $durationLimitH = int($provisoDurationLimit) / 3600
+               $durationLimitM = (int($provisoDurationLimit) - (int($durationLimitH) * 3600)) / 60
+               $durationLimitS = int($provisoDurationLimit) - (int($durationLimitH) * 3600) - (int($durationLimitM) * 60)
+
+               $durationLimit = $durationLimitS + "s"
+
+               if ((int($durationLimitM) > 0) and (int($durationLimitS) >= 0)) {
+                  $durationLimit = $durationLimitM + "m:" + $durationLimit
+               }
+               if ( int($durationLimitH) > 0 ) {
+                  $durationLimit = $durationLimitH + "h:" + $durationLimit
+               }
+               #@Summary = "[" + $provisoThresholdTypeAscii + " for more than " + $durationLimit + " - lasted " + $duration + "]" + $leafFormula + " " + $provisoThresholdModeAscii +  " " + $provisoThresholdValue + " (" + $provisoFormulaValue + ") for " + $provisoSubElementLabel
+              
+		$LabelFinal = $provisoSubElementLabel 
+		#if (regmatch($provisoSubElementLabel,"^.*bps.*")) 
+		#{
+               	#	$Label = extract($provisoSubElementLabel, ".*:.*:(.*)")
+		#	$Label = ltrim(rtrim($Label))
+		#	$Label_Nums = split($Label,ProvisoSubElementLabel," ")
+		#	$LabelFinal = "" + ProvisoSubElementLabel[2] + " " + ProvisoSubElementLabel[3] + " " + ProvisoSubElementLabel[4]
+		#} 
+		#else 
+                #{
+		#   	$LabelFinal = $provisoSubElementLabel
+		#}
+
+		if (regmatch($leafFormula,"^.*[(].*")) 
+		{		
+			$NewFormula = extract($leafFormula, '(.*)[(].*')
+			$NewFormula = ltrim(rtrim($NewFormula))
+		}
+		else
+		{
+			$NewFormula = $leafFormula
+		}
+		#@Summary = "" + $provisoThresholdTypeAsciiNew + " lasted " + $duration + " " + $leafFormula + " " + $LabelFinal
+		@Summary = "" + $provisoThresholdTypeAsciiNew + " lasted " + $duration + " " + $NewFormula + " " + $LabelFinal
+		@ExpireTime = 86400		 
+	    }
+		# Do we have interface details in the Summary...
+		# look for a forward slash...
+		#if (regmatch(@Summary,"^.*\/.*"))
+		#{
+		#	@PhysicalCard = extract(@Summary,"^.*[KG]bps (.*) $")
+		#	@AlarmClass = "Utilization threshold"
+		#}
+		#else
+		#{
+		#	@AlarmClass = "PROVISO"
+		#}
+
+		#if (match($specific-trap, "1410") || match($specific-trap, "1411"))
+		#{
+		#	@Summary = $leafFormula + " " + $provisoThresholdTypeAscii + " lasted " + $duration + " " + $provisoThresholdModeAscii + " (" + $provisoFormulaValue + ") for " + $provisoSubElementLabel
+		#}  
+
+	if ((regmatch(@Summary, "Inbound Utilization")) && (match($specific-trap, "1120") || match($specific-trap, "1121")))
+	{
+       		@AlarmClass = "Inbound Utilization CritBurstViolationThr"
+		#if (regmatch($provisoSubElementLabel,".*bps.*")) 
+		if (regmatch($provisoSubElementLabel,".*IF:.*")) 
+		{
+               		$Label = extract($provisoSubElementLabel, "^.*IF:(.*)$")
+			$Label = ltrim(rtrim($Label))
+			$LabelFinal = extract($Label,"[0-9]+ (.*)")
+			if (regmatch($LabelFinal,".*\$.*"))
+			{
+				$LabelFinal = extract($LabelFinal,"(.*)\$.*")
+			}
+			#$Label_Nums = split($Label,ProvisoSubElementLabel," ")
+			#$LabelFinal = ProvisoSubElementLabel[2] + " " + ProvisoSubElementLabel[3] + " " + ProvisoSubElementLabel[4] + " " + ProvisoSubElementLabel[5] + " " + ProvisoSubElementLabel[6] + " " + ProvisoSubElementLabel[7] + " " + ProvisoSubElementLabel[8]
+		} 
+	}	
+	else if ((regmatch(@Summary, "Inbound Utilization")) && (match($specific-trap, "1110") || match($specific-trap, "1111")))
+	{
+       		 @AlarmClass = "Inbound Utilization WarnBurstViolationThr"
+		#if (regmatch($provisoSubElementLabel,".*bps.*")) 
+		if (regmatch($provisoSubElementLabel,".*IF:.*")) 
+		{
+               		#$Label = extract($provisoSubElementLabel, "^.*\:.*\:(.*)$")
+               		$Label = extract($provisoSubElementLabel, "^.*IF:(.*)$")
+			$Label = ltrim(rtrim($Label))
+			$LabelFinal = extract($Label,"[0-9]+ (.*)")
+			if (regmatch($LabelFinal,".*\$.*"))
+			{
+				$LabelFinal = extract($LabelFinal,"(.*)\$.*")
+			}
+			#if (regmatch($provisoSubElementLabel,".*\$.*"))
+			#{
+			#	$LabelFinal = extract($provisoSubElementLabel,"(.*)\$.*")
+			#}
+			#$Label_Nums = split($Label,ProvisoSubElementLabel," ")
+			#$LabelFinal = ProvisoSubElementLabel[2] + " " + ProvisoSubElementLabel[3] + " " + ProvisoSubElementLabel[4] + " " + ProvisoSubElementLabel[5] + " " + ProvisoSubElementLabel[6] + " " + ProvisoSubElementLabel[7] + " " + ProvisoSubElementLabel[8]
+		} 
+	}
+	else if ((regmatch(@Summary, "Inbound Errors")) && (match($specific-trap, "1120") || match($specific-trap, "1121")))
+	{
+        	@AlarmClass = "Inbound Errors CritBurstViolationThr"
+		if (regmatch($provisoSubElementLabel,"^.*bps.*")) 
+		{
+               		$Label = extract($provisoSubElementLabel, "^.*IF:(.*)$")
+			$Label = ltrim(rtrim($Label))
+			$LabelFinal = extract($Label,"[0-9]+ (.*)")
+               		
+			#$Label = extract($provisoSubElementLabel, ".*:.*:(.*)")
+			#$Label = ltrim(rtrim($Label))
+			#$Label_Nums = split($Label,ProvisoSubElementLabel," ")
+			#$LabelFinal = "" + ProvisoSubElementLabel[2] + " " + ProvisoSubElementLabel[3] + " " + ProvisoSubElementLabel[4]
+		} 
+	}
+	else if ((regmatch (@Summary, "Inbound Errors")) && (match($specific-trap, "1110") || match($specific-trap, "1111")))
+	{
+       		 @AlarmClass = "Inbound Errors WarnBurstViolationThr"
+		if (regmatch($provisoSubElementLabel,"^.*bps.*")) 
+		{
+               		$Label = extract($provisoSubElementLabel, "^.*IF:(.*)$")
+			$Label = ltrim(rtrim($Label))
+			$LabelFinal = extract($Label,"[0-9]+ (.*)")
+		} 
+	}
+	else if ((regmatch(@Summary, "Inbound Volume")) && (match($specific-trap, "1120") || match($specific-trap, "1121")))
+	{
+        	@AlarmClass = "Inbound Volume CritBurstViolationThr"
+		if (regmatch($provisoSubElementLabel,"^.*bps.*")) 
+		{
+               		$Label = extract($provisoSubElementLabel, "^.*IF:(.*)$")
+			$Label = ltrim(rtrim($Label))
+			$LabelFinal = extract($Label,"[0-9]+ (.*)")
+		} 
+	}
+	else if ((regmatch (@Summary, "Inbound Volume")) && (match($specific-trap, "1110") || match($specific-trap, "1111")))
+	{
+       		 @AlarmClass = "Inbound Volume WarnBurstViolationThr"
+		if (regmatch($provisoSubElementLabel,"^.*bps.*")) 
+		{
+               		$Label = extract($provisoSubElementLabel, "^.*IF:(.*)$")
+			$Label = ltrim(rtrim($Label))
+			$LabelFinal = extract($Label,"[0-9]+ (.*)")
+		} 
+	}
+	else if ((regmatch(@Summary, "Outbound Errors")) && (match($specific-trap, "1120") || match($specific-trap, "1121")))
+	{
+       		 @AlarmClass = "Outbound Errors CritBurstViolationThr"
+		if (regmatch($provisoSubElementLabel,"^.*bps.*")) 
+		{
+               		$Label = extract($provisoSubElementLabel, "^.*IF:(.*)$")
+			$Label = ltrim(rtrim($Label))
+			$LabelFinal = extract($Label,"[0-9]+ (.*)")
+
+               		#$Label = extract($provisoSubElementLabel, ".*:.*:(.*)")
+			#$Label = ltrim(rtrim($Label))
+			#$Label_Nums = split($Label,ProvisoSubElementLabel," ")
+			#$LabelFinal = "" + ProvisoSubElementLabel[2] + " " + ProvisoSubElementLabel[3] + " " + ProvisoSubElementLabel[4]
+		} 
+	}
+	else if ((regmatch(@Summary, "Outbound Errors")) && (match($specific-trap, "1110") || match($specific-trap, "1110")))
+	{
+		@AlarmClass = "Outbound Errors WarnBurstViolationThr"	
+		if (regmatch($provisoSubElementLabel,"^.*bps.*")) 
+		{
+               		$Label = extract($provisoSubElementLabel, "^.*IF:(.*)$")
+			$Label = ltrim(rtrim($Label))
+			$LabelFinal = extract($Label,"[0-9]+ (.*)")
+               		
+			#$Label = extract($provisoSubElementLabel, ".*:.*:(.*)")
+			#$Label = ltrim(rtrim($Label))
+			#$Label_Nums = split($Label,ProvisoSubElementLabel," ")
+			#$LabelFinal = "" + ProvisoSubElementLabel[2] + " " + ProvisoSubElementLabel[3] + " " + ProvisoSubElementLabel[4]
+		} 
+	}
+	else if ((regmatch(@Summary, "Inbound Discarded")) && (match($specific-trap, "1120") || match($specific-trap, "1120")))
+	{
+       		@AlarmClass = "Inbound Discarded CritBurstViolationThr"
+		if (regmatch($provisoSubElementLabel,"^.*bps.*")) 
+		{
+               		$Label = extract($provisoSubElementLabel, "^.*IF:(.*)$")
+			$Label = ltrim(rtrim($Label))
+			$LabelFinal = extract($Label,"[0-9]+ (.*)")
+               		#$Label = extract($provisoSubElementLabel, ".*:.*:(.*)")
+			#$Label = ltrim(rtrim($Label))
+			#$Label_Nums = split($Label,ProvisoSubElementLabel," ")
+			#$LabelFinal = "" + ProvisoSubElementLabel[2] + " " + ProvisoSubElementLabel[3] + " " + ProvisoSubElementLabel[4]
+		} 
+	}
+	else if ((regmatch(@Summary, "Inbound Discarded")) && (match($specific-trap, "1110") || match($specific-trap, "1111")))
+	{
+       		@AlarmClass = "Inbound Discarded WarnBurstViolationThr"
+		if (regmatch($provisoSubElementLabel,"^.*bps.*")) 
+		{
+               		$Label = extract($provisoSubElementLabel, "^.*IF:(.*)$")
+			$Label = ltrim(rtrim($Label))
+			$LabelFinal = extract($Label,"[0-9]+ (.*)")
+		} 
+	}
+	else if ((regmatch(@Summary, "Outbound Discarded")) && (match($specific-trap, "1120") || match($specific-trap, "1121")))
+	{
+       		 @AlarmClass = "Outbound Discarded CritBurstViolationThr"
+		if (regmatch($provisoSubElementLabel,"^.*bps.*")) 
+		{
+               		$Label = extract($provisoSubElementLabel, "^.*IF:(.*)$")
+			$Label = ltrim(rtrim($Label))
+			$LabelFinal = extract($Label,"[0-9]+ (.*)")
+		} 
+	}
+	else if ((regmatch (@Summary, "Outbound Discarded")) && (match($specific-trap, "1110") || match($specific-trap, "1111"))) 
+	{
+       		 @AlarmClass = "Outbound Discarded WarnBurstViolationThr"
+		if (regmatch($provisoSubElementLabel,"^.*bps.*")) 
+		{
+               		$Label = extract($provisoSubElementLabel, "^.*IF:(.*)$")
+			$Label = ltrim(rtrim($Label))
+			$LabelFinal = extract($Label,"[0-9]+ (.*)")
+		} 
+	}
+	else if ((regmatch(@Summary, "Interface Availability")) && (match($specific-trap, "1120") || match($specific-trap, "1121")))
+	{
+       		@AlarmClass = "Interface Availability CritBurstViolationThr"
+		if (regmatch($provisoSubElementLabel,"^.*IF:.*")) 
+		{
+               		$Label = extract($provisoSubElementLabel, "^.*IF:(.*)$")
+			$Label = ltrim(rtrim($Label))
+			$LabelFinal = extract($Label,"[0-9]+ (.*)")
+		} 
+		else if(regmatch($provisoSubElementLabel,"^.*ASMI.*")) 
+		{
+               		$Label = extract($provisoSubElementLabel, "^.*Interface<(.*)>$")
+			$LabelFinal = "Interface" + " " + $Label	
+		}
+	}
+	else if ((regmatch(@Summary, "Interface Availability")) && (match($specific-trap, "1110") || match($specific-trap, "1111")))
+	{
+       		@AlarmClass = "Interface Availability WarnBurstViolationThr"
+		#if (regmatch($provisoSubElementLabel,"^.*bps.*")) 
+		#{
+               	#	$Label = extract($provisoSubElementLabel, "^.*IF:(.*)$")
+		#	$Label = ltrim(rtrim($Label))
+		#	$LabelFinal = extract($Label,"[0-9]+ (.*)")
+		#} 
+		if (regmatch($provisoSubElementLabel,"^.*IF:.*")) 
+		{
+               		$Label = extract($provisoSubElementLabel, "^.*IF:(.*)$")
+			$Label = ltrim(rtrim($Label))
+			$LabelFinal = extract($Label,"[0-9]+ (.*)")
+		} 
+		else if(regmatch($provisoSubElementLabel,"^.*ASMI.*")) 
+		{
+               		$Label = extract($provisoSubElementLabel, "^.*Interface<(.*)>$")
+			$LabelFinal = "Interface" + " " + $Label	
+		}
+	}
+	else if ((regmatch (@Summary, "GoodPutRatio")) && (match($specific-trap, "1120") || match($specific-trap, "1121")))
+	{
+       		 @AlarmClass = "GoodPutRatio CritBurstViolationThr"
+		if (regmatch($provisoSubElementLabel,"^.*Jitter.*")) 
+		{
+               		#$LabelFinal = extract($provisoSubElementLabel, ".*:(.*)")
+               		$LabelFinal = extract($provisoSubElementLabel, "[0-9A-Za-z]+:(.*)")
+			#$Label = ltrim(rtrim($Label))
+			#$Label_Nums = split($Label,ProvisoSubElementLabel," ")
+			#$LabelFinal = "" + ProvisoSubElementLabel[2] + " " + ProvisoSubElementLabel[3] + " " + ProvisoSubElementLabel[4]
+		} 
+	}
+	else if ((regmatch (@Summary, "GoodPutRatio")) && (match($specific-trap, "1110") || match($specific-trap, "1111")))
+	{
+       		 @AlarmClass = "GoodPutRatio WarnBurstViolationThr"
+		if (regmatch($provisoSubElementLabel,"^.*Jitter.*")) 
+		{
+               		#$LabelFinal = extract($provisoSubElementLabel, ".*:(.*)")
+               		$LabelFinal = extract($provisoSubElementLabel, "[0-9A-Za-z]+:(.*)")
+			#$Label = ltrim(rtrim($Label))
+			#$Label_Nums = split($Label,ProvisoSubElementLabel," ")
+			#$LabelFinal = "" + ProvisoSubElementLabel[2] + " " + ProvisoSubElementLabel[3] + " " + ProvisoSubElementLabel[4]
+		} 
+	}
+	else if ((regmatch (@Summary, "OneWayLatency_Max_SourceDestination")) && (match($specific-trap, "1120") || match($specific-trap, "1121")))
+	{
+       		 @AlarmClass = "OneWayLatency CritBurstViolationThr"
+		if (regmatch($provisoSubElementLabel,"^.*Jitter.*")) 
+		{
+               		#$LabelFinal = extract($provisoSubElementLabel, ".*:(.*)")
+               		$LabelFinal = extract($provisoSubElementLabel, "[0-9A-Za-z]+:(.*)")
+			#$Label = ltrim(rtrim($Label))
+			#$Label_Nums = split($Label,ProvisoSubElementLabel," ")
+			#$LabelFinal = "" + ProvisoSubElementLabel[2] + " " + ProvisoSubElementLabel[3] + " " + ProvisoSubElementLabel[4]
+		} 
+	}
+	else if ((regmatch (@Summary, "OneWayLatency_Max_SourceDestination")) && (match($specific-trap, "1110") || match($specific-trap, "1111")))
+	{
+       		 @AlarmClass = "OneWayLatency WarnBurstViolationThr"
+		if (regmatch($provisoSubElementLabel,"^.*Jitter.*")) 
+		{
+               		#$LabelFinal = extract($provisoSubElementLabel, ".*:(.*)")
+               		$LabelFinal = extract($provisoSubElementLabel, "[0-9A-Za-z]+:(.*)")
+			#$Label = ltrim(rtrim($Label))
+			#$Label_Nums = split($Label,ProvisoSubElementLabel," ")
+			#$LabelFinal = "" + ProvisoSubElementLabel[2] + " " + ProvisoSubElementLabel[3] + " " + ProvisoSubElementLabel[4]
+		} 
+	}
+	else if ((regmatch(@Summary, "Probe Availability")) && (match($specific-trap, "1120") || match($specific-trap, "1121")))
+	{
+       		 @AlarmClass = "Probe Availability CritBurstViolationThr"
+		if (regmatch($provisoSubElementLabel,"^.*bps.*")) 
+		{
+               		$LabelFinal = extract($provisoSubElementLabel, ".*:(.*)")
+		} 
+	}
+	else if ((regmatch(@Summary, "Probe Availability")) && (match($specific-trap, "1110") || match($specific-trap, "1111")))
+	{
+       		@AlarmClass = "Probe Availability WarnBurstViolationThr"
+		if (regmatch($provisoSubElementLabel,"^.*bps.*")) 
+		{
+               		$LabelFinal = extract($provisoSubElementLabel, ".*:(.*)")
+		} 
+	}
+	else if ((regmatch(@Summary, "LIMO_transmissions")) && (match($specific-trap, "1120") || match($specific-trap, "1121")))
+	{
+       		@AlarmClass = "LIMO_transmissions CritBurstViolationThr"
+               	$LabelFinal = "for " + $provisoSubElementLabel
+	}
+	else if ((regmatch(@Summary, "LIMO_transmissions")) && (match($specific-trap, "1110") || match($specific-trap, "1111")))
+	{
+       		@AlarmClass = "LIMO_transmissions WarnBurstViolationThr"
+               	$LabelFinal = "for " + $provisoSubElementLabel
+	}
+	else if ((regmatch(@Summary, "RetriesAttemptsPercent")) && (match($specific-trap, "1120") || match($specific-trap, "1121")))
+	{
+       		@AlarmClass = "RetriesAttemptsPercent CritBurstViolationThr"
+               	$LabelFinal = "for " + $provisoSubElementLabel
+	}
+	else if ((regmatch(@Summary, "RetriesAttemptsPercent")) && (match($specific-trap, "1110") || match($specific-trap, "1111")))
+	{
+       		@AlarmClass = "RetriesAttemptsPercent WarnBurstViolationThr"
+               	$LabelFinal = "for " + $provisoSubElementLabel
+	}
+	else if ((regmatch(@Summary, "RetriesAttemptsPercent")) && (match($specific-trap, "1220") || match($specific-trap, "1221")))
+	{
+       		@AlarmClass = "RetriesAttemptsPercent CritSLAViolationThr"
+               	$LabelFinal = "for " + $provisoSubElementLabel
+	}
+	else if ((regmatch(@Summary, "RetriesAttemptsPercent")) && (match($specific-trap, "1210") || match($specific-trap, "1211")))
+	{
+       		@AlarmClass = "RetriesAttemptsPercent WarnSLAViolationThr"
+               	$LabelFinal = "for " + $provisoSubElementLabel
+	}
+	else if ((regmatch(@Summary, "RetriesAttemptsPercent")) && (match($specific-trap, "1410") || match($specific-trap, "1411")))
+	{
+       		@AlarmClass = "RetriesAttemptsPercent WarnAutoViolationThr"
+               	$LabelFinal = "for " + $provisoSubElementLabel
+	}
+	else if ((regmatch(@Summary, "SignalNoise")) && (match($specific-trap, "1410") || match($specific-trap, "1411")))
+	{
+       		@AlarmClass = "SignalNoise WarnAutoViolationThr"
+		if (regmatch($provisoSubElementLabel,"^.*IF:.*")) 
+		{
+               		$LabelFinal = extract($provisoSubElementLabel, "^.*IF:(.*)$")
+		} 
+		else if(regmatch($provisoSubElementLabel,"^.*ASMI.*")) 
+		{
+               		$Label = extract($provisoSubElementLabel, "^.*Interface<(.*)>$")
+			$LabelFinal = "Interface" + " " + $Label	
+		}
+	}
+	else if ((regmatch(@Summary, "LineAttenuation")) && (match($specific-trap, "1410") || match($specific-trap, "1411")))
+	{
+       		 @AlarmClass = "LineAttenuation WarnAutoViolationThr"
+		if (regmatch($provisoSubElementLabel,"^.*IF:.*")) 
+		{
+               		$LabelFinal = extract($provisoSubElementLabel, "^.*IF:(.*)$")
+		} 
+		else if(regmatch($provisoSubElementLabel,"^.*ASMI.*")) 
+		{
+               		$Label = extract($provisoSubElementLabel, "^.*Interface<(.*)>$")
+			$LabelFinal = "Interface" + " " + $Label	
+		}
+	}
+	else if ((regmatch(@Summary, "SevErrSecs")) && (match($specific-trap, "1410") || match($specific-trap, "1411")))
+	{
+       		@AlarmClass = "SevErrSecs WarnAutoViolationThr"
+		if (regmatch($provisoSubElementLabel,"^.*IF:.*")) 
+		{
+               		$LabelFinal = extract($provisoSubElementLabel, "^.*IF:(.*)$")
+		} 
+		else if(regmatch($provisoSubElementLabel,"^.*ASMI.*")) 
+		{
+               		$Label = extract($provisoSubElementLabel, "^.*Interface<(.*)>$")
+			$LabelFinal = "Interface" + " " + $Label	
+		}
+	}
+	else if ((regmatch(@Summary, "CyclicRedundancyCheck")) && (match($specific-trap, "1410") || match($specific-trap, "1411")))
+	{
+       		@AlarmClass = "CyclicRedundancyCheck WarnAutoViolationThr"
+		if (regmatch($provisoSubElementLabel,"^.*IF:.*")) 
+		{
+               		$LabelFinal = extract($provisoSubElementLabel, "^.*IF:(.*)$")
+		} 
+		else if(regmatch($provisoSubElementLabel,"^.*ASMI.*")) 
+		{
+               		$Label = extract($provisoSubElementLabel, "^.*Interface<(.*)>$")
+			$LabelFinal = "Interface" + " " + $Label	
+		}
+	}
+	@AlertGroup = @AlarmClass
+
+	@Summary = "" + $provisoThresholdTypeAsciiNew + " lasted " + $duration + " " + $NewFormula + " " + $LabelFinal
+	#if (match($specific-trap, "1410") || match($specific-trap, "1411"))
+	#{
+#		@Summary = $NewFormula + " " + $provisoThresholdTypeAsciiNew + " lasted " + $duration + " " + $LabelFinal 
+	#} 
+#	else
+#	{
+#		@Summary = "" + $provisoThresholdTypeAsciiNew + " lasted " + $duration + " " + $NewFormula + " " + $LabelFinal
+#	} 

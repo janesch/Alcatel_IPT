@@ -1,0 +1,451 @@
+// Policy Name: Correlate_Cable_Breaks
+// Description: Policy to correlate any identified cable breaks to determine probable major breaks.
+//
+//  A	    B     C        D
+//  |--------|     |--------|
+// 
+// Version    Date        Name        Description
+// 1.0        14-09-10    -        Baseline
+// 1.1        14-09-10    Tony Nisbet    Capture ServerSerial with logging (patch 4.22)
+// 
+
+// Input will be an unprocessed cable break alarm
+
+log("Correlate_Cable_Breaks: start");
+log("Correlate_Cable_Breaks: IQLOGSTART: ServerSerial=" + @ServerSerial + " EventId=" + @EventId);
+
+
+// Lookup geographic locations for this alarm
+If(@AssetGeographicalAddress like "[0-9]+[a-zA-Z]*")
+    {
+    A = Int(Rextract(@AssetGeographicAddress, "([0-9]+)[a-zA-Z]*"));
+    }
+else
+    {
+    // We need to be able to extract the data, so if it didn't match the expected format
+    // we must exit
+    log("Correlate_Cable_Breaks: Exiting - AssetGeographicalAddress not matching expected format");
+    Exit();
+    }
+if(@RemoteNode like "[0-9]+[a-zA-Z]*")
+    {
+    B = Int(Rextract(@RemoteNode, "([0-9]+)[a-zA-Z]*"));
+    }
+else
+    {
+    // We need to be able to extract the data, so if it didn't match the expected format
+    // we must exit
+    log("Correlate_Cable_Breaks: Exiting - RemoteNode not matching expected format");
+    Exit();
+    }
+
+// If this is a point break...
+
+If (A == B) {
+
+  // Flag it as a point break and abort processing
+
+  EventContainer.AlertGroup = "Point Break Event";
+
+  ReturnEvent(EventContainer);
+
+}
+
+Else {
+
+
+
+  // If there are any other cable breaks on the same road connected to either TSA or TSB then pull them in for processing
+
+  Breaks = GetByFilter("ha_ncoms_impact_events","SuppressEscl = 0 and AlertGroup like '^Cable Break Event.*' and Road = '"+ @AssetMotorway +"' and (TSA in ('"+ @TSA +"','"+ @TSB +"') or TSB in ('"+ @TSA +"','"+ @TSB +"')) and Serial <> "+ @Serial ,False);
+
+  numBreaks = Num;
+
+
+
+  If ( numBreaks > 0 ) {
+
+
+
+    // Sort the markers
+
+    If (B < A) {
+
+      C = B;
+
+      B = A;
+
+      A = C;
+
+    }
+
+    
+
+    overlapFound = False;
+
+    pointBreakFound = False;
+
+    i = 0;
+
+    // DB 100907 - We need to build a comma-separated list of the affected events
+    childCount = 0;
+    childId = '';
+    // DB 100907 - End
+ 
+
+    // Compare each cable break alarm with these markers and escalate any overlap
+
+    While( (i < numBreaks) && (!pointBreakFound) ) {
+
+        
+
+      // Lookup geographic locations for this cable break
+
+    if(Breaks[i].AssetGeographicAddress = "[0-9]+[a-zA-Z]*")
+        {
+              C = Int(Rextract(Breaks[i].AssetGeographicAddress, "([0-9]+)[a-zA-Z]*"));
+        }
+    else
+        {
+        // We need to be able to extract the data, so if it didn't match the expected format
+        // we must exit
+        log("Correlate_Cable_Breaks: Exiting - AssetGeographicAddress for event " + i + " not matching expected format");
+        Exit();
+        }
+    if(Breaks[i].RemoteNode = "[0-9]+[a-zA-Z]*")
+        {
+              D = Int(Rextract(Breaks[i].RemoteNode, "([0-9]+)[a-zA-Z]*"));
+        }
+    else
+        {
+        // We need to be able to extract the data, so if it didn't match the expected format
+        // we must exit
+        log("Correlate_Cable_Breaks: Exiting - RemoteNode for event " + i + " not matching expected format");
+        Exit();
+        }
+      
+
+      // Check if it is a point break
+
+      If (C == D) {
+
+        // Flag it as a point break and disregard the alarm
+
+        Breaks[i].AlertGroup = "Point Break Event";
+
+      }
+
+      Else {
+
+            
+
+        // Sort the markers
+
+        If (D < C) { 
+
+          E = D;
+
+          D = C;
+
+          C = E;
+
+        }
+
+
+
+        // Check if there is no overlap...
+
+        If ((B < C) || (D < A)) {
+
+          // No overlap so disregard the event
+
+        }
+
+        Else {
+
+
+
+          // Flag that an overlap has been found
+
+          overlapFound = True;
+
+
+
+          // Determine the markers for the overlap...
+
+          If ( A == C ) {
+
+            If ( B > D ) {
+
+              // Overlap between A and D
+
+              B = D;
+
+            }
+
+            Else { // B <= D
+
+              // Overlap between A and B
+
+          } }
+
+          
+
+          Elseif ( A < C ) {
+
+            If ( B == C ) {
+
+              // Point Break at B/C
+
+              A = B;
+
+              pointBreakFound = True;
+
+            }
+
+            Else { // B > C
+
+              If ( B < D ) {
+
+                // Overlap between C and B
+
+                A = C;
+
+              }
+
+              Else { // B <= D
+
+                // Overlap between C and D
+
+                A = C;
+
+                B = D;
+
+          } } }
+
+          
+
+          Else { // A > C
+
+            If ( A == D ) {
+
+              // Point Break at A/D
+
+              B = A;
+
+              pointBreakFound = True;
+
+            }
+
+            Else { // A < D
+
+              If ( B > D ) {
+
+                // Overlap beetween A and D
+
+                B = D;
+
+              }
+
+              Else { // B < D
+
+                // Overlap between A and B
+
+          } } }
+
+          
+
+          // The event has now been correlated so Suppress it
+
+          Breaks[i].SuppressEscl = 4;
+       Breaks[i].SuppressCause = "Suppressed by Correlate_Cable_Breaks Impact policy";
+
+      // DB 100907 - add event to list of children
+      if (childCount > 0) {
+        childId = childId + ',' + Breaks[i].Serial;
+      } else {
+        childId = Breaks[i].Serial;
+      }
+      childCount = childCount + 1;
+      // DB 100907 - End
+
+
+        }
+
+      } 
+
+    } // Finished comparing cable break alarms.
+
+
+
+    // If we found an overlap...
+
+    If ( overlapFound ) {
+
+     
+
+      // Suppress this alarm
+
+      EventContainer.SuppressEscl = 4;
+      EventContainer.SuppressCause = "Suppressed by Correlate_Cable_Breaks Impact policy";
+
+      // DB 100907 - Add the event to the list of child events
+      if (childCount > 0) {
+        childId = childId + ',' + EventContainer.Serial;
+      } else {
+        childId = EventContainer.Serial;
+      }
+          childCount = childCount + 1;
+      // DB 100907 - End
+
+      NewEvent = NewObject();
+
+      NewEvent.Node = @Node;
+
+      // Added OwnerUID on 24022009 by sk, patch-3.50.1
+      NewEvent.OwnerUID = 65534;
+
+      NewEvent.AlertKey = @AlertKey;
+
+      NewEvent.LastOccurrence = getdate();
+
+      NewEvent.FirstOccurrence = getdate();
+
+      NewEvent.Severity = 5;
+
+      NewEvent.Type = 1;
+
+      NewEvent.Manager = "Netcool Impact";
+
+      NewEvent.Agent = @Agent;
+
+      NewEvent.AssetElectronicAddress = @AssetElectronicAddress;
+
+      NewEvent.ImpactFlag=2;
+
+      // DB 100907 - Populate additional fields
+
+      NewEvent.InServiceStatus = @InServiceStatus;
+
+      NewEvent.FirstRaiseTime=getdate();
+
+      NewEvent.DateGenerated = getdate();
+
+      NewEvent.STINum = @STINum;
+
+      NewEvent.STIRef = @STI_Ref;
+
+      NewEvent.RCCArea = @RCCArea;
+
+      NewEvent.EquipmentType = @EquipmentType;
+
+      // DB 100907 - End
+
+// DB 100807 - Set ActionRequired to 1 for TT creation
+      NewEvent.ActionRequired = 1; 
+// DB 100807 - Set ServiceAffecting to 1 for TT creation
+      NewEvent.ServiceAffecting = 1;
+
+      NewEvent.TSA = @TSA;
+
+      NewEvent.SDPLocation = @SDPLocation;
+
+      NewEvent.SpanChain = @SpanChain;
+
+      NewEvent.ServiceType = @ServiceType;
+
+      NewEvent.AssetMotorway = @AssetMotorway;
+
+      NewEvent.AssetGeographicAddress = "" + A;
+
+      NewEvent.RemoteNode = "" + B;
+
+      NewEvent.SuppressEscl = 0;
+
+      NewEvent.HalStatus = @HalStatus;
+
+      NewEvent.LocalRootObj = @LocalRootObj;
+
+      // DB 100907 - Set ChildID field
+      NewEvent.ChildID = childId;
+      // DB 100907 - End
+      
+
+      // If we found a point break...
+
+      If ( pointBreakFound ) {
+
+          
+
+        // Generate a synthetic point break event...
+
+        NewEvent.Identifier = "Correlated Point Break Event:Motorway:" + @AssetMotorway + ",MarkerA:" + A;
+
+        NewEvent.AlertGroup = "Point Break Event";
+
+        NewEvent.Summary = "Potential point break on "+ @AssetMotorway +" at marker " + A;
+
+      }
+
+      Else {
+
+
+
+        // Generate a synthetic major cable break event...
+
+        NewEvent.Identifier = "Correlated Cable Break Event:Motorway:" + @AssetMotorway + ",MarkerA:" + A + ",MarkerB:" + B;
+
+        NewEvent.AlertGroup = "Cable Break Event";
+
+        NewEvent.Summary = "Potential major cable break on "+ @AssetMotorway +" between markers " + A + " and " + B;
+
+      }
+
+      
+      // DB 100907 - Save the Identifier for later
+    synthIdentifier = NewEvent.Identifier;
+      // DB 100907 - End
+
+      // Use the AddDataItem function to add the event to the Object Server. 
+
+      Type = 'ha_ncoms_impact_events';
+
+      AddDataItem(Type,NewEvent);
+
+    // DB 100907 - put the ServerName and ServerSerial of the synthetic event in the child events
+    //        if they don't already contain parent information
+
+    // Get the synthetic event as we'll need its ServerName and ServerSerial
+    theSynthEvent=GetByFilter('ha_ncoms_impact_events',"(Identifier='"+synthIdentifier+"')",false);
+
+    // Get the serial numbers of the child events in an array
+    ChildDelimiter = ",";
+    serialArray = Split(theSynthEvent[0].ChildID, ChildDelimiter);
+    numserialArray = Length(serialArray);
+    aa = 0;
+    while ( aa < numserialArray )
+    {
+        aChildEvent=GetByFilter('ha_ncoms_impact_events',"(Serial="+serialArray[aa]+")",false);
+        numChildEvents = Length(aChildEvent);
+        if (numChildEvents > 0)
+        {
+            if(aChildEvent[0].ParentServerName == '') {
+                aChildEvent[0].ParentServerName = theSynthEvent[0].ServerName;
+            }
+            if(aChildEvent[0].ParentServerSerial == '') {
+                aChildEvent[0].ParentServerSerial = theSynthEvent[0].ServerSerial;
+            }
+        }
+        aa = aa + 1;
+    }
+    // DB 100907 - End
+
+    }
+
+  }
+
+}
+
+log("Correlate_Cable_Breaks: IQLOGFINISH: ServerSerial=" + @ServerSerial + " EventId=" + @EventId);
+log("Correlate_Cable_Breaks: stop");
+

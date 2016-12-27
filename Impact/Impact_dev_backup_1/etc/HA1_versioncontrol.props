@@ -1,0 +1,18 @@
+##
+## Version Control System: sample and default properties.
+##
+
+## Debug flag: (by default logging debug info)
+#impact.versioncontrol.debug=true
+
+## PATH to the binaries for Version Control System:
+#impact.versioncontrol.path=<_PATH_>
+
+##
+## Below are the properties used by Version Control System:
+##
+
+impact.versioncontrol.class=com.micromuse.common.versioncontrol.SVNVersionControlSystem
+impact.versioncontrol.debug=false
+impact.versioncontrol.path=/opt/IBM/tivoli/netcool/platform/solaris/svn/bin
+impact.versioncontrol.repository="/opt/IBM/tivoli/netcool/platform/solaris/svn/repository"

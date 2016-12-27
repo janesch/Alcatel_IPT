@@ -1,0 +1,655 @@
+#######################################################################
+#
+#       Copyright (C) 1999-2002 Micromuse Ltd. All rights reserved.
+#       All Rights Reserved
+#
+#       RESTRICTED RIGHTS:
+#
+#       This file may have been supplied under a license.
+#       It may be used, disclosed, and/or copied only as permitted
+#       under such license agreement.  Any copy must contain the
+#       above copyright notice and this restricted rights notice.
+#       Use, copying, and/or disclosure of the file is strictly
+#       prohibited unless otherwise provided in the license agreement.
+#
+#
+# Ident: $Id: socket.rules 1.5.1.3 2002/02/27 09:56:53 daniels Development $
+#
+#######################################################################
+table rcctable = "$NCHOME/custom/probes/rules/socket/lookup/socket.rcc.lookup"
+table haltable = "$NCHOME/custom/probes/rules/socket/lookup/halogen.lookup"
+
+if( match( @Manager, "ProbeWatch" ) ) {
+        switch(@Summary)
+        {
+        case "Running ...":
+                @Severity = 1
+                @AlertGroup = "probestat"
+                @Type = 2
+        case "Going Down ...":
+                @Severity = 5
+                @AlertGroup = "probestat"
+                @Type = 1
+        default:
+                @Severity = 1
+        }
+        @AlertKey = @Agent
+        @Summary = @Agent + " probe on " + @Node + ": " + @Summary
+}
+else {
+
+#        @Manager = "Socket Probe"
+        @Manager = "Halogen"
+        @Agent =  "Halogen"
+
+        if (int($line_n) == 1) {
+                # $line_00 should read "Service Halogen notification service is up/down"
+                if (regmatch($line_00, "down")) {
+                        @Type = 1
+                        @ClearTime = 0
+                        @Severity = 5
+                        @FirstRaiseTime = getdate
+                        @LastRaiseTime = getdate
+                        update(@LastRaiseTime)
+                        @Summary = "HALOGEN system disconnected from mediation"
+                }
+                else if (regmatch($line_00, "up")) {
+                        @Type = 2
+                        @Severity = 1
+                        @ClearTime = getdate
+                        update(@Severity)
+                        update(@ClearTime)
+                }
+                else {
+                        discard
+                }
+
+                @Node = "HIGHWAYS"
+                @AlertGroup = "Halogen mediation"
+                @AlertKey = "HALOGEN connection event"
+                @Identifier = "HALOGEN connection" + @Type
+                @Class = 50000
+                @HalDateTime = 0
+                @Node = hostname()
+                @NodeAlias = @Node
+        }
+        else {
+
+		# The following include files added by Sandip
+		include "$NCHOME/custom/probes/rules/socket/include/dateGenerated.include.halogen.rules"
+		include "$NCHOME/custom/probes/rules/socket/include/dateReceived.include.halogen.rules"
+		include "$NCHOME/custom/probes/rules/socket/include/Date_and_Time.include.halogen.rules"
+		include "$NCHOME/custom/probes/rules/socket/include/halid.include.halogen.rules"
+		include "$NCHOME/custom/probes/rules/socket/include/loggingSystemID.include.halogen.rules"
+		include "$NCHOME/custom/probes/rules/socket/include/loggingSystemName.include.halogen.rules"
+		include "$NCHOME/custom/probes/rules/socket/include/logType.include.halogen.rules"
+		include "$NCHOME/custom/probes/rules/socket/include/topic.include.halogen.rules"
+		include "$NCHOME/custom/probes/rules/socket/include/Clearance_Method.include.halogen.rules"
+		include "$NCHOME/custom/probes/rules/socket/include/Equipment_Type.include.halogen.rules"
+		include "$NCHOME/custom/probes/rules/socket/include/Equipment_Mode.include.halogen.rules"
+		include "$NCHOME/custom/probes/rules/socket/include/Equipment_Ref.include.halogen.rules"
+		include "$NCHOME/custom/probes/rules/socket/include/Fault_Id.include.halogen.rules"
+		include "$NCHOME/custom/probes/rules/socket/include/Fault_severity.include.halogen.rules"
+		include "$NCHOME/custom/probes/rules/socket/include/Fault_Status.include.halogen.rules"
+		include "$NCHOME/custom/probes/rules/socket/include/Fault_Text.include.halogen.rules"
+		include "$NCHOME/custom/probes/rules/socket/include/Fault_Type.include.halogen.rules"
+		include "$NCHOME/custom/probes/rules/socket/include/Link0_Retries.include.halogen.rules"
+		include "$NCHOME/custom/probes/rules/socket/include/Link0_Transmissions.include.halogen.rules"
+		include "$NCHOME/custom/probes/rules/socket/include/Link1_Retries.include.halogen.rules"
+		include "$NCHOME/custom/probes/rules/socket/include/Link1_Transmissions.include.halogen.rules"
+		include "$NCHOME/custom/probes/rules/socket/include/Link2_Retries.include.halogen.rules"
+		include "$NCHOME/custom/probes/rules/socket/include/Link2_Transmissions.include.halogen.rules"
+		include "$NCHOME/custom/probes/rules/socket/include/Link3_Retries.include.halogen.rules"
+		include "$NCHOME/custom/probes/rules/socket/include/Link3_Transmissions.include.halogen.rules"
+		include "$NCHOME/custom/probes/rules/socket/include/MTTR_Exceeded.include.halogen.rules"
+		include "$NCHOME/custom/probes/rules/socket/include/RMC_Area_Abbr.include.halogen.rules"
+		include "$NCHOME/custom/probes/rules/socket/include/RMC_Area_name.include.halogen.rules"
+		include "$NCHOME/custom/probes/rules/socket/include/Subsystem.include.halogen.rules"
+
+		# Added & modified by Sandip
+                #$DATE_GENERATED= extract($line_00, "dateGenerated=(.*)\.[0-9]+$")
+		$DATE_GENERATED= $dateGenerated
+                #$DATE_RECEIVED= extract($line_01, "dateReceived=(.*)\.[0-9]+$")
+		$DATE_RECEIVED= $dateReceived
+                #$HALID=extract($line_02, "halID=(.*)")
+		$HALID=$halID
+                #if (regmatch($line_03, "loggingSystemID=.*")) {
+                #        $LOG_SYS_NAME=extract($line_03, "loggingSystemID=(.*)")
+                #}
+                #else {
+                #        $LOG_SYS_NAME=extract($line_03, "loggingSystemName=(.*)")
+                #}
+		if (regmatch($loggingSystemID, ".*")) {
+                        $LOG_SYS_NAME= $loggingSystemID
+                }
+                else {
+                        $LOG_SYS_NAME= $loggingSystemName
+                }
+                #$LOG_TYPE=extract($line_04, "logType=[A-Z]*0*([0-9]+)$")
+		$LOG_TYPE= $logType
+                #$TOPIC=extract($line_05, "topic=(.*)")
+		$TOPIC= $topic
+
+                log(warn, "LOG_TYPE = " + $LOG_TYPE)
+                log(warn, "TOPIC = " + $TOPIC)
+
+
+		 # Added by Sandip for the patch-3.97
+                if (match($Equipment_Type, "DRC") OR match($Equipment_Type, "HVC") OR match($Equipment_Type, "MAN") OR match($Equipment_Type, "RMT") OR match(
+$Equipment_Type, "SAC") OR match($Equipment_Type, "SYS") OR match($Equipment_Type, "TLC") OR match($Equipment_Type, "VAC") OR match($Equipment_Type, "WWG"))
+                {
+                        discard
+                }
+
+
+                switch ($TOPIC) {
+
+                        case "EquipmentFault":
+
+				# Added & modified by Sandip
+                                #$CLEARANCEMETHOD=extract($line_06, "Clearance_Method=(.*)")
+                                #$DATE_AND_TIME=extract($line_07, "Date_and_Time=(.*)")
+                                #$EQUIPMENT_REF=extract($line_08, "Equipment_Ref=(.*)")
+                                #$EQUIPMENT_TYPE=extract($line_09, "Equipment_Type=(.*)")
+                                #$FAULT_ID=extract($line_10, "Fault_Id=(.*)")
+                                #$FAULT_STATUS=extract($line_11, "Fault_Status=(.*)")
+                                #$FAULT_TEXT=extract($line_12, "Fault_Text=(.*)")
+                                #$FAULT_TYPE=extract($line_13, "Fault_Type=(.*)")
+                                #$MTTR_EXCEEDED=extract($line_14, "MTTR_Exceeded=(.*)")
+                                #$SUBSYSTEM=extract($line_15, "Subsystem=(.*)")
+
+				$CLEARANCEMETHOD=$Clearance_Method
+				$DATE_AND_TIME=$Date_and_Time
+       				$EQUIPMENT_REF=$Equipment_Ref
+       				$EQUIPMENT_TYPE=$Equipment_Type
+       				$FAULT_ID=$Fault_Id
+       				$FAULT_STATUS=$Fault_Status
+       				$FAULT_TEXT=$Fault_Text
+       				$FAULT_TYPE=$Fault_Type
+       				$MTTR_EXCEEDED=$MTTR_Exceeded
+       				$SUBSYSTEM=$Subsystem
+
+                                switch ($LOG_TYPE) {
+                                        case "1" | "2" | "3" | "6":
+                                                $timestamp1 = datetotime($DATE_AND_TIME,"dd/MM/yyyy HH:mm:ss")
+
+                                        case "1501":
+                                                $timestamp1 = datetotime($DATE_AND_TIME,"yyyy-MM-dd HH:mm:ss")
+
+                                        default:
+                                                $timestamp1 = getdate
+                                }
+
+                                if (match($LOG_TYPE, "6")) {
+                                	$FAULT_STATUS = "CLEARED"
+                                }
+
+                        case "TelephoneFault":
+
+				# Added & modified by Sandip
+                                #$DATE_AND_TIME=extract($line_06, "Date_and_Time=(.*)")
+                                #$EQUIPMENT_REF=extract($line_07, "Equipment_Ref=(.*)")
+                                #$EQUIPMENT_TYPE=extract($line_08, "Equipment_Type=(.*)")
+                                #$FAULT_ID=extract($line_09, "Fault_Id=(.*)")
+                                #$FAULT_SEVERITY=extract($line_10, "Fault_Severity=(.*)")
+                                #$FAULT_STATUS=extract($line_11, "Fault_Status=(.*)")
+                                #$FAULT_TYPE=extract($line_12, "Fault_Type=(.*)")
+
+				$DATE_AND_TIME=$Date_and_Time
+      				$EQUIPMENT_REF=$Equipment_Ref
+      				$EQUIPMENT_TYPE=$Equipment_Type
+      				$FAULT_ID=$Fault_Id
+      				$FAULT_SEVERITY= $Fault_severity
+      				$FAULT_STATUS=$Fault_Status
+      				$FAULT_TYPE=$Fault_Type
+
+                                $timestamp1 = datetotime($DATE_AND_TIME,"dd/MM/yyyy HH:mm:ss")
+
+                        case "LinkMonitor":
+
+				# Added & modified by Sandip
+                                #$DATE_AND_TIME=extract($line_06, "Date_and_Time=(.*)")
+                                #$EQUIPMENT_MODE=extract($line_07, "Equipment_Mode=(.*)")
+                                #$EQUIPMENT_REF=extract($line_08, "Equipment_Ref=(.*)")
+                                #$EQUIPMENT_TYPE=extract($line_09, "Equipment_Type=(.*)")
+                                #$LINK0_RETRIES=extract($line_10, "Link0_Retries=(.*)")
+                                #$LINK0_TRANSMISSIONS=extract($line_11, "Link0_Transmissions=(.*)")
+                                #$LINK1_RETRIES=extract($line_12, "Link1_Retries=(.*)")
+                                #$LINK1_TRANSMISSIONS=extract($line_13, "Link1_Transmissions=(.*)")
+                                #$LINK2_RETRIES=extract($line_14, "Link2_Retries=(.*)")
+                                #$LINK2_TRANSMISSIONS=extract($line_15, "Link2_Transmissions=(.*)")
+                                #$LINK3_RETRIES=extract($line_16, "Link3_Retries=(.*)")
+                                #$LINK3_TRANSMISSIONS=extract($line_17, "Link3_Transmissions=(.*)")
+
+				$DATE_AND_TIME=$Date_and_Time
+      				$EQUIPMENT_MODE=$Equipment_Mode
+      				$EQUIPMENT_REF=$Equipment_Ref
+      				$EQUIPMENT_TYPE=$Equipment_Type
+      				$LINK0_RETRIES=$Link0_Retries
+      				$LINK0_TRANSMISSIONS=$Link0_Transmissions
+      				$LINK1_RETRIES= $Link1_Retries
+      				$LINK1_TRANSMISSIONS= $Link1_Transmissions
+      				$LINK2_RETRIES=$Link2_Retries
+      				$LINK2_TRANSMISSIONS=$Link2_Transmissions
+      				$LINK3_RETRIES=$Link3_Retries
+      				$LINK3_TRANSMISSIONS=$Link3_Transmissions
+
+                                $timestamp1 = datetotime($DATE_AND_TIME,"dd/MM/yyyy HH:mm:ss")
+
+                                discard
+
+                        default:
+                                discard
+
+                }
+
+                $EQUIPMENT_TYPE = upper($EQUIPMENT_TYPE)
+                $FAULT_TYPE = upper($FAULT_TYPE)
+
+
+                $timestamp2 = datetotime($DATE_RECEIVED,"yyyy-MM-dd HH:mm:ss")
+
+                if (exists($FAULT_TYPE)) {
+                        $type = ltrim(rtrim($FAULT_TYPE))
+                }
+                else {
+                        $type = "UNKNOWN FAULT TYPE"
+                }
+
+                if (exists($FAULT_TEXT)) {
+                        $text = upper(ltrim(rtrim($FAULT_TEXT)))
+                }
+                else {
+                        $text = ""
+                }
+
+				switch ($FAULT_STATUS) {
+
+						case "HARD" | "INTER":
+
+								@Type = 1
+								@FirstRaiseTime = $timestamp1
+								@LastRaiseTime = $timestamp1
+								@ClearTime = 0
+								update(@LastRaiseTime)
+
+								switch ($FAULT_SEV) {
+										case "" | "MAJOR":
+												@Severity = 4
+										case "MINOR":
+												@Severity = 3
+										default:
+												@Severity = 1
+								}
+
+
+								switch ($EQUIPMENT_TYPE) {
+
+										# Added CAM by Sandip; ref. vega#200808004079
+										case "CAM":
+												@AlarmClass = $EQUIPMENT_TYPE + "_FAULT"
+
+										case "RCC":
+												if (!match($type,"RCC COMMUNICATIONS FAILURE")) {
+														discard
+												}
+												@AlarmClass = "RCC_COMMS_FAILURE"
+										case "TCC":
+												if (!match($type,"LINK TO TCC FAILED")) {
+														discard
+												}
+												@AlarmClass = "TCC_LINK_TO_TCC_FAILED"
+
+										case "LCC":
+												if (!match($type, "UNOBTAINABLE") &&
+												!(regmatch($type, "LINE.*HOG.*") && regmatch($text, "(ON LINK.*|)[0-3]")) &&
+												!(regmatch($type, "LINE.*HOG.*") && regmatch($text, "(LINE.*|)[0-3]+"))) {
+														log(debug, "DISCARDING !")
+														discard
+												}
+												
+												if(match($type, "UNOBTAINABLE"))
+												{
+													@AlarmClass = "LCC_UNOBTAINABLE"
+												}
+
+												if(regmatch($type, "LINE.*HOG.*") && regmatch($text, "(ON LINK.*|)[0-3]"))
+												{
+													@AlarmClass = "LCC_LINE_HOG_ON_LINK"
+												}
+
+												else if(regmatch($type, "LINE.*HOG.*"))
+												{
+													@AlarmClass = "LCC_LINE_HOG"
+												}
+
+
+
+										case "TPR":
+												if ( !(regmatch($type,"(UNOBTAINABLE|LINE.*HOG.*|MAINS.*)") && match($text, "") ) &&
+												!(match($type,"NMCS1 RES UNOBTAINABLE") && regmatch($text,"31")) &&
+												!(match($type,"NMCS1 LIT LINK FAILURE") && regmatch($text,"[0-1]")) &&
+								!(regmatch($type,"LINE.*HOG.*") && regmatch($text,"(ON LINK.*|)[0-3]+"))) {
+														discard
+												}
+
+		if(match($type,"NMCS1 RES UNOBTAINABLE") && regmatch($text,"31"))
+			{
+			@AlarmClass = $EQUIPMENT_TYPE + "_" + $type
+			}
+		else
+			{
+			if(regmatch($type,"MAINS.*") && match($text, ""))
+				{
+				@AlarmClass = $EQUIPMENT_TYPE + "_MAINS"
+				}
+			else
+				{
+				if(match($type,"UNOBTAINABLE") && match($text, ""))
+					{
+					@AlarmClass = $EQUIPMENT_TYPE + "_" + $type
+					}
+				else
+					{
+					if(match($type,"NMCS1 LIT LINK FAILURE") && regmatch($text,"[0-1]"))
+						{
+						@AlarmClass = $EQUIPMENT_TYPE + "_" + $type
+						}
+					}
+				}
+			}
+												if(regmatch($type, "LINE.*HOG.*") && regmatch($text, "(ON LINK.*|)[0-3]"))
+												{
+													@AlarmClass = "TPR_LINE_HOG_ON_LINK"
+												}
+
+												else if(regmatch($type, "LINE.*HOG.*")) 
+												{
+													@AlarmClass = "TPR_LINE_HOG"
+												}
+
+										case "SIG" | "MSS" | "FOG":
+												if (!match($type, "UNOBTAINABLE")) {
+														discard
+												}
+												@AlarmClass = $EQUIPMENT_TYPE + "_UNOBTAINABLE"
+
+										case "ALM":
+												if (!match($type, "UNOBTAINABLE")) {
+														discard
+												}
+												else {
+														@SuppressEscl = 4
+												}
+												@AlarmClass = $EQUIPMENT_TYPE + "_UNOBTAINABLE"
+
+										case "MET":
+												if (!match($type, "UNOBTAINABLE") &&
+												!regmatch($type,"FOG DETECTOR REPORTED MAINS .*FAULT") &&
+												!match($type,"FOG DETECTOR REPORTED UNOBTAINABLE") &&
+												!nmatch($type,"FOG DETECTOR REPORTED FAULTY")) {
+														discard
+												}
+												else if (match($type, "UNOBTAINABLE"))
+												{
+												@AlarmClass = $EQUIPMENT_TYPE + "_UNOBTAINABLE"
+												}
+												else if (regmatch($type, "FOG DETECTOR REPORTED MAINS .*FAULT"))
+												{
+												@AlarmClass = $EQUIPMENT_TYPE + "_MAINS_FAULT"
+												}
+												else if (regmatch($type, "FOG DETECTOR REPORTED UNOBTAINABLE"))
+												{
+												@AlarmClass = $EQUIPMENT_TYPE + "_FOG_UNOBTAINABLE"
+												}
+												else if (regmatch($type, "FOG DETECTOR REPORTED FAULTY"))
+												{
+												@AlarmClass = $EQUIPMENT_TYPE + "_FOG_FAULTY"
+												}
+
+										case "MID":
+												if (!match($type,"UNOBTAINABLE") && !regmatch($type,"MAINS.*")) {
+														discard
+												}
+												else if (match($type, "UNOBTAINABLE"))
+												{
+												@AlarmClass = $EQUIPMENT_TYPE + "_UNOBTAINABLE"
+												}
+												else if (regmatch($type, "MAINS.*"))
+												{
+												@AlarmClass = $EQUIPMENT_TYPE + "_MAINS"
+												}
+
+										case "COB":
+												if (!regmatch($type,"SUBSYSTEM .* FAILURE( TO CONNECT|)") &&
+												!regmatch($type, "IPLU.*LINK.*TIMEOUT")) {
+														discard
+												}
+												else if (regmatch($type, "SUBSYSTEM.*"))
+												{
+												@AlarmClass = $EQUIPMENT_TYPE + "_SUBSYS"
+												}
+												else if (regmatch($type, "IPLU.*"))
+												{
+												@AlarmClass = $EQUIPMENT_TYPE + "_IPLU_LINK_TIMEOUT"
+												}
+
+										case "CTV":
+												if (!regmatch($type, "(OPTICAL FAULT|VIDEO SWITCH|VIDEO SIGNAL)")) {
+														discard
+												}
+		else
+			{
+			@AlarmClass = $EQUIPMENT_TYPE + "_" + $type
+			}
+
+										case "IPLU" | "IPU":
+												if (!regmatch($type, "IPLU.*LINK.*TIMEOUT")) {
+														discard
+												}
+												@AlarmClass = $EQUIPMENT_TYPE + "_LINK_TIMEOUT"
+
+										case "RES":
+												if (!regmatch($type, "MAINS.*FAULT(.*LINE [1-6]|)") && !regmatch($type, "NVR(.*LINE [1-6]|)") &&
+												!regmatch($type, "NVR - LOW.*LEVEL(.*LINE [1-6]|)")) {
+														discard
+												}
+		else
+			{
+			if(regmatch($type,"NVR(.*LINE [1-6]|)"))
+				{
+				@AlarmClass = $EQUIPMENT_TYPE + "_NVR"
+				}
+			else
+				{
+				if(regmatch($type,"NVR - LOW.*LEVEL(.*LINE [1-6]|)"))
+					{
+					@AlarmClass = $EQUIPMENT_TYPE + "_NVR - LOW LEVEL"
+					}	
+												else if (regmatch($type, "MAINS.*FAULT(.*LINE [1-6]|)"))
+												{
+												@AlarmClass = $EQUIPMENT_TYPE + "_MAINS"
+												}
+				}
+			}
+
+										case "SS":
+												if (!regmatch($type, "NVR(.*LINE [1-6]|)") && !regmatch($type, "NVR - LOW.*LEVEL(.*LINE [1-6]|)") &&
+												!regmatch($type, "MAINS_[1-2]_FAULT(.*LINE [1-6]|)")) {
+														discard
+												}
+		else
+			{
+			if(regmatch($type,"NVR(.*LINE [1-6]|)"))
+				{
+				@AlarmClass = $EQUIPMENT_TYPE + "_NVR"
+				}
+			else
+				{
+				if(regmatch($type,"NVR - LOW.*LEVEL(.*LINE [1-6]|)"))
+					{
+					@AlarmClass = $EQUIPMENT_TYPE + "_NVR - LOW LEVEL"
+					}	
+												else if (regmatch($type, "MAINS_[1-2]_FAULT(.*LINE [1-6]|)"))
+												{
+												@AlarmClass = $EQUIPMENT_TYPE + "_MAINS"
+												}
+				}
+			}
+										case "TEL":
+												if (!regmatch($type, "FAULT(.*LINE [1-6]|)")) {
+														discard
+												}
+												@AlarmClass = $EQUIPMENT_TYPE + "_FAULT"
+
+										default:
+												log(debug, "DISCARDING !")
+												discard
+								}
+
+						case "CLEARED":
+								@Type = 2
+								@ClearTime = $timestamp1
+								update(@ClearTime)
+								@Severity = 1
+
+						default:
+								discard
+				}
+
+                @Identifier = $LOG_SYS_NAME +"|"+ $FAULT_ID+"|"+$EQUIPMENT_TYPE+"|"+$DATE_AND_TIME+"|"+@Type
+                if (match($EQUIPMENT_REF, "")) {
+                        @Node = $EQUIPMENT_TYPE
+                }
+                else {
+                        @Node = $EQUIPMENT_TYPE +" - "+ ltrim($EQUIPMENT_REF)
+                }
+                @NodeAlias = ltrim($EQUIPMENT_REF)
+if(regmatch(@NodeAlias,"^\(.*\)"))
+                {
+                        @NodeAlias = extract(@NodeAlias,"^\((.*)\)")
+                }
+               if(match($EQUIPMENT_TYPE,"RES"))
+                {
+                $rcc = lookup($LOG_SYS_NAME,rcctable)
+                @NodeAlias = $rcc + "/" + @NodeAlias + "/000"
+                }
+
+		## Added by Sandip, Patch - 3.54.2
+                if(match($EQUIPMENT_TYPE,"CAM"))
+                {
+                if (regmatch($EQUIPMENT_REF, ".*,.*,.*")) {
+                $EQUIPMENT_Ref = extract($EQUIPMENT_REF,"(.*)...$")
+                @Node = $EQUIPMENT_TYPE +" - "+ ltrim($EQUIPMENT_Ref)
+                }
+                }
+
+                @AlertGroup = $LOG_SYS_NAME
+                @AlertKey = $EQUIPMENT_TYPE+"/"+$FAULT_ID
+
+                if (match($text,"")) {
+                        @Summary = $type
+                }
+                else {
+                        @Summary = $type +" - "+ $text
+                }
+
+                @EquipmentType =  $EQUIPMENT_TYPE
+                @HalStatus =  $FAULT_STATUS
+                @HalId = $HALID
+                @Class = 50000
+
+                @HalSubsystem = $SUBSYSTEM
+                @HalLogType = $LOG_TYPE
+                @FirstOccurrence = getdate
+                @LastOccurrence = getdate
+                @HalDateTime = $timestamp2
+                @X733SpecificProb = "Fault"
+		[$ServAff,$ResAff,$ActReq] = lookup (@AlarmClass,"haltable")
+		@ServiceAffecting = $ServAff
+		@ResilienceAffecting = $ResAff
+		@ActionRequired = $ActReq
+		### for TEL FAULTS implement deduplication,....
+               if(match($EQUIPMENT_TYPE,"TEL"))
+                {
+		@AlertKey = "TEL FAULT"
+		@Identifier = @Node + @Type + @AlertKey
+		@Summary = "FAULT"
+              	} 
+		if(match($EQUIPMENT_TYPE,"CAM"))
+                {
+		@AlertKey = "CAM FAULT"
+		@Identifier = @Node + @Type + @AlertGroup + @AlertKey
+		@Summary = "FAULT"
+		}	
+		 # Added by Sandip for the patch-3.97
+               if(match($EQUIPMENT_TYPE,"RES") && regmatch(@Summary,"MISC_FAULT"))
+                {
+                        discard
+                }
+
+        }
+}
+
+
+# removing details from the live envronment (Toby Vereker)
+# 24 march 2007
+#details($*)
+####added the logic to set the lastraisetime and first raise time
+#################for the events who got nul value or 01/01/1979 00:00:00 as First and Last Raise time #######
+
+
+
+if(exists($ReceivedTime) && match(@LastRaiseTime, "0"))
+{
+@LastRaiseTime = $ReceivedTime
+}
+if(!exists($ReceivedTime) && match(@LastRaiseTime, "0"))
+{
+@LastRaiseTime = getdate
+}
+if(exists($ReceivedTime) && match(@FirstRaiseTime, "0"))
+{
+@FirstRaiseTime = $ReceivedTime
+}
+if(!exists($ReceivedTime) && match(@FirstRaiseTime, "0")){
+@FirstRaiseTime = getdate
+}
+if(match(@DateGenerated, "0")){
+@DateGenerated = @FirstOccurrence
+}if(match(@DateReceived, "0")){
+@DateReceived = @FirstOccurrence
+}if(match(@HalDateTime, "0")){
+@HalDateTime = @FirstOccurrence
+}if(match(@InterTime, "0")){
+@InterTime = @FirstOccurrence
+}if(match(@provisoViolationTime, "0")){
+@provisoViolationTime = @FirstOccurrence
+}if(match(@InternalLast, "0")){
+@InternalLast = @FirstOccurrence
+}if(match(@ParentChildTime, "0")){
+@ParentChildTime = @FirstOccurrence
+}if(match(@ClearTime, "0")){
+@ClearTime = @FirstOccurrence
+}
+if(!exists(@DateGenerated)){
+@DateGenerated = @FirstOccurrence
+ }if(!exists(@DateReceived)){
+ @DateReceived = @FirstOccurrence
+ }if(!exists(@HalDateTime)){
+ @HalDateTime = @FirstOccurrence
+ }if(!exists(@InterTime)){
+ @InterTime = @FirstOccurrence
+ }if(!exists(@provisoViolationTime)){
+ @provisoViolationTime = @FirstOccurrence
+  }if(!exists(@InternalLast)){
+ @InternalLast = @FirstOccurrence
+  }if(!exists(@ParentChildTime)){
+ @ParentChildTime = @FirstOccurrence
+  }if(!exists(@ClearTime)){
+ @ClearTime = @FirstOccurrence
+  }
+
+
+##################GauravTyagi-19Oct2011###########################
+

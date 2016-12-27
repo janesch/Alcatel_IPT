@@ -1,0 +1,6 @@
+impact.policylogger.logtofile=true
+impact.policylogger.autostartup=false
+impact.policylogger.classname=com.micromuse.response.service.ActionTreeLogger
+impact.policylogger.collectreports=false
+impact.policylogger.description=No description yet
+impact.policylogger.errorhandlingpolicyname=DefaultExceptionHandler

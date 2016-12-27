@@ -1,0 +1,56 @@
+##
+## Sample and default server properties below.
+##
+
+## Remote execution server (default is localhost 1345).
+#impact.jrexec.host=JREXECHOST
+#impact.jrexec.port=1345
+#impact.props.timeout=0
+
+## The impact.server.timeout is a global timeout for all timed activities.
+#impact.server.timeout=20000
+
+impact.server.timeout=120000
+
+#impact.types.directory=<default properties directory>
+
+## impact.servicemanager.storelogs creates a store for the client
+## logs
+impact.servicemanager.storelogs=true
+
+##
+## Below are the properties used by the server.
+##
+
+impact.cluster.name=NCICLUSTER
+impact.cluster.pinginterval=6000
+impact.cluster.pingtimeout=6000
+impact.cluster.repingcount=3
+impact.cluster.resyncbeforestandby=true
+impact.replication.receiveupdatesfor.orgnodes=true
+impact.replication.receiveupdatesfor.hibernations=true
+impact.replication.receiveupdatesfor.servicestates=true
+impact.replication.receiveupdatesfor.types=true
+impact.replication.receiveupdatesfor.policies=true
+
+impact.security.host=172.20.174.57
+impact.security.port=9080
+
+# This property is used to add JAR files to the CLASSPATH of the
+# impact server. It is denoted by a list of directories that
+# will be searched, in order, for JAR files. The listied directories
+# should be separated by the platform-specific path delimiter,
+# i.e. colon on *nix, semi-colon on Windows. The first entry
+# $NCHOME/wslib is reserved for webservices DSA, please append
+# additional directories after it
+impact.server.customClassLoaderDirs=/opt/IBM/tivoli/netcool/wslib
+
+# This propertiy is used by NCI18NHelper to determine which properties
+# files to load.
+impact.i18n.messages.bundle=com.micromuse.common.language.nci.NCIMessagesBundleServer
+
+impact.logdir=/opt/IBM/tivoli/netcool/impact/log
+impact.i18n.language=en
+impact.i18n.country=GB
+impact.keystore.location=/opt/IBM/tivoli/netcool/etc/impact/keystore/impact.ks
+        

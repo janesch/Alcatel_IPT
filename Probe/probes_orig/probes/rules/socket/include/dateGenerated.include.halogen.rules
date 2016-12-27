@@ -1,0 +1,79 @@
+if ( regmatch ( $line_00, "dateGenerated" ) ) { 
+$dateGenerated= extract($line_00, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_01, "dateGenerated" ) ) { 
+$dateGenerated= extract($line_01, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_02, "dateGenerated" ) ) { 
+$dateGenerated= extract($line_02, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_03, "dateGenerated" ) ) { 
+$dateGenerated= extract($line_03, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_04, "dateGenerated" ) ) { 
+$dateGenerated= extract($line_04, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_05, "dateGenerated" ) ) { 
+$dateGenerated= extract($line_05, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_06, "dateGenerated" ) ) { 
+$dateGenerated= extract($line_06, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_07, "dateGenerated" ) ) { 
+$dateGenerated= extract($line_07, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_08, "dateGenerated" ) ) { 
+$dateGenerated= extract($line_08, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_09, "dateGenerated" ) ) { 
+$dateGenerated= extract($line_09, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_10, "dateGenerated" ) ) { 
+$dateGenerated= extract($line_10, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_11, "dateGenerated" ) ) { 
+$dateGenerated= extract($line_11, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_12, "dateGenerated" ) ) { 
+$dateGenerated= extract($line_12, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_13, "dateGenerated" ) ) { 
+$dateGenerated= extract($line_13, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_14, "dateGenerated" ) ) { 
+$dateGenerated= extract($line_14, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_15, "dateGenerated" ) ) { 
+$dateGenerated= extract($line_15, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_16, "dateGenerated" ) ) { 
+$dateGenerated= extract($line_16, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_17, "dateGenerated" ) ) { 
+$dateGenerated= extract($line_17, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_18, "dateGenerated" ) ) { 
+$dateGenerated= extract($line_18, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_19, "dateGenerated" ) ) { 
+$dateGenerated= extract($line_19, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_20, "dateGenerated" ) ) { 
+$dateGenerated= extract($line_20, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_21, "dateGenerated" ) ) { 
+$dateGenerated= extract($line_21, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_22, "dateGenerated" ) ) { 
+$dateGenerated= extract($line_22, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_23, "dateGenerated" ) ) { 
+$dateGenerated= extract($line_23, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_24, "dateGenerated" ) ) { 
+$dateGenerated= extract($line_24, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_25, "dateGenerated" ) ) { 
+$dateGenerated= extract($line_25, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_26, "dateGenerated" ) ) {
+$dateGenerated= extract($line_26, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_27, "dateGenerated" ) ) {
+$dateGenerated= extract($line_27, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_28, "dateGenerated" ) ) {
+$dateGenerated= extract($line_28, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_29, "dateGenerated" ) ) {
+$dateGenerated= extract($line_29, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_30, "dateGenerated" ) ) {
+$dateGenerated= extract($line_30, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_31, "dateGenerated" ) ) {
+$dateGenerated= extract($line_31, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_32, "dateGenerated" ) ) {
+$dateGenerated= extract($line_32, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_33, "dateGenerated" ) ) {
+$dateGenerated= extract($line_33, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_34, "dateGenerated" ) ) {
+$dateGenerated= extract($line_34, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_35, "dateGenerated" ) ) {
+$dateGenerated= extract($line_35, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_36, "dateGenerated" ) ) {
+$dateGenerated= extract($line_36, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_37, "dateGenerated" ) ) {
+$dateGenerated= extract($line_37, "dateGenerated=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_38, "dateGenerated" ) ) {
+$dateGenerated= extract($line_38, "dateGenerated=(.*)\.[0-9]+$")
+}   

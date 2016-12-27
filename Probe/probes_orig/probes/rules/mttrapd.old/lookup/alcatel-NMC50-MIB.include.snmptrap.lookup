@@ -1,0 +1,79 @@
+###############################################################################
+# /opt/netcool/m2r/export/ov4760/alcatel-NMC50-MIB.include.snmptrap.lookup
+# Automatically created by mib2rules (http://support.micromuse.com/toolsutils)
+# Tue Jun 13 13:02:22 2006
+###############################################################################
+table alcatel-NMC50-MIB-nmc50Status = 
+{
+################################################################################
+# The severity of the most serious alarm currently active in the NMC server software.
+################################################################################
+	{"0","UNKNOWN (0)"},
+	{"1","CRITICAL (1)"},
+	{"2","MAJOR (2)"},
+	{"3","MINOR (3)"},
+	{"4","WARNING (4)"},
+	{"5","INDETERMINATE (5)"},
+	{"6","CLEARED (6)"}
+}
+default = "Unknown"
+
+table alcatel-NMC50-MIB-pbxType = 
+{
+################################################################################
+# The type of PABX.
+################################################################################
+	{"0","A4400 (0)"},
+	{"1","AOXE (1)"},
+	{"2","AOXO (2)"}
+}
+default = "Unknown"
+
+table alcatel-NMC50-MIB-pbxStatus = 
+{
+################################################################################
+# The severity of the most serious alarm currently active in the PABX software.
+################################################################################
+	{"1","CRITICAL (1)"},
+	{"2","MAJOR (2)"},
+	{"3","MINOR (3)"},
+	{"4","WARNING (4)"},
+	{"5","INDETERMINATE (5)"},
+	{"6","CLEARED (6)"},
+	{"7","UNKNOWN (7)"}
+}
+default = "Unknown"
+
+table alcatel-NMC50-MIB-notifSenderType = 
+{
+################################################################################
+# Type of notification sender
+################################################################################
+	{"0","A4760 (0)"},
+	{"1","A4400 (1)"},
+	{"2","OXE (2)"},
+	{"3","OXO (3)"}
+}
+default = "Unknown"
+
+table alcatel-NMC50-MIB-notifProblemState = 
+{
+################################################################################
+# Problem state sent into a state notification
+################################################################################
+	{"0","ACTIVE (0)"},
+	{"1","ACKNOWLEDGE (1)"},
+	{"2","CLEAR (2)"}
+}
+default = "Unknown"
+
+table alcatel-NMC50-MIB-notifCorrelation = 
+{
+################################################################################
+# Correlation sent into an incident notification
+################################################################################
+	{"0","FALSE (0)"},
+	{"1","TRUE (1)"}
+}
+default = "Unknown"
+

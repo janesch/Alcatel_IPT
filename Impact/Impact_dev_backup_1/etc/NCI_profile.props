@@ -1,0 +1,18 @@
+#This file was written by server.
+#Mon May 24 14:19:17 EDT 2004
+impact.profile.enable=false
+impact.profile.returnevent.threshold=20
+impact.profile.internaltype.timewindow=30
+impact.profile.jrexec.execution.count.threshold=3
+impact.profile.sqlinsert.execution.time.threshold=500
+impact.profile.sqlhotspot.timewindow=60
+impact.profile.sqlhotspot.threshold=10
+impact.profile.jrexec.execution.time.threshold=5
+impact.profile.hibernation.inmemorythreshold=1000
+impact.profile.sqlquery.xiny.threshold=3
+impact.profile.internaltype.threshold=100
+impact.profile.sqlquery.xiny.timewindow=5
+impact.profile.jrexec.execution.timewindow=60
+impact.profile.sqlquery.returnrow.threshold=50
+impact.profile.returnevent.timewindow=30
+impact.profile.sqlquery.execution.time.threshold=500

@@ -1,0 +1,1302 @@
+AlmID	AlmNm	Sev	SiteVisEvn	ServAffEvn	ResAffEvn	Cor
+274	DTMF receiver release error	2	2	2	2	2
+275	ACCOUNTING: Appli P1 : feature incident P2 P3	2	2	2	2	2
+276	External accounting application P1 : NO RECOVERY	2	2	2	2	2
+278	Incoherence in appointment reminder data P1 P2 P3	2	2	2	2	2
+279	Shift into line lockout status	2	2	2	2	2
+280	Soft Error %c%c%c%c%c%c;	2	2	2	2	2
+281	Wrong time;	2	2	2	2	2
+282	PTP. PB Chrono...	2	2	2	2	2
+283	ACCOUNTING. Appli P1 : feature incident P2 P3	2	2	2	2	2
+284	Task not running P1;	2	2	1	2	2
+286	T2 event not expected P1.P2 P3;	2	2	2	2	2
+287	"Header msg pb (T2, T0 or S0), (P1 P2 P3) especially TEI or flag"	2	2	2	2	2
+288	T2 Dlap : P1 (0:released  1:established)	4	2	1	1	1
+290	Lap DPNSS P1 (-20:lost 16:estab) on channel P2	4	2	1	1	1
+294	Lost of layer 2 on S0 acces (neqt P1)	4	2	1	1	1
+295	Lap DASS2 P1 (-20:lost 16:estab) on channel P2	4	2	1	1	1
+310	T2 Dlap Released	4	2	1	1	1
+311	T2 Dlap Established	4	2	2	2	2
+312	T0 Layer 1 Released	4	2	1	1	1
+313	T0 Layer 1 Established	4	0	0	0	0
+339	Error on priority call routing P1	2	2	2	2	2
+340	"Error in procedure P1 with P2, P3"	2	2	2	2	2
+341	PB on auto call back zone P1	2	2	2	2	2
+350	Link loss on half/com terminal P1 trunk P2	2	2	1	2	2
+355	Soft_Protect.EqtP1Installed range setP2forbidden	4	2	1	2	2
+377	IP Phone init incident P1	2	2	1	2	2
+378	IP Phone sig incident P1	2	2	1	2	2
+379	Inter ACT link HS: P1	4	2	1	1	1
+380	Ip address is lost	2	0	0	0	0
+381	 Ip Phone Incident number 1	2	2	2	2	2
+382	 Ip Phone Incident number 2	2	2	2	2	2
+383	 Ip Phone Incident number 3	2	2	2	2	2
+384	 Ip Phone Incident number 4	2	2	2	2	2
+385	 Ip Phone Incident number 5	2	2	2	2	2
+386	 Ip Phone Incident number 6	2	2	2	2	2
+387	 Ip Phone Incident number 7	2	2	2	2	2
+388	 Ip Phone Incident number 8	2	2	2	2	2
+389	 Ip Phone Incident number 9	2	2	2	2	2
+390	Ip Phone Incident number 192	2	2	2	2	2
+391	Ip Phone Incident number 193	2	2	2	2	2
+392	Ip Phone Incident number 194	2	2	2	2	2
+393	Ip Phone Incident number 195	2	0	0	0	0
+394	Ip Phone Incident number 196	2	2	2	2	2
+395	Ip Phone Incident number 197	2	2	2	2	2
+396	Ip Phone Incident number 198	2	2	2	2	2
+397	Ip Phone Incident number 199	2	2	2	2	2
+398	Ip Phone Incident number 200	2	2	2	2	2
+399	Ip Phone Incident number 201	2	2	2	2	2
+400	Supervisor P1 unknown of the trap Snmp sending application	2	2	2	2	2
+401	SNMP. Supervisor P1 try to make a state resynchro on the stand-by cpu	2	2	1	2	2
+409	The inter-ACT link over IP from (P1 P2) is up	2	2	2	2	2
+410	Inter ACT IP link init error P1	4	2	1	2	2
+411	IP Phone HS P1	2	2	2	2	2
+412	IP_LINK Incident P1	2	2	1	1	1
+413	IP_LINK Incident P1	2	2	1	1	1
+414	IP_LINK Incident P1	2	2	1	1	1
+415	IP_LINK Incident P1	2	2	1	1	1
+416	Too long Restart for IPLINK	2	2	1	1	1
+417	The Media Gateway is rescued by the Media Gateway (P1)	4	1	1	1	1
+418	The signaling link over IP is recovered	4	2	2	2	2
+419	Trying to establish the back up signaling link	4	2	2	2	2
+420	Back up signaling link establishment failed (P1)	2	1	1	1	1
+422	P1	2	2	1	1	1
+426	NOE terminal reset P1	2	2	1	2	2
+500	Connection/Disconnection Modem P1;	2	2	1	2	2
+604	AFE_CHORUS: P1	2	2	2	2	2
+605	AFE_AG_ADM: P1	2	2	2	2	2
+606	AFE_AG_CSTA: P1	2	2	2	2	2
+607	AFE_AG_MAO: P1	2	2	2	2	2
+608	AFE_AG_MAO_CR: P1	2	2	2	2	2
+609	AFE_AGENT: P1	2	2	2	2	2
+610	AFE_AUTOTEL: P1	2	2	2	2	2
+611	AFE_CMIS_SERVER: P1	2	2	2	2	2
+612	AFE_CMIS_AFE: P1	2	2	2	2	2
+614	AFE_DAA: P1	2	2	2	2	2
+616	AFE_LOWLAYER: P1	2	2	2	2	2
+617	AFE_MAIL_TXT: P1	2	0	0	0	0
+618	AFE_MAIN: P1	2	2	2	2	2
+619	AFE_PARAMS: P1	2	2	2	2	2
+620	AFE_PG_GRP: P1	2	2	2	2	2
+621	AFE_PILOT: P1	2	2	2	2	2
+622	AFE_REAL_TIM: P1	2	2	2	2	2
+623	AFE_REC_GRP: P1	2	2	2	2	2
+624	AFE_REQ_SPV: P1	2	2	2	2	2
+625	AFE_STAT_ACD: P1	2	2	2	2	2
+626	AFE_STAT_GET: P1	2	2	2	2	2
+627	AFE_STAT_REQ: P1	2	2	2	2	2
+628	AFE_STBY_AFE: P1	2	2	2	2	2
+629	AFE_SUPERV: P1	2	2	2	2	2
+630	AFE_TEAM: P1	2	2	2	2	2
+631	AFE_TICKET: P1	2	2	2	2	2
+632	AFE_TRAD: P1	2	2	2	2	2
+633	AFE_TRUNK: P1	2	2	2	2	2
+634	AFE CMIS error P1	2	2	2	2	2
+635	AFE Super object P1;	2	2	2	2	2
+636	AgentALB Agent ALB Error : P1   	2	2	2	2	2
+637	ALB error P1 P2	2	2	2	2	2
+638	AFE_FILTER: P1	2	2	2	2	2
+639	Software lock AFE error P1	2	2	2	2	2
+640	FLEXLM_ERROR_SERVER : no checkout can be realized P1 P2	2	0	0	0	0
+641	FLEXLM_CONSISTENCY : Checkout request exceed the limits P1	2	2	2	2	2
+642	FLEXLM_SERVER_LINK: Network breakdown with the licensing FlexLM server P1 P2	2	2	2	2	2
+643	FLEX_AG_ERROR: P1	2	2	2	2	2
+644	FLEX_AG_CRASH: Link breakdown with the FLEX agent P1 P2 	2	2	2	2	2
+688	"Connection error  [P1, P2, P3] = P1"	2	2	2	2	2
+689	"No answer receive : context P1, distant node P2, message P3"	2	2	2	2	2
+692	Management problem : incompatible rerouting number P1	2	2	2	2	2
+693	Rerouting request refused by public network P1	2	2	2	2	2
+694	SNTP. Error in machine name get P1	2	2	2	2	2
+695	sntp is not launch as root	2	2	2	2	2
+696	ip address of the machine not found	2	2	1	2	2
+697	SNTP. Error on socket bind P1	2	2	2	2	2
+698	SNTP. Error on get message P1	2	2	2	2	2
+699	SNTP. Error on send message P1	2	2	2	2	2
+700	Secret Code error : asking=P1=asked)	2	2	2	2	2
+701	SECRET CODE LOCKED on set=P1=asked)	2	2	2	2	2
+702	Secret code error-meter RESET on P1	2	2	2	2	2
+735	"ACR. Skill not defined : skill P1, charactere node P2, expertise P3"	2	2	2	2	2
+740	Beginning of an INT/IP downloading  @:P1	4	2	2	2	2
+741	End of downloading of an INT/IP board @:P1	4	2	2	2	2
+742	The INT/IP board downloading has failed @:P1	4	1	1	1	1
+743	Beginning of downloading of a TSC/IP terminal @:P1	2	2	2	2	2
+744	End of downloading of a TSC/IP terminal @:P1	2	2	2	2	2
+745	The TSC/IP terminal downloading has failed @:P1	2	2	1	2	2
+746	Configuration error during the download of a TSC/IP set	2	2	1	2	2
+747	Config error or Loss of IP connection: P1	4	2	1	1	1
+870	error init couche%c 0xP1 status 0xP2	2	2	1	1	1
+871	error couche%c 0xP1 status 0xP2	2	2	1	1	1
+872	error couche%c 0xP1 status 0xP2 0xP3	2	2	1	1	1
+991	 DPNSS/DASS. BLOCK BUFFERS EXHAUSTED	4	2	1	1	1
+992	 DPNSS/DASS. BLOCK BUFFER ALREADY ALLOCATED	4	0	0	0	0
+993	DPNSS/DASS channel P1 layer 2 reset ok (type P2)	4	2	2	2	2
+994	DPNSS/DASS channel P1 layer 2 reset failed	4	2	1	1	1
+995	DPNSS/DASS call cleared on channel P1 (cause P2)	4	2	2	2	2
+1099	End of external alarm : P1	2	2	2	2	2
+1100	Default external alarm : P1	2	2	2	2	2
+1101	external alarm : P1	2	2	1	2	2
+1102	external alarm : P1	2	0	0	0	0
+1103	external alarm : P1	2	2	2	2	2
+1104	external alarm : P1	2	2	2	2	2
+1105	external alarm : P1	2	2	2	2	2
+1106	external alarm : P1	2	2	2	2	2
+1107	external alarm : P1      	2	2	2	2	2
+1108	external alarm : P1	2	2	2	2	2
+1109	external alarm : P1	2	2	2	2	2
+1110	external alarm : P1	2	2	2	2	2
+1111	external alarm : P1	2	2	2	2	2
+1112	external alarm : P1	2	2	2	2	2
+1113	external alarm : P1	2	2	2	2	2
+1114	external alarm : P1	2	2	2	2	2
+1115	external alarm : P1      	2	2	2	2	2
+1116	external alarm : P1	2	2	2	2	2
+1117	external alarm : P1	2	2	2	2	2
+1118	external alarm : P1	2	2	2	2	2
+1119	external alarm : P1	2	2	2	2	2
+1120	external alarm : P1	2	2	2	2	2
+1121	external alarm : P1	2	2	2	2	2
+1122	external alarm : P1	2	2	2	2	2
+1123	external alarm : P1      	2	2	2	2	2
+1124	external alarm : P1	2	2	2	2	2
+1125	external alarm : P1	2	0	0	0	0
+1126	external alarm : P1	2	2	2	2	2
+1127	external alarm : P1	2	2	2	2	2
+1128	external alarm : P1	2	2	2	2	2
+1129	external alarm : P1	2	2	2	2	2
+1130	external alarm : P1	2	2	2	2	2
+1131	external alarm : P1      	2	2	2	2	2
+1132	external alarm : P1	2	2	2	2	2
+1133	external alarm : P1	2	2	2	2	2
+1134	external alarm : P1	2	2	2	2	2
+1135	external alarm : P1	2	2	2	2	2
+1136	external alarm : P1	2	2	2	2	2
+1137	external alarm : P1	2	2	2	2	2
+1138	external alarm : P1	2	2	2	2	2
+1139	external alarm : P1      	2	2	2	2	2
+1140	external alarm : P1	2	2	2	2	2
+1141	external alarm : P1	2	2	2	2	2
+1142	external alarm : P1	2	2	2	2	2
+1143	external alarm : P1	2	2	2	2	2
+1144	external alarm : P1	2	2	2	2	2
+1145	external alarm : P1	2	2	2	2	2
+1146	external alarm : P1	2	2	2	2	2
+1147	external alarm : P1      	2	2	2	2	2
+1148	external alarm : P1	2	2	2	2	2
+1149	external alarm : P1	2	2	2	2	2
+1150	external alarm : P1	2	2	2	2	2
+1151	external alarm : P1	2	2	2	2	2
+1152	external alarm : P1	2	2	2	2	2
+1153	external alarm : P1	2	2	2	2	2
+1154	external alarm : P1	2	2	2	2	2
+1155	external alarm : P1      	2	2	2	2	2
+1156	external alarm : P1	2	2	2	2	2
+1157	external alarm : P1	2	2	2	2	2
+1158	external alarm : P1	2	2	2	2	2
+1159	external alarm : P1	2	2	2	2	2
+1160	external alarm : P1	2	2	2	2	2
+1161	external alarm : P1	2	2	2	2	2
+1162	external alarm : P1	2	2	2	2	2
+1163	external alarm : P1      	2	2	2	2	2
+1164	external alarm : P1	2	2	2	2	2
+1165	external alarm : P1	2	2	2	2	2
+1166	external alarm : P1	2	2	2	2	2
+1167	external alarm : P1	2	2	2	2	2
+1168	external alarm : P1	2	2	2	2	2
+1169	external alarm : P1	2	2	2	2	2
+1170	external alarm : P1	2	2	2	2	2
+1171	external alarm : P1      	2	2	2	2	2
+1172	external alarm : P1	2	2	2	2	2
+1173	external alarm : P1	2	2	2	2	2
+1174	external alarm : P1	2	2	2	2	2
+1175	external alarm : P1	2	2	2	2	2
+1176	external alarm : P1	2	2	2	2	2
+1177	external alarm : P1	2	2	2	2	2
+1178	external alarm : P1	2	2	2	2	2
+1179	external alarm : P1      	2	2	2	2	2
+1180	external alarm : P1	2	2	2	2	2
+1181	external alarm : P1	2	2	2	2	2
+1182	external alarm : P1	2	2	2	2	2
+1183	external alarm : P1	2	2	2	2	2
+1184	external alarm : P1	2	2	2	2	2
+1185	external alarm : P1	2	2	2	2	2
+1186	external alarm : P1	2	2	2	2	2
+1187	external alarm : P1      	2	2	2	2	2
+1188	external alarm : P1	2	2	2	2	2
+1189	external alarm : P1	2	2	2	2	2
+1190	external alarm : P1	2	2	2	2	2
+1191	external alarm : P1	2	2	2	2	2
+1192	external alarm : P1	2	2	2	2	2
+1193	external alarm : P1	2	2	2	2	2
+1194	external alarm : P1	2	2	2	2	2
+1195	external alarm : P1      	2	2	2	2	2
+1196	external alarm : P1	2	2	2	2	2
+1197	external alarm : P1	2	2	2	2	2
+1198	external alarm : P1	2	2	2	2	2
+1199	external alarm : P1	2	2	2	2	2
+1200	external alarm : P1	2	2	2	2	2
+1250	GPA. Bad loaded prgm P1 vs declared one P2 on dsp P3	4	2	1	2	2
+1251	GPA. Pb P1 during init of dsp P2 with pgm P3	4	2	1	2	2
+1252	"GPA. Nb chanels declared on DSP P1 : P2 on ST-BY, P3 on MAIN"	2	2	2	2	2
+1253	Incorrect program for GPA DSP : appli P1 table P2	2	2	2	2	2
+1254	Existing program for GPA DSP : appli P1 table P2	2	2	2	2	2
+1255	Bad physical address for GPA DSP program : appli P1 table P2	2	2	2	2	2
+1256	Appli P1 - P2 table : too many GPA circuits size of P3	2	2	2	2	2
+1270	Already freed connexion object type P1 released	2	2	2	2	2
+1271	No representation for neqt P1	2	2	2	2	2
+1272	"Occupied representation (neqt P1, state P2 TI P3)"	2	2	2	2	2
+1279	Not expected connection object type : index=P1 type=P2	2	2	2	2	2
+1302	Unknown entity nb P1	2	2	2	2	2
+1313	Entity nr P1 is unknown is this node.	4	2	1	2	2
+1400	ABCA init P1 status P2 info P3	2	2	2	2	2
+1401	ABCA task P1 exception P2 PC 0xP3P4	2	2	2	2	2
+1402	ABCA IE error type P1 ie P2 :P3	2	2	2	2	2
+1403	ABCA task P1 loop P2 PC 0xP3P4	2	2	2	2	2
+1404	ABCA Wrong MSG P1 IE P2 P3 : P4	2	2	2	2	2
+1405	ABCA rout src P1 .P2.P3	2	2	2	2	2
+1406	ABCA buffer P1 P2<->P3	2	2	2	2	2
+1407	"ABCA [SBC P1,P2,P3,P4][OPE main: P5,P6,P7,P8 - enq: P9,P10,P11,P12]"	2	2	2	2	2
+1411	"ABCA. Dow: file %c%c%c%c ope P1, format error P2 errno P3 (%c%c%c%c)"	4	2	1	2	2
+1460	V24:P1: fatal error of applic (pid P2) signal P3	4	2	1	2	2
+1461	V24:P1: fork error=P2	4	2	1	2	2
+1462	"V24:P1: chanel configuration, operation P2, error P3"	2	2	1	2	2
+1463	V24:P1: application (pid P2) restarted on signal P3	2	2	1	2	2
+1464	V24:P1: application execution error P2	2	2	1	2	2
+1465	V24:P1: conflict with inittab	2	2	1	2	2
+1500	P1 error P2 src = P3 P4	4	2	1	2	2
+1501	Rout: CRYSTAL number erroneous P1 (msg.type = P2)	4	2	1	2	2
+1502	Rout: coupler number erroneous P1 (msg.type = P2)	4	2	1	2	2
+1503	"Rout: too long message (P1 oct.) for P2,P3,P4"	2	2	2	2	2
+1505	Rout: eqt number erroneous P1 with desti P2 type P3	2	2	2	2	2
+1506	Rout: INTB coupler not main in CRYSTAL P1	2	2	2	2	2
+1510	Duplicate IP addr from P1.P2.P3.P4.P5.P6	4	2	1	1	1
+1511	Eth.addr.is broadcast for P1.P2.P3.P4	4	2	1	1	1
+1512	SM Out of buffers	4	2	1	1	1
+1513	"Unrecoverable error for socket manager, exiting"	4	2	1	1	1
+1514	PM No System Call (P1) P2	2	2	2	2	2
+1515	PM Ctl Th:Bad service code P1	2	2	2	2	2
+1516	PM Proc Req:Bad service code P1	2	2	2	2	2
+1517	"Unrecoverable error for the device manager, exiting"	4	1	1	1	1
+1518	Device manager out of P1 buffers	2	2	2	2	2
+1519	DM V24+: P1	2	2	2	2	2
+1520	RAM CPU. NMI Parity	4	1	1	1	1
+1521	"Powerfail, shutdown"	4	1	1	1	1
+1522	Hard Disk Bad sector P1 P2 P3	4	1	1	1	1
+1523	Files Mngt OM warning: P1	4	1	1	1	1
+1524	NMI IO1 (watchdog P1)	4	1	1	1	1
+1525	Other NMI : P1	2	2	2	2	2
+1526	"OM panic, exiting"	4	1	1	1	1
+1527	"Process P1 exit, pid P2.P3 signal P4 PC 0xP5 th P6"	4	1	1	1	1
+1528	Test from chorus if incidents handler is running	2	2	2	2	2
+1529	"Kernel: Lack of dynamic port P1 (6=TCP, 17=UDP)"	4	2	1	2	2
+1530	Netaccess: new connection accepted (P1.P2.P3.P4)	2	2	2	2	2
+1531	Netaccess: connection closed	2	2	2	2	2
+1532	Netaccess: quit	2	2	2	2	2
+1533	Netaccess: unknown application type	2	2	2	2	2
+1534	Netaccess: get bad CPU role	4	2	1	1	1
+1535	Netaccess: socket write error	4	2	1	1	1
+1536	Netaccess: socket read error	4	2	1	1	1
+1537	Netaccess: IPC_send error	4	2	1	1	1
+1538	Netaccess: IPC_receive error	4	2	1	1	1
+1539	Netaccess : receives bad data	4	2	1	2	2
+1540	Netaccess: Chorus kernel function error	4	2	1	2	2
+1541	"P1 spurious hard disk interrup occurs, during P2 seconds"	4	1	1	1	1
+1542	"No more space free on disk part., device P1, P2 time full during P3 sec"	4	1	1	1	1
+1543	Extension board failure	4	1	1	1	1
+1544	CPU has received a power supply alarm	4	2	1	0	0
+1545	Disappearance of power supply alarm	2	1	1	1	1
+1546	Date modification done by P1	4	2	1	1	1
+1547	Source P1 tries to set an incorrect system date	2	2	2	2	2
+1548	Potential problem of hard drive detected by SMART	2	2	2	2	2
+1549	Critical problem of hard drive detected by SMART	2	2	2	2	2
+1550	"The cpu is going into throttle mode P1, temp P2"	2	2	2	2	2
+1551	IP/X25 tunnel: layer X25 started	2	2	2	2	2
+1552	IP/X25 tunnel: layer X25 layer	2	2	1	1	1
+1553	IP/X25 tunnel: layer X25 not available	4	2	1	1	1
+1554	IP/X25 tunnel:P1.P2.P3.P4 : LCN put in BAD state(cause:P5 diag:P6)	4	2	1	1	1
+1555	IP/X25 tunnel: P1.P2.P3.P4 : LCN closed after unused	2	2	2	2	2
+1556	IP/X25 tunnel: LCN P1.P2.P3.P4 reset	2	2	2	2	2
+1557	IP/X25 tunnel: lack of resources P1	2	2	2	2	2
+1558	IP/X25 tunnel: LCN not configurated; X25 addr : P1	2	2	2	2	2
+1559	IP/X25 tunnel: P1.P2.P3.P4 VC crossed request	2	2	2	2	2
+1560	IP/X25 tunnel: P1.P2.P3.P4 adress problem	2	2	2	2	2
+1561	IP/X25 tunnel: protocol error P1	2	2	2	2	2
+1562	IP/X25 tunnel: bad call to Chorus P1	2	2	2	2	2
+1563	IP/X25 tunnel: Out of LCN to reach node P1.	2	2	1	1	1
+1565	Ethernet disabled due to excessive traffic	4	2	1	1	1
+1566	Ethernet broadcast reception disabled due to excessive traffic	4	2	1	1	1
+1567	DHCP server started	2	2	2	2	2
+1568	DHCP. No more free @ on P1.P2.P3.P4 for client P5 (MAC=P6:P7:P8:P9:P10:P11)	4	2	1	2	2
+1571	Network substitution problem (P1 P2 P3)	2	2	2	2	2
+1572	Network automatic callback problem (P1 P2)	2	2	2	2	2
+1580	Accounting ticket creation problem (P1 P2 P3)	2	2	2	2	2
+1581	Sending back Accounting ticket toward user node problem (P1 P2 P3)	2	2	2	2	2
+1600	"IO1 driver error, P1 No C1 wrong in output"	2	2	2	2	2
+1601	"IO1 driver error, wrong message length in output (P1), link P2"	2	2	2	2	2
+1602	"IO1 driver error, full output link P1"	2	2	2	2	2
+1603	"IO1 driver error, wrong telephone msg received, line P1, position (P2,P3,P4)"	2	2	2	2	2
+1604	IO1 board not synchronized	2	1	1	1	1
+1605	"Loss of the IO1 board, value of the P1 flags"	4	1	1	1	1
+1606	Std By CPU. Refused sending msg	4	2	2	2	2
+1607	P1.P2.P3.P4.P5.P6.P7.P8.P9.P10.P11.P12.P13.P14.P15	2	2	2	2	2
+1608	"No more room to store signalling messages, param. : P1 P2 P3 P4"	2	2	2	2	2
+1609	"P1 incidents sent by coupler (P2, P3)"	2	2	2	2	2
+1610	IO1 Driver. io4400 module not downloaded	2	2	2	2	2
+1611	bad PRS msg received (switcher.c-ligne P1) cr=P2 cpl=P3 eqt=P4 	2	2	2	2	2
+1612	"Protocol error on Alcatel 8&9 series, type P1 (neqt P2)"	4	2	1	2	2
+1613	P1.P2.P3.P4.P5.P6.P7.P8.P9.P10.P11.P12.P13.P14.P15	2	2	2	2	2
+1620	"IO2 driver: wrong length of the message, P1"	2	2	2	2	2
+1621	"IO2 driver: no more available memory in order to transmit,P1 file"	2	2	2	2	2
+1630	Loss of the ALIZE driver	2	2	2	2	2
+1631	"ALIZE driver: wrong length of the message, P1"	2	2	2	2	2
+1632	"ALIZE driver: no more available memory in order to transmit,P1 file"	2	2	2	2	2
+1640	"Internal Monitel error no P1, line P2, file P3"	4	2	1	1	1
+1650	transition to a self-slowed-down telephone state	4	2	1	1	1
+1651	Leave the self-slowed-down telephone state	2	2	1	1	1
+1660	Monitel: Lack of resource type P1	4	2	1	1	1
+1661	"Monitel: Lack of vital resource, type P1"	4	2	1	1	1
+1662	"Monitel: Lack of resource for ISDN processing, type P1, access no P2"	4	2	1	0	0
+1663	Monitel. Rate of free type P1 resources below to P2 per cent	4	2	1	1	1
+1680	"Monitel: Applicative error P1 type, infos P2, P3"	4	2	1	0	0
+1681	"Monitel: Applicative error, type P1, info P2, PC 0xP3P4"	4	2	1	2	2
+1682	"Monitel: Applicative error, type P1, thread P2"	4	2	1	2	2
+1683	"Monitel: Too long proces. time, eqt P1, time P2, PC 0xP3P4"	4	2	1	2	2
+1700	"Protocol error Q931, type P1, access no P2"	4	2	1	1	1
+1701	Bad equipment number P1 for an ISDN equipment	2	2	2	2	2
+1702	Bad use of ISDN equipment P1	2	2	2	2	2
+1720	"Monitel exception P1, PC 0xP2P3"	2	2	1	1	1
+1721	"Phone exc P1, PC 0xP2P3 neqt P4"	2	2	1	2	2
+1722	"Aborted telephone task, PC 0xP1P2 exc P3 neqt P4"	4	2	1	1	1
+1723	"Telephone task will be aborted, PC 0xP1P2 neqt P3"	4	2	1	1	1
+1724	"Equipment in a loop, PC 0xP1P2 neqt P3 evt P4"	4	2	1	2	2
+1725	"Equipment in a double loop, PC 0xP1P2 neqt P3 evt P4"	4	2	1	2	2
+1726	Triple exception for equipment P1	4	2	1	2	2
+1727	"Bad address in function's argument, thread P1(P2), PC 0xP3P4"	4	2	1	2	2
+1735	Exception in coupler's software	4	2	1	2	2
+1740	"Monitel: Chorus error, type P1, status P2"	4	2	1	1	1
+1741	"Monitel: non critical Chorus error, type P1, status P2"	4	2	1	1	1
+1750	Monitel : REJECT message from IOBB	2	2	2	2	2
+1751	Monitel : Error type P1 (P2) in Q93B message (at line P3)	2	2	2	2	2
+1752	Monitel : Bad invoke_id (P1) received at line P2	2	2	2	2	2
+1753	Monitel : No route fo invoke_id (P1) at line P2	2	2	2	2	2
+1754	Monitel : Fault invoke_id received	2	2	2	2	2
+1755	Monitel : Error type P1 (P2) in ATM UData message (at line P3)	2	2	2	2	2
+1756	Monitel : Error type P1 (P2) in ATM API message (at line P3)	2	2	2	2	2
+1757	Monitel : Error type P1 (P2) in ATM layer 2 message (at line P3)	2	2	2	2	2
+1758	Monitel : Error type P1 (P2) in ATM layer 1 message (at line P3)	2	2	2	2	2
+1759	Monitel :Error type P1 (P2) in ATM coupler message (at line P3)	2	2	2	2	2
+1760	Monitel : No more ATM resources of type P1 (at line P2)	2	2	2	2	2
+1770	"IPLINK shared memory error, memory full"	4	2	1	2	2
+2000	IO1 driver not responding	4	2	1	2	2
+2001	No identity of IO1 is coming;	4	2	1	2	2
+2002	Not answer from the download of IO1	4	2	1	2	2
+2003	The role determination has not been successful	4	2	1	2	2
+2004	IO1 running but not declared;	4	2	1	2	2
+2005	IO1 init board type: P1 is incoherent	2	2	2	0	0
+2006	No AD_RESP from CPU after AD_REQ   ;	2	2	1	2	2
+2007	Main CPU detected on unexpected link P1	4	2	1	1	1
+2008	"Std By CPU. CPU_CPL_AD_RESP message invalid : P1,P2,P3"	4	2	1	1	1
+2009	P1 CPU role P2	4	2	1	1	1
+2010	No more TS PO between CRYSTAL P1 and CRYSTAL P2	4	2	1	1	1
+2011	No more TS between CR P1 and CR P2 or no more conference resources	4	2	1	1	1
+2012	No more free TS on the PCM looped back from CRYSTAL P1	4	2	1	1	1
+2013	Connection request on unknown link: P1	2	2	2	2	2
+2014	Pbm repres. demi-com. P1 repres. P2 in P3	2	2	2	2	2
+2015	TS already allocated to terminal : IT P1 => P2	2	2	2	2	2
+2016	TS already de-allocated	2	2	2	2	2
+2017	No TS for terminal	2	2	2	2	2
+2018	"No more free connection object, type P1, neqt PO P2"	2	2	2	2	2
+2019	P1 coupler commissioning	2	2	2	2	2
+2020	%c%c terminal awaited;	2	2	2	2	2
+2021	Bad coupler type: P1 awaited	4	1	1	1	1
+2022	No coupler awaited in that position	4	1	1	1	1
+2023	Board downloading has failed	4	1	1	1	1
+2024	"Cabling error between <P1,P2> and <P3,P4>"	4	1	1	1	1
+2025	Incorrect number of channels on DSPP1 : P2 instead of P3	4	2	1	2	2
+2026	Answer not awaited from DSP P1	2	2	1	2	2
+2027	No GOMIK acquittment during init phase;	2	2	1	2	2
+2030	Term. anomaly: origin P1	2	2	1	2	2
+2031	Unexpected answer during coupler test	4	2	1	2	2
+2032	Coupler test failed P1 times	4	1	1	2	2
+2033	cpl out of service after cpl test failure	4	1	1	2	2
+2034	P1 terminals on board : P2 managed	4	1	1	2	2
+2035	Stand-by CPU: P1 DSP channels instead of P2	4	2	1	2	2
+2036	Stand-by CPU: P1 VG channels instead of P2	2	2	2	2	2
+2037	Stand-by CPU: P1 channels on DSP P2 instead of P3	2	2	2	2	2
+2038	Stand-by CPU: cpl type = P1 instead of P2	4	1	1	1	1
+2039	"Stand-by CPU: board under US: posi P1, type P2 instead of P3,P4"	4	1	1	1	1
+2040	Std By CPU. Bad term type = P1 instead of P2 Msg P3 n_term P4	4	2	1	1	1
+2041	Stand-by CPU: cpl type = P1 instead of INTA or INTB	4	2	1	1	1
+2042	Loss of a P1 type cpl	4	1	1	1	1
+2043	Loss of the P1 CRYSTAL	4	1	1	1	1
+2044	Loss of the INT opposite the cpl	4	1	1	1	1
+2045	Loss of the P1 T2 link on the cpl INT link	4	1	1	1	1
+2046	"Loss of the P1,P2 coupler during the CPU switch over"	4	1	1	1	1
+2047	"State = P1 for Cpl P2,P3 on CPU and P4 on INTB"	4	1	1	1	1
+2048	"State P1,P2 coupler incoherent after CPU switch over"	4	1	1	1	1
+2050	UA Terminal P1 Loss	4	1	1	1	1
+2051	Std By CPU. wrong message P1 on neqt P2 info P3	4	2	1	1	1
+2052	Std By CPU. MAJ_ETAT_JONC msg for bad term.	4	2	1	1	1
+2053	Terminal P1 in service	2	2	2	2	2
+2054	UA Subdevice P1 P2 down on term P3	2	2	1	2	2
+2055	Std By CPU. SAVE_TAXE msg for bad term.	2	2	1	1	1
+2056	Std By CPU. COMM_OFF msg for P1 bad link	2	2	2	2	2
+2057	Std By CPU. ERASE_PATH msg for P1 bad link	2	2	2	2	2
+2058	Std By CPU. SAVE_PATH msg for P1 bad link	2	2	2	2	2
+2059	St-by CPU put in service	2	2	2	2	2
+2060	No associated terminal for this eqt for P1 detection	2	2	2	2	2
+2061	No detection in progress but associated term.: P1	2	2	2	2	2
+2062	The terminal is not a DSP channel	2	2	2	2	2
+2063	P1 detection type for P2 not implemented yet	2	2	2	2	2
+2064	Out of service P1 P2	4	1	1	1	1
+2065	Put in service P1 P2	2	2	2	2	2
+2066	Term P1 : out of dcoms	2	2	2	2	2
+2067	VG eqt brodcasting without dcom	2	2	2	2	2
+2068	VG chaining error=P1;eqt=P2;vg_msg=P3	2	2	2	2	2
+2069	IO1 board not registered! cpl [cr P1] [lnk P2] is:P3	2	2	1	2	2
+2070	swapping mode is not the same on main and stand-by CPU	4	1	1	1	1
+2071	Occupation rate of partition P1 is upper to P2 percent	4	2	1	1	1
+2072	"Problem with a RUNTEL command, enter in state P1"	4	2	1	1	1
+2073	Shutdown command has been called	2	2	2	2	2
+2074	survroot: Loss of P1 applicative IPC messages	4	2	1	2	2
+2075	signalling transfer on ethernet error line P1	2	2	2	2	2
+2076	Size of a TEL's or remanent's region is not the same on main and stand-by CPU	4	2	1	1	1
+2077	CPU was halted due to a shutdown	4	2	2	2	2
+2078	UTA(P1) download  OK (1:local 2:distant)	2	2	2	2	2
+2079	UTA(P1) download failure(1:local 2:distant) cause P2	2	2	2	2	2
+2080	"P1 access is synchronizing on Board (P2,P3)"	2	2	2	2	2
+2081	IO1 in free running and synchro board activated	4	2	1	2	2
+2082	"Cpl synchro P1,P2 not detected by INTB"	4	2	1	2	2
+2083	Invalid parameter in synchronization message	2	2	2	2	2
+2085	"Access P1, board (P2,P3) : synchronization stopped"	2	2	2	2	2
+2086	IO1 enslaved without synchro board activated	2	2	1	2	2
+2087	Fictitious coupler INTIP does not exist	4	2	1	2	2
+2088	Bad clock synchro state (MIXED)	4	2	1	2	2
+2089	creation in the crystal P1 of a global domain behind non-global domain	2	2	1	2	2
+2090	access with priority < and > than 200 declared on the same crystal (P1)	2	2	2	2	2
+2091	"synchronizing access P1 (P2,P3) is incompatible with MG(P4) backup link"	2	2	2	2	2
+2092	P1	2	2	2	2	2
+2101	P1 access still in state of alarm	2	2	2	2	2
+2102	P1 access back to normal	2	2	2	2	2
+2103	P1 access end of P2 time-out unusual	2	2	2	2	2
+2104	Access P1: P2 transitions into alarm status	2	2	2	2	2
+2105	P1 access in state of alarm at initialization	2	2	2	2	2
+2106	P1 access in state of alarm	2	2	2	2	2
+2107	P1 access in state of maintenance alarm	2	2	2	2	2
+2108	End alarm P1access in initialization	2	2	2	2	2
+2109	P1 access: protocol error	2	2	2	2	2
+2110	P1 access in maintenance and in state of alarm	2	2	2	2	2
+2111	P1 access in unknown P2 fault	2	2	2	2	2
+2112	P1 alarm on P2 access	2	2	2	2	2
+2113	T2 lapD not established still trying	4	2	1	1	1
+2119	"Eqt P1, trunk P2 : public gives T2/T0 com on busy channel P3"	2	2	2	2	2
+2120	Unsuccessful Preemption of equipement P1	2	2	2	2	2
+2121	NDDI AGC DSP is out of service	4	1	1	1	1
+2122	NDDI AGC DSP is back in service	2	2	2	2	2
+2123	No free NDDI AGC found	2	2	2	2	2
+2124	TEI Removal received by equipment P1	2	2	2	2	2
+2140	Alarm : P1 resources quantity critical	2	2	2	2	2
+2141	P1 resources quantity normal	2	2	2	2	2
+2151	Undeclared subdevice P1 present	2	2	2	2	2
+2160	State term P1 P2 invalid : P3	2	2	2	2	2
+2161	Bad UA cmd: P1 P2.P3.P4	2	2	1	2	2
+2162	SubdevUA P1 P2: Bad cmd: P3 P4.P5.P6	2	2	2	2	2
+2163	UA Segment Failure P1 msg P2 P3	2	2	2	2	2
+2164	SubdevUA P1 P2: Segment Failure P3 msg P4.P5	2	2	2	2	2
+2165	Anomaly Terminal UA P1 adr P2 type P3 info P4	2	0	0	0	0
+2166	"CPU requires Reset CPL P1 (P2,P3) Cause P4"	4	2	1	1	1
+2167	P1 INT role P2	2	2	2	2	2
+2168	Stand-by CPU is out of service	4	1	1	1	1
+2169	Main CPU initialization completed	2	2	2	2	2
+2170	Critical number of coupler out of serv P1 percents	2	2	1	1	1
+2171	Former main CPU has been lost	4	1	1	1	1
+2172	Loss of physical equipment P1 setting off telealarm	2	2	2	2	2
+2175	"During installation of a patch for TEL, problem P1 occured"	2	1	1	1	1
+2176	A dynamic patch has been installed for P1	2	2	2	2	2
+2177	Error loading patch for P1	4	1	1	1	1
+2180	US TS Preemption of equipment P1	2	2	2	2	2
+2181	INT TS Preemption of equipment P1	2	2	2	2	2
+2182	Preemption of equipment P1 on T2 ABC	2	2	2	2	2
+2183	Preemption of equipment P1 on T2 DREX	2	2	2	2	2
+2184	"User ask for reset of Hybrid Link (P1, P2, P3)"	2	2	2	2	2
+2185	"User ask for reset of Hybrid Access (Node P1, Access P2, Type P3)"	2	2	2	2	2
+2197	A4400 Order for incidents redirection on P1 received	2	2	2	2	2
+2198	A4400 Incidents now redirected on : P1	2	2	2	2	2
+2199	A4400 Version : P1	2	2	1	2	2
+2200	ServAppli. PB chorus function P1 status P2	2	2	1	2	2
+2201	ServAppli. Bad msg rcvd typ_msg P1 state P2 dev P3 typ_dev P4	2	2	2	2	2
+2202	ServAppli. PB open device TypDev P1 nDev P2 status P3	2	2	2	2	2
+2203	ServAppli. PB on appli binary P1 status P2	2	2	2	2	2
+2204	ServAppli. PB chorus in application. function P1 status P2 access P3	2	2	2	2	2
+2205	ServAppli. PB at end of application Pmtv P1 status P2 acces P3	2	2	2	2	2
+2206	ServAppli. Message unexpected type P1 access P2	2	2	2	2	2
+2250	"AP1: Pb with exec of pgme P2, stat = P3 (P4)."	2	2	2	2	2
+2251	"AP1: Pb P2 with P3, st = P4 (P5)."	2	2	2	2	2
+2252	"AP1: Pb P2, tty P3, st = P4 (P5)."	2	2	2	2	2
+2253	"AP1: Pb P2, file P3, st = P4 (P5)."	2	2	2	2	2
+2254	Impossible to read remanent P1: appli P2 err P3 (P4)	2	2	2	2	2
+2255	SQL error: appli P1 table P2 error P3 (P4)	4	2	1	2	2
+2256	SQL err during a FETCH: appli P1 table P2 err P3 (P4)	2	2	1	2	2
+2300	ACDAFIBAR: Mapping Remanents Error P1	2	2	2	2	2
+2301	ACDAFIBAR: Desti P1 Init Error	2	2	2	2	2
+2302	ACDAFIBAR: Error with No. P1 Parameters	2	2	2	2	2
+2303	ACDAFIBAR: Team number P1 error	2	2	2	2	2
+2304	ACDAFIBAR: Barometer Writing Error P1 P2	2	2	2	2	2
+2310	ACDPCVIEW : Mapping Remanents Error P1	2	2	2	2	2
+2311	ACDPCVIEW : Desti P1 Init Error	2	2	2	2	2
+2312	ACDPCVIEW : Error with Nb of Parameters P1	2	2	2	2	2
+2313	ACDPCVIEW : Error : Team number P1 error	2	2	2	2	2
+2314	ACDPCVIEW : Pcview Writing Error P1 P2	2	2	2	2	2
+2315	ACDPCVIEW : OPS not valid for this application	2	2	2	2	2
+2320	ACDSAUVREMOBS: CPU Role unknown P1	2	2	2	2	2
+2321	ACDSAUVREMOBS: System date incorrect	2	2	2	2	2
+2322	ACDSAUVREMOBS: SendMsg function error P1	2	2	2	2	2
+2330	SAUVOBS Mapping remanent P1 error	2	2	2	2	2
+2331	SAUVOBS Desti P1 initialization error	2	2	2	2	2
+2332	SAUVOBS Error on receiving message P1 on %c CPU	2	2	2	2	2
+2333	SAUVOBS Unexpected message P1 on %c CPU	2	2	2	2	2
+2334	SAUVOBS Error in message type P1 on %c CPU	2	2	2	2	2
+2335	SAUVOBS Init with unknown CPU role P1	2	2	2	2	2
+2336	SAUVOBS Standby applic no longer responding	2	2	2	2	2
+2337	SAUVOBS Date Error %c	2	2	2	2	2
+2338	SAUVOBS Error in info file %c P1 team P2	2	2	2	2	2
+2339	SAUVOBS Error in opening file %c P1 team P2	2	2	2	2	2
+2340	SAUVOBS Error in closing file %c P1 team P2	2	2	2	2	2
+2341	SAUVOBS Error in reading file %c P1 record P2	2	2	2	2	2
+2342	SAUVOBS Error in writing file %c P1 record P2	2	2	2	2	2
+2343	SAUVOBS Error when shifting daily file record P1	2	2	2	2	2
+2344	SAUVOBS File %c team P1 not on standby	2	2	2	2	2
+2345	Presence of two main Call Server on the network	4	2	1	1	1
+2346	Bascul command called	4	2	1	1	1
+2347	Reset of stand by CPU	4	2	1	1	1
+2348	Local CPU Shutdown	4	2	1	1	1
+2349	Bascul command called	4	2	1	1	1
+2350	ACDEDIT System error on P1 date request	2	2	2	2	2
+2351	ACDINISTR Error reading lang file line P1 P2	2	2	2	2	2
+2352	ACDINISTR Error in opening lang file P1 P2	2	2	2	2	2
+2353	ACDINISTR Error in reading elt in lang dir P1	2	2	2	2	2
+2354	ACDINISTR Error in opening lang dir P1	2	2	2	2	2
+2355	ACDOBSTRAF Error in opening SITACC.dat P1	2	2	2	2	2
+2356	ACDOBSTRAF SITACC.dat P1 reading error	2	2	2	2	2
+2357	ACDOBSTRAF System error on date request P1	2	2	2	2	2
+2358	ACDSUPVI System error on date request P1	2	2	2	2	2
+2359	ACDSUPVI Error in type of terminal	2	2	2	2	2
+2360	ACDSUPVI ipcCall error P1	2	2	2	2	2
+2361	ACDSUPVI ipcSend error P1   	2	2	2	2	2
+2362	ACDSUPVI ipcReceive error P1	2	2	2	2	2
+2363	ACDSUPVI CMIS update error P1	2	2	2	2	2
+2364	ACDSUPVI MAO update error P1	2	2	2	2	2
+2365	ACDSUPVI SQL error P1	2	2	2	2	2
+2366	ACDSUPVI Error in creating port P1	2	2	2	2	2
+2367	ACDSUPVI Alloc error in MAO grp ports P1	2	2	2	2	2
+2368	P1	4	2	1	2	2
+2369	ACDSUPVI Terminal init error	2	2	1	2	2
+2370	ACDSUPVI Error of too many parameters	2	2	1	2	2
+2371	ACDSUPVI error mapping remanents imposs P1	2	2	1	2	2
+2372	ACDUTI Error opening obs file %c P1 P2	2	2	1	2	2
+2373	ACDUTI status of obs file %c P1 P2	2	2	2	2	2
+2374	ACDUTI Error in size of obs file %c P1	2	2	2	2	2
+2375	ACDUTI Error in reading obs file %c P1 P2	2	2	2	2	2
+2376	ACDUTI Error in moving obs file %c P1 P2	2	2	2	2	2
+2377	ACDSUPVI Desti init error P1	2	2	2	2	2
+2378	ACDSUPVI get v24 P1 pb	2	2	2	2	2
+2379	ACDSUPVI set v24 P1 pb	2	2	2	2	2
+2400	Change of main set of CNA terminal neqt:P1	2	2	2	2	2
+2401	End of alert - saving alert report : status P1	2	2	2	2	2
+2402	Putting LOOP server (P1) into service	2	2	2	2	2
+2403	Loss of LOOP server (P1)	2	2	2	2	2
+2404	Bad initialization of LOOP serveur P1	2	2	2	2	2
+2405	Failure of connexion to a serveur LOOP (user/server): P1	2	2	2	2	2
+2406	Loss of connexion to a LOOP server (user/serveur): P1	2	2	2	2	2
+2407	SARC : unknown server.	2	2	2	2	2
+2408	SARC : server path disconnected.	2	2	2	2	2
+2409	SARC : server : no answer or no access.	2	2	2	2	2
+2410	SARC : no more free slot on server access.	2	2	2	2	2
+2411	SARC : no more registration.	2	2	2	2	2
+2412	SARC : no more area for tickets.	2	2	2	2	2
+2413	SCOM : unknown server.	2	2	2	2	2
+2414	SCOM : server path disconnected.	2	2	2	2	2
+2415	SCOM : server : no answer or no access.	2	2	2	2	2
+2416	SCOM : no more free slot on server access   	2	2	2	2	2
+2417	SCOM : no more recording.	2	2	2	2	2
+2418	SCOM : no more virtual extension.	2	2	2	2	2
+2419	SCOM : no more demi com for virtual extension.	2	2	2	2	2
+2420	SCOM : no more area to send ticket.	2	2	2	2	2
+2421	"Minimize Release, trunk group = P1, eqt = P2"	2	2	2	2	2
+2422	"Modification of Minimize done by management eqt = P1, cat = P2"	2	2	2	2	2
+2423	"Modification of Minimize from Alarm Terminal eqt = P1, cat = P2"	2	2	2	2	2
+2424	"No more interphone circuit left, eqt P1"	2	2	2	2	2
+2425	ETEC/AINT connection P1	2	2	2	2	2
+2426	ETEC/AINT disconnection P1	2	2	2	2	2
+2427	Try to connect subscriber P1 to SCOM access P2	2	2	2	2	2
+2440	"Voice guide fct out of service - DTMF receiver of P1 (P2,P3)"	4	1	1	2	2
+2441	Batteries for backup of voice messages out of service	4	1	1	2	2
+2442	Partition P1 : message P2 defined as voice guide P3 language P4	2	2	2	2	2
+2453	P1 P2	2	2	2	2	2
+2454	Bad INT configuration : cr1:P1 cpl1:P2 cr2:P3 cpl2:P4	4	2	1	2	2
+2455	IO2 in CPU mode asked. Starting with IO1	4	2	1	2	2
+2456	Reboot CPU after P1 problem (IO2)	4	2	1	1	1
+2457	"P1 coupler (P2,P3) not initalized yet"	4	1	1	1	1
+2458	Bad PCMS code : P1 P2 P3 P4 P5 P6 ...	2	2	2	2	2
+2459	Registered board type = P1 but plugged board P2	2	2	2	2	2
+2460	Lack of DComs while processing terminal P1	2	2	2	2	2
+2461	P1 CPU (position P2) incorrectly declared	2	2	2	2	2
+2462	CPU switch-over requested by phase alignment process	2	2	2	2	2
+2463	RamCard No P1 is write protected - Message No P2 - Operation P3	2	2	2	2	2
+2464	Low battery level on RamCard No P1	4	1	1	2	2
+2465	Battery out of service on RamCard No P1	4	1	1	2	2
+2466	Good battery level on RamCard No P1	2	2	2	2	2
+2467	Pluging of a Voice Guide memory card of P1 type in slot No P2	2	2	2	2	2
+2468	Removal of a Voice Guide memory card of P1 type in slot No P2	2	2	2	2	2
+2469	"Write Protect State change on RamCard No P1, state P2"	2	2	2	2	2
+2470	No RamCard on PCMCIA slot of GPA coupler	2	2	2	2	2
+2471	No writable RamCard Card detected on PCMCIA slot of GPA coupler	2	1	2	2	2
+2472	Not enough memory on RamCard for Vocal Guide message No P1	2	2	2	2	2
+2473	No RamCard for Vocal Guide message No P1	2	2	2	2	2
+2474	Failed to download file for the VG message No P1	2	2	2	2	2
+2475	No answer from coupler while VG init - Evt sent 0xP1	2	2	2	2	2
+2476	Erasing voice message P1 on partition P2	2	2	2	2	2
+2477	VG init : wrong available memory size on partition P1 difference P2	2	2	2	2	2
+2478	Failed to upload data of the voice message P1	2	2	2	2	2
+2479	Failure of the back-up inter-ACT link establishment	2	0	0	0	0
+2480	Stand-by CPU : type IR = P1 instead of P2	4	2	1	2	2
+2481	Alignment of nodes P1 and P2 shift=P3 p1=P4 p2=P5	2	2	2	2	2
+2482	Phase shift between nodes P1 and P2 shift=P3 p1=P4 p2=P5	2	2	2	2	2
+2485	Board P1 equipments type P2 : P3 managed.	2	2	2	2	2
+2486	Country board management incompatible with this board (country zone:P1)	2	2	2	2	2
+2487	Registered board type = P1 but plugged board P2	2	2	2	2	2
+2488	Daughter board P1 is missing.	4	1	1	2	2
+2489	"P1 virtual coupler (P2,P3) of the associated coupler P4 (P5,P6) not initalized."	2	2	2	2	2
+2490	"Loss of a virtual coupler P1 (P2,P3) of the associated coupler P4 (P5,P6)"	4	2	1	1	1
+2491	"P1(P2,P3) virtual coupler commissioning of the associated coupler P4(P5,P6)"	2	2	2	2	2
+2500	Dow: file P1 opening error	2	2	2	2	2
+2501	Dow: file P1 reading error	2	2	2	2	2
+2502	Dow: seek error beginning P1 file	2	2	2	2	2
+2503	Dow: no more place in downloaded boards table	2	2	2	2	2
+2504	"Dow: thread not found for P1,P2,P3 cpl"	2	2	2	2	2
+2505	Dow: port creation has failed P1	2	2	2	2	2
+2506	Dow: sending of msg to thread has failedP1	2	2	2	2	2
+2507	Dow: message badly received by thread P1	2	2	2	2	2
+2508	"Dow: unexpected message P1,P2,P3"	2	2	2	2	2
+2509	"Dow: unexpected state P1,P2,P3"	2	2	2	2	2
+2510	Dow: priority recovery error P1	2	2	2	2	2
+2511	Dow: thread creation error P1	2	2	2	2	2
+2512	Dow: region allowance has failed P1	2	2	2	2	2
+2513	Dow: message waiting has failed P1	2	2	2	2	2
+2514	Dow: too many boards are waiting	2	2	2	2	2
+2515	Dow: region releasing has failed P1	2	2	2	2	2
+2516	Dow: port destruction has failed P1	2	2	2	2	2
+2517	Dow: thread destruction has failed P1	2	2	2	2	2
+2518	Dow: thread stop has failed P1	2	2	2	2	2
+2519	"Dow: sending of a msg has failed P1,P2"	2	2	2	2	2
+2520	Dow: P1 downloading error	2	2	2	2	2
+2521	Dow: downloading aborted following cpl loss	2	2	2	2	2
+2522	The coupler P1 is different than the downloadable one	2	2	2	2	2
+2523	Incorrect boot version of this coupler	2	1	1	2	2
+2524	"Problem number P1 to store version, errno = P2"	2	2	2	2	2
+2525	Message number P1 present in the 2 guide files to merge	2	2	2	2	2
+2526	Error writting file : P1	2	2	2	2	2
+2530	ml_serv_mail (P1) : message with corrupt data	2	2	2	2	2
+2531	ml_serv not ready	2	2	2	2	2
+2532	ml_serv MAIL_FIC : read/write problem	2	2	2	2	2
+2533	ml_serv : linked messages problem (P1)	2	2	2	2	2
+2534	ml_serv ready to receive/send messages	2	2	2	2	2
+2540	ml serv. Buffer mmes released P1 (P2 - state P3)	2	2	2	2	2
+2541	ml_serv Table (P1) full (P2 P3)	2	2	2	2	2
+2542	ml_serv. Loss of mail (P1) for user (P2 P3)	2	2	2	2	2
+2544	ml_serv. Invalid list of preprogrammed messages (P1)	2	2	2	2	2
+2545	ml_serv. P1 (P2) out of range in table (P3)	2	2	2	2	2
+2570	Traf. obs pb P1 P2 P3	2	2	2	2	2
+2597	Registered board but not physically there	2	2	2	2	2
+2598	The remote crystal starts with the back-up inter-ACT link	2	2	2	2	2
+2599	The main inter-ACT link via RLIO is restarted	2	2	2	2	2
+2600	Obs: error CQL P1 on INSERT table P2	2	2	2	2	2
+2602	Obs: error CQL P1 on DELETE table P2	2	2	2	2	2
+2603	Obs: unexpected message P1 P2 P3	2	2	2	2	2
+2604	Obs: unknown message P1 P2 P3	2	2	2	2	2
+2605	The stand-by Obstraf application does not answer anymore	2	2	2	2	2
+2606	Init Obstraf with P1 unknown CPU role	2	2	2	2	2
+2607	Obs: remanent mapping error P1 on P2	2	2	2	2	2
+2608	Obs: P1 error priority definition	2	2	2	2	2
+2609	Obs: P1 error thread creation	2	2	2	2	2
+2610	Obs: Disk full : P1 percent used	2	2	2	2	2
+2611	Obs: Allocation error on P1	2	2	2	2	2
+2612	Obs: Overlow of P1	2	2	2	2	2
+2613	Obs: Thread P1 ended with status P2.	2	2	2	2	2
+2614	Obs: Trouble in creating file .%c%c%c.	2	2	2	2	2
+2615	Voice Guide channel lack for VG No P1	2	2	2	2	2
+2616	Simulation P1	2	2	2	2	2
+2617	Obstraf redirected P1 P2 P3	2	2	2	2	2
+2620	P1 P2	2	2	2	2	2
+2630	Error opening ComX25 nodes table. Errno P1	2	2	2	2	2
+2631	Error load ComX25 nodes file line P1 err P2 node P3	2	2	2	2	2
+2632	Stack comx25 full: incident P1 lost for NMC	2	2	2	2	2
+2633	ComX25 Error open X25 VC node P1 to node P2	2	2	2	2	2
+2634	ComX25 polling error node P1 to node P2 err P3	2	2	2	2	2
+2635	ComX25 polling process failure P1 status P2	2	2	2	2	2
+2636	ComX25 Chorus port init failure status P1	2	2	2	2	2
+2637	Network incidents : node P1 unreacheable	2	2	2	2	2
+2638	Network incidents : node P1 connected	2	2	2	2	2
+2650	SQL error: appli P1 table P2 error P3	4	2	1	2	2
+2651	SQL err during a FETCH: appli P1 table P2 err P3	4	2	1	2	2
+2652	SQL err during an INSERT: appli P1 table P2 err P3	4	2	1	2	2
+2653	SQL err during a DELETE: appli P1 table P2 err P3	4	2	1	2	2
+2654	SQL err during an UPDATE: appli P1 table P2 err P3	4	2	1	2	2
+2655	SQL COMMIT err: appli P1 table P2 err P3	4	2	1	2	2
+2656	Incoherent data: appli P1 table P2 (P3)	2	2	2	2	2
+2657	Lack of memory: appli P1 table P2 status P3	4	2	1	2	2
+2658	Impossible to read the remanent P1: appli P2 err P3	4	2	1	2	2
+2659	Translator inconsistency error : appli P1 error P2 info P3	2	2	2	2	2
+2663	IPC Chorus err: appli P1 oper P2 err P3	4	2	1	1	1
+2664	Error mutexInit : appli P1 error P2	2	2	2	2	2
+2665	Stand-by CPU data not modified: appli P1 role P2	2	2	1	1	1
+2666	MAO err on stand-by CPU: appli P1 oper P2 err P3	4	2	1	1	1
+2667	MAO error by operator: appli P1 P2 P3	2	2	2	2	2
+2668	Buf. CMIS Overflow : appli P1 (P2:P3) Rq:P4 Obj:P5 P6	2	2	2	2	2
+2669	"Acces denied on data acces control, object P1"	2	2	2	2	2
+2670	"FREETEL Error P1 (P2, P3)"	2	2	2	2	2
+2671	"Translator inconsistency, MCDU = P1"	2	2	2	2	2
+2672	Check Exception Application P1 PC=P2	2	2	2	2	2
+2673	End of cmis loop P1 P2	2	2	2	2	2
+2674	Insert error in an acd v2 list	2	2	2	2	2
+2675	"Initrem : Exception P1, function P2, PC = 0xP3P4P5P6"	2	2	2	2	2
+2676	Cmisd : connection problem (P1)	2	2	2	2	2
+2677	"Maoagent : Exception P1, operation P2, object P3, PC = 0xP4P5P6P7"	2	2	2	2	2
+2678	IPC IPC SEND err: appli P1 err P2 fd P3 ord P4 dest. P5	2	2	2	2	2
+2679	CMIS err rcp EFD on stand-by CPU: appli P1 err P2	2	2	2	2	2
+2680	Loss of events	2	2	2	2	2
+2681	Begin PBX state re-synchronization	2	2	2	2	2
+2682	End PBX state re-synchronization	2	2	2	2	2
+2683	appli P1 table P2 : non numeric adresse P3/P4	2	2	2	2	2
+2684	Bad langage number (P1) object (P2) info (P3)	2	2	2	2	2
+2685	MAO error by call-handling: obj P1 op P2 inst P3 err P4 P5 P6	2	2	2	2	2
+2686	MAO err on stand-by CPU: err P1 Ope P2 Obj P3 Inst : P4 	4	1	1	1	1
+2699	"Initrem : Incoherent data on WinNT table P1 (P2,P3,P4)"	2	2	2	2	2
+2700	Software package Error P1 info2 P2 info3 P3	4	2	1	1	1
+2701	Software package Error P1 info2 P2 info3 P3	2	2	1	1	1
+2710	"Configuration error, parameter P1, value read P2, used P3"	4	2	1	1	1
+2711	Event Routing Discrimator P1 locked	2	2	2	2	2
+2712	"Appli P1 : Message too long, object P2, operation P3"	2	2	2	2	2
+2750	Appli P1 : inconsistency detected table P2 by P3	2	2	2	2	2
+2751	Appli P1 : ASCII file error table P2 fct P3	2	2	2	2	2
+2752	Appli P1 : Category Number error table P2 fct P3	2	2	2	2	2
+2760	"Network mgt : from node P1, oper P2. error P3/P4"	2	2	2	2	2
+2761	"Network mgt : from node P1, oper P2 invalid for P3"	2	2	2	2	2
+2762	"Network mgt : from node P1, objet P2 creation refused, err P3"	2	2	2	2	2
+2763	Network mgt : error on file LOG.P1.xx (P2)	2	2	2	2	2
+2764	Network mgt : error on file LOG.P1.xx (P2)	2	2	2	2	2
+2765	"Diffusion error, operation P1, object P2"	2	2	2	2	2
+2766	Network mgmt : unreachable node P1	2	2	2	2	2
+2767	Network mgt : creation on a file *RLOG.P1.P2	2	2	2	2	2
+2768	Network mgt : transfer of the file LOG.P1.P2 impossible	2	2	2	2	2
+2769	Network mgt : inconsistent sequence number in node P1	2	2	2	2	2
+2770	Network mgmt : automatic check with node P1 impossible	2	2	2	2	2
+2771	Moving : transfer of keys from node P1 impossible	2	2	2	2	2
+2772	Network mgt : creation of a file E.x.y.z (x = origin node P1)	2	2	2	2	2
+2773	"CMISE error : object 70P1, problem P2, errno P3"	4	2	1	2	2
+2774	"MAO error , memory update : appli P1 object P2"	4	2	1	2	2
+2775	Network mgt : creation on a file EA.P1.P2.P3	2	2	2	2	2
+2776	Network mgt : appearance of a node P1 not known	2	2	2	2	2
+2777	"Network mgt : from node P1, error P2 P3 : P4"	2	2	2	2	2
+2778	Network mgt : restore sequence P1 for node P2	2	2	2	2	2
+2779	Network mgt : restore area sequence P1 for node P2	2	2	2	2	2
+2780	Appli P1 : Loss of X25 virtual channel during emission (P2)	2	2	2	2	2
+2781	"Impossible to supervised the node P1 of the network P2, error : P3"	2	2	2	2	2
+2800	PH: Chorus failed P1 P2	4	2	1	2	2
+2801	PH: ressources problem P1 P2	2	2	2	2	2
+2802	PH: address pb P1	2	2	2	2	2
+2803	PH: creating context with out of range parameters P1 P2 P3	2	2	2	2	2
+2804	PH: sendmessage to unexistant application P1	2	2	2	2	2
+2805	PH: unknown access point P1 P2 P3	2	2	2	2	2
+2806	PH: unknown frame P1	2	2	2	2	2
+2807	PH: unknown access group type P1 P2 P3	2	2	2	2	2
+2808	PH: inexistant access group P1 P2	2	2	2	2	2
+2809	PH: packet lost P1 P2	2	2	2	2	2
+2810	PH: unknown message P1 P2	2	2	2	2	2
+2811	PH: dis25 P1 P2	2	2	2	2	2
+2813	PH: incident X25: diag=P1 apc=P2 ap=P3 lcn=P4	2	2	2	2	2
+2814	"PH: preemption on P1, adjacent P2, of P3 lcn"	2	2	2	2	2
+2815	PH: tei P1 removed by network on (P2 P3 P4)	2	2	2	2	2
+2817	PH: free already avalaible ressource	2	2	2	2	2
+2818	PH: bad data in P1 when P2 because P3 by P4	2	2	2	2	2
+2819	PH: bad LAP data: fct=P1 cause=P2 type=P3	2	2	2	2	2
+2820	PH: bad LLP data: fct P1 cause P2 type P3	2	2	2	2	2
+2821	PH: bad VL data in P1 because P2 type P3 by P4	2	2	2	2	2
+2822	"PH: maintenance pb during P1, awaited number P2 received P3"	2	2	2	2	2
+2823	PH: Cpl flow ctrl: AccessCluster:P1 Flag(RR=0 RNR=1):P2	2	2	2	2	2
+2824	PH: disconnected originator P1 TEI P2 LCN P3 reason P4	2	2	2	2	2
+2825	PH:Access (P1 P2 P3) goes down	4	1	1	1	1
+2826	PH:Local link [P1 P2] is down	4	2	1	1	1
+2827	PH:Local link [P1 P2] is up	2	2	2	2	2
+2828	PH:error at adjt node numb: expected=P1 found=P2	4	2	1	1	1
+2829	PH:Access (P1 P2 P3) goes up	2	2	2	2	2
+2830	"PH:Token lost from adjacent P1, rep nb=P2"	2	2	2	2	2
+2831	PH:Adjacent node P1 not responding	4	2	1	1	1
+2832	PH:Node P1 is unreachable	4	2	1	1	1
+2833	PH:Access group at (P1 P2 P3) is not available	4	2	1	1	1
+2834	PH:L2 estab request not acknowledged (P1 P2 P3); attempt no P4	2	2	2	2	2
+2835	PH:Coupler reset: no answer from (P1 P2 P3)	2	0	0	0	0
+2836	PH:Access (P1 P2 P3) is up	2	2	2	2	2
+2837	PH:Access (P1 P2 P3) is down	4	2	1	1	1
+2838	PH:PLL P1 is up on access (P2 P3 P4)	2	2	2	2	2
+2839	PH:PLL P1 is down on access (P2 P3 P4)	4	2	1	1	1
+2840	PH:Estab Req for PLL P1 on access (P2 P3 P4)	2	2	2	2	2
+2841	PH:link(P1 P2) is not updated	4	2	1	1	1
+2842	PH:link (P1 P2) supervising : master=nodeP3	2	2	2	2	2
+2843	Link disable by operator (Access groupe X25 number P1)	2	2	2	2	2
+2844	Link enable by operator (X25 Access group : P1)	2	2	2	2	2
+2845	PH:IP Hybrid Link to P1 is broken (type P2 access P3 princip P4)	4	2	1	1	1
+2846	PH:Node P1 is reachable	2	2	2	2	2
+2847	PH:IP Hybrid Link : adr IP P1.P2.P3.P4 unknown	4	2	1	1	1
+2848	PH:Hybrid Link tei P1 node P2 access P3 princip P4 : reception of a 2nd call !	4	2	1	1	1
+2849	PH:IP Virtual Service to P1 is broken	4	2	1	1	1
+2850	PH:Trunk disable by operator (Access groupe X25 number P1)	2	2	1	1	1
+2851	PH:Trunk enable by operator (X25 Access group : P1)	2	2	2	2	2
+2852	"PH:Hybrid access (P1,P2,P3):L2 estab request not acknowledged; attempt no P4"	4	2	1	1	1
+2853	PH:Reset de l'Acces Hybride (P1 P2 P3) car pas de reponse	4	2	1	1	1
+2854	PH:layer 2 Sapi S is ready on Hybrid Access (P1 P2 P3)	2	2	2	2	2
+2855	PH:layer 2 sapi S is deactivated on Hybrid Access (P1 P2 P3)	2	2	2	2	2
+2856	PH:L2(SapiP TeiP1) is activated on Hybrid Access (P2 P3 P4)	2	2	2	2	2
+2857	PH:L2(SapiP TeiP1) is deactivated on Hybrid Access (P2 P3 P4)	2	2	2	2	2
+2858	PH:l2 sapiP teiP1 estab req on Hybrid Access (P2 P3 P4)	2	2	2	2	2
+2859	PH:layer 2 is down on Hybrid Access (P1 P2 P3)	4	2	1	2	2
+2860	"PH:Hybrid access (P1,P2,P3):PLL estab req unacknowledged; attempt #P4"	2	2	2	2	2
+2861	PH:Reset de l'Acces Hybride (P1 P2 P3) car pas de reponse	2	2	2	2	2
+2862	PH:Hybrid Access (P1 P2 P3) is up	2	2	2	2	2
+2863	PH:Hybrid Access (P1 P2 P3) is down	2	2	2	2	2
+2864	PH:PLL P1 is up on Hybrid Access (P2 P3 P4)	2	2	2	2	2
+2865	PH:PLL P1 is down on Hybrid Access (P2 P3 P4)	4	2	1	1	1
+2866	PH:Estab Req for PLL P1 on Hybrid Access (P2 P3 P4)	2	2	2	2	2
+2867	PH:Hybrid Access (P1 P2 P3) goes down	4	2	1	1	1
+2868	PH:IP Hybrid Link to P1 is broken (type P2 access P3 sig P4)	4	2	1	1	1
+2869	PH:Hybrid Link tei P1 (P2 P3 P4) : reception of a 2nd call !	4	2	1	1	1
+2870	PH:Loop in static routing for the node P1: Relay(Local=P2 Peer=P3)	2	2	1	1	1
+2871	PH:Remote link [P1 P2] is up	2	2	2	2	2
+2872	PH:Remote link [P1 P2] is down	4	2	1	1	1
+2873	PH:Update seq synchro:Src=P1 #(exp=P2 rcv=P3) waitDelay=P4 s	2	2	2	2	2
+2874	PH:Node P1 is reacheable by relay P2	2	2	2	2	2
+2875	PH:Node P1 is out of reach by relay node P2	4	2	1	2	2
+2876	PH:No more IP pack for the hybrid accesses (max=P1)	2	2	2	2	2
+2877	PH:maintenance message wrong size: adjacent node P1 type P2 size P3	2	2	2	2	2
+2993	"XML Server exception P1, Thread P2 PC = 0xP3P4P5P6"	2	2	2	2	2
+2994	Loop in static routing. Node P1	2	2	2	2	2
+2995	Critical ressource. Action P1	2	2	2	2	2
+2996	Number of send virtual in 100 ms reached. Node P1 Nb Recv P2 Nb Max P3	2	2	2	2	2
+2997	"Exception in another space supervisorP1, Thread P2 PC 0xP3P4"	2	2	2	2	2
+2998	"Packet switching aborted P1, Thread P2 PC 0xP3P4"	2	2	2	2	2
+2999	"Packet switching exception P1, Thread P2 PC 0xP3P4"	2	2	2	2	2
+3001	IO transm. fault P1 P2 P3 P4 P5 P6	2	2	2	2	2
+3002	No more place in ICM memory	2	2	2	2	2
+3003	Rec. Mailbox err P1 File P2 Line P3 Stat P4	2	2	2	2	2
+3004	Wait event err P1 File P2 Line P3 Stat P4	2	2	2	2	2
+3005	NOBACKLINK_ERROR P1 File P2 Line P3 Stat P4	4	2	1	2	2
+3006	DMM err P1 File P2 Line P3 Stat P4	2	2	2	2	2
+3007	LED_FLASHING_ERROR P1 File P2 Line P3 Stat P4	2	2	2	2	2
+3008	UNKNOWN_EVENT P1 File P2 Line P3 Stat P4	2	2	2	2	2
+3009	ACTIV_QUEUE_UNKNOWN P1 File P2 Line P3 Stat P4	2	2	2	2	2
+3010	UNKNOWN_MSG P1 File P2 Line P3 Stat P4	2	2	2	2	2
+3011	VSEM_LIMIT_ERROR P1 File P2 Line P3 Stat P4	2	2	2	2	2
+3012	PSEM_ERROR P1 File P2 Line P3 Stat P4	2	2	2	2	2
+3013	MAX_TASK_STACK_REACHED P1 File P2 Line P3 Inf P4	2	2	2	2	2
+3015	Absence multiframe synchro error P1	2	2	2	2	2
+3016	Switch error P1	2	2	2	2	2
+3017	Hardware problem P1 File P2 Line P3	4	2	1	2	2
+3018	No more place in the TSM memory P1 File P2 Line P3	2	2	2	2	2
+3019	CPU6 Bad hardware for Campus DECT feature P1 P2 P3 hard P4	2	2	2	2	2
+3024	Wrong length for D950 dsp binary P1 File P2 Line P3	2	2	2	2	2
+3026	The D950 DSP has not found the synchro P1 File P2 Line P3 Stat P4	2	2	2	2	2
+3027	DSP status error P1 File P2 Line P3 Stat1 P4 Stat2 P5	2	2	2	2	2
+3050	SPB : SPB board in service	2	2	2	2	2
+3051	SPB : SPB board stopped error P1 flag P2	2	2	2	2	2
+3052	Spb problem type P1 detected. Dev. P2 flag P3	2	2	2	2	2
+3053	Spbmanager lost (type P1)	2	2	2	2	2
+3055	Patch has been done on SPB board	2	2	2	2	2
+3056	Impossible to patch SPB board. Status P1.	2	2	2	2	2
+3057	"Problem at IO1N downloading, type P1, error P2"	2	2	2	2	2
+3058	"Internal error in io1n_mgr, type P1, line P2, error P3   "	2	2	2	2	2
+3059	An error type P1 prevents local IO1N running	2	2	2	2	2
+3060	USB cable status P1	2	2	2	2	2
+3070	Maximum number of login attempts reached for user P1	2	2	2	2	2
+3071	Ethernet link P1 changes state to P2	2	2	2	2	2
+3072	No response from RADIUS server P1	2	2	2	2	2
+3073	Authentication on local database due to unavailable RADIUS servers	2	2	2	2	2
+3101	Stop of the IO2 management	2	2	2	2	2
+3102	IO2MS. Chorus problem. Prim: P1 Status: P2	4	2	1	2	2
+3103	IO2MS. Chorus problem. Prim: P1 Error: P2	2	2	2	2	2
+3104	IO2MS. Chorus problem. Prim: P1 Status: P2 Src: P3 Desti: P4	4	2	1	2	2
+3105	IO2MS. Chorus problem. Prim: P1 Status: P2 Src: P3 Desti P4	4	2	1	2	2
+3106	Internal error in IO2 management. Address P1	2	2	2	2	2
+3107	Serious internal error in IO2 management. Address P1	2	2	2	2	2
+3108	Version error in an IO2 board	2	2	2	2	2
+3109	The IO2 board does not exist for the IO2 board management	2	2	2	2	2
+3110	Serious problem with the C1 chip in an IO2 board	2	2	2	2	2
+3111	Problem with the C1 chip in the IO2 board	2	2	2	2	2
+3112	This IO2 board does not answer to the IO2 management soft	2	2	2	2	2
+3113	Routing error of a signalization message	2	0	0	0	0
+3114	Frame routing error. Object class: P1	2	2	2	2	2
+3115	IT allowance problem for an IO2 level 1	2	2	2	2	2
+3116	Sending of a message of more than 1 Ko by an IO2	2	2	2	2	2
+3117	P1 problem with the reception buffer of the IO2 management	2	2	2	2	2
+3118	Reception buffer of the IO2 management is saturated	2	2	2	2	2
+3119	Wrong message sent by this IO2. Addr: P1	2	2	2	2	2
+3120	This IO2 has received a wrong message. Pbm: P1	2	2	2	2	2
+3121	Error message. Type: P1 Class: P2 Oper : P3	2	2	2	2	2
+3122	Wrong order from the Call Handling to the IO2 management. Addr: P1	2	2	2	2	2
+3123	Wrong order from X25 software to IO2 management. Addr: P1	2	2	2	2	2
+3124	No more memory for IO2 management	2	2	2	2	2
+3125	No more object of the P1 pool for the IO2 management	2	2	2	2	2
+3126	IO2 management cannot find Call Handling. Prim: P1	2	2	2	2	2
+3127	IO2 management cannot find X25. Prim: P1	2	2	2	2	2
+3128	Exception for MONIO2. No=P1 PC=P2 A=P3	2	2	2	2	2
+3129	Exception IO2 management supervisor. No=P1 PC=P2 A=P3	2	2	2	2	2
+3130	Exception IO2 management user. No=P1 PC=P2 A=P3	2	2	2	2	2
+3131	IO2 management cannot find character driver. Primitive : P1	2	2	2	2	2
+3132	Loss of AT interface of an IO2 board	2	2	2	2	2
+3133	Problem with a HDLC module of an IO2 board	2	2	2	2	2
+3134	"Problem at OBCA downloading, type P1, error P2"	2	2	2	2	2
+3135	"Internal error in obcamgr, type P1, line P2, error P3"	2	2	2	2	2
+3136	An error type P1 prevents local OBCA running	2	2	2	2	2
+3137	"IO2 Spyder Driver Fault, type P1, Inst  P2, way P3"	2	2	2	2	2
+3138	"IO2 Spyder HDLC Channel Fault, type P1, Inst P2, Way P3"	2	2	2	2	2
+3139	"IO2 Sig path problem , type P1, link P2, Way P3"	2	2	2	2	2
+3140	"IO2 X25 protocol fault, type P1, Inst P2, Way P3 P4 P5 P6"	2	2	2	2	2
+3501	Clock loss	2	2	2	2	2
+3502	Wrong code execution	2	2	2	2	2
+3503	Coupler's watch-dog elapsed	2	2	2	2	2
+3504	RTC error	2	2	2	2	2
+3505	Software error	4	2	1	2	2
+3506	Software error	4	2	1	2	2
+3507	Software error with semaphore P1	4	2	1	2	2
+3508	Software error	4	2	1	2	2
+3509	Software error	4	2	1	2	2
+3510	RTC transmission error	2	2	2	2	2
+3511	RTC transmission error	2	2	2	2	2
+3512	CPU ordered a reset	4	2	1	2	2
+3513	Bad DSP initialization	2	2	2	2	2
+3514	Unknown message P1 type in module P2	2	2	2	2	2
+3515	DO CASE error P1 P2 P3 P4	2	2	2	2	2
+3516	Stack P1 error	2	2	2	2	2
+3517	Coupler memory exhausted	4	2	1	2	2
+3518	Memory error	4	2	1	2	2
+3519	Memory error	4	2	1	2	2
+3520	Memory error	4	2	1	2	2
+3521	Memory error	4	2	1	2	2
+3522	Memory error	4	2	1	2	2
+3523	Lack of memory during transmission to CPU	4	2	1	2	2
+3524	Free memory time out	4	2	1	2	2
+3525	Free memory time out	4	2	1	2	2
+3526	CPU transmission problem	4	2	1	2	2
+3527	Coupler reset	4	2	1	1	1
+3528	DSP detection phase incorrect	2	2	2	2	2
+3529	Connexion refused pcm out P1	2	2	2	2	2
+3530	CPU transmission problem	4	2	1	1	1
+3531	Software error with event P1	4	2	1	1	1
+3533	Routing problem	2	2	2	2	2
+3534	Routing problem	2	2	2	2	2
+3535	"C1 incident, type P1, link P2, info1 P3, info2 P4, info3 P5"	2	2	2	2	2
+3536	Routing problem	2	2	2	2	2
+3537	Routing problem	2	2	2	2	2
+3538	Routing problem	2	2	2	2	2
+3539	Reset ordered by CPU	4	2	1	1	2
+3540	Transmission problem	2	2	2	2	2
+3541	Illegal term number	2	2	2	2	2
+3542	Illegal state for this terminal	2	2	2	2	2
+3543	Problem in starting a timeout	2	2	2	2	2
+3544	Decadic dialling not possible	2	2	2	2	2
+3545	Terminal initialisation error	4	2	1	2	2
+3546	"terminal P1, No free 500 Hz detector available"	2	2	2	2	2
+3549	Transmission problem	2	2	2	2	2
+3550	Transmission problem	2	2	2	2	2
+3551	Transmission problem	2	2	2	2	2
+3552	Transmission problem	2	2	2	2	2
+3553	Transmission problem	2	2	2	2	2
+3554	Transmission error	2	2	2	2	2
+3555	Transmission error	2	2	2	2	2
+3556	Transmission error	2	2	2	2	2
+3557	No more place in ICM memory	2	2	2	2	2
+3558	Absence multiframe synchro error P1	2	2	2	2	2
+3559	Switch error P1	2	2	2	2	2
+3567	Timer long problem event P1	2	2	2	2	2
+3573	"ISDN general error: mod P1 styp P2 info(P3,P4,P5)"	2	2	2	2	2
+3574	"ISDN layer 2: mod P1 styp P2 info(P3,P4,P5)"	2	2	2	2	2
+3575	ISDN layer 1 mod P1 styp P2	2	2	2	2	2
+3576	"ISDN Line Interface mod P1 styp P2 info(P3,P4,P5)"	2	2	2	2	2
+3577	"Boot event P1, status:P2,P3,P4"	2	2	2	2	2
+3578	"Boot error P1, status:P2,P3,P4 info:0xP5P6,0xP7P8"	2	2	2	2	2
+3580	remove TEI: mod P1 P2 (P3) realy:P4 info:P5	2	2	2	2	2
+3581	Download ANO_BOOT_COPY ???	2	2	2	2	2
+3584	Board Download completed.	2	2	2	2	2
+3643	Init port failure : port is not in idle state	2	2	2	2	2
+3644	Init port failure : bad port id or bad state	2	2	2	2	2
+3652	INTOF2: NoResp TESTO Cpl P1 Arg: P2 P3	2	2	2	2	2
+3659	Level 2: HDLC frame retransmission. (0xP1P2P3P4 errors)	2	2	2	2	2
+3660	"status of 8KFS (0 is OK, 1 is KO): P1 , value : P2 P3"	2	2	2	2	2
+3687	Error DSP GPA card P1 opcode : P2	2	2	2	2	2
+3688	Problem with sending the clip frame P1 P2 P3	2	2	2	2	2
+3689	Problem in the combo detection P1 P2 P3 P4: detected	2	2	2	2	2
+3690	Problem P1 for DSP on card Z32	2	2	2	2	2
+3691	Problem P1 for DSP on card Z32	2	2	2	2	2
+3692	Loop earth incorrect interface P1	2	2	2	2	2
+3695	Wrong line signaling : term:P1 tsl:P2 err:P3 code:P4	2	2	2	2	2
+3696	PCM: Error in decadic digit reception	2	2	2	2	2
+3697	PCM: Error in the initialization's parameters	2	2	2	2	2
+3698	PCM: Unexpected signal ligne reception trm P1 evt : P2	2	2	2	2	2
+3700	"PCM: Unexpected event traited on term P1, protocol P2"	2	2	2	2	2
+3701	"PCM: Unexpected event traited, state P1, event P2"	2	2	2	2	2
+3704	PCM: Problem on slave processor P1 P2	2	2	2	2	2
+3705	PCM: Event P1 traited on term P2 not initialised	2	2	2	2	2
+3707	PCM: Unexpected applicative message P1 from CPU in module P2	2	2	2	2	2
+3708	PCM: Unexpected applicative message P1 from CPU xincorect parameter P2	2	2	2	2	2
+3712	INT: Clock problem	2	2	2	2	2
+3714	Inter-INT link lost	2	2	2	2	2
+3715	 Incident on creation/supression of Data-Link N64 P1 P2 P3 P4 P5	2	2	2	2	2
+3716	INTB : uncompleted initialization	2	2	2	2	2
+3720	"C1 chip Problem on INT2B/RT2B/INTOF: type P1, (P2 times)"	2	2	2	2	2
+3723	INTB main unable to deliver clock signal	2	2	2	2	2
+3742	UA: Timeout during reception on a link	2	2	2	2	2
+3743	 UA: Timeslot outside of limits	2	2	2	2	2
+3744	 UA: Bad message length	2	2	2	2	2
+3745	 UA: Message sent before terminal reset	2	2	2	2	2
+3746	 UA: Unknown destination of message	2	2	2	2	2
+3747	 UA: Timeslot unknown	2	2	2	2	2
+3748	 UA: Too many timeslots declared	2	2	2	2	2
+3749	 UA: Unknown message type	2	2	2	2	2
+3750	 UA: Unexpected RESET message terminal P1	2	2	2	2	2
+3751	UA message buffer full	2	2	2	2	2
+3752	 UA: Link busy	2	2	2	2	2
+3753	 UA: More Info UA ano : Sub Type : P1 {Args..: P2 P3 P4 P5 P6 }	2	2	2	2	2
+3754	UA link no longer responding	4	1	1	2	2
+3755	 UA: Too many subdevices connected	2	2	2	2	2
+3756	 UA: Message lost	2	2	2	2	2
+3761	Trunk not defined for this dialed MCDU = P1	2	2	2	2	2
+3766	INT2B coupler (or RT2B or INTOFB) has received a power supply alarm   	2	2	2	2	2
+3767	Disappearance of power supply alarm (seen by INT2B or RT2B or INTOFB).	2	2	2	2	2
+3768	Rack power supply anomaly.	2	2	2	2	2
+3769	"Hardware Pb P1, diag:P2,info 0xP3 0xP4 0xP5 0xP6 0xP7P8 0xP9P10"	2	2	2	2	2
+3770	"Func.Err. T=P1 M=0xP2 E=P3 (#P4) s=P5,R=0xP6, 0xP7P8 0xP9P10"	2	2	2	2	2
+3771	"Bad attribute Msg=0xP1 Off=P2,(W=P3),V= 0xP4 0xP5 0xP6 0xP7"	2	2	2	2	2
+3772	"Software error P1P2h:P3P4h (line 0xP5P6), status 0xP7P8."	2	2	2	2	2
+3773	Bad frame Acc P1 (S=0xP2) ABT=P3 TOT=0xP4P5 Nok=0xP6P7	2	2	2	2	2
+3774	"High error ratio Acc=P1 S=P2 (1:begin,0:end) ; AL:P3"	2	2	2	2	2
+3778	"CLIP detection for terminal P1 , Problem P2"	2	2	2	2	2
+3779	NDDI: Problem in the QSLAC command P1 for terminal P2	2	2	2	2	2
+3780	NDDI: Problem in the QSLAC command P1 for terminal P2	2	2	2	2	2
+3781	Problem P1 for DSP on card NDDI2	2	2	2	2	2
+3782	Problem P1 for DSP on card NDDI2	2	2	2	2	2
+3783	NDDI/APA: Metering problem on outgoing call	2	2	2	2	2
+3784	NDDI/APA: Incoming call on pager trunk	2	2	2	2	2
+3785	NDDI/APA: The initialization country parameter is wrong	2	2	2	2	2
+3786	NDDI/APA: meter pulse too long	2	2	2	2	2
+3787	NDDI/APA: meter pulse too short	2	2	2	2	2
+3788	NDDI/APA: Wrong A / B polarity	2	2	2	2	2
+3797	CTN software anomaly : P1.P2.P3.P4.P5.P6.P7.P8.P9	2	2	2	2	2
+3798	Bad RMF terminal number	2	2	2	2	2
+3802	No CTN response to the GNISC TESTO message	2	2	2	2	2
+3803	GNISC to CTN transmission failure	2	2	2	2	2
+3804	GNISC - CTN link initialization process incomplete	2	2	2	2	2
+3862	GPA: Bad reading of voice guide FLASH (Inc P1 File P2 Line P3 Stat1 P4)	2	2	2	2	2
+3863	GPA: DSP Problem (Inc P1 null P2 NoDSP P3 NoInci P4)	2	2	2	2	2
+3900	ATM: ABC connection error : subscriber nb P1P2 direction P3P4  info1 P5	2	2	2	2	2
+3901	ATM: ABC connection error : subscriber nb P1P2 call ref 0xP3P4 info1 P5	2	0	0	0	0
+3951	Wrong configuration : vta_type P1 present at position of an IBS	2	2	2	2	2
+3975	"Information: Status of links (Main:P1, Rescue:P2)"	2	2	2	2	2
+3976	"Information: error P1 on the VX support (P2P3, P4P5)"	2	2	2	2	2
+3978	"Cpl synchro P1,P2,P3 not detected by remote coupler   "	2	2	2	2	2
+3979	Status modification of DLCI P1P2h status P3h Info1:P4P5h.	2	2	2	2	2
+3980	Host DSP error code P1h (Info1: P2h Info2:P3P4h)	2	0	0	0	0
+4001	CSTA server : new creation	2	2	2	2	2
+4002	CSTA server : connection closed	2	2	2	2	2
+4003	CSTA server : exit	2	2	2	2	2
+4004	CSTA server : unknown application type	2	2	2	2	2
+4005	CSTA server : get bad CPU role	2	2	2	2	2
+4006	CSTA server : socket write error	2	2	2	2	2
+4007	CSTA server : socket read error	2	2	2	2	2
+4008	CSTA server : IPC send error	2	2	2	2	2
+4009	CSTA server : IPC receive error	2	2	2	2	2
+4010	CSTA server : get bad data	2	2	2	2	2
+4011	CSTA server : Chorus kernel function error	2	2	2	2	2
+4012	CSTA server : protocol error	2	2	2	2	2
+4013	CSTA : neqt:P1  0xP2P3-P4-0xP5P6-P7-0xP8P9-P10	2	2	2	2	2
+4014	CSTA : neqt:P1  Call ref:P2	2	2	2	2	2
+4015	CSTA CH : service RoseId P1 not answered.	2	2	2	2	2
+4016	CSTA CH : server P1 has a full message queue.	2	2	2	2	2
+4017	CSTA server : new creation P1 P2.P3.P4.P5	2	2	2	2	2
+4018	CSTA server : P1 connection closed	2	2	2	2	2
+4019	CSTA server : P1 exit	2	2	2	2	2
+4020	CSTA server : P1 essai de connection invalide.	2	2	2	2	2
+4021	CSTA server : P1 get bad CPU role	2	2	2	2	2
+4022	CSTA server : P1 socket write error(P2)	2	2	2	2	2
+4023	CSTA server : P1 socket read error(P2)	2	2	2	2	2
+4024	CSTA server : P1 IPC send error	2	2	2	2	2
+4025	CSTA server : P1 IPC receive error(P2)	2	2	2	2	2
+4026	CSTA server : P1 type(P2) - get bad data	2	2	2	2	2
+4027	CSTA server : P1 system call error	2	2	2	2	2
+4028	CSTA server : P1 type (P2) protocol error	2	2	2	2	2
+4029	CSTA server AFE : P1 the message queue is full.	2	2	2	2	2
+4030	"CSTA : The Network record of qmcdu:P1 is failed, Cause:P2"	2	2	2	2	2
+4031	CSTA : VAD DTO -> no free physical DSP equipment	2	2	2	2	2
+4032	CSTA : monitoring limit exceed type=P1 maximun=P2	2	2	2	2	2
+4033	CSTA : buffer limit exceed type=P1 maximun=P2	2	2	2	2	2
+4060	FIO : Internal error in fct 0xP1P2 (P3)	2	2	2	2	2
+4061	FIO : P1 function : Chorus error P2	2	2	2	2	2
+4062	"FIO : can't map remanent P1, status P2"	2	2	2	2	2
+4063	FIO : unknown message received	2	2	2	2	2
+4064	FIO : Signal P1 caught on thread P2	2	2	2	2	2
+4070	PBM : Internal error in fct 0xP1P2 (P3)	2	2	2	2	2
+4071	PBM : P1 function : Chorus error P2	2	2	2	2	2
+4072	"PBM : remaD operation P1 failed on remanent P2, status P3"	2	2	2	2	2
+4073	PBM : File operation P1 failed (status P2)	2	2	2	2	2
+4074	"PBM : Cbn handler thread suspended, P1 failures"	2	2	2	2	2
+4075	PBM : Transaction P1 aborted by watch dog	2	2	2	2	2
+4076	PBM : signal P1 caught	2	2	2	2	2
+4080	Wrong configuration : vta_type P1 present at position of a P2	2	2	2	2	2
+4081	This 4040 terminal needs to be downloaded (CKS=0xP1)	2	2	2	2	2
+4082	"Error of protocol (code P1, op_code P2 command P3) (HE)"	2	2	2	2	2
+4083	"Error of protocol (code P1, op_code P2 command P3) (HE)"	2	2	2	2	2
+4084	HE/FBC download failure section P1 status code P2 status extension P3	2	2	2	2	2
+4085	"The initialization of this 4040 or 4048 terminal failed, function P1"	2	2	2	2	2
+4086	Neqt P1 key P2 missing on boss in supervision RISO/PRISO	2	2	2	2	2
+4087	Establishment of Nx64 call failed : neqt = P1  cAUSE = P2	2	2	2	2	2
+4088	Beginning of downloading of HE(6)/FBC(13): vta_type P1 neqt P2	2	2	2	2	2
+4089	End of downloading of HE(6)/FBC(13): vta_type P1 neqt P2	2	2	2	2	2
+4099	B channel choice error No P1 link P2 out P3	2	2	2	2	2
+4100	Inconsistency of VPN node list No P1	4	2	1	2	2
+4101	Maximum number of trunks on an acces P1-P2-P3 is overflown	2	2	2	2	2
+4102	Lack of VPN resources Glob P1 Decl P2 Used P3	4	2	1	2	2
+4103	Incoming VPN call aborted No P1	4	2	1	2	2
+4104	outgoing VPN Overflow call aborted No P1	4	2	1	2	2
+4105	VPN ovf call failed because of VPN time-slots on P1	4	2	1	2	2
+4108	VPN call failed: err P1	4	2	1	2	2
+4109	" SUP_B_Ch: B Channel in position (P1, P2, P3, P4) is in service"	4	2	1	2	2
+4110	download : out of memory	2	2	2	2	2
+4111	Download : no current file for voice message P1	2	2	2	2	2
+4112	Beginning of uploading file P1	4	2	2	2	2
+4113	End of uploading file P1	4	2	2	2	2
+4114	Download : file P1 writing error	4	2	2	2	2
+4115	"appli P1 : VG submsg P2, Can't read file P3"	2	2	2	2	2
+4116	"appli P1 : VG submsg P2, file P3 has an invalid content"	2	2	2	2	2
+4117	"appli P1 : VG submsg P2, multiple current file : file P3 unsel."	2	2	2	2	2
+4118	appli P1 : function P2 no more memory in heap	2	2	2	2	2
+4119	appli P1 : function P2 Directory or file access denied	2	2	2	2	2
+4120	appli P1 : function P2 no more memory in remanents	2	2	2	2	2
+4121	AID moving : welcome P1 unreachable (P2)	2	2	2	2	2
+4122	 Nber of allowed IP calls is reached: IP call=P1 - allowed=P2	4	2	1	2	2
+4123	 Nber of IP calls reached on hop P1-P2 count=P3 - max=P4	4	2	1	2	2
+4124	 Nber of non IP calls reached on hop P1-P2 count=P3 - max=P4	4	2	1	2	2
+4200	: P1 P2	2	2	2	2	2
+4201	: P1 P2	2	2	2	2	2
+4202	: P1 P2	2	2	2	2	2
+4203	: P1 P2	2	2	2	2	2
+4204	: P1 P2_	2	2	2	2	2
+4205	: P1	2	2	2	2	2
+4206	: P1	2	2	2	2	2
+4207	: P1	2	2	2	2	2
+4208	: P1	2	2	2	2	2
+4250	"No compressor P1 free, 0:data, 1:voice"	4	2	1	1	1
+4251	"Compressor out of service - cr=P1, cpl=P2, pcm=P3, it=P4"	4	2	1	1	1
+4252	incompatible compression types (P1 - P2)	4	2	1	1	1
+4253	"Compressor put in service - cr=P1, cpl=P2, pcm=P3, it=P4"	2	2	2	2	2
+4300	": numbering plan descriptor P1, did type P2, # P3 undefined"	2	2	2	2	2
+4301	": numbering plan descriptor P1, type P2, val P3 undefined"	2	2	2	2	2
+4302	: unusual mapping of byte3 P1 toward internal value P2	2	2	2	2	2
+4303	: unusual pub/priv mapping (P1) for byte3 internal value P2	2	2	2	2	2
+4304	: numbering plan descriptor P1 origin P2 type P3 invalid	2	2	2	2	2
+4305	": NPD selector P1, b3 P2, plan de num P3 -> P4"	2	2	2	2	2
+4306	": station P1, private calling number index P2 , invalid npi P3"	2	2	2	2	2
+4307	": station P1, private calling number index P2 invalid"	2	2	2	2	2
+4308	: unusual mapping of byte3 internal value P1 toward P2	2	2	2	2	2
+4309	 DATA_SECURITY: Unauthorized Calling number P1 received	2	2	2	2	2
+4351	 Incoherent data: appli P1 table P2 cause P3 info P4 P5 P6	2	2	2	2	2
+4352	" Initrem : Instance exception, table P1 instance P2 infos P3 P4 P5"	2	2	2	2	2
+4353	" Initrem:Lack of memory, table P1 cause P2 infos P3 P4 P5"	2	2	2	2	2
+4354	 Lack of CPU RAM memory: installed=P1MB requested=P2MB	4	2	1	1	1
+4355	stop of FAN of Call Server	4	2	1	1	1
+4356	FAN of Call Server restarts	2	2	2	2	2
+4400	Duplicate IP addr from P1.P2.P3.P4.P5.P6	4	2	1	1	1
+4401	Ethernet broadcast reception disabled due to excessive traffic	4	2	1	1	1
+4402	"Compression state P1 (10-13 INFO, other ERROR); daughter board P2,DSP P3"	4	2	1	1	1
+4403	Error P1 on message type P2 on timeslot P3	2	2	2	2	2
+4404	ICMP message(s) received	2	2	2	2	2
+4405	IP Parameters given by CPU are invalid (error P1)   	4	2	1	2	2
+4406	Coupler DHCP client gone to error state P1	2	2	2	2	2
+4407	"RAS Incident for the voip board (P1,P2):Information state P3"	2	2	2	2	2
+4408	INT-IP Ethernet error code P1 (status P2 P3 0xP4P5 0xP6P7 0xP8P9)	2	0	0	0	0
+4409	 INT-IP Error during startup sequence code P1 (status 0xP2P3P4P5 0xP6P7P8P9)	4	2	1	1	1
+4410	: The max sig load for ippone is reached.	4	2	1	1	1
+4411	Payload type transparent received not allowed (time slot P1)	2	2	2	2	2
+4412	H323 : end of the communication with cause P1	2	2	2	2	2
+4413	A specific command file has been processed	2	2	2	2	2
+4414	Error in RTP stream : Dest=P1.P2.P3.P4:P5 - Codes : P6 / P7 / P8	2	2	2	2	2
+4420	IP Board : P1 must be managed	2	2	1	2	2
+4421	" P1 registered, but P2 plugged  "	2	2	1	2	2
+4422	"Incident at the echo cancel feature P1 value asked: P2, value applied: P3"	2	2	2	2	2
+5068	" SUP_B_Ch: B channel in position (P1, P2, P3, P4) is out servise"	2	2	2	2	2
+5120	Start of CSP counters observation (P1 min)	2	2	2	2	2
+5121	End of a CSP counters observation (see P1)	2	2	2	2	2
+5122	cspcounter error : P1	2	2	2	2	2
+5130	Multi-Reflex terminal P1 in service	2	2	2	2	2
+5131	Multi-Reflex terminal P1 missing or not operational	2	2	2	2	2
+5132	Self-test P1 error on Multi-Reflexe	2	2	2	2	2
+5200	"MGD: SIG_H exc P1, PC 0xP2P3"	2	2	2	2	2
+5201	"MGD: SIG_L exc P1, PC 0xP2P3"	2	2	2	2	2
+5202	"MGD: Aborted SIG_H task, PC 0xP1P2 exc P3"	2	2	2	2	2
+5203	"MGD: Bad address in function's argument, thread P1, PC 0xP2P3"	2	2	2	2	2
+5204	"MGD: SIG_L SIG_L driver error, wrong message length in reception (P1)"	2	2	2	2	2
+5205	MGD: End of SIG_H initialization	2	2	2	2	2
+5206	MGD: Wrong power supply in rack nbr P1	2	2	2	2	2
+5207	MGD: Incorrect configuration of rack nbr P1	2	2	2	2	2
+5208	MGD: CPU message P1 sending error P2	2	2	2	2	2
+5209	MGD: Nil pointer message	2	2	2	2	2
+5210	MGD: Wrong rack number P1	2	2	2	2	2
+5211	MGD: Wrong board number P1	2	2	2	2	2
+5212	MGD: Error P1 during the DSP download	2	2	2	2	2
+5213	MGD: Unexpected switch case P1	2	2	2	2	2
+5214	MGD: Software error P1 P2 P3	2	2	2	2	2
+5215	MGD: Memory failure	2	2	2	2	2
+5216	MGD: Error P1 during a message reception	2	2	2	2	2
+5217	MGD: Wrong sub-module P1	2	2	2	2	2
+5218	MGD: DSP anomaly P1	2	2	2	2	2
+5700	"No more ith_user object left, eqt P1"	2	2	2	2	2
+5701	"Lack of ITH keys, eqt P1"	2	2	2	2	2
+5751	IGK: Remanents problem : The tab_gwip_vpn array is full	2	2	2	2	2
+5752	 no more area for IP stat tickets => needed (P1) /  allowed (P2).	2	2	1	2	2
+5800	P1 SIP trunk group put into service	2	2	2	2	2
+5801	P1 SIP trunk group put out of service	2	2	2	2	2
+5802	SIP: DSAP initialization problem P1 P2 P3	2	2	2	2	2
+5803	IPP V1S Reflexe (P1) is trying to send a DTMF to a SIP device => IMPOSSIBLE	2	2	2	2	2
+5810	Ldap server number P1 is not accessible : ldap error P2.	2	2	2	2	2
+5811	Ldap server number P1 is accessible.	2	2	2	2	2
+5850	FAN out of order	2	2	2	2	2
+5851	"DSP0 resource error on MG : Ress P1, Err P2, info(P3,P4,P5)"	2	2	2	2	2
+5852	Modem MGD out of order	2	2	1	2	2
+5853	Distant UDP port not available	2	2	1	2	2
+5854	MediaGateway messages lost	2	2	1	2	2
+5855	Hardware problem on AFU	2	2	1	2	2
+5856	MediaGateway has received a power supply alarm	4	2	1	1	1
+5857	GD/GA/INTIP/RGD: reason of reboot P1	4	2	1	1	1
+5858	MediaGateway power supply has come back	2	2	1	1	1
+5859	RGD: download status P1	2	2	1	1	1
+5860	QOS 802.1.q : Vlan id 0 is forbidden	2	2	1	2	2
+5861	standby cpu lost his switch (IP link Out Of Service).	4	1	1	1	1
+5900	Remote extension: Overflow table REMOTE for neqt P1.	2	2	2	2	2
+5906	 P1 remaining day(s) before committing fraud.	2	2	2	2	2
+5907	VPN Call released : MAO param mismatch between nodes (P1.P2.P3.P4 : P5)	2	2	2	2	2
+5950	Key Generation error : P1	2	2	2	2	2
+5951	Unable to update binary : P1	2	2	1	2	2
+5952	Unable to update lanpbx : P1	2	2	1	2	2
+5953	Unable to update Config_BT : P1	2	2	2	2	2
+5954	Invalid PSK : P1	2	2	2	2	2
+5955	SSM capacity overflow P1	2	2	2	2	2
+5956	ESP failure : P1	2	2	2	2	2
+5957	SRTP/SRTCP treatment failure: P1	2	2	2	2	2
+5958	Personalisation error : P1	2	2	2	2	2
+5959	SSM swap : P1	2	2	2	2	2
+5960	MTU reduction : P1	2	2	2	2	2
+5961	Loss of TCP link with SSM P1	2	2	2	2	2
+5962	Unable to connect to SSM P1	2	2	1	2	2
+5963	TCP connection timeout : P1	2	2	2	2	2
+5964	SM binary update version : P1	2	2	2	2	2
+5965	Get connexion to SSM P1	2	0	0	0	0
+5966	Update of Lanpbx.cfg done : P1	2	2	2	2	2
+5967	Update of Config_BT.cfg done : P1	2	2	2	2	2
+6000	Direct RTP flow with H323 IP device IMPOSSIBLE : P1 	2	2	1	1	1

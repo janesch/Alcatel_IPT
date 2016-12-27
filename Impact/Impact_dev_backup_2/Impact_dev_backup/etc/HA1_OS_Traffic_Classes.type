@@ -1,0 +1,19 @@
+#This file was written by Impact Server.
+#Thu Feb 24 10:34:24 GMT 2011
+OS_Traffic_Classes.SQL.QUERYINTERVALFORDATATYPESTATS=0
+OS_Traffic_Classes.SQL.CACHEINVALIDATION=0
+OS_Traffic_Classes.SQL.QUERYCACHEINVALIDATION=0
+OS_Traffic_Classes.SQL.DATASOURCENUM=9
+OS_Traffic_Classes.SQL.ENABLED=true
+OS_Traffic_Classes.SQL.ORDERBY=
+OS_Traffic_Classes.SQL.USERPARAMETERS=\ WITHDEFAULTS{{'Probe', INTEGER, 'Probe', 'Probe', 'Probe', 'true', '', '', FALSE, FALSE}, {'Forwarding_Class_Abbr', LONG_STRING, 'Forwarding_Class_Abbr', 'Forwarding_Class_Abbr', 'Forwarding_Class_Abbr', 'true', '', '', FALSE, FALSE}}
+OS_Traffic_Classes.SQL.QUERYCACHESIZE=0
+OS_Traffic_Classes.SQL.COUNTCACHEINVALIDATION=0
+OS_Traffic_Classes.SQL.DYNAMICLINKINFOSET={}
+OS_Traffic_Classes.SQL.DISPLAYNAMEFIELD=Probe
+OS_Traffic_Classes.SQL.TIMEINTERVLAFORDATATYPESTATS=0
+OS_Traffic_Classes.SQL.CACHESIZE=0
+OS_Traffic_Classes.SQL.INCLUDE_ROOT=true
+OS_Traffic_Classes.SQL.KEYFIELDS.1=Probe
+OS_Traffic_Classes.SQL.TABLENAME=custom.Traffic_Classes
+OS_Traffic_Classes.SQL.RESTRICTWHERECLAUSE=

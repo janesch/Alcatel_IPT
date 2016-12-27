@@ -1,0 +1,3 @@
+impact.selfmonitoring.datasource=defaultobjectserver
+impact.selfmonitoring.autostartup=false
+impact.selfmonitoring.logtofile=false

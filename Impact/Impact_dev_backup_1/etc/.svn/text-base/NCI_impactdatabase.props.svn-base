@@ -1,0 +1,5 @@
+#This file was written by Impact Server.
+#Mon Jan 14 16:54:19 MST 2008
+impact.impactdatabase.autostartup=true
+impact.impactdatabase.logtofile=true
+impact.impactdatabase.port=5435

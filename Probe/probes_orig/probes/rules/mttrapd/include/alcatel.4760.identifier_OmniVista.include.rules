@@ -1,0 +1,543 @@
+switch ($notifFaultId) 
+{
+	case "2018E" | "15014E":
+		@ImpactFlag = 2
+                @ExpireTime = 259200
+
+	 case "100E":
+		@ImpactFlag = 2
+
+	case "2026E":
+	
+		$param1 = extract($notifAddText, "connection to PCX ([^ ]+)")
+		$param2 = extract($notifAddText, "COM port ([^ ]+)")
+		$parameters = $param1 + $param2
+
+	case "2027E":
+
+		$param1 = extract($notifAddText, "to PCX ([^ ]+)")
+		$param2 = extract($notifAddText, "COM port ([^ ]+)")
+		$parameters = $param1 + $param2
+
+
+###############################################################################################
+# FaultId 4003 is clearing 4000/4001/4002, so same fault ID into AlertKey for 4000/4001/4002.
+
+        case "4000E": 
+
+		$notifManagedObject = $notifManagedObject + "4000"
+
+	case "4001E":
+
+		$notifManagedObject = $notifManagedObject + "4001"
+
+	case "4002E":
+
+		$notifManagedObject = $notifManagedObject + "4002"
+
+	case "4003E":
+
+                #The alert {0} has been cleared
+                #4003E Clear Alarm will clear 4000E,4001E and 4002E 
+		$parameters = extract($notifAddText, "The alert ([^ ]+)")
+###############################################################################################
+
+#    20100319	Additions by Chris Janes of Innovise
+	case "4019E":
+		$notifManagedObject = $notifManagedObject +  "4019"
+
+	case "4020E":
+		$notifManagedObject = $notifManagedObject +  "4020"
+
+	case "4021E":
+		$notifManagedObject = $notifManagedObject +  "4021"
+
+#	20100319	End of Additions
+
+	case "4022E":
+
+		#Alarm {0} is no longer relevant
+                #4022E Clear Alarm will clear 4019E,4020E and 4021E
+		$parameters = extract($notifAddText, "Alarm ([^ ]+)")
+
+	case "6100E":
+
+                #Connection to Service Control Manager on {0} has failed ({1})
+		$parameters = extract($notifAddText, "Manager on ([^ ]+)")
+
+	case "6101E":
+
+                #Connected to Service Control Manager on {0}
+		$parameters = extract($notifAddText, "Manager on ([^ ]+)")
+
+	case "6110E":
+
+                #Stop service request on {0} failed ({1})
+		$parameters = extract($notifAddText, "request on ([^ ]+)")
+
+	case "6111E":
+
+                #Abort of service via NT on {0} has failed ({1})
+		$parameters = extract($notifAddText, "via NT on ([^ ]+)")
+
+	case "6112E":
+
+                #Abort of service via CORBA on {0} has failed ({1})
+		$parameters = extract($notifAddText, "CORBA on ([^ ]+)")
+
+	case "6113E":
+
+                #Stop of service on {0} successful
+		$parameters = extract($notifAddText, "service on ([^ ]+)")
+
+	case "6120E":
+
+                #Uninstall of service on {0} has failed ({1}) 
+		$parameters = extract($notifAddText, "service on ([^ ]+)")
+	
+	case "6121E":
+
+                #Uninstall of service on {0} successful
+		$parameters = extract($notifAddText, "service on ([^ ]+)")
+
+	case "6130E":
+
+                #Install of service on {0} has failed ({1})
+		$parameters = extract($notifAddText, "service on ([^ ]+)")
+
+	case "6131E":
+
+                #Install of service on {0} successfu
+		$parameters = extract($notifAddText, "service on ([^ ]+)")
+
+	case "6132E":
+
+                #Installation of service {0} using Windows account \"{1}\" failed ({2})
+		$parameters = extract($notifAddText, "of service ([^ ]+)")
+
+	case "6140E":
+
+		#Start of service on {0} failed ({1})
+		$parameters = extract($notifAddText, "service on ([^ ]+)")
+		
+
+	case "6141E":
+
+		#Service {0} is running
+		$parameters = extract($notifAddText, "Service ([^ ]+)")
+		
+
+	case "6142E":
+
+		#Starting service {0} using NT account \"{1}\" failed ({2})
+		$parameters = extract($notifAddText, "Starting service ([^ ]+)")
+	
+
+	case "6150E":
+
+		#Service {0} is not running normally ({1})
+		$parameters = extract($notifAddText, "Service ([^ ]+)")
+	
+
+	case "6151E":
+
+		#Service {0} is running normally
+		$parameters = extract($notifAddText, "Service ([^ ]+)")
+	
+
+	case "6160E":
+
+		#Size of {0} disk or directory (\\{4}\\{1}) does not exceed minimum threshold any more
+		$param1 = extract($notifAddText, "Size of ([^ ]+)")
+		$param2 = extract($notifAddText, "directory \(\\\\.*\\\\(.*)\) does not")
+		$var3 = extract($notifAddText, "directory \(\\\\(.*)\\\\.*\)")
+		$parameters = $param1 + $param2 + $var3
+
+
+	case "6161E":
+
+		#Less than {2} {3} remain available on {0} drive (\\{4}\\{1})
+		$param1 = extract($notifAddText, "available on ([^ ]+)")
+		$param2 = extract($notifAddText, "drive \(\\\\.*\\\\(.*)\)")
+		$var3 = extract($notifAddText, "drive \(\\\\(.*)\\\\.*\)")
+		$parameters = $param1 + $param2 + $var3
+
+     	case "6162E":
+
+		#{0} Directory (\\{4}\\{1}) occupies more than {2} {3} of entire drive
+		$param1 = extract($notifAddText, "([^ ]+) Directory")
+		$param2 = extract($notifAddText, "Directory \(\\\\.*\\\\(.*)\)")
+		$var3 = extract($notifAddText, "Directory \(\\\\(.*)\\\\.*\)")
+		$parameters = $param1 + $param2 + $var3
+
+	case "6163E":
+
+		#{0} Directory (\\{4}\\{1}) takes more than {2} {3}
+		$param1 = extract($notifAddText, "([^ ]+) Directory")
+		$param2 = extract($notifAddText, "Directory \(\\\\.*\\\\(.*)\)")
+		$var3 = extract($notifAddText, "Directory \(\\\\(.*)\\\\.*\)")
+		$parameters = $param1 + $param2 + $var3
+
+	case "6164E":
+
+		#Size of {0} disk or directory (\\{4}\\{1}) does not exceed maximum threshold any more
+		$param1 = extract($notifAddText, "Size of ([^ ]+)")
+		$param2 = extract($notifAddText, "directory \(\\\\.*\\\\(.*)\)")
+		$var3 = extract($notifAddText, "directory \(\\\\(.*)\\\\.*\)")
+		$parameters = $param1 + $param2 + $var3
+
+	case "6165E":
+
+		#Less than {2} {3} remain available on {0} drive (\\{4}\\{1})
+		$param1 = extract($notifAddText, "available on ([^ ]+)")
+		$param2 = extract($notifAddText, "drive \(\\\\.*\\\\(.*)\)")
+		$var3 = extract($notifAddText, "drive \(\\\\(.*)\\\\.*\)")
+		$parameters = $param1 + $param2 + $var3
+
+	
+	case "6166E":
+
+		#{0} Directory (\\{4}\\{1}) takes more than {2} {3} of entire drive
+		$param1 = extract($notifAddText, "([^ ]+) Directory")
+		$param2 = extract($notifAddText, "Directory \(\\\\.*\\\\(.*)\)")
+		$var3 = extract($notifAddText, "Directory \(\\\\(.*)\\\\.*\)")
+		$parameters = $param1 + $param2 + $var3
+
+
+	case "6167E":
+
+		#{0} Directory (\\{4}\\{1}) takes more than {2} {3}
+		$param1 = extract($notifAddText, "([^ ]+) Directory")
+		$param2 = extract($notifAddText, "Directory \(\\\\.*\\\\(.*)\)")
+		$var3 = extract($notifAddText, "Directory \(\\\\(.*)\\\\.*\)")
+		$parameters = $param1 + $param2 + $var3
+
+	case "6170E":
+
+
+		#Purge of archive {0} ('{2}' on {1}) succeeded
+		$parameters = extract($notifAddText, "archive ([^ ]+)")
+
+	case "6171E":
+
+
+		#Purge of archive {0} ('{2}' on {1}) failed ({3})
+		$parameters = extract($notifAddText, "archive ([^ ]+)")
+
+		
+	
+	case "10000E":
+
+                #The string {0} is not compatible with the PCX character set
+		$parameters = extract($notifAddText, "The string ([^ ]+)")
+		
+
+	case "10001E":
+
+                #The PCX {0} refused modification of the field {1} with the value {2} on station {3}
+		$parameters = extract($notifAddText, "The PCX ([^ ]+)")
+		
+	
+	case "10008E":
+
+                #Synchronization failed on PCX {0} (disk full)
+		$parameters = extract($notifAddText, "on PCX ([^ ]+)")
+		
+
+	case "10027E":
+
+		#Cannot get Software Update Status from the PCX {0}
+		$parameters = extract($notifAddText, "the PCX ([^ ]+)")
+		
+
+	case "10028E":
+
+		#Software Update Status retrieved successfully from the PCX {0}
+		$parameters = extract($notifAddText, "the PCX ([^ ]+)")
+		
+
+	case "13001E":
+
+                #Cost calculation error during record loading from PCX {0}
+		$parameters = extract($notifAddText, "from PCX ([^ ]+)")
+
+	case "13002E":
+
+                #Manual deletion of the item: {0}
+		$parameters = extract($notifAddText, "the item: ([^ ]+)")
+
+	case "13011E":
+
+                #Record File {0} cannot be opened
+		$parameters = extract($notifAddText, "Record File ([^ ]+)")
+
+	case "13012E":
+
+                #Rejected Record File {0} cannot be opened 
+		$parameters = extract($notifAddText, "Record File ([^ ]+)")
+
+	case "13013E":
+
+                #Files 'TAXAxxxx.DAT' have been renamed in {0} because of a read error
+		$parameters = extract($notifAddText, "renamed in ([^ ]+)")
+
+	case "13014E":
+
+                #Files 'TAXAxxxx.DAT' could not be renamed in {0}
+		$parameters = extract($notifAddText, "renamed in ([^ ]+)")
+
+	case "13015E":
+
+                #Inserted files 'TAXAxxxx.DAT' cannot be renamed in {0}
+		$parameters = extract($notifAddText, "renamed in ([^ ]+)")
+
+	case "13016E":
+
+                #Inserted Files 'TAXAxxxx.DAT' cannot be removed from {0}
+		$parameters = extract($notifAddText, "removed from ([^ ]+)")
+
+	case "13017E" | "13018E":
+
+                #Files 'TAXAxxxx.DAT' has been rejected in {0} because of a database error
+                #Files 'TAXAxxxx.DAT' cannot be rejected in {0} because of a database error
+		$parameters = extract($notifAddText, "rejected in ([^ ]+)")
+
+	
+	case "13019E":
+
+
+                #Bad Format in {0}.The records have been rejected in {1}
+		$parameters = extract($notifAddText, "Format in ([^ ]+)")
+
+	case "13020E":
+
+                #Bad records in {0}. The records have been rejected in {1} 
+		$parameters = extract($notifAddText, "records in ([^ ]+)")
+	
+	case "13021E":
+
+                #{0}: Loader will stop because it cannot access Database.
+		$parameters = extract($notifAddText, "([^ ]+): Loader")
+
+	
+	case "13022E":
+
+                #Loader will stop loading in {0} because of insufficient disk space 
+		$parameters = extract($notifAddText, "loading in ([^ ]+)")
+	
+	case "13023E":
+
+                #{0} : Bad value from CORBA
+		$parameters = extract($notifAddText, "([^ ]+): Bad value")
+
+	case "13024E":
+
+	        #MAO File {0} cannot be opened
+		$parameters = extract($notifAddText, "MAO File ([^ ]+)")
+
+        case "13025E":
+
+                #Reject MAO File {0} cannot be opened
+	        $parameters = extract($notifAddText, "MAO File ([^ ]+)")
+
+
+	case "13026E":
+
+                #Files 'MAOxxxx.DAT' have been renamed in {0} because of a read error
+		$parameters = extract($notifAddText, "renamed in ([^ ]+)")
+
+	case "13027E":
+
+                #Files 'MAOxxxx.DAT' could not be renamed in {0}
+		$parameters = extract($notifAddText, "renamed in ([^ ]+)")
+
+	case "13028E":
+
+                #Inserted Files 'MAOxxxx.DAT' cannot be removed from {0}
+		$parameters = extract($notifAddText, "removed from ([^ ]+)")
+
+
+	case "13029E":
+
+                #Bad Format in {0}. The MAO records have been rejected in {1} 
+		$parameters = extract($notifAddText, "Bad Format in ([^ ]+)")
+
+	case "13030E":
+
+                #Bad MAO records in {0}. The MAO records have been rejected in {1}
+		$parameters = extract($notifAddText, "records in ([^ ]+)")
+
+	case "13031E":
+
+	        #File {0} cannot be opened 
+		$parameters = extract($notifAddText, "File ([^ ]+)")
+
+	case "13032E":
+
+	        #Read error in {0}
+		$parameters = extract($notifAddText, "error in ([^ ]+)")
+
+	case "13033E":
+
+                #File {0} is empty 
+		$parameters = extract($notifAddText, "File ([^ ]+)")
+
+	case "13034E":
+
+	        #File {0} not found
+		$parameters = extract($notifAddText, "File ([^ ]+)")
+
+	case "13035E":
+
+	        #File {0} not found
+		$parameters = extract($notifAddText, "File ([^ ]+)")
+
+	case "13036E":
+
+	        #File {0} not found in mao.lis
+		$parameters = extract($notifAddText, "File ([^ ]+)")
+
+	case "15502E":
+
+		#MIB {0} was not found in directory {1}
+		$parameters = extract($notifAddText, "MIB ([^ ]+)")
+
+	case "15503E":
+
+		#MIB file {0} found and OK
+		$parameters = extract($notifAddText, "MIB file ([^ ]+)")
+	
+	case "17000E":
+
+		#[{0}]: No INF file found for data file {1}
+		$parameters = extract($notifAddText, "data file ([^ ]+)")
+	
+
+	case "17001E":
+
+		#[{0}]: Data file {1} cannot be decompressed
+		$parameters = extract($notifAddText, "Data file ([^ ]+)")
+
+	case "17002E":
+
+		#[{0}]: File {1} not found
+		$parameters = extract($notifAddText, "File ([^ ]+)")
+
+	case "17012E":
+
+                #[{0}]: File {1} not found
+                $parameters = extract($notifAddText, "File ([^ ]+)")
+
+
+	case "17003E":
+
+		#[{0}]: Cannot get file {1} format
+		$parameters = extract($notifAddText, "get file ([^ ]+)")
+
+	case "17004E":
+
+		#[{0}]: Memory allocation error for file {1}
+		$parameters = extract($notifAddText, "for file ([^ ]+)")
+
+	case "17005E":
+
+		#[{0}]: Error while copying file {1} from disk to memory
+		$parameters = extract($notifAddText, "copying file ([^ ]+)")
+
+	case "17006E":
+
+		#[{0}]: Wrong file {1} content
+		$parameters = extract($notifAddText, "Wrong file ([^ ]+)")
+
+	case "17013E":
+
+                #Configuration error in ptpParameters field: CumulY contains unknown object(s): {0} 
+		$parameters = extract($notifAddText, "object\(s\): ([^ ]+)")
+
+	case "17016E":
+
+                #Configuration error in traffic observation loading parameters: found unknown object(s): {0}
+		$parameters = extract($notifAddText, "unknown objecgt\(s\): ([^ ]+)")
+	
+
+	case "17017E":
+
+                #[{0}]: This file contains counters lower than 0 
+		$parameters = extract($notifAddText, "([^ ]+): This file")
+	
+
+	case "19000E":
+
+                #Duplicate name on {0}. The directory link for {1} cannot be created
+		$param1 = extract($notifAddText, "name on ([^ ]+) \.")
+		$param2 = extract($notifAddText, "link for (.*) cannot")
+		$parameters = $param1 + $param2
+	
+
+	case "19001E":
+
+                #The entry {0} already exists. No automatic creation for link with {1}. 
+		$param1 = extract($notifAddText, "The entry ([^ ]+)")
+		$param2 = extract($notifAddText, "link with ([^ ]+)")
+		$parameters = $param1 + $param2
+	
+
+	case "19002E":
+
+                #The creation of the entry {1} has been rejected with the status {0} No automatic creation for link with {2}
+		$param1 = extract($notifAddText, "the entry ([^ ]+)")
+		$param2 = extract($notifAddText, "the status ([^ ]+)")
+		$var3 = extract($notifAddText, "link with ([^ ]+)")
+		$parameters = $param1 + $param2 + $var3
+
+       case "20009E":
+
+		#Received alarm comes from an unknown PCX: {0}
+		$parameters = extract($notifAddText, "PCX: ([^ ]+)")
+	
+        case "21000E":
+                # $notifAddText = "{0} contains records (tickets) with bad format"
+                $parameters = extract($notifAddText, "^(^.*) contains records")
+                
+        case "21002E" | "21001E":
+                # 21001 => $notifAddText = "File {0} cannot be decompressed"
+                # 21002 => $notifAddText = "File {0}: Read error"
+                $parameters = extract($notifAddText, "^File ([^ ]+)")
+
+        case "21003E":
+                # $notifAddText = "An internal error occurred while processing the file {0}"
+                $parameters = extract($notifAddText, "processing the file ([^ ]+)")
+
+	  case "21004E":
+                # $notifAddText = "Database insertion failed: file {0} cannot be loaded"
+                $parameters = extract($notifAddText, "failed: file ([^ ]+)")
+
+        case "22000E" | "22001E":
+                # $notifAddText = "Cannot browse directory {0}"
+                $parameters = extract($notifAddText, "browse directory ([^ ]+)")
+
+        case "22002E":
+                # $notifAddText = "Cannot copy file {0}"
+                $parameters = extract($notifAddText, "copy file ([^ ]+)")
+
+	case "24004":
+
+		#RADIUS server {0} issued a challenge to the user {1}
+		$param1 = extract($notifAddText, "RADIUS server ([^ ]+)")
+		$param2 = extract($notifAddText, "to the user ([^ ]+)")
+		$parameters = $param1 + $param2
+
+        case "25000E":
+                # $notifAddText = "User Account is locked for userid: {0} with name: {1}."
+                $param1 = extract($notifAddText, "for userid: ([^ ]+)")
+                $param2 = extract($notifAddText, "with name: ([^.]+)")
+                $parameters = $param1 + $param2
+                
+
+        case "25001E":
+                # $notifAddText = "logfile : {0}"
+                $parameters = extract($notifAddText, "logfile :([^ ]+)")
+                
+	default:
+
+}

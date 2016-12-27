@@ -1,0 +1,26 @@
+#
+# Netcool Nameserver config file
+#
+# Point the values below to your Netcool Nameserver.
+# By default the nameserver is deployed on the Netcool GUI Server.
+# However, if you moved the nameserver.war file to a different
+# J2EE server, you'll need to enter the address of that host below.
+# The host and port are the ones that the J2EE server is listening on
+# for http requests. The location is the nameserver's address
+# (/nameserver/services by default). The userid and password fields need
+# to match the ones set in the nameserver's web.xml file ("admin" and
+# "netcool" by default).
+
+
+impact.nameserver.0.host=172.20.174.57
+impact.nameserver.0.port=9080
+impact.nameserver.0.location=/nameserver/services
+
+impact.nameserver.1.host=172.20.174.157
+impact.nameserver.1.port=9080
+impact.nameserver.1.location=/nameserver/services
+
+impact.nameserver.count=2
+
+impact.nameserver.ssl_enabled=false
+impact.nameserver.netcall_timeout=60

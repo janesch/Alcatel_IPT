@@ -1,0 +1,59 @@
+AlertGroup 	Summary	Severity	ProbableCause	AlertKey	ActionRequired	ServiceAffecting	ResilienceAffecting	CorrelationFlag
+coldStart	Cold Start	2	The SNMP agent in the switch is reinitiating and its configuration may have been altered.	Chassis	0	2	2	2
+warmStart	Warm Start	2	The SNMP agent in the switch is reinitiating itself and its configuration is unaltered.	Chassis	0	2	2	2
+linkDown	Link Down	5	The SNMP agent in the switch recognizes a failure in one of the communications links configured for the switch.	Interface	1	1	1	1
+linkUp	Link Up	4	The SNMP agent in the switch recognizes that one of the communications links configured for the switch has come up.	Interface	0	2	2	2
+authenticationFailure	Authentication Failure	3	The SNMP agent in the switch has received a protocol message that is not properly authenticated.	SNMP	0	2	2	2
+entConfigChange	Entity Config Change	3	An entConfigChange notification is generated when a conceptual row is created, modified, or deleted in one of the entity tables.	Module	0	2	2	2
+aipAMAPStatusTrap	AIP AMAP status trap	3	The status of the Alcatel Mapping Adjacency Protocol (AMAP) port changed.	AIP	0	2	2	2
+aipGMAPConflictTrap	AIP GMAP conflict trap	3	Indicates a Group Mobility Advertisement Protocol (GMAP) port update conflict.	AIP	0	2	2	2
+policyEventNotification	Policy event notification	3	The switch notifies the NMS when a significant event happens that involves the policy manager.	Policy	0	2	2	2
+chassisTrapsStr	Chassis trap software trouble report	4	A software trouble report (STR) was sent by an application encountering a problem during its execution.	Chassis	1	3	3	
+chassisTrapsAlert	Chassis traps alert	5	A notification that some change has occurred in the chassis. (FAN or PSU)	Chassis	1	2	1	2
+chassisTrapsStateChange	Chassis traps state change	5	An NI status change was detected. (FAN or PSU)	Chassis	1	2	1	2
+vrrpTrapNewMaster	VRRP trap new master	4	The SNMP agent has transferred from the backup state to the master state.	VRRP	0	2	3	2
+vrrpTrapAuthFailure	VRRP trap authentication failure	3	A packet was received from the network whose authentication key conflicts with the switch\222s authentication key or type.	VRRP	0	2	2	2
+healthMonDeviceTrap	Health mon device trap	2	Indicates a device level threshold was crossed.	Health	0	2	2	2
+healthMonModuleTrap	Health mon module trap	2	Indicates a module-level threshold was crossed.	Health	0	2	2	2
+healthMonPortTrap	Health mon port trap	2	Indicates a port-level threshold was crossed.	Health	0	2	2	2
+esmDrvTrapDropsLink	ESM drv trap drops link	4	This trap is sent when the Ethernet code drops the link because of excessive errors.	Interface	1	3	3	3
+risingAlarm	Rising Alarm	2	An Ethernet statistical variable has exceeded its rising threshold. The variable\222s rising threshold and whether it will issue an SNMP trap for this condition are configured by an NMS station running RMON.	RMON	0	2	2	2
+fallingAlarm	Falling Alarm	2	An Ethernet statistical variable has dipped below its falling threshold. The variable\222s falling threshold and whether it will issue an SNMP trap for this condition are configured by an NMS station running RMON.	RMON	0	2	2	2
+stpNewRoot	Spanning Tree new root	2	Sent by a bridge that became the new root of the spanning tree.	STP	0	2	2	2
+stpRootPortChange	Spanning Tree Protocol root port change	3	A root port has changed for a spanning tree bridge. The root port is the port that offers the lowest cost path from this bridge to the root bridge.	STP	0	2	2	2
+mirrorConfigError	Mirror config error	3	The mirroring configuration failed on an NI. This trap is sent when any NI fails to configure mirroring. Due to this error, port mirroring session will be terminated.	PMM	0	2	2	2
+mirrorUnlikeNi	mirrorUnlikeNi	3	The mirroring configuration is deleted due to the swapping of different NI board type. The Port Mirroring session which was active on a slot cannot continue with the insertion of different NI type in the same slot.	PMM	0	2	2	2
+ifMauJabber	Interface mau jabber	4	This trap is sent whenever a managed interface MAU enters the jabber state.	Interface	1	3	3	3
+sessionAuthenticationTrap	Session authentication trap	3	An authentication failure trap is sent each time a user authentication is refused.	Session	0	2	2	2
+trapAbsorptionTrap	Trap absorption trap	2	The absorption trap is sent when a trap has been absorbed at least once.	none	0	2	2	2
+alaStackMgrDuplicateSlotTrap	ALA stack manager duplicate slot trap	3	Two or more slots claim to have the same slot number.	Stack Manager	0	2	2	2
+alaStackMgrNeighborChangeTrap	ALA stack manager neighbor change trap	3	Indicates whether or not the stack is in loop.	Stack Manager	0	2	2	2
+alaStackMgrRoleChangeTrap	ALA stack manager role change trap	3	Indicates that a new primary or secondary stack is elected.	Stack Manager	0	2	2	2
+lpsViolationTrap	LPS violation trap	2	A Learned Port Security (LPS) violation has occurred.	Bridge	0	2	2	2
+alaDoSTrap	ALA DoS trap	2	Indicates that the sending agent has received a Denial of Service (DoS) attack.	IP	0	2	2	2
+gmBindRuleViolation	GM bind rule violation	3	Occurs whenever a binding rule which has been configured gets violated.	VLAN	0	2	2	2
+ospfNbrStateChange	OSPF neighbor state change	2	Indicates a state change of the neighbor relationship.	OSPF	0	2	2	2
+ospfVirtNbrStateChange	OSPF virtual neighbor state change	3	Indicates a state change of the virtual neighbor relationship.	OSPF	0	2	2	2
+httpServerDoSAttackTrap	httpServerDoSAttackTrap	2	This trap is sent to management station(s) when the HTTP server is under Denial of Service attack. The HTTP and HTTPS connections are sampled at a 15 second interval. This trap is sent every 1 minute while the HTTP server detects it is under attack.	Web Management	0	2	2	2
+alaStackMgrDuplicateRoleTrap	ALA stack manager duplicate role trap	3	The element identified by alaStackMgrSlotNINumber detected the presence of two elements with the same primary or secondary role as specified by alaStackMgrChasRole on the stack.	Chassis	0	2	2	2
+alaStackMgrClearedSlotTrap	ALA stack manager cleared slot trap	3	The element identified by alaStackMgrSlotNINumber will enter the pass through mode because its operational slot was cleared with immediate effect.	Chassis	0	2	2	2
+alaStackMgrOutOfSlotsTrap	ALA stack manager out of slots trap	3	One element of the stack will enter the pass through mode because there are 2 slot numbers available to be assigned to this element.	Chassis	0	2	2	2
+alaStackMgrOutOfTokensTrap	ALA stack manager out of tokens trap	3	The element identified by alaStackMgrSlotNINumber will enter the pass through mode because there are 2 tokens available to be assigned to this element.	Chassis	0	2	2	2
+alaStackMgrOutOfPassThroughSlotsTrap	alaStackMgrOutOfPassThroughSlotsTrap	3	There are 2 pass through slots available to be assigned to an element that is supposed to enter the pass through mode.	Chassis	0	2	2	2
+gmHwVlanRuleTableOverloadAlert	gmHwVlanRuleTableOverloadAlert	2	An overload trap occurs whenever a new entry to the hardware VLAN rule table gets dropped due to the overload of the table.	VLAN	0	2	2	2
+lnkaggAggUp	Link aggregation up	4	Indicates the link aggregate is active. This trap is sent when any one port of the link aggregate group goes into the attached state.	Linkaggregation	0	2	2	2
+lnkaggAggDown	Link aggregation aggregate dow	5	Indicates the link aggregate is not active. This trap is sent when all ports of the link aggregate group are 2 longer in the attached state.	Linkaggregation	1	1	1	2
+lnkaggPortJoin	Link aggregation port join	3	This trap is sent when any given port of the link aggregate group goes to the attached state.	Linkaggregation	0	2	2	2
+lnkaggPortLeave	Link aggregation port leave	3	This trap is sent when any given port detaches from the link aggregate group.	Linkaggregation	0	2	1	2
+lnkaggPortRemove	Link aggregation port remove	3	This trap is sent when any given port of the link aggregate group is removed due to an invalid configuration.	Linkaggregation	0	2	2	2
+pktDrop	Packet drop	4	The pktDrop trap indicates that the sending agent has dropped certain packets (to blocked IP ports, from spoofed addresses, etc.).	IP	0	2	2	2
+alaOvNormalTrapAbsorbed	alaOvNormalTrapAbsorbed	2	The absorption trap is sent when a Normal trap has been absorbed at least once	SNMP	0	2	2	2
+alaOvWarningTrapAbsorbed	alaOvWarningTrapAbsorbed	2	The absorption trap is sent when a Warning trap has been absorbed at least once	SNMP	0	2	2	2
+alaOvMinorTrapAbsorbed	alaOvMinorTrapAbsorbed	2	The absorption trap is sent when a Minor trap has been absorbed at least once	SNMP	0	2	2	2
+alaOvMajorTrapAbsorbed	alaOvMajorTrapAbsorbed	2	The absorption trap is sent when a Major trap has been absorbed at least once	SNMP	0	2	2	2
+alaOvCriticalTrapAbsorbed	alaOvCriticalTrapAbsorbed	2	The absorption trap is sent when a Critical trap has been absorbed at least once	SNMP	0	2	2	2
+alaOvSwitchDown	alaOvSwitchDown	5	Switch has STOPPED responding to OmniVista	1	1	1	2
+alaOvSwitchUp	alaOvSwitchUp	1	Switch has resumed responding to OmniVista.	0	2	2	2
+alaVrrp3TrapNewMaster	alaVrrp3TrapNewMaster	4	The newMaster trap indicates that the sending agent has transitioned to Master state	VRRP	0	2	2	2
+alaVrrp3TrapProtoError	alaVrrp3TrapProtoError	4	The error trap indicates that the sending agent has encountered the protocol error	VRRP	0	2	2	2
+udldStateChange	udldStateChange	5	This trap is sent when the UDLD state of a port has changed	Interface	1	2	1	2

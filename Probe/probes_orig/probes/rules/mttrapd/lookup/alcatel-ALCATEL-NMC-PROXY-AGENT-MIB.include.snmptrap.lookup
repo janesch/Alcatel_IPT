@@ -1,0 +1,206 @@
+###############################################################################
+# /opt/netcool/m2r/export/ov4760/alcatel-ALCATEL-NMC-PROXY-AGENT-MIB.include.snmptrap.lookup
+# Automatically created by mib2rules (http://support.micromuse.com/toolsutils)
+# Tue Jun 13 13:02:22 2006
+###############################################################################
+table alcatel-ALCATEL-NMC-PROXY-AGENT-MIB-topClass = 
+{
+################################################################################
+# Identifier which allows the identification of the system.
+# For instance an Alcatel 4400
+################################################################################
+	{"23","board (23)"},
+	{"29","shelf (29)"},
+	{"82","terminal (82)"},
+	{"89","node (89)"},
+	{"175","ACTorSUEvents (175)"},
+	{"186","LinkServices (186)"},
+	{"190","segment (190)"}
+}
+default = "Unknown"
+
+table alcatel-ALCATEL-NMC-PROXY-AGENT-MIB-baseClass = 
+{
+################################################################################
+# Identifier which allows to identify the impacted object
+# without ambiguity for a given system. For instance
+# a board of a 4400
+################################################################################
+	{"23","board (23)"},
+	{"29","shelf (29)"},
+	{"82","terminal (82)"},
+	{"89","node (89)"},
+	{"175","ACTorSUEvents (175)"},
+	{"186","LinkServices (186)"},
+	{"190","segment (190)"}
+}
+default = "Unknown"
+
+table alcatel-ALCATEL-NMC-PROXY-AGENT-MIB-classId1 = 
+{
+################################################################################
+# Object class, level one
+################################################################################
+	{"23","board (23)"},
+	{"29","shelf (29)"},
+	{"82","terminal (82)"},
+	{"89","node (89)"},
+	{"175","ACTorSUEvents (175)"},
+	{"186","LinkServices (186)"},
+	{"190","segment (190)"}
+}
+default = "Unknown"
+
+table alcatel-ALCATEL-NMC-PROXY-AGENT-MIB-classId2 = 
+{
+################################################################################
+# Object class, level two
+################################################################################
+	{"23","board (23)"},
+	{"29","shelf (29)"},
+	{"82","terminal (82)"},
+	{"89","node (89)"},
+	{"175","ACTorSUEvents (175)"},
+	{"186","LinkServices (186)"},
+	{"190","segment (190)"}
+}
+default = "Unknown"
+
+table alcatel-ALCATEL-NMC-PROXY-AGENT-MIB-classId3 = 
+{
+################################################################################
+# Object class, level three
+################################################################################
+	{"23","board (23)"},
+	{"29","shelf (29)"},
+	{"82","terminal (82)"},
+	{"89","node (89)"},
+	{"175","ACTorSUEvents (175)"},
+	{"186","LinkServices (186)"},
+	{"190","segment (190)"}
+}
+default = "Unknown"
+
+table alcatel-ALCATEL-NMC-PROXY-AGENT-MIB-classId4 = 
+{
+################################################################################
+# Object class, level four
+################################################################################
+	{"23","board (23)"},
+	{"29","shelf (29)"},
+	{"82","terminal (82)"},
+	{"89","node (89)"},
+	{"175","ACTorSUEvents (175)"},
+	{"186","LinkServices (186)"},
+	{"190","segment (190)"}
+}
+default = "Unknown"
+
+table alcatel-ALCATEL-NMC-PROXY-AGENT-MIB-classId5 = 
+{
+################################################################################
+# Object class, level five
+################################################################################
+	{"23","board (23)"},
+	{"29","shelf (29)"},
+	{"82","terminal (82)"},
+	{"89","node (89)"},
+	{"175","ACTorSUEvents (175)"},
+	{"186","LinkServices (186)"},
+	{"190","segment (190)"}
+}
+default = "Unknown"
+
+table alcatel-ALCATEL-NMC-PROXY-AGENT-MIB-eventType = 
+{
+################################################################################
+# OSI type of the notification
+################################################################################
+	{"2","communicationAlarm (2)"},
+	{"3","environmentalAlarm (3)"},
+	{"4","equipmentAlarm (4)"},
+	{"10","processingErrorAlarm (10)"},
+	{"11","qualityOfServiceAlarm (11)"}
+}
+default = "Unknown"
+
+table alcatel-ALCATEL-NMC-PROXY-AGENT-MIB-severity = 
+{
+################################################################################
+# OSI severity of the notification
+################################################################################
+	{"0","Indeterminate (0)"},
+	{"1","Critical (1)"},
+	{"2","Major (2)"},
+	{"3","Minor (3)"},
+	{"4","Warning (4)"},
+	{"5","Normal (5)"}
+}
+default = "Unknown"
+
+table alcatel-ALCATEL-NMC-PROXY-AGENT-MIB-probableCause = 
+{
+################################################################################
+# Probable cause of the notification
+################################################################################
+	{"0","Unknown (0)"},
+	{"1","AdapterError (1)"},
+	{"2","ApplicationSubsystemFailure (2)"},
+	{"3","BandWidthReduced (3)"},
+	{"4","CallEstablishmentError (4)"},
+	{"5","CommunicationsProtocolError (5)"},
+	{"6","CommunicationsSubsystemFailure (6)"},
+	{"7","ConfigurationOrCustomizationError (7)"},
+	{"8","Congestion (8)"},
+	{"9","CorruptData (9)"},
+	{"10","CpuCyclesLimitExceeded (10)"},
+	{"11","DataSetOrModemError (11)"},
+	{"12","DegradedSignal (12)"},
+	{"13","DteDceInterfaceError (13)"},
+	{"14","EnclosureDoorOpen (14)"},
+	{"15","EquipmentMalFunction (15)"},
+	{"16","ExcessiveVibration (16)"},
+	{"17","FileError (17)"},
+	{"18","FireDetected (18)"},
+	{"19","FloodDetected (19)"},
+	{"20","FramingError (20)"},
+	{"21","HeatingVentilationCoolingSystemProblem (21)"},
+	{"22","HumidityUnacceptable (22)"},
+	{"23","InputOutputDeviceError (23)"},
+	{"24","InputDeviceError (24)"},
+	{"25","LANError (25)"},
+	{"26","LeakDetected (26)"},
+	{"27","LocalNodeTransmissionError (27)"},
+	{"28","LossOfFrame (28)"},
+	{"29","LossOfSignal (29)"},
+	{"30","MaterialSupplyExhausted (30)"},
+	{"31","MultiplexerProblem (31)"},
+	{"32","OutOfMemory (32)"},
+	{"33","OutputDeviceError (33)"},
+	{"34","PerformanceDegraded (34)"},
+	{"35","PowerProblem (35)"},
+	{"36","PressureUnacceptable (36)"},
+	{"37","ProcessorProblem (37)"},
+	{"38","PumpFailure (38)"},
+	{"39","QueueSizeExceeded (39)"},
+	{"40","ReceiveFailure (40)"},
+	{"41","ReceiverFailure (41)"},
+	{"42","RemoteNodeTransmissionFailure (42)"},
+	{"43","ResourceAtOrNearingCapacity (43)"},
+	{"44","ResponseTimeExcessive (44)"},
+	{"45","RetransmissionRateExcessive (45)"},
+	{"46","SoftwareError (46)"},
+	{"47","SoftwareProgramAbnormallyTerminated (47)"},
+	{"48","SoftwareProgramError (48)"},
+	{"49","StorageCapacityProblem (49)"},
+	{"50","TemperatureUnacceptable (50)"},
+	{"51","ThresholdCrossed (51)"},
+	{"52","TimingProblem (52)"},
+	{"53","ToxicLeakDetected (53)"},
+	{"54","TransmitFailure (54)"},
+	{"55","TransmitterFailure (55)"},
+	{"56","UnderlyingResourceUnavailable (56)"},
+	{"57","VersionMismatch (57)"}
+}
+default = "Unknown"
+

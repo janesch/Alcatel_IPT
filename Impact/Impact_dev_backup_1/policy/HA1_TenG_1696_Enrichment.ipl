@@ -1,0 +1,460 @@
+//Nick Evans 09-02-2011 
+//This policy sets RemoteNode RemoteCard and ChannelNode details to 10g 1696 alarms
+PhysicalCard = @PhysicalCard;
+PhysicalCardSplit1 = Extract(PhysicalCard, 0, "/");
+PhysicalCardSplit2 = Extract(PhysicalCard, 1, "/");
+PhysicalCardSplit3 = Extract(PhysicalCard, 2, "/");
+Log("PhysicalCardSplit:"+PhysicalCardSplit1+" "+PhysicalCardSplit2+" "+PhysicalCardSplit3);
+PhysicalCardExtract = PhysicalCardSplit1+"/"+PhysicalCardSplit2;
+
+@RemoteNodeA = "Not Found";
+@RemoteNodeB = "Not Found";
+@RemoteNodeC = "Not Found";
+@RemoteNodeD = "Not Found";
+@RemoteNodeE = "Not Found";
+@RemoteNodeF = "Not Found";
+@RemoteNodeG = "Not Found";
+@RemoteNodeH = "Not Found";
+@RemoteNodeI = "Not Found";
+@RemoteCardA = "Not Found";
+@RemoteCardB = "Not Found";
+@RemoteCardC = "Not Found";
+@RemoteCardD = "Not Found";
+@RemoteCardE = "Not Found";
+@RemoteCardF = "Not Found";
+@RemoteCardG = "Not Found";
+@RemoteCardH = "Not Found";
+@RemoteCardI = "Not Found";
+@Channel30NodeA = "Not Found";
+@Channel30NodeB = "Not Found";
+@Channel31NodeA = "Not Found";
+@Channel31NodeB = "Not Found";
+@Channel32NodeA = "Not Found";
+@Channel32NodeB = "Not Found";
+@Channel33NodeA = "Not Found";
+@Channel33NodeB = "Not Found";
+@Channel34NodeA = "Not Found";
+@Channel34NodeB = "Not Found";
+@Channel35NodeA = "Not Found";
+@Channel35NodeB = "Not Found";
+@Channel36NodeA = "Not Found";
+@Channel36NodeB = "Not Found";
+@Channel37NodeA = "Not Found";
+@Channel37NodeB = "Not Found";
+@Channel38NodeA = "Not Found";
+@Channel38NodeB = "Not Found";
+log("TenG_1696_Enrichment Start:");
+MyArray1 = {};
+AlarmClass = @AlarmClass;
+if(AlarmClass = "Node Isolation"){
+Filter = "(L1_SYSNAME='"+@Node+"')";
+}else{
+Filter = "(L1_SYSNAME='"+@Node+"' and L1_IF_ID LIKE '"+PhysicalCardExtract+"%')";
+}
+log("TenG_1696_Enrichment Interface Filter:"+Filter);
+RemoteEnd = GetByFilter('Circee_Interface_Table', Filter, false);
+numRemoteEnd = Length(RemoteEnd);
+Log(Filter+ " RecordCount:"+numRemoteEnd);
+z = 0;
+if(numRemoteEnd > 0){
+while(z < numRemoteEnd){
+RemoteNode = RemoteEnd[z].L2_SYSNAME;
+RemoteCard = RemoteEnd[z].L2_IF_ID;
+RemoteDevice = RemoteNode+":"+RemoteCard;
+MyArray1 = MyArray1 + RemoteDevice;
+numMyArray1 = Length(MyArray1);
+Log("L2 MyArray1 Record Count :"+numMyArray1+":"+RemoteDevice+":"+@Node+":"+@PhysicalCard);
+z = int(z) + 1;
+}
+}
+AlarmClass = @AlarmClass;
+if(AlarmClass = "Node Isolation"){
+Filter = "(L2_SYSNAME='"+@Node+"')";
+}else{
+Filter = "(L2_SYSNAME='"+@Node+"' and L2_IF_ID LIKE '"+PhysicalCardExtract+"%')";
+}
+RemoteEnd = GetByFilter('Circee_Interface_Table', Filter, false);
+numRemoteEnd = Length(RemoteEnd);
+Log(Filter+ " RecordCount:"+numRemoteEnd);
+log("TenG_1696_Enrichment Interface Filter:"+Filter);
+z = 0;
+if(numRemoteEnd > 0){
+while(z < numRemoteEnd){
+RemoteNode = RemoteEnd[z].L1_SYSNAME;
+RemoteCard = RemoteEnd[z].L1_IF_ID;
+RemoteDevice = RemoteNode+":"+RemoteCard;
+MyArray1 = MyArray1 + RemoteDevice;
+numMyArray1 = Length(MyArray1);
+Log("L1 MyArray1 Record Count :"+numMyArray1+":"+RemoteDevice+":"+@Node+":"+@PhysicalCard);
+z = int(z) + 1;
+}
+}
+MyArray1 = Distinct(MyArray1);
+numMyArray = Length(MyArray1);
+a = 0;
+if(numMyArray > 0){
+while(a < numMyArray){
+
+RemoteDevice = MyArray1[a];
+RemoteNode = Extract(RemoteDevice, 0, ":");
+RemoteCard = Extract(RemoteDevice, 1, ":");
+if(RemoteCard LIKE ".*port.*-.*"){
+RemoteCard1 = Extract(RemoteCard, 0, "-");
+RemoteCard = RemoteCard1;
+}
+Log("L3 MyArray1 Record Count :"+numMyArray+":"+RemoteDevice+":"+@Node+":"+@PhysicalCard);
+
+if(a == 0){
+@RemoteNodeA = RemoteNode;
+@RemoteCardA = RemoteCard;
+}if(a == 1){
+@RemoteNodeB = RemoteNode;
+@RemoteCardB = RemoteCard;
+}if(a == 2){
+@RemoteNodeC = RemoteNode;
+@RemoteCardC = RemoteCard;
+}if(a == 3){
+@RemoteNodeD = RemoteNode;
+@RemoteCardD = RemoteCard;
+}if(a == 4){
+@RemoteNodeE = RemoteNode;
+@RemoteCardE = RemoteCard;
+}if(a == 5){
+@RemoteNodeF = RemoteNode;
+@RemoteCardF = RemoteCard;
+}if(a == 6){
+@RemoteNodeG = RemoteNode;
+@RemoteCardG = RemoteCard;
+}if(a == 7){
+@RemoteNodeH = RemoteNode;
+@RemoteCardH = RemoteCard;
+}if(a == 8){
+@RemoteNodeI = RemoteNode;
+@RemoteCardI = RemoteCard;
+}
+a = int(a) +1;
+}
+}
+
+Log("ChannelNode A Lookup Start:");
+AlarmClass = @AlarmClass;
+if(AlarmClass = "Node Isolation"){
+Filter = "(L2_SYSNAME='"+@Node+"' and (L1_SYSNAME LIKE 'Not%' or L1_INTERFACE_ID LIKE '%port%'))";
+}else{
+Filter = "(L2_SYSNAME='"+@Node+"' and L2_INTERFACE_ID LIKE '"+PhysicalCardExtract+"%' and (L1_SYSNAME LIKE 'Not%' or L1_INTERFACE_ID LIKE '%port%'))";
+}
+ChannelLookup = GetByFilter('Circee_Lambda_Table', Filter, false);
+NumChannelLookup = Length(ChannelLookup);
+MyChannelArray = {};
+MyChannelArray2 = {};
+b = 0;
+If(NumChannelLookup > 0){
+while(b < NumChannelLookup){
+LambdaID = ChannelLookup[b].LAMBDA_ID;
+ChannelNode = ChannelLookup[b].L1_SYSNAME;
+ChannelIFID = ChannelLookup[b].L1_INTERFACE_ID; 
+ChannelDetails = LambdaID+"|"+ChannelNode+"|"+ChannelIFID;
+MyChannelArray = MyChannelArray+ChannelDetails;
+LambdaID1 = ChannelLookup[b].LAMBDA_ID;
+ChannelNode1 = ChannelLookup[b].L2_SYSNAME;
+ChannelIFID1 = ChannelLookup[b].L2_INTERFACE_ID;
+if((ChannelIFID LIKE ".*port.*" AND ChannelIFID LIKE ".*port.*" AND ChannelNode != ChannelNode1) or (ChannelIFID ="Not Used" or ChannelIFID = "Not Applicable")){
+ChannelDetails = LambdaID1+"|"+ChannelNode1+"|"+ChannelIFID1;
+MyChannelArray = MyChannelArray+ChannelDetails;
+}
+
+Log("L1 MyChannelArray Record Count :"+numChannelLookup+":"+ChannelDetails+":"+@Node+":"+@PhysicalCard);
+b = int(b)+1;
+}
+}
+Log("ChannelNodeA Lookup Start:");
+AlarmClass = @AlarmClass;
+if(AlarmClass = "Node Isolation"){
+Filter = "(L1_SYSNAME='"+@Node+"' and (L2_SYSNAME LIKE 'Not%' or L2_INTERFACE_ID like '%port%'))";
+}else{
+Filter = "(L1_SYSNAME='"+@Node+"' and L1_INTERFACE_ID LIKE '"+PhysicalCardExtract+"%' and (L2_SYSNAME LIKE 'Not%' or L2_INTERFACE_ID like '%port%'))";
+ChannelLookup = GetByFilter('Circee_Lambda_Table', Filter, false);
+}
+NumChannelLookup = Length(ChannelLookup);
+c = 0;
+If(NumChannelLookup > 0){
+while(c < NumChannelLookup){
+LambdaID = ChannelLookup[c].LAMBDA_ID;
+ChannelNode = ChannelLookup[c].L2_SYSNAME;
+ChannelIFID = ChannelLookup[c].L2_INTERFACE_ID; 
+ChannelDetails = LambdaID+"|"+ChannelNode+"|"+ChannelIFID;
+MyChannelArray2 = MyChannelArray2+ChannelDetails;
+LambdaID1 = ChannelLookup[c].LAMBDA_ID;
+ChannelNode1 = ChannelLookup[c].L1_SYSNAME;
+ChannelIFID1 = ChannelLookup[c].L1_INTERFACE_ID;
+if((ChannelIFID1 LIKE ".*port.*" AND ChannelIFID LIKE ".*port.*" AND ChannelNode != ChannelNode1) or (ChannelIFID ="Not Used" or ChannelIFID = "Not Applicable")){
+ChannelDetails = LambdaID1+"|"+ChannelNode1+"|"+ChannelIFID1;
+MyChannelArray2 = MyChannelArray2+ChannelDetails;
+}
+
+
+Log("L1 MyChannelArray Record Count :"+numChannelLookup+":"+ChannelDetails+":"+@Node+":"+@PhysicalCard);
+c = int(c)+1;
+}
+}
+numMyArray = Length(MyChannelArray);
+d = 0;
+if(numMyArray > 0){
+while(d < numMyArray){
+
+RemoteDevice = MyChannelArray[d];
+ChannelLambdaID = Extract(RemoteDevice, 0, "|");
+ChannelNodeID = Extract(RemoteDevice, 1, "|");
+ChannelIFIDID = Extract(RemoteDevice, 2, "|");
+if(ChannelNodeID = "Not Used" OR ChannelNodeID = "Not Applicable"){
+ChannelMatch = ChannelNodeID;
+}else{
+ChannelMatch = ChannelNodeID+"/"+ChannelIFIDID;
+}
+Log("L3 MyChannelArray Record Count :"+numMyArray+":"+RemoteDevice+":"+@Node+":"+@PhysicalCard);
+
+if(ChannelLambdaID = "30:30"){
+Channel30NodeA = @Channel30NodeA;
+if(Channel30NodeA = "Not Found"){ 
+@Channel30NodeA = ChannelMatch;
+if(ChannelMatch = "Not Used" OR ChannelMatch = "Not Applicable"){
+@Channel30NodeB = ChannelMatch;
+}
+}else{
+@Channel30NodeB = ChannelMatch;
+}
+if((ChannelMatch = "Not Used" OR ChannelMatch = "Not Applicable")){
+@Channel30NodeA = ChannelMatch;
+@Channel30NodeB = ChannelMatch;
+}
+}if(ChannelLambdaID = "31:31"){
+Channel31NodeA = @Channel31NodeA;
+if(Channel31NodeA = "Not Found"){
+@Channel31NodeA = ChannelMatch;
+if(ChannelMatch = "Not Used" OR ChannelMatch = "Not Applicable"){
+@Channel31NodeB = ChannelMatch;
+}
+}else{
+@Channel31NodeB = ChannelMatch;
+}
+if((ChannelMatch = "Not Used" OR ChannelMatch = "Not Applicable")){
+@Channel31NodeA = ChannelMatch;
+@Channel31NodeB = ChannelMatch;
+}
+}if(ChannelLambdaID = "32:32"){
+Channel32NodeA = @Channel32NodeA;
+if(Channel32NodeA = "Not Found"){
+@Channel32NodeA = ChannelMatch;
+if(ChannelMatch = "Not Used" OR ChannelMatch = "Not Applicable"){
+@Channel32NodeB = ChannelMatch;
+}
+}else{
+@Channel32NodeB = ChannelMatch;
+}
+if((ChannelMatch = "Not Used" OR ChannelMatch = "Not Applicable")){
+@Channel32NodeA = ChannelMatch;
+@Channel32NodeB = ChannelMatch;
+}
+}if(ChannelLambdaID = "33:33"){
+Channel33NodeA = @Channel33NodeA; 
+if(Channel33NodeA = "Not Found"){
+@Channel33NodeA = ChannelMatch;
+if(ChannelMatch = "Not Used" OR ChannelMatch = "Not Applicable"){
+@Channel33NodeB = ChannelMatch;
+}
+}else{
+@Channel33NodeB = ChannelMatch;
+}
+if((ChannelMatch = "Not Used" OR ChannelMatch = "Not Applicable")){
+@Channel33NodeA = ChannelMatch;
+@Channel33NodeB = ChannelMatch;
+}
+}if(ChannelLambdaID = "35:35"){
+Channel35NodeA = @Channel35NodeA;
+if(Channel35NodeA = "Not Found"){
+@Channel35NodeA = ChannelMatch;
+if(ChannelMatch = "Not Used" OR ChannelMatch = "Not Applicable"){
+@Channel35NodeB = ChannelMatch;
+}
+}else{
+@Channel35NodeB = ChannelMatch;
+}
+if((ChannelMatch = "Not Used" OR ChannelMatch = "Not Applicable")){
+@Channel35NodeA = ChannelMatch;
+@Channel35NodeB = ChannelMatch;
+}
+}if(ChannelLambdaID = "36:36"){
+Channel36NodeA = @Channel36NodeA;
+if(Channel36NodeA = "Not Found"){
+@Channel36NodeA = ChannelMatch;
+if(ChannelMatch = "Not Used" OR ChannelMatch = "Not Applicable"){
+@Channel36NodeB = ChannelMatch;
+}
+}else{
+@Channel36NodeB = ChannelMatch;
+}
+if((ChannelMatch = "Not Used" OR ChannelMatch = "Not Applicable")){
+@Channel36NodeA = ChannelMatch;
+@Channel36NodeB = ChannelMatch;
+}
+}if(ChannelLambdaID = "37:37"){
+Channel37NodeA = @Channel37NodeA;
+if(Channel37NodeA = "Not Found"){
+@Channel37NodeA = ChannelMatch;
+if(ChannelMatch = "Not Used" OR ChannelMatch = "Not Applicable"){
+@Channel37NodeB = ChannelMatch;
+}
+}else{
+@Channel37NodeB = ChannelMatch;
+}
+if((ChannelMatch = "Not Used" OR ChannelMatch = "Not Applicable")){
+@Channel37NodeA = ChannelMatch;
+@Channel37NodeB = ChannelMatch;
+}
+}if(ChannelLambdaID = "38:38"){
+Channel38NodeA = @Channel38NodeA;
+if(Channel38NodeA = "Not Found"){
+@Channel38NodeA = ChannelMatch;
+if(ChannelMatch = "Not Used" OR ChannelMatch = "Not Applicable"){
+@Channel38NodeB = ChannelMatch;
+}
+}else{
+@Channel38NodeB = ChannelMatch;
+}
+if((ChannelMatch = "Not Used" OR ChannelMatch = "Not Applicable")){
+@Channel38NodeA = ChannelMatch;
+@Channel38NodeB = ChannelMatch;
+}
+}
+d = int(d) +1;
+}
+}
+numMyArray = Length(MyChannelArray2);
+e = 0;
+if(numMyArray > 0){
+while(e < numMyArray){
+
+RemoteDevice = MyChannelArray2[e];
+ChannelLambdaID = Extract(RemoteDevice, 0, "|");
+ChannelNodeID = Extract(RemoteDevice, 1, "|");
+ChannelIFIDID = Extract(RemoteDevice, 2, "|");
+if(ChannelNodeID = "Not Used" OR ChannelNodeID = "Not Applicable"){
+ChannelMatch = ChannelNodeID;
+}else{
+ChannelMatch = ChannelNodeID+"/"+ChannelIFIDID;
+}
+Log("L3 MyChannelArray Record Count :"+numMyArray+":"+RemoteDevice+":"+@Node+":"+@PhysicalCard);
+
+if(ChannelLambdaID = "30:30"){
+Channel30NodeB = @Channel30NodeB;
+Channel30NodeA = @Channel30NodeA;
+if(Channel30NodeB = "Not Found" AND Channel30NodeA != ChannelMatch){ 
+@Channel30NodeB = ChannelMatch;
+Channel30NodeB = @Channel30NodeB;
+}if(Channel30NodeA = "Not Found" AND Channel30NodeB != ChannelMatch){
+@Channel30NodeA = ChannelMatch;
+}
+if((ChannelMatch = "Not Used" OR ChannelMatch = "Not Applicable")){
+@Channel30NodeA = ChannelMatch;
+@Channel30NodeB = ChannelMatch;
+}
+}if(ChannelLambdaID = "31:31"){
+Channel31NodeB = @Channel31NodeB;
+Channel31NodeA = @Channel31NodeA;
+if(Channel31NodeB = "Not Found" AND Channel31NodeA != ChannelMatch){ 
+@Channel31NodeB = ChannelMatch;
+Channel31NodeB = @Channel31NodeB;
+}if(Channel31NodeA = "Not Found" AND Channel31NodeB != ChannelMatch){
+@Channel31NodeA = ChannelMatch;
+}
+if((ChannelMatch = "Not Used" OR ChannelMatch = "Not Applicable")){
+@Channel31NodeA = ChannelMatch;
+@Channel31NodeB = ChannelMatch;
+}
+}if(ChannelLambdaID = "32:32"){
+Channel32NodeB = @Channel32NodeB;
+Channel32NodeA = @Channel32NodeA;
+if(Channel32NodeB = "Not Found" AND Channel32NodeA != ChannelMatch){ 
+@Channel32NodeB = ChannelMatch;
+Channel32NodeB = @Channel32NodeB;
+}if(Channel32NodeA = "Not Found" AND Channel32NodeB != ChannelMatch){
+@Channel32NodeA = ChannelMatch;
+}
+if((ChannelMatch = "Not Used" OR ChannelMatch = "Not Applicable")){
+@Channel32NodeA = ChannelMatch;
+@Channel32NodeB = ChannelMatch;
+}
+}if(ChannelLambdaID = "33:33"){
+Channel33NodeB = @Channel33NodeB;
+Channel33NodeA = @Channel33NodeA;
+if(Channel33NodeB = "Not Found" AND Channel33NodeA != ChannelMatch){ 
+@Channel33NodeB = ChannelMatch;
+Channel33NodeB = @Channel33NodeB;
+}if(Channel33NodeA = "Not Found" AND Channel33NodeB != ChannelMatch){
+@Channel33NodeA = ChannelMatch;
+}
+if((ChannelMatch = "Not Used" OR ChannelMatch = "Not Applicable")){
+@Channel33NodeA = ChannelMatch;
+@Channel33NodeB = ChannelMatch;
+}
+}if(ChannelLambdaID = "35:35"){
+Channel35NodeB = @Channel35NodeB;
+Channel35NodeA = @Channel35NodeA;
+if(Channel35NodeB = "Not Found" AND Channel35NodeA != ChannelMatch){ 
+@Channel35NodeB = ChannelMatch;
+Channel35NodeB = @Channel35NodeB;
+}if(Channel35NodeA = "Not Found" AND Channel35NodeB != ChannelMatch){
+@Channel35NodeA = ChannelMatch;
+}
+if((ChannelMatch = "Not Used" OR ChannelMatch = "Not Applicable")){
+@Channel35NodeA = ChannelMatch;
+@Channel35NodeB = ChannelMatch;
+}
+}if(ChannelLambdaID = "36:36"){
+Channel36NodeB = @Channel36NodeB;
+Channel36NodeA = @Channel36NodeA;
+if(Channel36NodeB = "Not Found" AND Channel36NodeA != ChannelMatch){ 
+@Channel36NodeB = ChannelMatch;
+Channel36NodeB = @Channel36NodeB;
+}if(Channel36NodeA = "Not Found" AND Channel36NodeB != ChannelMatch){
+@Channel36NodeA = ChannelMatch;
+}
+if((ChannelMatch = "Not Used" OR ChannelMatch = "Not Applicable")){
+@Channel36NodeA = ChannelMatch;
+@Channel36NodeB = ChannelMatch;
+}
+}if(ChannelLambdaID = "37:37"){
+Channel37NodeB = @Channel37NodeB;
+Channel37NodeA = @Channel37NodeA;
+if(Channel37NodeB = "Not Found" AND Channel37NodeA != ChannelMatch){ 
+@Channel37NodeB = ChannelMatch;
+Channel37NodeB = @Channel37NodeB;
+}if(Channel37NodeA = "Not Found" AND Channel37NodeB != ChannelMatch){
+@Channel37NodeA = ChannelMatch;
+}
+if((ChannelMatch = "Not Used" OR ChannelMatch = "Not Applicable")){
+@Channel37NodeA = ChannelMatch;
+@Channel37NodeB = ChannelMatch;
+}
+}if(ChannelLambdaID = "38:38"){
+Channel38NodeB = @Channel38NodeB;
+Channel38NodeA = @Channel38NodeA;
+if(Channel38NodeB = "Not Found" AND Channel38NodeA != ChannelMatch){ 
+@Channel38NodeB = ChannelMatch;
+Channel38NodeB = @Channel38NodeB;
+}if(Channel38NodeA = "Not Found" AND Channel38NodeB != ChannelMatch){
+@Channel38NodeA = ChannelMatch;
+}
+if((ChannelMatch = "Not Used" OR ChannelMatch = "Not Applicable")){
+@Channel38NodeA = ChannelMatch;
+@Channel38NodeB = ChannelMatch;
+}
+}
+e = int(e) +1;
+}
+}
+
+
+
+
+

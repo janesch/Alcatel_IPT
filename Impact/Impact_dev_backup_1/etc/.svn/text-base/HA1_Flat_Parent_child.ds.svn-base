@@ -1,0 +1,5 @@
+#This file was written by server.
+#Thu Nov 11 15:42:18 GMT 2010
+Flat_Parent_child.Flat\ File.JDBCDRIVER=com.micromuse.common.simpletextjdbc.SimpleTextDriver
+Flat_Parent_child.Flat\ File.DIRECTORY=/opt/IBM/tivoli/netcool/custom/impact/parent_child
+Flat_Parent_child.Flat\ File.DELIMITER=,

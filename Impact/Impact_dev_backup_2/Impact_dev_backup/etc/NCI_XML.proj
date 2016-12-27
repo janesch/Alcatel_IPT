@@ -1,0 +1,34 @@
+#This file was written by Impact Server.
+#Mon Aug 21 19:13:28 EDT 2006
+impact.datatype.19=STEST_JavaXML_Chapter
+impact.datatype.18=STEST_JavaXML_Contents
+impact.datatype.17=STEST_JavaXML_Heading
+impact.datatype.16=STEST_JavaXML_SectionBreak
+impact.policy.3=XmlXsdFileTestPolicy
+impact.datatype.15=STEST_JavaXML_Title
+impact.policy.2=XmlStringTestPolicy
+impact.datatype.14=STEST_JavaXML_Topic
+impact.policy.1=XmlHttpTestPolicy
+impact.datasrc.numdatasrc=1
+impact.datatype.13=HTEST_JavaXML_Book
+impact.policy.0=XmlFileTestPolicy
+impact.datatype.12=HTEST_JavaXML_Chapter
+impact.datatype.numdatatype=24
+impact.datatype.11=HTEST_JavaXML_Contents
+impact.datatype.10=HTEST_JavaXML_Heading
+impact.datatype.9=HTEST_JavaXML_SectionBreak
+impact.datatype.8=HTEST_JavaXML_Title
+impact.datatype.7=HTEST_JavaXML_Topic
+impact.datatype.6=FTEST_JavaXML_Book
+impact.datatype.5=FTEST_JavaXML_Chapter
+impact.datatype.4=FTEST_JavaXML_Contents
+impact.datatype.3=FTEST_JavaXML_Heading
+impact.datatype.2=FTEST_JavaXML_SectionBreak
+impact.datatype.1=FTEST_JavaXML_Title
+impact.policy.numpolicy=4
+impact.datatype.0=FTEST_JavaXML_Topic
+impact.datatype.23=XmlFileTOC
+impact.datatype.22=XmlHttpTOC
+impact.datatype.21=XmlStringTOC
+impact.datatype.20=STEST_JavaXML_Book
+impact.datasrc.0=XmlDsaMediatorDataSource

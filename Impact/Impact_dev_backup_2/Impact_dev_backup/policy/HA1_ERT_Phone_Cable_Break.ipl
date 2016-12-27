@@ -1,0 +1,407 @@
+// Policy Name: ERT_Phone_Cable_Break
+// 
+// Version    Date        Name        Description
+// 1.0        14-09-10    -        Baseline
+// 1.1        14-09-10    Tony Nisbet    Capture ServerSerial with logging (patch 4.22)
+//
+
+log("ERT_Phone_Cable_Break: Start Node= "+ @Node + " Serial= " + @Serial + "Summary= " + @Summary);
+log("ERT_Phone_Cable_Break: IQLOGSTART: ServerSerial=" + @ServerSerial + " EventId=" + @EventId);
+
+// Event reader filter will only put devices with EquipmentType = 'RES'
+DataType = "ha_ncoms_impact_events";
+Filter = "Serial = " +  @Serial;
+UpdateExpression = "ImpactFlag = 12";
+BatchUpdate(DataType, Filter, UpdateExpression);
+
+// Store variable defaults
+HighMarkerVarA = 0;
+LowMarkerVarA = 0;
+HighMarkerVarB = 0;
+LowMarkerVarB = 0;
+ProblemMarkerAEnd = 0;
+ProblemMarkerBEnd = 0;
+
+    // Extract all line numbers (should be 3) from triggering event Summary field
+	    AllLineNumbers = Rextract(EventContainer.Summary,".*{(.*)}.*");
+        //Extract Line Numbers from AllLineNumbers into an array
+        LineNumbers = RextractAll(AllLineNumbers,"([0-9]+), ([0-9]+), ([0-9]+)");
+
+    // Extract the road from the geographical address
+    myRoad = EventContainer.AssetMotorway;
+    // Extract suffix from the geographic address
+    mySuffix = EventContainer.AssetGeographicAddress;
+    if (@Severity = 0) 
+    {
+    Filter = "(Severity > 0) and (EquipmentType = 'RES') and ((TSA = '"+EventContainer.TSA+"') or (TSA = '"+EventContainer.TSB+"')) and ((TSB = '"+EventContainer.TSB+"') or (TSB = '"+EventContainer.TSA+"')) and (AssetMotorway = '"+myRoad+"') and (Manager='Halogen')";
+    }
+    else
+    {
+        // Get events for other RES events for the same line failures on the same road section
+        //Filter = "(Severity > 0) and (EquipmentType = 'RES') and (EventId = 'HAL_007') and ((TSA = '"+EventContainer.TSA+"') or (TSA = '"+EventContainer.TSB+"')) and ((TSB = '"+EventContainer.TSB+"') or (TSB = '"+EventContainer.TSA+"')) and (AssetMotorway = '"+myRoad+"') and (Summary like '.*Line ["+LineNumbers[0]+"|"+LineNumbers[1]+"|"+LineNumbers[2]+"].*')";
+     Filter = "(Severity > 0) and (EquipmentType = 'RES') and ((TSA = '"+EventContainer.TSA+"') or (TSA = '"+EventContainer.TSB+"')) and ((TSB = '"+EventContainer.TSB+"') or (TSB = '"+EventContainer.TSA+"')) and (AssetMotorway = '"+myRoad+"') and (Manager='Halogen') and (Summary like '.*LINE ["+LineNumbers[0]+"|"+LineNumbers[1]+"|"+LineNumbers[2]+"].*')";
+    }        
+    resEvents = GetByFilter('ha_ncoms_impact_events',Filter,false);
+        // Count the results
+        numResEvents = Length(resEvents);
+        log("ERT_Phone_Cable_Break: Get same line failures: "+ Filter );
+        log("ERT_Phone_Cable_Break: Found "+ numResEvents + " events for same line failures");
+
+        // Start a loop
+        x = 0;
+    TotalSTIRef = '';
+        while (x < numResEvents)
+                {
+                // Extract the marker value from the geographic address
+                tempMarker = Rextract(resEvents[x].AssetGeographicAddress, "([0-9]+)[a-zA-Z]*");
+                tempMarkerInt = int(tempMarker);
+                log("ERT_Phone_Cable_Break: Found marker "+ tempMarkerInt );
+                // If x = 0 this is the first value being processed and just needs to be stored
+                if(x = 0)
+                        {
+                        HighMarkerVarA = tempMarkerInt;
+                        LowMarkerVarA = tempMarkerInt;
+                        TotalSTIRef = resEvents[x].STIRef;
+                        }
+                // If x is not 0 then we need to compare the values to get the highest and lowest marker values
+                else
+                        {
+                        //Is temp marker value greater than HighMarkerVarA ?
+                        if(tempMarkerInt > HighMarkerVarA)
+                                {
+                                HighMarkerVarA = tempMarkerInt;
+                                }
+                        // if not is it lower than LowMakerVarA
+                        else
+                                {
+                                if(tempMarkerInt < LowMarkerVarA)
+                                        {
+                                        LowMarkerVarA = tempMarkerInt;
+                                        }
+                                }
+                        }
+          TotalSTIRef = TotalSTIRef + ',' + resEvents[x].STIRef;
+                // Increment the counter
+                x = x + 1;
+                }
+log("HighMarkerVarA " + HighMarkerVarA);
+log("LowMarkerVarA " + LowMarkerVarA);
+
+    if(@Severity = 0)
+    {
+    Filter = "(Severity > 0) and (EquipmentType = 'RES') and ((TSA = '"+EventContainer.TSA+"') or (TSA = '"+EventContainer.TSB+"')) and ((TSB = '"+EventContainer.TSB+"') or (TSB = '"+EventContainer.TSA+"')) and (AssetMotorway = '"+myRoad+"') and (Manager='Halogen')";
+
+    }
+    else
+    {
+        // Get events for other RES events for other line failures on the same road section
+        //Filter = "(Severity > 0) and (EquipmentType = 'RES') and (EventId = 'HAL_007') and ((TSA = '"+EventContainer.TSA+"') or (TSA = '"+EventContainer.TSB+"')) and ((TSB = '"+EventContainer.TSB+"') or (TSB = '"+EventContainer.TSA+"')) and (AssetMotorway = '"+myRoad+"') and (Summary not like '.*Line ["+LineNumbers[0]+"|"+LineNumbers[1]+"|"+LineNumbers[2]+"].*')";
+    Filter = "(Severity > 0) and (EquipmentType = 'RES') and ((TSA = '"+EventContainer.TSA+"') or (TSA = '"+EventContainer.TSB+"')) and ((TSB = '"+EventContainer.TSB+"') or (TSB = '"+EventContainer.TSA+"')) and (AssetMotorway = '"+myRoad+"') and (Summary not like '.*LINE ["+LineNumbers[0]+"|"+LineNumbers[1]+"|"+LineNumbers[2]+"].*') and (Manager='Halogen')";
+    }        
+    resEvents2 = GetByFilter('ha_ncoms_impact_events',Filter,false);
+        // Count the results
+        numResEvents2 = Length(resEvents2);
+        log("ERT_Phone_Cable_Break: Get different line failures: "+ Filter );
+        log("ERT_Phone_Cable_Break: Found "+ numResEvents2 + " events for other line failures");
+
+        // If we have no other line failures
+        if ( numResEvents2 = 0 ) {
+                // Set the B markers to the same as the A markers
+                log("ERT_Phone_Cable_Break: No other line failures");
+                HighMarkerVarB = HighMarkerVarA;
+                LowMarkerVarB = LowMarkerVarA;
+        }
+        // Start a loop
+        y = 0;
+    TotalSTIRefOther = '';
+        while (y < numResEvents2)
+                {
+                // Extract the marker value from the geographic address
+                tempMarker = Rextract(resEvents2[y].AssetGeographicAddress, "([0-9]+)[a-zA-Z]*");
+                tempMarkerInt = int(tempMarker);
+                log("ERT_Phone_Cable_Break: Found marker "+ tempMarkerInt );
+                // If y = 0 this is the first value being processed and just needs to be stored
+                if(y = 0)
+                        {
+                        HighMarkerVarB = tempMarkerInt;
+                        LowMarkerVarB = tempMarkerInt;
+               TotalSTIRefOther = resEvents2[y].STIRef;
+                        }
+                // If y is not 0 then we need to compare the values to get the highest and lowest marker values
+                else
+                        {
+                        //Is temp marker value greater than HighMarkerVarA ?
+                        if(tempMarkerInt > HighMarkerVarB)
+                                {
+                                HighMarkerVarB = tempMarkerInt;
+                                }
+                        // if not is it lower than LowMakerVarB
+                        else
+                                {
+                                if(tempMarkerInt < LowMarkerVarB)
+                                        {
+                                        LowMarkerVarB = tempMarkerInt;
+                                        }
+                                }
+                        }
+          TotalSTIRefOther = TotalSTIRefOther + ',' + resEvents2[y].STIRef;
+                // Increment the counter
+                y = y + 1;
+                }
+log("HighMarkerVarB " + HighMarkerVarB);
+log("LowMarkerVarB " + LowMarkerVarB);
+        // We now have the highest and lowest marker values for sets of events for different RES lines
+        // These can be compared to find the values closest together, and the fault should be between those
+        if(HighMarkerVarA > HighMarkerVarB)
+                {
+                // if High A is greater than High B then the fault must lie between High B and Low A
+                // Set variables accordingly
+                ProblemMarkerAEnd = HighMarkerVarB;
+                ProblemMarkerBEnd = LowMarkerVarA;
+                }
+        else
+                {
+                // if High B is greater than High A then the fault must lie between High A and Low B
+                // Set variables accordingly
+                ProblemMarkerAEnd = HighMarkerVarA;
+                ProblemMarkerBEnd = LowMarkerVarB;
+                }
+    log("ProblemMarkerAEnd " + ProblemMarkerAEnd);
+    log("ProblemMarkerBEnd " + ProblemMarkerBEnd);
+    //log("TotalSTIRef = " + TotalSTIRef);
+    //log("TotalSTIRefOther = " + TotalSTIRefOther);
+    TotalSTIRef = TotalSTIRef + ',' + TotalSTIRefOther;
+    //log("New TotalSTIRef = " + TotalSTIRef);
+    InterfaceSTIs = split(TotalSTIRef,",");
+    DistinctTotalSTIRef = distinct(InterfaceSTIs);
+    DistinctSTINum = length(DistinctTotalSTIRef);
+    //log("DistinctSTINum = " + DistinctSTINum);
+    //log("InterfaceSTIs =" + InterfaceSTIs);
+    //log("DistinctTotalSTIRef =" + DistinctTotalSTIRef);
+
+        // We now check to see if there is already a sythentic event for the RES failure in the ObjectServer
+        // The node field of a synthetic cable break event for this span comprises the road, the suffix indicating the side of the road/junction and the tsa and tsb values
+        Filter = "(Severity > 0) and (Type = 1) and (EquipmentType = 'RES') and (Node in ('"+myRoad+"_"+@TSA+"_"+@TSB+"','"+myRoad+"_"+@TSB+"_"+@TSA+"'))";
+        resSynthEvent = GetByFilter('ha_ncoms_impact_events',Filter,false);
+        log("ERT_Phone_Cable_Break: Get existing synthetic: "+ Filter);
+        numResSynthEvent = Length(resSynthEvent);
+        log("ERT_Phone_Cable_Break: Found this many matching synthetics: "+ numResSynthEvent);
+
+        // Check to see if we found an event
+        if(numResSynthEvent > 0)
+                {
+        // DB 100907 - save the Identifier for later
+        synthIdentifier = resSynthEvent[0].Identifier;
+        // DB 100907 - end
+
+                // If we get to here we did find an event and we need to update it
+                resSynthEvent[0].Severity = 5;
+                resSynthEvent[0].Summary = "Possible RES cable break calculated to be between "+myRoad+"/"+ProblemMarkerAEnd+" and "+myRoad+"/"+ProblemMarkerBEnd;
+          resSynthEvent[0].LastOccurrence = getdate();
+          resSynthEvent[0].TTFlag=0;
+                // Add child id of original event to synthetic events ChildID field
+
+        // GB 140807 - Added checking to see if Serial number is already in the ChildID field
+        //ChildDelimiter = ",";
+        //log("resSynthEvent[0].ChildID = " + resSynthEvent[0].ChildID);
+        //resChildIdArray = Split(resSynthEvent[0].ChildID, ChildDelimiter);
+        //numResChildIdArray = Length(resChildIdArray);
+        //log("numResChildIdArray = " + numResChildIdArray);
+        //aa = 0;
+        //bb = 0;
+        //while (aa < numResChildIdArray)
+        //    {
+        //    if( resChildArray[aa] == EventContainer.ServerSerial )
+        //        {
+        //        bb = bb + 1;
+        //        }
+        //    aa = aa + 1;
+        //    }
+        //if(bb = 0)
+        //    {
+        //log("Adding ChildId");
+        //    resSynthEvent[0].ChildID = resSynthEvent[0].ChildID + "," + EventContainer.ServerSerial;
+        //    }
+
+                //resSynthEvent[0].AlertGroup = "Cable Break Event: RES";
+                //resSynthEvent[0].SuppressEscl = 0;
+          //resSynthEvent[0].SuppressCause = "";
+          //resSynthEvent[0].STIRef = DistinctSTINum;
+           //resSynthEvent[0].STIRef =  DistinctTotalSTIRef;
+                }
+        else
+                {
+
+    // GB 130807 - Stop creating point break type events
+            if((ProblemMarkerAEnd > 0) && (ProblemMarkerAEnd <> ProblemMarkerBEnd))
+            {
+
+                    // If we get to here we did not find an event and we need to insert a new synthetic cable break event
+                    NewEvent = NewObject();
+                    NewEvent.Identifier = "Impact RES cable break event " + myRoad + "_" + @TSA + "_" + @TSB;
+
+        // DB 100907 - save the Identifier for later
+                    synthIdentifier = "Impact RES cable break event " + myRoad + "_" + @TSA + "_" + @TSB;
+        // DB 100907 - end
+
+                    NewEvent.Node = myRoad + "_" + @TSA + "_" + @TSB;
+                      // Added OwnerUID by SK for the Vega# 200807016286
+              NewEvent.OwnerUID = 65534;
+                    NewEvent.TSA = @TSA;
+                    NewEvent.TSB = @TSB;
+                    NewEvent.AlertGroup = "Cable Break Event: RES";
+                    NewEvent.AlertKey = "RES cable event";
+                    NewEvent.LastOccurrence = getdate();
+                    NewEvent.Summary = "Possible RES cable break calculated to be between "+myRoad+"/"+ProblemMarkerAEnd+" and "+myRoad+"/"+ProblemMarkerBEnd;
+                    NewEvent.Severity = 5;
+                    NewEvent.Type = 1;
+    
+              // DB 100807 - Set ActionRequired to 1 for TT creation
+            NewEvent.ActionRequired = 1; 
+              // DB 100807 - Set ServiceAffecting to 1 for TT creation
+                 NewEvent.ServiceAffecting = 1;
+    
+        // DB 100907 - Set additional fields in the event
+            NewEvent.InServiceStatus = @InServiceStatus;
+            NewEvent.FirstOccurrence=getdate();
+            NewEvent.DateGenerated = getdate();
+            //NewEvent.STINum = @STINum;
+            //NewEvent.STIRef = @STI_Ref;
+            NewEvent.RCCArea = @RCCArea;
+        // DB 100907 - End
+
+                    NewEvent.EquipmentType = "RES";
+                    NewEvent.ServiceType = @ServiceType;
+                    NewEvent.Manager = "Netcool Impact";
+                    NewEvent.Agent = @Agent;
+                    NewEvent.ImpactFlag = 2;
+                    NewEvent.EventId = 'IMP_003';
+                    NewEvent.SDPLocation = @SDPLocation;
+                    NewEvent.AssetElectronicAddress = @AssetElectronicAddress;
+            // Under Patch 3.66
+                    //NewEvent.ChildID = @ServerSerial;
+                    NewEvent.ParentChildFlag = 5;
+              NewEvent.ParentChildTime = getdate();
+                    NewEvent.AssetMotorway= myRoad;
+                    NewEvent.AssetGeographicAddress="" + ProblemMarkerAEnd;
+                    NewEvent.RemoteNode="" + ProblemMarkerBEnd;
+                    NewEvent.HalStatus = @HalStatus;
+                    NewEvent.LocalRootObj = @LocalRootObj;
+
+        // GB 140807 - Added FirstRaiseTime and LastRaiseTime from triggering event
+            NewEvent.FirstRaiseTime = @FirstRaiseTime;
+            NewEvent.LastRaiseTime = @LastRaiseTime;
+
+                    // Use the AddDataItem function to add the event to the Object Server.
+                    Type = 'ha_ncoms_impact_events';
+                    AddDataItem(Type,NewEvent);
+            }
+                }    // end of 'if(numResSynthEvent > 0)'
+
+        // DB 100907 - put the ServerName and ServerSerial of the synthetic event in the child events
+        //        if they don't already contain parent information
+
+        // Get the synthetic event as we'll need its ServerName and ServerSerial
+        log("synthIdentifier =" + synthIdentifier);
+        theSynthEvent=GetByFilter('ha_ncoms_impact_events',"(Identifier='"+synthIdentifier+"')",false);
+        numtheSynthEvent = Length(theSynthEvent);
+        log(" numtheSynthEvent = " + numtheSynthEvent);
+        if (numtheSynthEvent > 0)
+        {
+        childId = '';
+        counter = 0;
+        log("numResEvents = " + numResEvents);
+        while ( counter < numResEvents )
+        {
+        if (counter > 0) {
+            childId = childId + ',' + resEvents[counter].ParentServerSerial;
+            } else {
+            childId = resEvents[0].ParentServerSerial;
+            }
+        counter = counter + 1;
+        }
+        counter = 0;
+        log("numResEvents2 = " + numResEvents2);
+        while ( counter < numResEvents2 )
+        {
+        if (counter > 0) {
+            childId = childId + ',' + resEvents2[counter].ParentServerSerial;
+            } else {
+            if (childId <> '')
+            {
+            childId = childId + ',' + resEvents2[counter].ParentServerSerial;
+            }
+            else
+            {
+                childId = resEvents2[0].ParentServerSerial;
+            }
+            }
+        counter = counter + 1;
+        }
+        log("childId = " + childId);
+        ChildIdArray = split(childId,",");
+        DistinctChildId = distinct(ChildIdArray);
+        log("DistinctChildId = " + DistinctChildId);
+        numserialArray = Length(DistinctChildId);
+              log("numserialArray =" + numserialArray);
+        aa = 0;
+        childId = '';
+        while ( aa < numserialArray )
+        {
+            //aChildEvent=GetByFilter('ha_ncoms_impact_events',"(Serial="+serialArray[aa]+")",false);
+            aChildEvent=GetByFilter('ha_ncoms_impact_events',"(Serial="+DistinctChildId[aa]+")",false);
+            numChildEvents = Length(aChildEvent);
+            if (numChildEvents > 0)
+            {
+                aChildEvent[0].ParentServerName = theSynthEvent[0].ServerName;
+                aChildEvent[0].ParentServerSerial = string(theSynthEvent[0].ServerSerial);
+                aChildEvent[0].SuppressEscl = 4;
+                aChildEvent[0].SuppressCause = "Suppressed By ERT Phone Cable Break Policy";
+
+            }
+        if (aa=0)
+        {
+            childId = DistinctChildId[aa];
+        }
+        else
+        {
+            childId = childId + ',' + DistinctChildId[aa];
+        }
+            
+            aa = aa + 1;
+        }
+        // DB 100907 - End
+        }
+     theSynthEvent[0].ChildID = childId;
+     numDistinctTotalSTIRef = length(DistinctTotalSTIRef);
+     aa = 0;
+    stringSTI = '';
+     while (aa < numDistinctTotalSTIRef)
+     {
+        if (aa=0)
+        {
+            stringSTI = DistinctTotalSTIRef[aa];
+        }
+        else
+        {
+            stringSTI = stringSTI + ',' + DistinctTotalSTIRef[aa];
+        }
+            
+        aa = aa + 1;
+    }
+    
+     theSynthEvent[0].STINum = DistinctSTINum;
+     theSynthEvent[0].STIRef = stringSTI;
+        ReturnEvent(EventContainer);
+
+    if (ProblemMarkerAEnd = ProblemMarkerBEnd)
+    {
+        if (numtheSynthEvent > 0)
+        {
+        log("Clear the synthetic event");
+            theSynthEvent[0].Severity=0;
+        }
+    }
+log("ERT_Phone_Cable_Break: IQLOGFINISH: ServerSerial=" + @ServerSerial + " EventId=" + @EventId);
+log("ERT_Phone_Cable_Break: End");
+

@@ -1,0 +1,5 @@
+#This file was written by Impact Server.
+#Tue Sep 13 11:38:43 EDT 2004
+impact.corbanameservice.port=4500
+impact.corbanameservice.logtofile=true
+impact.corbanameservice.autostartup=false

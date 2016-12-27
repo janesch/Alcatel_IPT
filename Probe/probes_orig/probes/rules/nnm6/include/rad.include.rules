@@ -1,0 +1,118 @@
+#Silas Lane assigned agent for use in the lookup table
+#
+#    if(regmatch($1, ".*SWITCH OF DB OCCURRED.*"))
+#        {
+#                $agent = "SWITCH OF DB OCCURRED"
+#        }
+#    else if(regmatch($1, ".*CLK CHANGED TO MASTER CLK SRC.*"))
+#        {
+#                $agent = "CLK CHANGED TO MASTER CLK SRC"
+#        }
+#    else if(regmatch($1, ".*DB UPDATE OCCURRED.*"))
+#        {
+#                $agent = "DB UPDATE OCCURRED"
+#        }
+#    else if(regmatch($1, ".*LOSS OF RX CLOCK.*"))
+#        {
+#                $agent = "LOSS OF RX CLOCK"
+#        }
+#    else if(regmatch($1, ".*LOSS OF SIGNAL ERR.*"))
+#        {
+#                $agent = "LOSS OF SIGNAL ERR"
+#        }
+#    else if(regmatch($1, ".*JITTER.*"))
+#        {
+#                $agent = "JITTER BUFFER OVERFLOW/UNDERFLOW EVENT"
+#        }
+#    else if(regmatch($1, ".*SEQUENCE ERROR.*"))
+#        {
+#                $agent = "SEQUENCE ERROR"
+#        }
+#    else if(regmatch($1, ".*LOC SYNC LOSS.*"))
+#        {
+#                $agent = "LOC SYNC LOSS"
+#        }
+#    else if(regmatch($1, ".*SYNC LOSS.*"))
+#        {
+#                $agent = "SYNC LOSS"
+#        }
+#    else if(regmatch($1, ".*CRC ERROR.*"))
+#        {
+#                $agent = "CRC ERROR"
+#        }
+#    else if(regmatch($1, ".*LOST SIGNAL.*"))
+#        {
+#		$agent = "LOST SIGNAL" 
+#		$temp = extract ($1, "(.*)..-..-[^-]+$")	
+#        }
+#    else if(regmatch($1, ".*NO CARRIER SENSE.*"))
+#        {
+#		$agent = "NO CARRIER SENSE"	
+#        }
+#    else if(regmatch($1, ".*BPV ERROR HAS.*"))
+#        {
+#		$agent = "BPV ERROR"	
+#        }
+#        else
+#        {
+#                $agent = "Unknown"
+#        }
+
+# 220806 - Silas Lane assigned type
+
+    if(regmatch($1, ".*MINOR.*"))
+        {
+                $Type = 1
+        }
+    else if(regmatch($1, ".*MAJOR.*"))
+        {
+                $Type = 1
+        }
+    else if(regmatch($1, ".*REMOVED.*"))
+        {
+                $Type = 1
+		$AlertKey = $3
+		$Sev = 4
+        }
+    else if(regmatch($1, ".*INSERTED.*"))
+        {
+                $Type = 2
+		$AlertKey = $3
+        }
+    else if(regmatch($1, ".*OFF.*"))
+        {
+                $Type = 2
+        }
+    else
+        {
+                $Type = 13
+        }
+
+######
+		$temp2 = extract ($1, "^\(([0-9]+)\).*")	
+# 230806 - Silas Lane did the lookup
+
+[$Alm, $Sev, $AlmNam, $AlmCaus, $AlmCls, $SiteVisEvnt, $SrvAffEvt, $ResAffEvnt, $CorEvnt] = lookup ($temp2, "rad")
+
+# 230806 - Silas Lane did the assignements
+	if(exists($AlertKey))
+		{
+		@AlertKey = $AlertKey
+		} else {
+    		@AlertKey = $temp2
+		}
+    	@Node = $IPAddress
+    	@Severity = $Sev
+	@X733ProbableCause = $AlmCaus
+	@AlarmClass = $AlmNam
+	@ActionRequired = $SiteVisEvnt
+	@ServiceAffecting = $SrvAffEvt
+	@ResilienceAffecting = $ResAffEvnt
+	@CorrelationFlag = $CorEvnt
+    	@Type = $Type
+
+################
+# Added by Giles Blake for module inserted/removed correlations
+################
+
+

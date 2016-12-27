@@ -1,0 +1,342 @@
+switch ($notifFaultId) 
+{
+
+	case "290N" | "295N":
+		# Problem=290, Clear=295
+		# $notifAddTex = "Lap DPNSS -20 (-20:lost 16:estab) on channel 28"
+		# $notifAddTex = "Lap DASS2 16 (-20:lost 16:estab) on channel 28"
+		$parameters = extract($notifAddText, " on channel (.*)$")
+
+	# Comment out because they're not in the DB requirements
+	case "379N":
+		# Cleared by 409
+		# $notifAddTex = "Inter ACT link HS: 23,(19,1),10.50.64.50,00:80:9f:35:a8:54"
+		$param1 = extract($notifAddText, "link HS: [0-9]+,\(([0-9]+),[0-9]+\),")
+		$param2 = extract($notifAddText, "link HS: [0-9]+,\([0-9]+,([0-9]+)\),")
+		$parameters = $param1 + " " + $param2
+		$notifManagedObject=extract($notifManagedObject,"^(.*Board::[0-9]+)")
+		@PhysicalCard = "GD"
+
+	case "409N":
+		# Clears 379
+		# $notifAddTex = "The inter-ACT link over IP from (19 1) is up"
+		$parameters = extract($notifAddText, "IP from \(([^)]+)")
+		@PhysicalCard = "GD"
+
+	case "740N":
+		# Cleared by 741
+		# $notifAddText = "Beginning of an INT/IP downloading @:00.80.9f.35.a8.54 (binmg)"
+		$parameters = extract($notifAddText, "downloading @:(.*)$")
+		@PhysicalCard = "GD"
+
+	case "741N":
+		# Clears 740
+		# $notifAddText = ""End of downloading of an INT/IP board @:00.80.9f.35.a8.54 (binmg)"
+		$parameters = extract($notifAddText, "an INT/IP board @:(.*)$")
+		@PhysicalCard = "GD"
+
+	case "993N" | "994N":
+		# Clear=993,Problem = 994
+		# $notifAddText = "DPNSS/DASS channel 160 layer 2 reset ok (type 5)"
+		# $notifAddText = "DPNSS/DASS channel 160 layer 2 reset failed"
+		$parameters = extract($notifAddText, "channel ([^ ]+)")
+
+	case "2011N":
+		# Information Alarm
+		# $notifAddText = "No more TS between CR 160 and CR 0 or no more conference resources"
+		$p1 = extract($notifAddText, "TS between CR ([^ ]+)")
+		$p2 = extract($notifAddText, "and CR ([^ ]+)")
+		$parameters = $p1 + " " + $p2
+
+	case "2019N":
+		# Clears 2042, 2043
+		# $notifAddText = "GD coupler commissioning"
+		# $notifManagedObject = "Network::PTN\Subnetwork::PTN\Node::Domain B\Shelf::8\Board::0"
+		# The $board was extracted from the parent rules files
+
+		$parameters = extract($notifAddText, "^(.*) coupler commissioning")
+
+		switch($notifAddText)
+                {
+                        case "GD coupler commissioning":
+                                if(match($board, "0"))
+                                {
+                                        # AlarmClass will be 2019GDN
+                                        $notifFaultId = $2 + "GDN"
+                                        @AlarmClass = $notifFaultId
+                                        @Summary = $notifAddText
+                                        @PhysicalCard = "GD"
+                                }
+                                else
+                                {
+                                        discard
+                                }
+
+                        case "Z coupler commissioning":
+                                if(match($board, "NoBoard"))
+                                {
+                                        # AlarmClass will be 2019SLI-16N
+                                        $notifFaultId = $2 + "SLI-16N"
+                                        @AlarmClass = $notifFaultId
+                                        @Summary = "Z(SLI-16) coupler commissioning" + "\" + "Board" + $board
+                                        @PhysicalCard = "SLI-16 PORT 01"
+                                }
+                                else
+                                {
+                                        # AlarmClass will be 2019SLI-16N
+                                        $notifFaultId = $2 + "SLI-16N"
+                                        @AlarmClass = $notifFaultId
+                                        @Summary = "Z(SLI-16) coupler commissioning"
+                                        @PhysicalCard = "BOARD " + $BoardNum
+                                }
+
+                        case "GA coupler commissioning":
+                                # AlarmClass will be 2019GAN
+                                $notifFaultId = $2 + "GAN"
+                                @AlarmClass = $notifFaultId
+                                @Summary = $notifAddText
+                                @PhysicalCard = "GA"
+
+
+                        default:
+                                if(match($board, "6") || match($board, "7"))
+                                {
+                                        # AlarmClass will be 2019DASS2N
+                                        $notifFaultId = $2 + "DASS2N"
+                                        @AlarmClass = $notifFaultId
+                                        @Summary = "Loss of a DASS2 type cpl"
+                                        @PhysicalCard = "DASS2 BOARD " + $BoardNum
+                                }
+                                else
+                                {
+                                        discard
+                                }
+                }
+
+
+
+
+	case "2042N":
+		# Cleared by 2019
+		# $notifAddText = "Loss of a GD type cpl"
+		# Creats Dummy Events for 2042 fault id based on Board Information
+                # $notifManagedObject = "\Network::PTN\Subnetwork::PTN\Node::Domain B\Shelf::8\Board::0"
+		# The $board was extracted from the parent rules files
+
+		$parameters = extract($notifAddText, "Loss of a (.*) type cpl")
+
+		switch($notifAddText)
+		{
+			case "Loss of a GD type cpl":
+				if(match($board, "0"))
+				{
+					# AlarmClass will be 2042GDN
+					$notifFaultId = $2 + "GDN"
+					@AlarmClass = $notifFaultId
+					@PhysicalCard = "GD"
+                                        # @Summary = $notifAddText + " Board " + $board + " Card " + @PhysicalCard
+                                        @Summary = $notifAddText + "\" + "Board" + "::" +  $board 
+				}
+				else
+				{
+					discard
+				}
+
+			case "Loss of a Z type cpl":
+				if(match($board, "NoBoard"))
+                        	{
+					# AlarmClass will be 2042SLI-16N
+                               		$notifFaultId = $2 + "SLI-16N"
+                                	@AlarmClass = $notifFaultId
+                                	@PhysicalCard = "SLI-16 PORT 01"
+                                	# @Summary = "Loss of a Z(SLI-16) type cpl " + "Board " + $board + " Card " +  @PhysicalCard 
+                                	@Summary = "Loss of a Z(SLI-16) type cpl " + "\" +  "Board" + "::" + $board 
+                        	}
+                        	else
+                        	{
+                                	# AlarmClass will be 2042SLI-16N
+                                	$notifFaultId = $2 + "SLI-16N"
+                                	@AlarmClass = $notifFaultId
+                                	@PhysicalCard = "BOARD " + $BoardNum
+                                	@Summary = "Loss of a Z(SLI-16) type cpl" + "\" +  "Board" + "::" + $board 
+                        	}
+	
+			case "Loss of a GA type cpl":
+				# AlarmClass will be 2042GAN
+	                        $notifFaultId = $2 + "GAN"
+				@AlarmClass = $notifFaultId
+                        	@PhysicalCard = "GA"
+                                # @Summary = $notifAddText + " Board " + $borad + " Card " +  @PhysicalCard
+                                @Summary = $notifAddText + "\" + "Board" + "::" +  $board 
+
+
+			default:
+				if(match($board, "6") || match($board, "7"))
+				{
+					# AlarmClass will be 2042DASS2N
+					$notifFaultId = $2 + "DASS2N"
+					@AlarmClass = $notifFaultId
+                                        @PhysicalCard = "DASS2 BOARD " + $BoardNum
+                                        @Summary = "Loss of a DASS2 type cpl" + "\" + "Board" + "::" +  $board
+				}
+				else
+				{
+					discard	
+				}
+		}	
+
+
+	case "2043N":
+		# Cleared by 2019
+		# $notifAddText = "Loss of the 4 CRYSTAL"
+		#$board = extract($notifAddText, "Loss of the ([^ ]+)")
+                # Editted Board 00 information to match with 2019GDN Event for Clearing 
+                $parameters = "GD" 
+                # AlarmClass will be 2043GDN
+                $notifFaultId = $2 + "GDN"
+                @AlarmClass = $notifFaultId
+		@PhysicalCard = "GD"
+                # @Summary = $notifAddText + "Board " + $board + " Card " + @PhysicalCard
+                @Summary = $notifAddText + "\" + "Board" + "::" + "0"
+		$notifManagedObject = $notifManagedObject + "\Board::0"
+  
+                #if (match($board, "00"))
+                #{
+	        #         # AlarmClass will be 2043GDN
+                #         $notifFaultId = $2 + "GDN"
+                #         @AlarmClass = $notifFaultId
+                #         @Summary = "Loss of a GD type cpl"
+                # }
+                 #else
+                 #{
+                 #        # AlarmClass will be 2043GAN
+                 #        $notifFaultId = $2 + "GAN"
+                 #        @AlarmClass = $notifFaultId
+                 #        @Summary = "Loss of a GA type cpl"
+                 #}
+
+	case "2140N":
+		# Cleared by 2141
+		# $notifAddText = "Alarm : SET resources quantity critical"
+		$parameters = extract($notifAddText, "Alarm : ([^ ]+)")
+
+	case "2141N":
+		# Clear 2140
+		# $notifAddText = "SET resources quantity normal"
+		$parameters = extract($notifAddText, "^([^ ]+)")
+
+	case "2059N" | "2168N" | "2171N":
+		# Clear = 2059 Problem in (2168, 2171)
+		# $notifManagedObject = "Network::PTN\Subnetwork::PTN\Node::Domain A\Shelf::0\Board::10"
+		$parameters = extract($notifManagedObject, "^(.*)\\Board")
+                $notifManagedObject = $parameters 
+
+	case "2490N":
+		# Cleared by 2491
+		# $notifAddText = "Loss of a virtual coupler GPA (4,27) of the associated coupler GD (4,0)"
+		$p1 = extract($notifAddText, "virtual coupler ([^ ]+)")
+		$p23 = extract($notifAddText, "virtual coupler .* (\([0-9]+,[0-9]+\)) of")
+		$param1 = $p1 + $p23
+		$p4 = extract($notifAddText, "associated coupler ([^ ]+)")
+		$p5 = extract($notifAddText, "associated coupler .* (\([0-9]+,[0-9]+\))$")
+        	$param2 = $p4 + $p5
+        	$parameters = $param1 + $param2
+                @PhysicalCard = "GD" 
+
+	case "2491N":
+		# Clear 2490
+		# $notifAddText = "GPA(4,27) virtual coupler commissioning of the associated coupler GD(4,0)"
+		$param1 = extract($notifAddText, "^([^ ]+)")
+      		$param2 = extract($notifAddText, "ssociated coupler (.*)$")
+      		$parameters = $param1 + $param2
+		@PhysicalCard = "GD"
+
+	case "2826N" | "2827N":
+		# Problem=2826, Clear=2827
+		# $notifAddText = "PH:Local link [20 10] is down" 
+		# $notifAddText = "PH:Local link [20 10] is up"
+		$parameters = extract($notifAddText, "link \[(.*)\]")
+
+	case "2832N" | "2846N":
+		# Problem=2832, Clear=2846
+		# $notifAddText = "PH:Node 10 is unreachable"
+		# $notifAddText = "PH:Node 10 is reachable"
+		$parameters = extract($notifAddText, "PH:Node ([^ ]+)")
+
+	case "2837N" | "2836N":
+		# Problem=2837, Clear=2836
+		# $notifAddText = "PH:Access (160 5 1) is down"
+		# $notifAddText = "PH:Access (160 5 1) is up"
+		$parameters = extract($notifAddText, "PH:Access \((.*)\) is")
+
+	case "2839N" | "2838N":
+		# Problem=2839, Clear=2838
+		# $notifAddText = "PH:PLL 160 is down on access (5 1 0)"
+		# $notifAddText = "PH:PLL 160 is up on access (5 1 0)"
+		$param1 = extract($notifAddText, "PH:PLL ([^ ]+)")
+		$param2 = extract($notifAddText, "on access (.*)")
+ 		$parameters = $param1 + $param2
+
+
+	case "2863N" | "2862N":
+		# Problem=2863, Clear=2862
+		# $notifAddText = "PH:Hybrid Access (10 1 Main) is up"
+		#$parameters = extract($notifAddText, "PH:Hybrid Access (.*) is")
+		$parameters = extract($notifAddText, "PH:Hybrid Access \(([^)]+)")
+                $mokey = extract ($notifManagedObject, "^(.*)\\ACT")
+                $notifManagedObject = $mokey
+
+	case "2864N" | "2865N":
+       		# Problem=2865, Clear=2864 
+		# $notifAddText = "PH:PLL 0 is down on Hybrid Access (10 1 Main)"
+		# $notifAddText = "PH:PLL 0 is up on Hybrid Access (10 1 Main)"
+        	$param1 = extract($notifAddText, "PH:PLL ([^ ]+)")
+	  	$param2 = extract($notifAddText, "Hybrid Access \(([^)]+)")
+        	$parameters = $param1 + $param2
+
+	case "2866N":
+		# Cleared by 2864
+		# $notifAddText = "PH:Estab Req for PLL 0 on Hybrid Access (10 1 Main)"
+                # $notifAddText = 
+		$param1 = extract($notifAddText, "for PLL ([^ ]+)")
+		$param2 = extract($notifAddText, "Hybrid Access \(([^)]+)")
+ 		$parameters = $param1 +  $param2
+
+	case "2867N":
+		# Cleared by 2862 or 2864
+		# $notifAddText = "PH:Hybrid Access (10 1 Main) goes down"
+                $parameters = extract($notifAddText, "Hybrid Access \(([^)]+)")
+
+	case "4402N":
+		# $notifAddText = "Compression state 3 (10-13 INFO, other ERROR); daughter board 1,DSP 1"
+		$parameters = extract($notifAddText, "daughter board ([^,]+)")
+
+#	case "5857N":
+#                # $notifManagedObject = "\Network::PTN\Subnetwork::PTN\Node::Domain B\Shelf::4\Board::0"
+#                $board = extract($notifManagedObject, "Board::([^ ]+)")
+#                if (match($board, "0"))
+#                {
+#        	        $notifFaultId = $2 + "GDN"
+#                        @AlarmClass = $notifFaultId
+#                        $notifAddText = "Loss of a GD type cpl"
+#                        @Summary = $notifAddText
+#                 }
+#                 else if ((match($board ,"6")) || (match($board, "7")))
+#                 {
+#                        $notifFaultId = $2 + "SLI-16N"
+#                        @AlarmClass = $notifFaultId
+#                        $notifAddText = "Loss of a Z(SLI-16) type cpl"
+#                        @Summary = $notifAddText
+#                  }
+#                  else
+#                  {
+#               		$notifFaultId = $2 + "GAN"
+#                        @AlarmClass = $notifFaultId
+#                        $notifAddText = "Loss of a GA type cpl"
+#                        @Summary = $notifAddText
+#                  }
+
+
+	default:
+}
+

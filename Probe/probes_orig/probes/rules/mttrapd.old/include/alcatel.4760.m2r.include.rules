@@ -1,0 +1,1047 @@
+######
+# alcatel include file
+######
+case ".1.3.6.1.4.1.637.64.4760": # - nmc50
+
+	switch($specific-trap) {
+		case "3": ### - trapAddPbx
+			# SNMPv1
+			# A trap that notify a new PABX to manage 
+			$pbxNetname = $1
+			$pbxSubnetname = $2
+			$pbxName = $3
+				$pbxTypelook = "pbxType." + $4
+				$pbxType = lookup($pbxTypelook,VarbindValTable)
+				if(match($pbxType,"UNKNOWN")) {
+					$pbxType = $4
+				} else {
+					$pbxType = $pbxType + " ( " + $4 + " )"
+				}
+				$pbxStatuslook = "pbxStatus." + $5
+				$pbxStatus = lookup($pbxStatuslook,VarbindValTable)
+				if(match($pbxStatus,"UNKNOWN")) {
+					$pbxStatus = $5
+				} else {
+					$pbxStatus = $pbxStatus + " ( " + $5 + " )"
+				}
+			$pbxCritical = $6
+			$pbxMajor = $7
+			$pbxMinor = $8
+			$pbxWarning = $9
+			$pbxIndeterminated = $10
+			@AlertGroup = ""
+			@Agent = "NMC50-MIB"
+			@Summary = "trapAddPbx " + $pbxStatus
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($pbxNetname,$pbxSubnetname,$pbxName,$pbxType,$pbxStatus,$pbxCritical,$pbxMajor,$pbxMinor,$pbxWarning,$pbxIndeterminated)
+
+		case "4": ### - trapDelPbx
+			# SNMPv1
+			# A trap that notify to stop to manage a PABX 
+			$pbxName = $1
+			@AlertGroup = ""
+			@Agent = "NMC50-MIB"
+			@Summary = "trapDelPbx"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($pbxName)
+
+		case "6": ### - trapState
+			# SNMPv1
+			# A trap that notify a problem state change 
+			$notifProblemId = $1
+				$notifProblemStatelook = "notifProblemState." + $2
+				$notifProblemState = lookup($notifProblemStatelook,VarbindValTable)
+				if(match($notifProblemState,"UNKNOWN")) {
+					$notifProblemState = $2
+				} else {
+					$notifProblemState = $notifProblemState + " ( " + $2 + " )"
+				}
+			@AlertGroup = ""
+			@Agent = "NMC50-MIB"
+			@Summary = "trapState" + " " + $notifProblemId + " to state " + $notifProblemState
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($notifProblemId,$notifProblemState)
+
+		case "10": ### - trapUnknownIncident
+			# SNMPv1
+			# A trap that notify a PABX incident with UNKNOWN severity 
+				$notifSenderTypelook = "notifSenderType." + $1
+				$notifSenderType = lookup($notifSenderTypelook,VarbindValTable)
+				if(match($notifSenderType,"UNKNOWN")) {
+					$notifSenderType = $1
+				} else {
+					$notifSenderType = $notifSenderType + " ( " + $1 + " )"
+				}
+			$notifFaultId = $2
+			$notifIncidentNumber = $3
+			$notifAlarmId = $4
+			$notifProblemId = $5
+			$notifEventType = $6
+			$notifManagedObject = $7
+			$notifProbableCause = $8
+				$notifCorrelationlook = "notifCorrelation." + $9
+				$notifCorrelation = lookup($notifCorrelationlook,VarbindValTable)
+				if(match($notifCorrelation,"UNKNOWN")) {
+					$notifCorrelation = $9
+				} else {
+					$notifCorrelation = $notifCorrelation + " ( " + $9 + " )"
+				}
+			$notifReceptionTime = $10
+			$notifAddText = $11
+			@AlertGroup = ""
+			@Agent = "NMC50-MIB"
+			@Summary = "trapUnknownIncident" + "details:" + " " + $notifManagedObject
+			@Severity = 1
+			@Type = 1
+			@Identifier = @Node + @Summary
+			#details($notifSenderType,$notifFaultId,$notifIncidentNumber,$notifAlarmId,$notifProblemId,$notifEventType,$notifManagedObject,$notifProbableCause,$notifCorrelation,$notifReceptionTime,$notifAddText)
+
+		case "11": ### - trapCriticalIncident
+			# SNMPv1
+			# A trap that notify a PABX incident with CRITICAL severity 
+				$notifSenderTypelook = "notifSenderType." + $1
+				$notifSenderType = lookup($notifSenderTypelook,VarbindValTable)
+				if(match($notifSenderType,"UNKNOWN")) {
+					$notifSenderType = $1
+				} else {
+					$notifSenderType = $notifSenderType + " ( " + $1 + " )"
+				}
+			$notifFaultId = $2
+			$notifIncidentNumber = $3
+			$notifAlarmId = $4
+			$notifProblemId = $5
+			$notifEventType = $6
+			$notifManagedObject = $7
+			$notifProbableCause = $8
+				$notifCorrelationlook = "notifCorrelation." + $9
+				$notifCorrelation = lookup($notifCorrelationlook,VarbindValTable)
+				if(match($notifCorrelation,"UNKNOWN")) {
+					$notifCorrelation = $9
+				} else {
+					$notifCorrelation = $notifCorrelation + " ( " + $9 + " )"
+				}
+			$notifReceptionTime = $10
+			$notifAddText = $11
+
+			# Discard 140 Event
+			if (match($notifFaultId, "140"))		
+			{
+				discard
+			}
+			else
+			{
+				@AlertGroup = ""
+				@Agent = "NMC50-MIB"
+				@Summary = "trapCriticalIncident"  + "details:" + " " + $notifManagedObject
+				@Severity = 1
+				@Type = 1
+				@Identifier = @Node + @Summary
+				#details($notifSenderType,$notifFaultId,$notifIncidentNumber,$notifAlarmId,$notifProblemId,$notifEventType,$notifManagedObject,$notifProbableCause,$notifCorrelation,$notifReceptionTime,$notifAddText)
+			}
+
+		case "12": ### - trapMajorIncident
+			# SNMPv1
+			# A trap that notify a PABX incident with MAJOR severity 
+				$notifSenderTypelook = "notifSenderType." + $1
+				$notifSenderType = lookup($notifSenderTypelook,VarbindValTable)
+				if(match($notifSenderType,"UNKNOWN")) {
+					$notifSenderType = $1
+				} else {
+					$notifSenderType = $notifSenderType + " ( " + $1 + " )"
+				}
+			$notifFaultId = $2
+			$notifIncidentNumber = $3
+			$notifAlarmId = $4
+			$notifProblemId = $5
+			$notifEventType = $6
+			$notifManagedObject = $7
+			$notifProbableCause = $8
+				$notifCorrelationlook = "notifCorrelation." + $9
+				$notifCorrelation = lookup($notifCorrelationlook,VarbindValTable)
+				if(match($notifCorrelation,"UNKNOWN")) {
+					$notifCorrelation = $9
+				} else {
+					$notifCorrelation = $notifCorrelation + " ( " + $9 + " )"
+				}
+			$notifReceptionTime = $10
+			$notifAddText = $11
+			@AlertGroup = ""
+			@Agent = "NMC50-MIB"
+			@Summary = "trapMajorIncident" + "details:" + " " + $notifManagedObject
+			@Severity = 1
+			@Type = 1
+			@Identifier = @Node + @Summary
+			#details($notifSenderType,$notifFaultId,$notifIncidentNumber,$notifAlarmId,$notifProblemId,$notifEventType,$notifManagedObject,$notifProbableCause,$notifCorrelation,$notifReceptionTime,$notifAddText)
+
+		case "13": ### - trapMinorIncident
+			# SNMPv1
+			# A trap that notify a PABX incident with MINOR severity 
+				$notifSenderTypelook = "notifSenderType." + $1
+				$notifSenderType = lookup($notifSenderTypelook,VarbindValTable)
+				if(match($notifSenderType,"UNKNOWN")) {
+					$notifSenderType = $1
+				} else {
+					$notifSenderType = $notifSenderType + " ( " + $1 + " )"
+				}
+			$notifFaultId = $2
+			$notifIncidentNumber = $3
+			$notifAlarmId = $4
+			$notifProblemId = $5
+			$notifEventType = $6
+			$notifManagedObject = $7
+			$notifProbableCause = $8
+				$notifCorrelationlook = "notifCorrelation." + $9
+				$notifCorrelation = lookup($notifCorrelationlook,VarbindValTable)
+				if(match($notifCorrelation,"UNKNOWN")) {
+					$notifCorrelation = $9
+				} else {
+					$notifCorrelation = $notifCorrelation + " ( " + $9 + " )"
+				}
+			$notifReceptionTime = $10
+			$notifAddText = $11
+			@AlertGroup = ""
+			@Agent = "NMC50-MIB"
+			@Summary = "trapMinorIncident" + "details:" + " " + $notifManagedObject
+			@Severity = 1
+			@Type = 1
+			@Identifier = @Node + @Summary
+			#details($notifSenderType,$notifFaultId,$notifIncidentNumber,$notifAlarmId,$notifProblemId,$notifEventType,$notifManagedObject,$notifProbableCause,$notifCorrelation,$notifReceptionTime,$notifAddText)
+
+		case "14": ### - trapWarningIncident
+			# SNMPv1
+			# A trap that notify a PABX incident with WARNING severity 
+				$notifSenderTypelook = "notifSenderType." + $1
+				$notifSenderType = lookup($notifSenderTypelook,VarbindValTable)
+				if(match($notifSenderType,"UNKNOWN")) {
+					$notifSenderType = $1
+				} else {
+					$notifSenderType = $notifSenderType + " ( " + $1 + " )"
+				}
+			$notifFaultId = $2
+			$notifIncidentNumber = $3
+			$notifAlarmId = $4
+			$notifProblemId = $5
+			$notifEventType = $6
+			$notifManagedObject = $7
+			$notifProbableCause = $8
+				$notifCorrelationlook = "notifCorrelation." + $9
+				$notifCorrelation = lookup($notifCorrelationlook,VarbindValTable)
+				if(match($notifCorrelation,"UNKNOWN")) {
+					$notifCorrelation = $9
+				} else {
+					$notifCorrelation = $notifCorrelation + " ( " + $9 + " )"
+				}
+			$notifReceptionTime = $10
+			$notifAddText = $11
+			@AlertGroup = ""
+			@Agent = "NMC50-MIB"
+			@Summary = "trapWarningIncident" + "details:" + " " + $notifManagedObject
+			@Severity = 1
+			@Type = 1
+			@Identifier = @Node + @Summary
+			#details($notifSenderType,$notifFaultId,$notifIncidentNumber,$notifAlarmId,$notifProblemId,$notifEventType,$notifManagedObject,$notifProbableCause,$notifCorrelation,$notifReceptionTime,$notifAddText)
+
+		case "15": ### - trapIndeterminateIncident
+			# SNMPv1
+			# A trap that notify a PABX incident with INDETERMINATE severity 
+				$notifSenderTypelook = "notifSenderType." + $1
+				$notifSenderType = lookup($notifSenderTypelook,VarbindValTable)
+				if(match($notifSenderType,"UNKNOWN")) {
+					$notifSenderType = $1
+				} else {
+					$notifSenderType = $notifSenderType + " ( " + $1 + " )"
+				}
+			$notifFaultId = $2
+			$notifIncidentNumber = $3
+			$notifAlarmId = $4
+			$notifProblemId = $5
+			$notifEventType = $6
+			$notifManagedObject = $7
+			$notifProbableCause = $8
+				$notifCorrelationlook = "notifCorrelation." + $9
+				$notifCorrelation = lookup($notifCorrelationlook,VarbindValTable)
+				if(match($notifCorrelation,"UNKNOWN")) {
+					$notifCorrelation = $9
+				} else {
+					$notifCorrelation = $notifCorrelation + " ( " + $9 + " )"
+				}
+			$notifReceptionTime = $10
+			$notifAddText = $11
+			@AlertGroup = ""
+			@Agent = "NMC50-MIB"
+			@Summary = "trapIndeterminateIncident" + "details:" + " " + $notifManagedObject
+			@Severity = 1
+			@Type = 1
+			@Identifier = @Node + @Summary
+			#details($notifSenderType,$notifFaultId,$notifIncidentNumber,$notifAlarmId,$notifProblemId,$notifEventType,$notifManagedObject,$notifProbableCause,$notifCorrelation,$notifReceptionTime,$notifAddText)
+
+		case "16": ### - trapClearIncident
+			# SNMPv1
+			# A trap that notify a PABX incident with CLEAR severity 
+				$notifSenderTypelook = "notifSenderType." + $1
+				$notifSenderType = lookup($notifSenderTypelook,VarbindValTable)
+				if(match($notifSenderType,"UNKNOWN")) {
+					$notifSenderType = $1
+				} else {
+					$notifSenderType = $notifSenderType + " ( " + $1 + " )"
+				}
+			$notifFaultId = $2
+			$notifIncidentNumber = $3
+			$notifAlarmId = $4
+			$notifProblemId = $5
+			$notifEventType = $6
+			$notifManagedObject = $7
+			$notifProbableCause = $8
+				$notifCorrelationlook = "notifCorrelation." + $9
+				$notifCorrelation = lookup($notifCorrelationlook,VarbindValTable)
+				if(match($notifCorrelation,"UNKNOWN")) {
+					$notifCorrelation = $9
+				} else {
+					$notifCorrelation = $notifCorrelation + " ( " + $9 + " )"
+				}
+			$notifReceptionTime = $10
+			$notifAddText = $11
+			@AlertGroup = ""
+			@Agent = "NMC50-MIB"
+			@Summary = "trapClearIncident" + "details:" + " " + $notifManagedObject
+			@Severity = 1
+			@Type = 2
+			@Identifier = @Node + @Summary
+			#details($notifSenderType,$notifFaultId,$notifIncidentNumber,$notifAlarmId,$notifProblemId,$notifEventType,$notifManagedObject,$notifProbableCause,$notifCorrelation,$notifReceptionTime,$notifAddText)
+
+		case "21": ### - trapPbxStatus
+			# SNMPv1
+			# A trap that notify a PABX status change 
+				$pbxStatuslook = "pbxStatus." + $1
+				$pbxStatus = lookup($pbxStatuslook,VarbindValTable)
+				if(match($pbxStatus,"UNKNOWN")) {
+					$pbxStatus = $1
+				} else {
+					$pbxStatus = $pbxStatus + " ( " + $1 + " )"
+				}
+			$pbxCritical = $2
+			$pbxMajor = $3
+			$pbxMinor = $4
+			$pbxWarning = $5
+			$pbxIndeterminated = $6
+			@AlertGroup = ""
+			@Agent = "NMC50-MIB"
+			@Summary = "trapPbxStatus" + "details:" + " " + $notifManagedObject
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($pbxStatus,$pbxCritical,$pbxMajor,$pbxMinor,$pbxWarning,$pbxIndeterminated)
+
+		case "22": ### - trapNmcStatus
+			# SNMPv1
+			# A trap that notify the NMC status change 
+				$nmc50Statuslook = "nmc50Status." + $1
+				$nmc50Status = lookup($nmc50Statuslook,VarbindValTable)
+				if(match($nmc50Status,"UNKNOWN")) {
+					$nmc50Status = $1
+				} else {
+					$nmc50Status = $nmc50Status + " ( " + $1 + " )"
+				}
+			$nmc50CriticalAlarmsCount = $2
+			$nmc50MajorAlarmsCount = $3
+			$nmc50MinorAlarmsCount = $4
+			$nmc50WarningAlarmsCount = $5
+			$nmc50IndeterminateAlarmsCount = $6
+			@AlertGroup = ""
+			@Agent = "NMC50-MIB"
+			@Summary = "trapNmcStatus"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($nmc50Status,$nmc50CriticalAlarmsCount,$nmc50MajorAlarmsCount,$nmc50MinorAlarmsCount,$nmc50WarningAlarmsCount,$nmc50IndeterminateAlarmsCount)
+
+		case "51": ### - trapModifyPbx
+			# SNMPv1
+			# A trap that notify a new PABX to manage 
+			$pbxNetname = $1
+			$pbxSubnetname = $2
+			$pbxName = $3
+				$pbxTypelook = "pbxType." + $4
+				$pbxType = lookup($pbxTypelook,VarbindValTable)
+				if(match($pbxType,"UNKNOWN")) {
+					$pbxType = $4
+				} else {
+					$pbxType = $pbxType + " ( " + $4 + " )"
+				}
+				$pbxStatuslook = "pbxStatus." + $5
+				$pbxStatus = lookup($pbxStatuslook,VarbindValTable)
+				if(match($pbxStatus,"UNKNOWN")) {
+					$pbxStatus = $5
+				} else {
+					$pbxStatus = $pbxStatus + " ( " + $5 + " )"
+				}
+			$pbxCritical = $6
+			$pbxMajor = $7
+			$pbxMinor = $8
+			$pbxWarning = $9
+			$pbxIndeterminated = $10
+			@AlertGroup = ""
+			@Agent = "NMC50-MIB"
+			@Summary = "trapModifyPbx"  + "details:" + " " + $notifNetworkId
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($pbxNetname,$pbxSubnetname,$pbxName,$pbxType,$pbxStatus,$pbxCritical,$pbxMajor,$pbxMinor,$pbxWarning,$pbxIndeterminated)
+
+		case "52": ### - trapModifySubnetwork
+			# SNMPv1
+			# A trap that notify a subnetwork name modification 
+			$notifNetworkId = $1
+			$notifSubnetworkId = $2
+			$notifNewSubnetworkName = $3
+			@AlertGroup = ""
+			@Agent = "NMC50-MIB"
+			@Summary = "trapModifySubnetwork"  + "details:" + " " + $notifNetworkId
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($notifNetworkId,$notifSubnetworkId,$notifNewSubnetworkName)
+
+		case "53": ### - trapModifyNetwork
+			# SNMPv1
+			# A trap that notify a network name modification 
+			$notifNetworkId = $1
+			$notifNewNetworkName = $2
+			@AlertGroup = ""
+			@Agent = "NMC50-MIB"
+			@Summary = "trapModifyNetwork"  + "details:" + " " + $notifNetworkId
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($notifNetworkId,$notifNewNetworkName)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			details($*)
+	}
+
+
+
+### Added by Toby
+### Set Node to the managed object if it exists
+if(exists($notifManagedObject))
+{
+        if(regmatch($notifManagedObject, ".*::.*::.*::.*::.*"))
+        {
+        $Node = extract($notifManagedObject, ".*Node::([^\]*)\.*")
+        } else
+        {
+        $Node = $notifManagedObject
+        }
+}
+if(exists($notifProblemId))
+{
+@Summary = @Summary + "ProblemID is " +$notifProblemId
+@Identifier = @Identifier + $ProblemId
+}
+
+
+
+case ".1.3.6.1.4.1.637.64.4760.9.1": # - traps
+	switch($specific-trap) 
+	{
+		case "3": ### - notifAddPbx
+			# SNMPv2
+			# A trap that notify a new PABX to manage 
+			$pbxNetname = $1
+			$pbxSubnetname = $2
+			$pbxName = $3
+				$pbxTypelook = "pbxType." + $4
+				$pbxType = lookup($pbxTypelook,VarbindValTable)
+				if(match($pbxType,"UNKNOWN")) {
+					$pbxType = $4
+				} else {
+					$pbxType = $pbxType + " ( " + $4 + " )"
+				}
+				$pbxStatuslook = "pbxStatus." + $5
+				$pbxStatus = lookup($pbxStatuslook,VarbindValTable)
+				if(match($pbxStatus,"UNKNOWN")) {
+					$pbxStatus = $5
+				} else {
+					$pbxStatus = $pbxStatus + " ( " + $5 + " )"
+				}
+			$pbxCritical = $6
+			$pbxMajor = $7
+			$pbxMinor = $8
+			$pbxWarning = $9
+			$pbxIndeterminated = $10
+			@AlertGroup = ""
+			@Agent = "NMC50-MIB"
+			@Summary = "notifAddPbx"  + "details:" + " " + $pbxNetname
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($pbxNetname,$pbxSubnetname,$pbxName,$pbxType,$pbxStatus,$pbxCritical,$pbxMajor,$pbxMinor,$pbxWarning,$pbxIndeterminated)
+
+		case "4": ### - notifDelPbx
+			# SNMPv2
+			# A trap that notify to stop to manage a PABX 
+			$pbxName = $1
+			@AlertGroup = ""
+			@Agent = "NMC50-MIB"
+			@Summary = "notifDelPbx"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($pbxName)
+
+#############################################################################
+#
+#	20100204	Changes by Chris Janes of Innovise ESM WP 165 SC 11 Drop 1
+#
+
+		case "6": ### Manual Clear Alarm
+			# SNMPv2
+			# A trap that notify a problem state change 
+			$notifProblemId = $1
+				$notifProblemStatelook = "notifProblemState." + $2
+				$notifProblemState = lookup($notifProblemStatelook,VarbindValTable)
+				if(match($notifProblemState,"UNKNOWN")) {
+					$notifProblemState = $2
+				} else {
+					$notifProblemState = $notifProblemState + " ( " + $2 + " )"
+				}
+			if(match($2,"1"))
+			{
+				# Discarding manual acknowledged
+				discard
+			}
+			else
+			{
+				@Manager = "OmniVista4760"
+				@AlertGroup = "ManualClear"
+				@AlertKey = $notifProblemId
+				@Summary = "OmniVista4760 Manual Clear Event: " + @AlertKey
+				@Severity = 2
+                                @SuppressEscl = 4
+				@Type = 0
+				$source = "OmniVista"
+				@Identifier = @Node + @Summary
+			}
+
+
+#		case "10"|"11"|"12"|"13"|"14"|"15"|"16" : ### - notifUnknownIncident
+
+
+
+
+		case "10" | "11" | "12" | "13" | "14" | "15" | "16":
+
+			# A trap that notify a PABX incident 
+			# Here we set up the varbinds and label them correctly
+			$notifSenderTypelook = "notifSenderType." + $1
+			$notifSenderType = lookup($notifSenderTypelook,VarbindValTable)
+				# notifSenderType.0	A4760
+				# notifSenderType.1	A4400
+				# notifSenderType.2	OXE
+				# notifSenderType.3	OXO
+			#	default="UNKNOWN"
+			if(match($notifSenderType,"UNKNOWN")) 
+			{
+				$notifSenderType = $1
+			} 
+			else 
+			{
+				$notifSenderType = $notifSenderType + " ( " + $1 + " )"
+			}
+
+			$notifFaultId = $2
+			$notifIncidentNumber = $3
+			$notifAlarmId = $4
+			$notifProblemId = $5
+			$notifEventType = $6
+			$notifManagedObject = $7
+			$notifProbableCause = $8
+			$notifCorrelationlook = "notifCorrelation." + $9
+			$notifCorrelation = lookup($notifCorrelationlook,VarbindValTable)
+				# notifCorrelation.0	FALSE
+				# notifCorrelation.1	TRUE
+				# default="UNKNOWN"
+			if(match($notifCorrelation,"UNKNOWN")) 
+			{
+				$notifCorrelation = $9
+			} 
+			else 
+			{
+				$notifCorrelation = $notifCorrelation + " ( " + $9 + " )"
+			}
+			$notifReceptionTime = $10
+			$notifAddText = $11
+
+			############################################################################################
+			# Populate First and Last Raise Time fields
+			# Giles Blake, 20/05/2010
+			###########################################################################################
+
+			@FirstRaiseTime = datetotime($notifReceptionTime, "yyyy-MM-dd HH:mm:ss")
+			@LastRaiseTime = datetotime($notifReceptionTime, "yyyy-MM-dd HH:mm:ss")
+
+			#############################################################################################
+			#	End - 20/05/2010
+			##############################################################################################
+
+			
+
+			############################################################################################
+			# Handling manually clearing problems alarms 
+			###########################################################################################
+			@NmosSerial = $notifAlarmId
+			update(@NmosSerial)
+			
+
+			#############################################################################################
+			#	Differenciation of the OmniPCX and OmniVista Alarm 
+			##############################################################################################
+			
+			# Removing the first / from $notifManagedObject
+		        $No_FirstSlash = extract($notifManagedObject, "^\\(.*)$")
+		        $notifManagedObject = $No_FirstSlash
+			
+			# Set URL to be used in OS trigger to populate Node and Nodealias
+			@URL = $notifManagedObject  
+
+			if (regmatch($notifManagedObject, "^Network::.*"))
+			{
+				$source = "OmniPCX"
+				$shelf = ""
+				if (regmatch($notifManagedObject, "^Network::.*::.*::.*Shelf::[0-9]+.*"))
+				{
+					@URL = extract($notifManagedObject, "^(Network::.*::.*::.*Shelf::[0-9]+).*")
+
+					$shelf = extract($notifManagedObject, "^Network::.*::.*::.*Shelf::([0-9]+).*")
+					#switch($shelf)
+                                	#{
+                                        #	case "0" | "19" | "255":
+					#		@URL = $notifManagedObject  
+					#
+					#	default:
+					#}
+				}
+				else if (regmatch($notifManagedObject, "^Network::.*::.*::.*Inter-Node Links::[0-9]+.*::.*"))
+				{
+					@URL = extract($notifManagedObject, "^(Network::.*::.*::.*Inter-Node Links::[0-9]+).*::.*")
+
+				}
+			}
+			else if(regmatch($notifManagedObject,"^NMC.*"))
+			{
+				$source = "OmniVista"
+
+#####################################################################
+#
+# Added to strip the value populated into the URL field for node
+# enrichment from the omni_node lookup table
+# Giles Blake, 05/05/10
+#
+#####################################################################
+
+				if(regmatch($notifManagedObject,"^NMC::.*::.*\\.*"))
+					{
+					if(regmatch($notifManagedObject,"^NMC::.*\\Application::[a-zA-Z]+\\.*"))
+						{
+						@URL = extract($notifManagedObject, "^(NMC::.*\\Application::[a-zA-Z]+)\\.*")
+						}
+					else
+						{
+						if(regmatch($notifManagedObject,"^NMC::.*\\Application::[a-zA-Z]+ [a-zA-Z]+\\.*"))
+							{
+							@URL = extract($notifManagedObject, "^(NMC::.*\\Application::[a-zA-Z]+ [a-zA-Z]+)\\.*")
+							}
+						}
+					}
+				else
+					{
+					@URL = extract($notifManagedObject, "^(NMC::.*::.*)")
+					}
+
+#####################################################################
+#
+# End of changes
+# Giles Blake, 05/05/10
+#
+#####################################################################
+
+	      		}
+              		else
+               		{
+               			$source = "Source - not set" #going to discard
+              		}
+
+			# Appending Latter for Fault IDs
+
+			#@URL = "source = " + $source
+
+$probeRule = $probeRule + "source=" + $source
+			switch ($source) 
+			{
+                  		case "OmniPCX":
+                  		        $notifFaultId = $2 + "N"	# "N" is added to identify as an OmniPCX Event
+					@AlarmClass = $notifFaultId   # @AlarmClass Attribute Value
+					@Node = $notifManagedObject   # This is the key for the Node/NodeAlias trigger for OmniPCX Events
+                      
+					#########################################################################################################
+					# Populating Summary and PhysicalCard fields for OmniPCX Events for perticular MOs:
+					#########################################################################################################
+			  
+					if(exists($notifManagedObject))
+			 			{
+						switch($shelf)
+                                			{
+                                        		case "0" | "19" | "255":
+                              				@Summary = $notifAddText
+							default:
+
+         	         				if(regmatch($notifManagedObject, "^Network::.*::.*::.*::.*Board::[0-9]+"))
+        						{
+                                       				$board = extract($notifManagedObject, "^Network::.*::.*::.*::.*Board::([0-9]+)")
+					
+								if (int($board) < 10)
+									{
+									$BoardNum = "0" + $board
+                              						@PhysicalCard = "BOARD " + $BoardNum
+                              						@Summary = $notifAddText + "\" + "Board" + "::" + $board
+									}
+								else
+									{
+									$BoardNum = $board
+                              						@PhysicalCard = "BOARD " + $BoardNum
+                              						@Summary = $notifAddText + "\" + "Board" + "::" + $board
+									}
+        		        			} 
+                                        		else
+      			        			{
+								$board = "NoBoard"	# This will be used in 2042 and 2019 events case
+					    			@Summary = $notifAddText
+					    			@PhysicalCard = ""
+    			        			}
+							}
+			        		}
+					############################################################################################
+					#	Lookup Table for De-duplication
+					############################################################################################
+					$notifdedupflag = lookup($notifFaultId, IncludeAddInfo) 
+					@AlertKey = $notifManagedObject
+                                	include "$NCHOME/custom/probes/rules/mttrapd/include/alcatel.4760.identifier_OmniPCX.include.rules"
+					
+					# Check if the parameters should/shouldn't be added to the AlertKey
+					if (match($notifdedupflag, "1"))
+					{
+						@AlertKey = $notifManagedObject + $parameters
+						@Identifier =  @AlarmClass + @AlertKey	
+						$yes = "true"
+					}
+					else if (match($notifdedupflag, "0"))
+					{
+						# Reset AlertKey as IncludeAddInfo is No
+						@AlertKey = $notifManagedObject
+						@Identifier =  @AlarmClass + @AlertKey	
+						$yes = "false"
+
+					}
+					else
+					{
+						# Discard OmniVista and OmniPCX events not in the design doc
+						discard
+					}
+
+
+				case "OmniVista":
+					$notifFaultId = $2 + "E"	#the E is added to identify it as an OmniVista Event
+					@AlarmClass = $notifFaultId   # @AlamClass attributes value
+
+$probeRule = $probeRule + "  AC= " + @AlarmClass
+					@Summary = $notifAddText 
+
+					##############################################################################################################
+					#Populating some specific OmniVista Nodes name based on specific MOs values
+					##############################################################################################################
+
+					if(exists($notifManagedObject))
+					{
+      						if(regmatch($notifManagedObject, "^NMC::.*\\A.*n.*"))
+        					{
+							$var1 = extract($notifManagedObject, "NMC::([^\]+)")
+							if(regmatch($notifManagedObject, "^NMC::.*::.*\\.*::.*"))
+					  		{	
+        							$var2 = extract($notifManagedObject, "Application::([^\]+)")
+								@Node = $var1 + "\" + $var2
+					  	 	}
+							else
+					  	 	{
+								$var3 = extract($notifManagedObject, "^NMC::.*\\Application::([^ ]+)")
+								@Node = $var1 + "\" + $var3
+					    		}
+                              			} 
+						else
+      						{
+    							@Node = $notifManagedObject   # This is the key for the Node/NodeAlias trigger
+    						}
+		     			}
+			
+					############################################################################################
+                                        #       Lookup Table for De-duplication
+                                        ############################################################################################
+                                        $notifdedupflag = lookup($notifFaultId, IncludeAddInfo)
+                                        @AlertKey = $notifManagedObject
+                                	include "$NCHOME/custom/probes/rules/mttrapd/include/alcatel.4760.identifier_OmniVista.include.rules"
+
+                                        if (match($notifdedupflag, "1"))
+                                        {
+						@AlertKey = $notifManagedObject +  $parameters
+                                                @Identifier =  @AlarmClass + @AlertKey
+						$yes = "true"
+                                        }
+                                        else
+                                        {
+						# Reset AlertKey as IncludeAddInfo is No
+                                                @AlertKey = $notifManagedObject
+                                                @Identifier =  @AlarmClass + @AlertKey
+						$yes = "false"
+
+                                        }
+
+				default:
+					$notifFaultId = $2
+details($*)
+			}
+
+
+			#################################################################################################################
+
+			# Here we are testing that the event has the minimum number of tokens
+
+			if ((match($notifAddText ,"")) || (match($notifManagedObject, "")))
+			{
+				# if it's a clear then let it through else discard
+				#if (!match($notifProblemState, "2")
+				if (! match($notifProblemState, "2"))
+				{
+					discard
+				}
+			}
+
+			#########################################################################################
+			# Discarding FaultId 140 and 120 based on requirement
+			#########################################################################################
+
+			switch($notifFaultId)
+			{
+				case "120E" | "125E" | "140E":
+					discard
+
+				default:
+			}
+
+			###########################################################################################
+			# Here we define the Defalt values for the OS Tokens
+			@Agent = "NMC50-MIB"
+			@Manager = "OmniVista4760"
+
+			# The following tokens are reset by a pre-insert trigger			
+			# here I'm setting them to something that will allow testing
+
+			@NodeAlias = "NA - not set"
+			@Severity = 1
+			@AlertGroup = "AG - not set"
+			#@AlertKey = "AK - not set"
+			@ActionRequired = "AR - not set"
+			@ServiceAffecting = "SA - not set"
+			@Type = 0 	# No Type Set
+			@ResilienceAffecting = "RA - not set"
+#####################################################################
+#
+# Defaulting the Node field to the URL value - as it is overwritten
+# by the pre-insert trigger, and previous value was not of use
+# when no match in the lookup was found.
+# Giles Blake, 05/05/10
+#
+#####################################################################
+
+			switch(@URL)
+			{
+				case "":
+				# Do nothing
+
+				default:
+					if(regmatch(@URL,"^Network::Highways\\Subnetwork::England\\.*"))
+						{
+						@Node = extract(@URL,"^Network::Highways\\Subnetwork::England\\(.*)")
+						} else {
+						@Node = @URL	
+						}
+			}
+
+#####################################################################
+#
+# End of changes 05/05/10
+#
+#####################################################################
+
+
+			
+#	End of Changes 20102004
+#
+#############################################################################
+
+
+#			# SNMPv2
+#			# A trap that notify a PABX incident with UNKNOWN severity 
+#				$notifSenderTypelook = "notifSenderType." + $1
+#				$notifSenderType = lookup($notifSenderTypelook,VarbindValTable)
+#				if(match($notifSenderType,"UNKNOWN")) {
+#					$notifSenderType = $1
+#				} else {
+#					$notifSenderType = $notifSenderType + " ( " + $1 + " )"
+#				}
+#			$notifFaultId = $2
+#			$notifIncidentNumber = $3
+#			$notifAlarmId = $4
+#			$notifProblemId = $5
+#			$notifEventType = $6
+#			$notifManagedObject = $7
+#			$notifProbableCause = $8
+#				$notifCorrelationlook = "notifCorrelation." + $9
+#				$notifCorrelation = lookup($notifCorrelationlook,VarbindValTable)
+#				if(match($notifCorrelation,"UNKNOWN")) {
+#					$notifCorrelation = $9
+#				} else {
+#					$notifCorrelation = $notifCorrelation + " ( " + $9 + " )"
+#				}
+#			$notifReceptionTime = $10
+#			$notifAddText = $11
+#			@AlertGroup = ""
+#			@Agent = "NMC50-MIB"
+#			@Summary = "notifUnknownIncident" + "details:" + " " + $notifManagedObject
+#			@Severity = 1
+#			@Type = 1
+#			@Identifier = @Node + @Summary
+#			#details($notifSenderType,$notifFaultId,$notifIncidentNumber,$notifAlarmId,$notifProblemId,$notifEventType,$notifManagedObject,$notifProbableCause,$notifCorrelation,$notifReceptionTime,$notifAddText)
+#
+#
+		case "21": ### - notifPbxStatus
+			# SNMPv2
+			# A trap that notify a PABX status change
+			discard 
+				$pbxStatuslook = "pbxStatus." + $1
+				$pbxStatus = lookup($pbxStatuslook,VarbindValTable)
+				if(match($pbxStatus,"UNKNOWN")) {
+					$pbxStatus = $1
+				} else {
+					$pbxStatus = $pbxStatus + " ( " + $1 + " )"
+				}
+			$pbxCritical = $2
+			$pbxMajor = $3
+			$pbxMinor = $4
+			$pbxWarning = $5
+			$pbxIndeterminated = $6
+			@AlertGroup = ""
+			@Agent = "NMC50-MIB"
+			@Summary = "notifPbxStatus"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($pbxStatus,$pbxCritical,$pbxMajor,$pbxMinor,$pbxWarning,$pbxIndeterminated)
+
+		case "22": ### - notifNmcStatus
+			# SNMPv2
+			# A trap that notify the NMC status change
+			discard 
+				$nmc50Statuslook = "nmc50Status." + $1
+				$nmc50Status = lookup($nmc50Statuslook,VarbindValTable)
+				if(match($nmc50Status,"UNKNOWN")) {
+					$nmc50Status = $1
+				} else {
+					$nmc50Status = $nmc50Status + " ( " + $1 + " )"
+				}
+			$nmc50CriticalAlarmsCount = $2
+			$nmc50MajorAlarmsCount = $3
+			$nmc50MinorAlarmsCount = $4
+			$nmc50WarningAlarmsCount = $5
+			$nmc50IndeterminateAlarmsCount = $6
+			@AlertGroup = ""
+			@Agent = "NMC50-MIB"
+			@Summary = "notifNmcStatus"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($nmc50Status,$nmc50CriticalAlarmsCount,$nmc50MajorAlarmsCount,$nmc50MinorAlarmsCount,$nmc50WarningAlarmsCount,$nmc50IndeterminateAlarmsCount)
+
+		case "51": ### - notifModifyPbx
+			# SNMPv2
+			# A trap that notify a new PABX to manage 
+			$pbxNetname = $1
+			$pbxSubnetname = $2
+			$pbxName = $3
+				$pbxTypelook = "pbxType." + $4
+				$pbxType = lookup($pbxTypelook,VarbindValTable)
+				if(match($pbxType,"UNKNOWN")) {
+					$pbxType = $4
+				} else {
+					$pbxType = $pbxType + " ( " + $4 + " )"
+				}
+				$pbxStatuslook = "pbxStatus." + $5
+				$pbxStatus = lookup($pbxStatuslook,VarbindValTable)
+				if(match($pbxStatus,"UNKNOWN")) {
+					$pbxStatus = $5
+				} else {
+					$pbxStatus = $pbxStatus + " ( " + $5 + " )"
+				}
+			$pbxCritical = $6
+			$pbxMajor = $7
+			$pbxMinor = $8
+			$pbxWarning = $9
+			$pbxIndeterminated = $10
+			@AlertGroup = ""
+			@Agent = "NMC50-MIB"
+			@Summary = "notifModifyPbx"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($pbxNetname,$pbxSubnetname,$pbxName,$pbxType,$pbxStatus,$pbxCritical,$pbxMajor,$pbxMinor,$pbxWarning,$pbxIndeterminated)
+
+		case "52": ### - notifModifySubnetwork
+			# SNMPv2
+			# A trap that notify a subnetwork name modification 
+			$notifNetworkId = $1
+			$notifSubnetworkId = $2
+			$notifNewSubnetworkName = $3
+			@AlertGroup = ""
+			@Agent = "NMC50-MIB"
+			@Summary = "notifModifySubnetwork" + "details:" + " " + "NetworkID" + " " + $1 + "SubNetworkID" + " " + $2
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($notifNetworkId,$notifSubnetworkId,$notifNewSubnetworkName)
+
+		case "53": ### - notifModifyNetwork
+			# SNMPv2
+			# A trap that notify a network name modification 
+			$notifNetworkId = $1
+			$notifNewNetworkName = $2
+			@AlertGroup = ""
+			@Agent = "NMC50-MIB"
+			@Summary = "notifModifyNetwork" + "details:" + " " + "NetworkID" + " " + $1 + "NewNetworkName" + " " + $2
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			#details($notifNetworkId,$notifNewNetworkName)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			details($*)
+
+	}

@@ -1,0 +1,5 @@
+## default email reader properties
+impact.defaultemailreader.logtofile=false
+impact.defaultemailreader.classname=com.micromuse.response.email.EmailReader
+impact.defaultemailreader.description=No description yet.
+impact.defaultemailreader.autostartup=false

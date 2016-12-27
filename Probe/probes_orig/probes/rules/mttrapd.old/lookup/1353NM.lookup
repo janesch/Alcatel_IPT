@@ -1,0 +1,47 @@
+AlertGroup Severity Summary AlertKey ActionReq ServAff ResAff CorrelFlag
+Replaceable Unit Problem	4	Card Failure	Equipment domain	1	2	1	1
+Node Isolation	5	Resource Isolation	Equipment domain	1	2	2	1
+Replaceable Unit Missing	4	Card Missing	Equipment domain	1	2	1	0
+Replaceable Unit Mismatch	5	Replaceable Unit Mismatch	Equipment domain	0	2	1	0
+Unconfigured Equipment	2	Unconfigured Equipment	Equipment domain	0	2	2	2
+Version Mismatch	2	Software Mismatch	Equipment domain	0	2	2	0
+Power supply failure	5	Power supply failure	WDM domain	1	2	1	0
+Rx LOS	5	Loss of signal	WDM domain	1	2	1	1
+Transmission Fault	5	Transmission Fault	WDM domain	1	2	1	1
+Clock Data Recovery Unlock	5	Clock unlocking on CDR	WDM domain	1	1	1	1
+Bit-rate Threshold Crossing Alarm	4	Bit-rate Threshold Crossing Alarm	WDM domain	1	2	1	1
+Current Temperature Out of Range	4	Current Temperature Out of Range	WDM domain	1	2	1	0
+Loss of Frame	4	Loss of Frame at Receive side	WDM domain	1	2	1	1
+Unavailable Time Alarm on SDH	4	Unavailable Time Alarm on SDH	Performance domain	1	2	1	1
+No communication between shelves	4	No communcation between shelves	UNKNOWN	1	2	1	0
+Performance Threshold Cross Alarm on B1	3	Performance Threshold Cross Alarm on B1	Performance domain	1	2	1	1
+Server signal Fail	4	Server Signal Failure	UNKNOWN	0	2	1	0
+WDM Loss of Frame	4	WDM Loss of Frame	UNKNOWN	0	2	1	0
+Unavailable Time	4	Unavailable Time	UNKNOWN	0	2	1	0
+Replaceable Unit Type Mismatch	4	Replaceable unit type mismatch	Hardware Failure	0	2	1	0
+Input Power Loss	5	input Power Loss	Signal Failure	1	2	1	0
+Input Power Loss,2nd stage input	5	input Power Loss	Signal Failure	1	2	1	0
+Output Power Loss	4	output Power Loss	Signal Failure	1	2	1	0
+Output Power Loss,1st stage output	4	output Power Loss	Signal Failure	1	2	1	0
+Output Power Loss,2nd stage output	4	output Power Loss	Signal Failure	1	2	1	0
+Unconfigured Equipment Present	2	unconfigured	Maintenance Indication	0	2	2	0
+LanFailure	4	Lan Failure	Hardware Failure	1	2	2	0
+High Temperature	4	high temperature	HW degradation	1	2	2	0
+Serial Communication Problem	3	serial communication 	harware failure	1	2	2	0
+Battery Failure	4	Battery Failure	HW degradation	1	2	2	0
+Transmitter Degraded	2	transmitter degraded	HW degradation	1	2	1	0
+Loss Of Signal	5	loss of Signal	Signal Failure	1	2	1	0
+Low Threshold Corrected Error Rate	2	Low Threshold	Signal Degradation	1	2	2	0
+High Threshold Corrected Error Rate	2	High Threshold	Signal Degradation	1	2	1	0
+Loss Of Frame	4	loss of Frame	signal Failure	1	2	1	0
+Loss Of MultiFrame	4	loss of multi frame	Signal Failure	1	2	1	0
+AIS	4	Alarm Indication Signal	Signal Failure	1	2	1	0
+Low BER	3	Low BER	Signal Degradation 	1	2	1	0
+Configuration or Customization Error	4	configuration	Hardware Failure	1	2	1	0
+Server Signal Failure	4	server signal failure	communications	0	2	1	0
+Underlying Resource Unavailable	4	underlying resource unavailable	communications	0	2	2	0
+Loss Of Multiplex Section	4	loss of multiplex section	communications	1	2	1	0
+Database Abnormal	4	Database Abnormal	Equipment domain	0	2	2	2
+Input Power Degrade	3	Input Power Degrade Defect	Equipment domain	0	2	2	2
+TX_Fail	4	Transmitting Fail/Tx Fail	WDM domain	0	2	2	2
+Egressing Server Signal Fail	4	Egressing Server Signal Fail	WDM domain	0	2	2	2

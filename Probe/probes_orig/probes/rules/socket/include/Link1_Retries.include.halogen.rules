@@ -1,0 +1,79 @@
+if ( regmatch ( $line_00, "Link1_Retries" ) ) { 
+$Link1_Retries= extract($line_00, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_01, "Link1_Retries" ) ) { 
+$Link1_Retries= extract($line_01, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_02, "Link1_Retries" ) ) { 
+$Link1_Retries= extract($line_02, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_03, "Link1_Retries" ) ) { 
+$Link1_Retries= extract($line_03, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_04, "Link1_Retries" ) ) { 
+$Link1_Retries= extract($line_04, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_05, "Link1_Retries" ) ) { 
+$Link1_Retries= extract($line_05, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_06, "Link1_Retries" ) ) { 
+$Link1_Retries= extract($line_06, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_07, "Link1_Retries" ) ) { 
+$Link1_Retries= extract($line_07, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_08, "Link1_Retries" ) ) { 
+$Link1_Retries= extract($line_08, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_09, "Link1_Retries" ) ) { 
+$Link1_Retries= extract($line_09, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_10, "Link1_Retries" ) ) { 
+$Link1_Retries= extract($line_10, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_11, "Link1_Retries" ) ) { 
+$Link1_Retries= extract($line_11, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_12, "Link1_Retries" ) ) { 
+$Link1_Retries= extract($line_12, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_13, "Link1_Retries" ) ) { 
+$Link1_Retries= extract($line_13, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_14, "Link1_Retries" ) ) { 
+$Link1_Retries= extract($line_14, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_15, "Link1_Retries" ) ) { 
+$Link1_Retries= extract($line_15, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_16, "Link1_Retries" ) ) { 
+$Link1_Retries= extract($line_16, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_17, "Link1_Retries" ) ) { 
+$Link1_Retries= extract($line_17, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_18, "Link1_Retries" ) ) { 
+$Link1_Retries= extract($line_18, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_19, "Link1_Retries" ) ) { 
+$Link1_Retries= extract($line_19, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_20, "Link1_Retries" ) ) { 
+$Link1_Retries= extract($line_20, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_21, "Link1_Retries" ) ) { 
+$Link1_Retries= extract($line_21, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_22, "Link1_Retries" ) ) { 
+$Link1_Retries= extract($line_22, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_23, "Link1_Retries" ) ) { 
+$Link1_Retries= extract($line_23, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_24, "Link1_Retries" ) ) { 
+$Link1_Retries= extract($line_24, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_25, "Link1_Retries" ) ) { 
+$Link1_Retries= extract($line_25, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_26, "Link1_Retries" ) ) {
+$Link1_Retries= extract($line_26, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_27, "Link1_Retries" ) ) {
+$Link1_Retries= extract($line_27, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_28, "Link1_Retries" ) ) {
+$Link1_Retries= extract($line_28, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_29, "Link1_Retries" ) ) {
+$Link1_Retries= extract($line_29, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_30, "Link1_Retries" ) ) {
+$Link1_Retries= extract($line_30, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_31, "Link1_Retries" ) ) {
+$Link1_Retries= extract($line_31, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_32, "Link1_Retries" ) ) {
+$Link1_Retries= extract($line_32, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_33, "Link1_Retries" ) ) {
+$Link1_Retries= extract($line_33, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_34, "Link1_Retries" ) ) {
+$Link1_Retries= extract($line_34, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_35, "Link1_Retries" ) ) {
+$Link1_Retries= extract($line_35, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_36, "Link1_Retries" ) ) {
+$Link1_Retries= extract($line_36, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_37, "Link1_Retries" ) ) {
+$Link1_Retries= extract($line_37, "Link1_Retries=(.*)")
+} else if ( regmatch ( $line_38, "Link1_Retries" ) ) {
+$Link1_Retries= extract($line_38, "Link1_Retries=(.*)")
+}   

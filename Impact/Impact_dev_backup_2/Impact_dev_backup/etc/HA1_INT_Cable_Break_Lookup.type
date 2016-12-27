@@ -1,0 +1,7 @@
+#This file was written by Impact Server.
+#Thu Apr 12 08:02:41 BST 2007
+INT_Cable_Break_Lookup.INTERNALSTORED.INCLUDE_ROOT=true
+INT_Cable_Break_Lookup.INTERNALSTORED.DYNAMICLINKINFOSET={}
+INT_Cable_Break_Lookup.INTERNALSTORED.USERPARAMETERS=\ WITHDEFAULTS{{'Value', INTEGER, 'Value', '', 'Value', 'false', '', '', FALSE, FALSE}, {'A_End', STRING, 'A_End', '', 'A_End', 'false', '', '', FALSE, FALSE}, {'B_End', STRING, 'B_End', '', 'B_End', 'false', '', '', FALSE, FALSE}}
+INT_Cable_Break_Lookup.INTERNALSTORED.PERSISTENT=true
+INT_Cable_Break_Lookup.INTERNALSTORED.DISPLAYNAMEFIELD=KEY

@@ -1,0 +1,1499 @@
+######
+# alcatel include file
+######
+case ".1.3.6.1.4.1.6486.800.1.1.1.1.3.2": # - alcatelIND1MacServerMIBTraps
+	switch($specific-trap) {
+		case "1": ### - chassisTrapsMacOverlap
+			# SNMPv2
+			# A MAC range overlap was found in the backplane eeprom
+			$physicalIndex = $1
+			$chasTrapMacRangeIndex = $2
+			@AlertGroup = "chassisTrapsMacOverlap"
+			@AlertKey = $1
+			@Agent = "ALCATEL-IND1-MAC-SERVER-MIB"
+			@Summary = "chassisTrapsMacOverlap physical index " + $physicalIndex + " chas trap mac range index " + $chasTrapMacRangeIndex
+			@Severity = 1
+			#@Type = 0
+			#@Type = 1
+			@Type = 13
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			##details($physicalIndex,$chasTrapMacRangeIndex)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.4.1.6486.800.1.2.1.10.7.999.1.1.7": # - dvmrpTraps
+	switch($specific-trap) {
+		case "1": ### - dvmrpNeighborLoss
+			# SNMPv2
+			# A dvmrpNeighborLoss trap signifies the loss of a 2-way
+			# adjacency with a neighbor.  This trap should be generated
+			# when the neighbor state changes from active to one-way,
+			# ignoring, or down.  The trap should be generated only if the
+			# router has no other neighbors on the same interface with a
+			# lower IP address than itself.
+			$dvmrpInterfaceLocalAddress = $1
+				$dvmrpNeighborStatelook = "dvmrpNeighborState." + $2
+				$dvmrpNeighborState = lookup($dvmrpNeighborStatelook,VarbindValTable)
+				if(match($dvmrpNeighborState,"UNKNOWN")) {
+					$dvmrpNeighborState = $2
+				} else {
+					$dvmrpNeighborState = $dvmrpNeighborState + " ( " + $2 + " )"
+				}
+			@AlertGroup = "dvmrpNeighborLoss"
+			@Agent = "DVMRP-STD-MIB"
+			@AlertKey = $dvmrpInterfaceLocalAddress
+			@Summary = "dvmrpNeighborLoss : on interface " + $dvmrpInterfaceLocalAddress + " neighbour state " + $dvmrpNeighborState
+			@Severity = 1
+			#@Type = 0
+			@Type = 13
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			##details($dvmrpInterfaceLocalAddress,$dvmrpNeighborState)
+
+		case "2": ### - dvmrpNeighborNotPruning
+			# SNMPv2
+			# A dvmrpNeighborNotPruning trap signifies that a non-pruning
+			# neighbor has been detected (in an implementation-dependent
+			# manner).  This trap should be generated at most once per
+			# generation ID of the neighbor.  For example, it should be
+			# generated at the time a neighbor is first heard from if the
+			# prune bit is not set in its capabilities.  It should also be
+			# generated if the local system has the ability to tell that a
+			# neighbor which sets the the prune bit in its capabilities is
+			# not pruning any branches over an extended period of time.
+			# The trap should be generated only if the router has no other
+			# neighbors on the same interface with a lower IP address than
+			# itself.
+			$dvmrpInterfaceLocalAddress = $1
+			$dvmrpNeighborCapabilities = $2
+			@AlertGroup = "dvmrpNeighborNotPruning"
+			@Agent = "DVMRP-STD-MIB"
+			@AlertKey = $dvmrpInterfaceLocalAddress
+			@Summary = "dvmrpNeighborNotPruning on interface: "  + $dvmrpInterfaceLocalAddress + "  neighbour capabilities:" +$dvmrpNeighborCapabilities
+			@Severity = 1
+			#@Type = 0
+			@Type = 13
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			##details($dvmrpInterfaceLocalAddress,$dvmrpNeighborCapabilities)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.4.1.6486.800.1.2.1.23.1.1.5": # - alaDoSTraps
+	switch($specific-trap) {
+		case "1": ### - alaDoSTrap
+			# SNMPv2
+			# The DoS trap indicates that the sending agent
+			# has received DoS attack
+				$alaDoSTypelook = "alaDoSType." + $1
+				$alaDoSType = lookup($alaDoSTypelook,VarbindValTable)
+				#if(match($alaDoSType,"UNKNOWN")) {
+				if(match($alaDoSType,"unknown")) {
+					$alaDoSType = $alaDoSType + " ( " + $1 + " )"
+					#$alaDoSType = $1
+				} else {
+					$alaDoSType = $alaDoSType
+					#$alaDoSType = $alaDoSType + " ( " + $1 + " )"
+				}
+			$alaDoSDetected = $2
+			@AlertGroup = "alaDoSTrap"
+			@AlertKey =  $alaDoSType
+			@Agent = "ALCATEL-IND1-IP-MIB"
+			#@Summary = "alaDoSTrap  , type: " + $alaDoSType + ", detected " + $alaDoSDetected
+			@Summary = "DoS Attack : " + $alaDoSType + ", Detected " + $alaDoSDetected
+			@Severity = 1
+			#@Type = 0
+			@Type = 13
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			##details($alaDoSType,$alaDoSDetected)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.4.1.6486.800.1.2.1.24.1.4": # - alaStackMgrTraps
+	switch($specific-trap) {
+		case "1": ### - alaStackMgrDuplicateSlotTrap
+			# SNMPv2
+			# The element specified by alaStackMgrSlotNINumber has the same slot number of
+			# another element of the stack and it must relinquish its operational status
+			# because it has a higher election key (up time, slot, mac).
+			# The elements will be put in pass through mode.
+			$alaStackMgrSlotNINumber = $1
+			@AlertGroup = "alaStackMgrDuplicateSlotTrap"
+			@Agent = "ALCATEL-IND1-STACK-MANAGER-MIB"
+			@AlertKey =  $alaStackMgrSlotNINumber
+			@Summary = "alaStackMgrDuplicateSlotTrap, in slot " + $alaStackMgrSlotNINumber
+			@Severity = 1
+			#@Type = 0
+			@Type = 13
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			#details($alaStackMgrSlotNINumber)
+
+		case "2": ### - alaStackMgrNeighborChangeTrap
+			# SNMPv2
+			# Indicates whether the stack is in loop or not.
+			# In case of no loop, alaStackMgrSlotNINumber and alaStackMgrTrapLinkNumber
+			# indicate where the Stack is broken
+			$alaStackMgrStackStatus = $1
+			$alaStackMgrSlotNINumber = $2
+			$alaStackMgrTrapLinkNumber = $3
+			@AlertGroup = "alaStackMgrNeighborChangeTrap"
+			@Agent = "ALCATEL-IND1-STACK-MANAGER-MIB"
+                        @AlertKey =  $alaStackMgrSlotNINumber
+			@Summary = "alaStackMgrNeighborChangeTrap, status: " + $alaStackMgrStackStatus + ", slotNInumber " + $alaStackMgrSlotNINumber + " trap link number " + $alaStackMgrTrapLinkNumber
+			@Severity = 1
+			#@Type = 0
+			@Type = 13
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			#details($alaStackMgrStackStatus,$alaStackMgrSlotNINumber,$alaStackMgrTrapLinkNumber)
+
+		case "3": ### - alaStackMgrRoleChangeTrap
+			# SNMPv2
+			# Role Change Trap. Indicates that a new primary or secondary is elected.
+			$alaStackMgrPrimary = $1
+			$alaStackMgrSecondary = $2
+			@AlertGroup = "alaStackMgrRoleChangeTrap"
+			@AlertKey = $alaStackMgrPrimary + $alaStackMgrSecondary 
+			@Agent = "ALCATEL-IND1-STACK-MANAGER-MIB"
+			@Summary = "alaStackMgrRoleChangeTrap on primary " + $alaStackMgrPrimary + " and secondary " + $alaStackMgrSecondary
+			@Severity = 1
+			#@Type = 0
+			@Type = 13
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			#details($alaStackMgrPrimary,$alaStackMgrSecondary)
+
+		case "4": ### - alaStackMgrDuplicateRoleTrap
+			# SNMPv2
+			# The element identified by alaStackMgrSlotNINumber detected the presence of
+			# two elements with the same primary or secondary role as specified by
+			# alaStackMgrChasRole on the stack.
+			$alaStackMgrSlotNINumber = $1
+			$alaStackMgrChasRole = $2
+			@AlertGroup = "alaStackMgrDuplicateRoleTrap"
+			@AlertKey = $alaStackMgrSlotNINumber
+			@Agent = "ALCATEL-IND1-STACK-MANAGER-MIB"
+			@Summary = "alaStackMgrDuplicateRoleTrap on slot" + $alaStackMgrSlotNINumber + " MgrChasRole " + $alaStackMgrChasRole
+			@Severity = 1
+			#@Type = 0
+			@Type = 13
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			#details($alaStackMgrSlotNINumber,$alaStackMgrChasRole)
+
+		case "5": ### - alaStackMgrClearedSlotTrap
+			# SNMPv2
+			# The element identified by alaStackMgrSlotNINumber will enter the pass through 
+			# mode because its operational slot was cleared with immediate effect.
+			$alaStackMgrSlotNINumber = $1
+			@AlertGroup = "alaStackMgrClearedSlotTrap"
+			@AlertKey = $alaStackMgrSlotNINumber
+			@Agent = "ALCATEL-IND1-STACK-MANAGER-MIB"
+			@Summary = "alaStackMgrClearedSlotTrap" + $alaStackMgrSlotNINumber
+			@Severity = 1
+			#@Type = 0
+			@Type = 13
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			#details($alaStackMgrSlotNINumber)
+
+		case "6": ### - alaStackMgrOutOfSlotsTrap
+			# SNMPv2
+			# One element of the stack will enter the pass through mode because there 
+			# are no slot numbers available to be assigned to this element.
+			@AlertGroup = "alaStackMgrOutOfSlotsTrap"
+			@Agent = "ALCATEL-IND1-STACK-MANAGER-MIB"
+			@Summary = "alaStackMgrOutOfSlotsTrap"
+			@Severity = 1
+			#@Type = 0
+			@Type = 13
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+		case "7": ### - alaStackMgrOutOfTokensTrap
+			# SNMPv2
+			# The element identified by alaStackMgrSlotNINumber will enter the pass through
+			# mode because there are no tokens available to be assigned to this element.
+			$alaStackMgrSlotNINumber = $1
+			@AlertGroup = "alaStackMgrOutOfTokensTrap"
+			@AlertKey =  $alaStackMgrSlotNINumber
+			@Agent = "ALCATEL-IND1-STACK-MANAGER-MIB"
+			@Summary = "alaStackMgrOutOfTokensTrap slot NI num" + $alaStackMgrSlotNINumber
+			@Severity = 1
+			#@Type = 0
+			@Type = 13
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			#details($alaStackMgrSlotNINumber)
+
+		case "8": ### - alaStackMgrOutOfPassThruSlotsTrap
+			# SNMPv2
+			# There are no pass through slots available to be assigned to an element
+			# that is supposed to enter the pass through mode.
+			@AlertGroup = "alaStackMgrOutOfPassThruSlotsTrap"
+			@Agent = "ALCATEL-IND1-STACK-MANAGER-MIB"
+			@Summary = "alaStackMgrOutOfPassThruSlotsTrap"
+			@Severity = 1
+			#@Type = 0
+			@Type = 13
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.4.1.6486.800.1.2.1.27.999": # - powerEthernetMIB
+	switch($specific-trap) {
+		case "1": ### - pethPsePortOnOffNotification
+			# SNMPv2
+			# This Notification indicates if Pse Port is  delivering  or
+			# not power to the PD. This Notification SHOULD be sent on
+			# every status change except in the searching mode.
+				$pethPsePortDetectionStatuslook = "pethPsePortDetectionStatus." + $1
+				$pethPsePortDetectionStatus = lookup($pethPsePortDetectionStatuslook,VarbindValTable)
+				if(match($pethPsePortDetectionStatus,"UNKNOWN")) {
+					$pethPsePortDetectionStatus = $1
+				} else {
+					$pethPsePortDetectionStatus = $pethPsePortDetectionStatus + " ( " + $1 + " )"
+				}
+			@AlertGroup = "pethPsePortOnOffNotification"
+			@Agent = "POWER-ETHERNET-MIB"
+			@Summary = "pethPsePortOnOffNotification status: " + $pethPsePortDetectionStatus
+			@Severity = 1
+			#@Type = 0
+			@Type = 13
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			#details($pethPsePortDetectionStatus)
+
+		case "2": ### - pethPsePortPowerMaintenanceStatusNotification
+			# SNMPv2
+			# This Notification indicates a Port Change Status and it
+			# SHOULD be sent on every status change.
+				$pethPsePortPowerMaintenanceStatuslook = "pethPsePortPowerMaintenanceStatus." + $1
+				$pethPsePortPowerMaintenanceStatus = lookup($pethPsePortPowerMaintenanceStatuslook,VarbindValTable)
+				if(match($pethPsePortPowerMaintenanceStatus,"UNKNOWN")) {
+					$pethPsePortPowerMaintenanceStatus = $1
+				} else {
+					$pethPsePortPowerMaintenanceStatus = $pethPsePortPowerMaintenanceStatus + " ( " + $1 + " )"
+				}
+			@AlertGroup = "pethPsePortPowerMaintenanceStatusNotification"
+			@Agent = "POWER-ETHERNET-MIB"
+			@AlertKey = "pethPsePortPowerMaintenance"
+			@Summary = "pethPsePortPowerMaintenanceStatusNotification status: " + $pethPsePortPowerMaintenanceStatus
+			@Severity = 1
+			#@Type = 0
+			@Type = 13
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			#details($pethPsePortPowerMaintenanceStatus)
+
+		case "4": ### - pethMainPowerUsageOnNotification
+			# SNMPv2
+			# This Notification indicate PSE Threshold usage indication is
+			# on, the usage power is above the threshold.
+			$pethMainPseConsumptionPower = $1
+			@AlertGroup = "pethMainPowerUsageOnNotification"
+			@AlertKey = "pethMainPowerUsage"
+			@Agent = "POWER-ETHERNET-MIB"
+			@Summary = "pethMainPowerUsageOnNotification power consumption " + $pethMainPseConsumptionPower
+			@Severity = 1
+			@Type = 1
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			#details($pethMainPseConsumptionPower)
+
+		case "5": ### - pethMainPowerUsageOffNotification
+			# SNMPv2
+			# This Notification indicate PSE Threshold usage indication
+			# off, the usage power is below the threshold.
+			$pethMainPseConsumptionPower = $1
+			@AlertGroup = "pethMainPowerUsageOffNotification"
+			@AlertKey = "pethMainPowerUsage"
+			@Agent = "POWER-ETHERNET-MIB"
+			@Summary = "pethMainPowerUsageOffNotification power consumption " + $pethMainPseConsumptionPower
+			@Severity = 1
+			@Type = 2
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			#details($pethMainPseConsumptionPower)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+case ".1.3.6.1.4.1.6486.800.1.2.1.28.2": # - alaVrrp3Traps
+        switch($specific-trap) {
+                case "1": ### - alaVrrp3TrapNewMaster
+                        # SNMPv2
+                        # The newMaster trap indicates that the sending agent has transitioned to Master state
+                                $alaVrrp3OperMasterIpAddrTypelook = "alaVrrp3OperMasterIpAddrType." + $1
+                                $alaVrrp3OperMasterIpAddrType = lookup($alaVrrp3OperMasterIpAddrTypelook,VarbindValTable)
+                                if(match($alaVrrp3OperMasterIpAddrType,"UNKNOWN")) {
+                                        $alaVrrp3OperMasterIpAddrType = $1
+                                } else {
+                                        $alaVrrp3OperMasterIpAddrType = $alaVrrp3OperMasterIpAddrType + " ( " + $1 + " )"
+                                }
+				$alaVrrp3TrapNewMasterReasonlook = "alaVrrp3TrapNewMasterReason." + $3
+                                $alaVrrp3TrapNewMasterReason = lookup($alaVrrp3TrapNewMasterReasonlook,VarbindValTable)
+                                if(match($alaVrrp3TrapNewMasterReason,"UNKNOWN")) {
+                                        $alaVrrp3TrapNewMasterReason = $1
+                                } else {
+                                        $alaVrrp3TrapNewMasterReason = $alaVrrp3TrapNewMasterReason + " ( " + $3 + " )"
+                                }
+                        $alaVrrp3OperMasterIpAddr = $2
+                        @AlertGroup = "alaVrrp3TrapNewMaster"
+                        @Agent = "ALCATEL-IND1-VRRP3-MIB"
+                        @AlertKey = $alaVrrp3OperMasterIpAddrType
+                        @Summary = "alaVrrp3TrapNewMaster trap received alaVrrp3OperMasterIpAddrType="+$alaVrrp3OperMasterIpAddrType+" alaVrrp3OperMasterIpAddr="+$alaVrrp3OperMasterIpAddr+" alaVrrp3TrapNewMasterReason="+$alaVrrp3TrapNewMasterReason
+                        @Severity = 4
+                        #@Type = 0
+                        @Type = 1
+                        @Identifier = @Node + @Summary
+                        details($alaVrrp3OperMasterIpAddrType, $alaVrrp3OperMasterIpAddr, $alaVrrp3TrapNewMasterReason)
+		case "2": ### - alaVrrp3TrapProtoError
+                        # SNMPv2
+                        # The newMaster trap indicates that the sending agent has transitioned to Master state
+                                $alaVrrp3TrapProtoErrorlook = "alaVrrp3TrapProtoError." + $1
+                                $alaVrrp3TrapProtoError = lookup($alaVrrp3TrapProtoErrorlook,VarbindValTable)
+                                if(match($alaVrrp3TrapProtoError,"UNKNOWN")) {
+                                        $alaVrrp3TrapProtoError = $1
+                                } else {
+                                        $alaVrrp3TrapProtoError = $alaVrrp3TrapProtoError + " ( " + $1 + " )"
+                                }
+				
+                        @AlertGroup = "alaVrrp3TrapProtoError"
+                        @Agent = "ALCATEL-IND1-VRRP3-MIB"
+                        @AlertKey = $alaVrrp3TrapProtoError
+                        @Summary = "alaVrrp3TrapProtoError trap received alaVrrp3TrapProtoErrReason="+$alaVrrp3TrapProtoError
+                        @Severity = 4
+                        #@Type = 0
+                        @Type = 1
+                        @Identifier = @Node + @Summary
+                        details($alaVrrp3TrapProtoError)
+                default:
+                        @Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+                        @Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+                        @Severity = 1
+                        #details($*)
+        }
+case ".1.3.6.1.4.1.6486.800.1.2.1.44.1.3": # - udldStateChange
+        switch($specific-trap) {
+                case "1": ### - 1.3.6.1.4.1.6486.800.1.2.1.44.1.3
+                        # SNMPv2
+                        # An udld port status change and reason.
+                        $udldStateChangeTrapPort = $3
+			$alaUdldCurrentState = $1
+			$alaUdldPrevState = $2
+                        @AlertGroup = "udldStateChange"
+                        @Agent = "ALCATEL-IND1-UDLD-MIB"
+                        @AlertKey = $udldStateChangeTrapPort
+                        @PhysicalCard = $udldStateChangeTrapPort
+                        @Summary = "udldStateChange on port " + $udldStateChangeTrapPort + " Reason:  Notify the Management Entity the previous UDLD-state:"+$alaUdldPrevState+" and UDLD-Current:"+$alaUdldCurrentState
+                        @Severity = 4
+                        @Type = 1
+                        @Identifier = @Node + @Summary
+                        details($udldStateChangeTrapPort, $alaUdldCurrentState, $alaUdldPrevState)
+
+                default:
+                        @Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+                        @Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+                        @Severity = 1
+                        #details($*)
+        }
+
+case ".1.3.6.1.4.1.6486.800.1.3.2.1": # - aipAMAPTraps
+	switch($specific-trap) {
+		case "1": ### - aipAMAPStatusTrap
+			# SNMPv2
+			# An AMAP port status change and reason.
+				$aipAMAPLastTrapReasonlook = "aipAMAPLastTrapReason." + $1
+				$aipAMAPLastTrapReason = lookup($aipAMAPLastTrapReasonlook,VarbindValTable)
+				if(match($aipAMAPLastTrapReason,"UNKNOWN")) {
+					$aipAMAPLastTrapReason = $1
+				} else {
+					$aipAMAPLastTrapReason = $aipAMAPLastTrapReason + " ( " + $1 + " )"
+				}
+			$aipAMAPLastTrapPort = $2
+			@AlertGroup = "aipAMAPStatusTrap"
+			@Agent = "ALCATEL-IND1-INTERSWITCH-PROTOCOL-MIB"
+			@AlertKey = $aipAMAPLastTrapPort
+			@Summary = "aipAMAPStatusTrap on port " + $aipAMAPLastTrapPort + " Reason " + $aipAMAPLastTrapReason
+			@Severity = 1
+			#@Type = 0
+			#@Type = 1
+			@Type = 13
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			#details($aipAMAPLastTrapReason,$aipAMAPLastTrapPort)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.4.1.6486.800.1.3.2.2": # - aipGMAPTraps
+	switch($specific-trap) {
+		case "1": ### - aipGMAPConflictTrap
+			# SNMPv2
+			# A GMAP update conflict.
+				$aipGMAPLastTrapReasonlook = "aipGMAPLastTrapReason." + $1
+				$aipGMAPLastTrapReason = lookup($aipGMAPLastTrapReasonlook,VarbindValTable)
+				if(match($aipGMAPLastTrapReason,"UNKNOWN")) {
+					$aipGMAPLastTrapReason = $1
+				} else {
+					$aipGMAPLastTrapReason = $aipGMAPLastTrapReason + " ( " + $1 + " )"
+				}
+			$aipGMAPLastTrapPort = $2
+			$aipGMAPLastTrapMac = $3
+			$aipGMAPLastTrapProtocol = $4
+			$aipGMAPLastTrapVlan = $5
+			@AlertGroup = "aipGMAPConflictTrap"
+			@Agent = "ALCATEL-IND1-INTERSWITCH-PROTOCOL-MIB"
+			@Summary = "aipGMAPConflictTrap , reason " + $aipGMAPLastTrapReason + " on vlan " + $5 + ", port " + $2 + ", mac " + $3 + ", protocol " + $4
+			@Severity = 1
+			#@Type = 0
+			@Type = 13
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			#details($aipGMAPLastTrapReason,$aipGMAPLastTrapPort,$aipGMAPLastTrapMac,$aipGMAPLastTrapProtocol,$aipGMAPLastTrapVlan)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.4.1.6486.800.1.3.2.3.1": # - policyManagerTrapDesc
+	switch($specific-trap) {
+		case "1": ### - policyEventNotification
+			# SNMPv2
+			# The policyEventNotification allows the switch to notify an NMS when 
+			# significant events happen. The NMS can then investigate and perform 
+			# appropriate control functions.  Other tables allow the NMS app to 
+			# zone in on the problem as part of a proactive monitoring system by the 
+			# NMS application. 
+			$policyTrapEventDetailString = $1
+			$policyTrapEventCode = $2
+			@AlertGroup = "policyEventNotification"
+			@Agent = "ALCATEL-IND1-POLICY-MIB"
+			@Summary = "policyEventNotification " + $policyTrapEventDetailString + " " + $policyTrapEventCode
+			@Severity = 1
+			#@Type = 0
+			@Type = 13
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			#details($policyTrapEventDetailString,$policyTrapEventCode)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.4.1.6486.800.1.3.2.4.1": # - chassisTrapsDesc
+	switch($specific-trap) {
+		case "1": ### - chassisTrapsStr
+			# SNMPv2
+			# A Software Trouble report is sent by whatever application 
+			# encountering a problem during its execution and would 
+			# want to aware the user of for maintenance purpose.        
+			$chassisTrapsStrLevel = $1
+			$chassisTrapsStrAppID = $2
+			$chassisTrapsStrSnapID = $3
+			$chassisTrapsStrfileName = $4
+			$chassisTrapsStrfileLineNb = $5
+			$chassisTrapsStrErrorNb = $6
+			$chassisTrapsStrcomments = $7
+			$chassisTrapsStrdataInfo = $8
+			@AlertGroup = "chassisTrapsStr"
+			@Agent = "ALCATEL-IND1-CHASSIS-MIB"
+			@Summary = "chassisTrapsStr" + $1 + " " + $2 + " " + $3 + "  " + $4 + " " + $5 + " " + $6  + " " + $7  + " " + $8 
+			@Severity = 1
+			#@Type = 0
+			#@Type = 1
+			@Type = 13
+			@Identifier = @Node + @Summary
+			#details($chassisTrapsStrLevel,$chassisTrapsStrAppID,$chassisTrapsStrSnapID,$chassisTrapsStrfileName,$chassisTrapsStrfileLineNb,$chassisTrapsStrErrorNb,$chassisTrapsStrcomments,$chassisTrapsStrdataInfo)
+
+		case "2": ### - chassisTrapsAlert
+			# SNMPv2
+			# generic trap notifying something changed in the chassis
+			# whatever it's a failure or not                                
+			$physicalIndex = $1
+			$chassisTrapsObjectType = $2
+			$chassisTrapsObjectNumber = $3
+			$chassisTrapsAlertNumber = $4
+			$chassisTrapsAlertDescr = $5
+			@AlertGroup = "chassisTrapsAlert"
+			@Agent = "ALCATEL-IND1-CHASSIS-MIB"
+			@AlertKey = $1 
+			@Summary = "chassisTrapsAlert  On  physical index " + $1 + ",  " +  $5 + ", Object Type " + $2 + " Object Number " + $3 + " Alert Number " + $4
+			@Severity = 1
+			#@Type = 0
+			@Type = 1
+			@Identifier = @Node + @Summary
+
+			#details($physicalIndex,$chassisTrapsObjectType,$chassisTrapsObjectNumber,$chassisTrapsAlertNumber,$chassisTrapsAlertDescr)
+
+		case "3": ### - chassisTrapsStateChange
+			# SNMPv2
+			# A status change was detected
+			$physicalIndex = $1
+			$chassisTrapsObjectType = $2
+			$chassisTrapsObjectNumber = $3
+				$chasEntPhysOperStatuslook = "chasEntPhysOperStatus." + $4
+				$chasEntPhysOperStatus = lookup($chasEntPhysOperStatuslook,VarbindValTable)
+				if(match($chasEntPhysOperStatus,"UNKNOWN")) {
+					$chasEntPhysOperStatus = $4
+				} else {
+					$chasEntPhysOperStatus = $chasEntPhysOperStatus + " ( " + $4 + " )"
+				}
+			@AlertGroup = "chassisTrapsStateChange"
+			@Agent = "ALCATEL-IND1-CHASSIS-MIB"
+			@Summary = "chassisTrapsStateChange on " + $physicalIndex + " to status " + $chasEntPhysOperStatus
+			@Severity = 1
+			#@Type = 0
+			@Type = 1
+# modified by Toby for clear by deduplication
+			#@Identifier = @Node +  @Summary
+			@Identifier = @Node + "chassisTrapsStateChange on " + $physicalIndex
+			#details($physicalIndex,$chassisTrapsObjectType,$chassisTrapsObjectNumber,$chasEntPhysOperStatus)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.4.1.6486.800.1.3.2.5": # - healthMonTraps
+	switch($specific-trap) {
+		case "1": ### - healthMonDeviceTrap
+			# SNMPv2
+			# Device-level rising/falling threshold crossing trap.
+				$healthMonRxStatuslook = "healthMonRxStatus." + $1
+				$healthMonRxStatus = lookup($healthMonRxStatuslook,VarbindValTable)
+				if(match($healthMonRxStatus,"UNKNOWN")) {
+					$healthMonRxStatus = $1
+				} else {
+					$healthMonRxStatus = $healthMonRxStatus + " ( " + $1 + " )"
+				}
+				$healthMonRxTxStatuslook = "healthMonRxTxStatus." + $2
+				$healthMonRxTxStatus = lookup($healthMonRxTxStatuslook,VarbindValTable)
+				if(match($healthMonRxTxStatus,"UNKNOWN")) {
+					$healthMonRxTxStatus = $2
+				} else {
+					$healthMonRxTxStatus = $healthMonRxTxStatus + " ( " + $2 + " )"
+				}
+				$healthMonMemoryStatuslook = "healthMonMemoryStatus." + $3
+				$healthMonMemoryStatus = lookup($healthMonMemoryStatuslook,VarbindValTable)
+				if(match($healthMonMemoryStatus,"UNKNOWN")) {
+					$healthMonMemoryStatus = $3
+				} else {
+					$healthMonMemoryStatus = $healthMonMemoryStatus + " ( " + $3 + " )"
+				}
+				$healthMonCpuStatuslook = "healthMonCpuStatus." + $4
+				$healthMonCpuStatus = lookup($healthMonCpuStatuslook,VarbindValTable)
+				if(match($healthMonCpuStatus,"UNKNOWN")) {
+					$healthMonCpuStatus = $4
+				} else {
+					$healthMonCpuStatus = $healthMonCpuStatus + " ( " + $4 + " )"
+				}
+				$healthMonCmmTempStatuslook = "healthMonCmmTempStatus." + $5
+				$healthMonCmmTempStatus = lookup($healthMonCmmTempStatuslook,VarbindValTable)
+				if(match($healthMonCmmTempStatus,"UNKNOWN")) {
+					$healthMonCmmTempStatus = $5
+				} else {
+					$healthMonCmmTempStatus = $healthMonCmmTempStatus + " ( " + $5 + " )"
+				}
+				$healthMonCmmCpuTempStatuslook = "healthMonCmmCpuTempStatus." + $6
+				$healthMonCmmCpuTempStatus = lookup($healthMonCmmCpuTempStatuslook,VarbindValTable)
+				if(match($healthMonCmmCpuTempStatus,"UNKNOWN")) {
+					$healthMonCmmCpuTempStatus = $6
+				} else {
+					$healthMonCmmCpuTempStatus = $healthMonCmmCpuTempStatus + " ( " + $6 + " )"
+				}
+			@AlertGroup = "healthMonDeviceTrap"
+			@Agent = "ALCATEL-IND1-HEALTH-MIB"
+			@Summary = "healthMonDeviceTrap " + $healthMonRxStatus + $healthMonRxTxStatus + $healthMonMemoryStatus + $healthMonCpuStatus + $healthMonCmmTempStatus + $healthMonCmmCpuTempStatus
+			@Severity = 1
+			#@Type = 0
+			@Type = 1
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			#details($healthMonRxStatus,$healthMonRxTxStatus,$healthMonMemoryStatus,$healthMonCpuStatus,$healthMonCmmTempStatus,$healthMonCmmCpuTempStatus)
+
+		case "2": ### - healthMonModuleTrap
+			# SNMPv2
+			# Module-level rising/falling threshold crossing trap.
+			$healthModuleSlot = $1
+				$healthMonRxStatuslook = "healthMonRxStatus." + $2
+				$healthMonRxStatus = lookup($healthMonRxStatuslook,VarbindValTable)
+				if(match($healthMonRxStatus,"UNKNOWN")) {
+					$healthMonRxStatus = $2
+				} else {
+					$healthMonRxStatus = $healthMonRxStatus + " ( " + $2 + " )"
+				}
+				$healthMonRxTxStatuslook = "healthMonRxTxStatus." + $3
+				$healthMonRxTxStatus = lookup($healthMonRxTxStatuslook,VarbindValTable)
+				if(match($healthMonRxTxStatus,"UNKNOWN")) {
+					$healthMonRxTxStatus = $3
+				} else {
+					$healthMonRxTxStatus = $healthMonRxTxStatus + " ( " + $3 + " )"
+				}
+				$healthMonMemoryStatuslook = "healthMonMemoryStatus." + $4
+				$healthMonMemoryStatus = lookup($healthMonMemoryStatuslook,VarbindValTable)
+				if(match($healthMonMemoryStatus,"UNKNOWN")) {
+					$healthMonMemoryStatus = $4
+				} else {
+					$healthMonMemoryStatus = $healthMonMemoryStatus + " ( " + $4 + " )"
+				}
+				$healthMonCpuStatuslook = "healthMonCpuStatus." + $5
+				$healthMonCpuStatus = lookup($healthMonCpuStatuslook,VarbindValTable)
+				if(match($healthMonCpuStatus,"UNKNOWN")) {
+					$healthMonCpuStatus = $5
+				} else {
+					$healthMonCpuStatus = $healthMonCpuStatus + " ( " + $5 + " )"
+				}
+			@AlertGroup = "healthMonModuleTrap"
+			@Agent = "ALCATEL-IND1-HEALTH-MIB"
+			@Summary = "healthMonModuleTrap " + $healthModuleSlot + $healthMonRxStatus + $healthMonRxTxStatus + $healthMonMemoryStatus + $healthMonCpuStatus
+			@Severity = 1
+			#@Type = 0
+			@Type = 1
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			#details($healthModuleSlot,$healthMonRxStatus,$healthMonRxTxStatus,$healthMonMemoryStatus,$healthMonCpuStatus)
+
+		case "3": ### - healthMonPortTrap
+			# SNMPv2
+			# Port-level rising/falling threshold crossing trap.
+			$healthPortSlot = $1
+			$healthPortIF = $2
+				$healthMonRxStatuslook = "healthMonRxStatus." + $3
+				$healthMonRxStatus = lookup($healthMonRxStatuslook,VarbindValTable)
+				if(match($healthMonRxStatus,"UNKNOWN")) {
+					$healthMonRxStatus = $3
+				} else {
+					$healthMonRxStatus = $healthMonRxStatus + " ( " + $3 + " )"
+				}
+				$healthMonRxTxStatuslook = "healthMonRxTxStatus." + $4
+				$healthMonRxTxStatus = lookup($healthMonRxTxStatuslook,VarbindValTable)
+				if(match($healthMonRxTxStatus,"UNKNOWN")) {
+					$healthMonRxTxStatus = $4
+				} else {
+					$healthMonRxTxStatus = $healthMonRxTxStatus + " ( " + $4 + " )"
+				}
+			@AlertGroup = "healthMonPortTrap"
+			@Agent = "ALCATEL-IND1-HEALTH-MIB"
+			@Summary = "healthMonPortTrap"
+			@Summary = "healthMonPortTrap" + $healthPortSlot + $healthPortIF + $healthMonRxStatus + $healthMonRxTxStatus
+			@Severity = 1
+			#@Type = 0
+			@Type = 1
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			#details($healthPortSlot,$healthPortIF,$healthMonRxStatus,$healthMonRxTxStatus)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.4.1.6486.800.1.3.2.6": # - cmmEsmDrvTraps
+	switch($specific-trap) {
+		case "1": ### - esmDrvTrapDropsLink
+			# SNMPv2
+			# When the Ethernet code drops the link because of
+			# excessive errors, a Trap is sent.
+			$esmPortSlot = $1
+			$esmPortIF = $2
+			$ifInErrors = $3
+			$ifOutErrors = $4
+			$esmDrvTrapDrops = $5
+			@AlertGroup = "esmDrvTrapDropsLink"
+			@Agent = "ALCATEL-IND1-PORT-MIB"
+			@Summary = "esmDrvTrapDropsLink"
+			@Summary = "esmDrvTrapDropsLink slot: " + $esmPortSlot + " port" + $esmPortIF + " inerrors" + $ifInErrors + " outerrors" + $ifOutErrors + " trapdrops" + $esmDrvTrapDrops
+			@Severity = 1
+			#@Type = 0
+			@Type = 1
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			#details($esmPortSlot,$esmPortIF,$ifInErrors,$ifOutErrors,$esmDrvTrapDrops)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.4.1.6486.800.1.3.2.7": # - spanningTreeTraps
+	switch($specific-trap) {
+		case "1": ### - stpNewRoot
+			# SNMPv2
+			# The NewRoot trap indicates that the bridge has 
+			# become the new root for this Spanning Tree instance;
+			# the trap is sent by a bridge soon after its election
+			# as the new root, upon expiration of the
+			# Topology Change Timer immediately subsequent to
+			# its election.
+			$vStpNumber = $1
+			@AlertGroup = "stpNewRoot"
+			@Agent = "ALCATEL-IND1-VLAN-STP-MIB"
+			@Summary = "stpNewRoot " + $vStpNumber
+			@Severity = 1
+			#@Type = 0
+			@Type = 13
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			#details($vStpNumber)
+
+		case "2": ### - stpRootPortChange
+			# SNMPv2
+			# A RootPortChange trap is sent for a Spannnig Tree
+			# instance by a bridge when its root port has changed.
+			# The root port is the port which offers the
+			# lowest cost path from this bridge to the root
+			# bridge.
+			$vStpNumber = $1
+			$vStpRootPortNumber = $2
+			@AlertGroup = "stpRootPortChange"
+			@Agent = "ALCATEL-IND1-VLAN-STP-MIB"
+			@Summary = "stpRootPortChange  vstp num" + $vStpNumber + " on port:" + $vStpRootPortNumber
+			@Severity = 1
+			#@Type = 0
+			@Type = 1
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			#details($vStpNumber,$vStpRootPortNumber)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.4.1.6486.800.1.3.2.8": # - portMirroringMonitoringTraps
+	switch($specific-trap) {
+		case "1": ### - mirrorConfigError
+			# SNMPv2
+			# The Mirroring Configuration failed on NI.
+			# This trap is sent when any NI fails to configure mirroring.                        
+			# Due to this error, port mirroring session will be terminated.
+			$mirmonPrimarySlot = $1
+			$mirmonPrimaryPort = $2
+			$mirroringSlot = $3
+			$mirroringPort = $4
+			$mirMonErrorNi = $5
+			$mirMonError = $6
+			@AlertGroup = "mirrorConfigError"
+			@Agent = "ALCATEL-IND1-PORT-MIRRORING-MONITORING-MIB"
+			@Summary = "mirrorConfigError"
+			@Severity = 1
+			#@Type = 0
+			@Type = 13
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			#details($mirmonPrimarySlot,$mirmonPrimaryPort,$mirroringSlot,$mirroringPort,$mirMonErrorNi,$mirMonError)
+
+		case "3": ### - mirrorUnlikeNi
+			# SNMPv2
+			# The Mirroring Configuration is deleted due to the swapping of different 
+			# NI board type. Port Mirroring session which was active on a slot,cannot 
+			# continue with the insertion of different NI type in the same slot. 
+			$mirmonPrimarySlot = $1
+			$mirmonPrimaryPort = $2
+			$mirroringSlot = $3
+			$mirroringPort = $4
+			$mirMonErrorNi = $5
+			@AlertGroup = "mirrorUnlikeNi"
+			@Agent = "ALCATEL-IND1-PORT-MIRRORING-MONITORING-MIB"
+			@Summary = "mirrorUnlikeNi NI: " + $mirMonErrorNi + " primary " + $mirmonPrimarySlot + ": " + $mirmonPrimaryPort + " mirror " + $mirroringSlot  + ": " + $mirroringPort
+			@Severity = 1
+			#@Type = 0
+			@Type = 13
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			#details($mirmonPrimarySlot,$mirmonPrimaryPort,$mirroringSlot,$mirroringPort,$mirMonErrorNi)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.4.1.6486.800.1.3.2.9": # - sourceLearningTraps
+	switch($specific-trap) {
+		case "1": ### - slPCAMStatusTrap
+			# SNMPv2
+			# Trap Status of Layer 2 pesudoCAM on this Coronado.
+			$slPCAMSlotNumber = $1
+			$slPCAMSliceNumber = $2
+				$slPCAMStatuslook = "slPCAMStatus." + $3
+				$slPCAMStatus = lookup($slPCAMStatuslook,VarbindValTable)
+				if(match($slPCAMStatus,"UNKNOWN")) {
+					$slPCAMStatus = $3
+				} else {
+					$slPCAMStatus = $slPCAMStatus + " ( " + $3 + " )"
+				}
+			@AlertGroup = "slPCAMStatusTrap"
+			@Agent = "ALCATEL-IND1-MAC-ADDRESS-MIB"
+			@Summary = "slPCAMStatusTrap " + $slPCAMSlotNumber + "  " + $slPCAMSliceNumber + " " + $slPCAMStatus
+			@Severity = 1
+			#@Type = 0
+			@Type = 13
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			#details($slPCAMSlotNumber,$slPCAMSliceNumber,$slPCAMStatus)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.4.1.6486.800.1.3.2.9.0.2.1": # - lpsTrapsDesc
+	switch($specific-trap) {
+		case "1": ### - lpsViolationTrap
+			# SNMPv2
+			# Learned Port Security Violation Trap.
+			$lpsTrapSwitchName = $1
+			$lpsTrapSwitchIpAddr = $2
+			$lpsTrapSwitchSlice = $3
+			$lpsTrapSwitchPort = $4
+			$lpsTrapViolatingMac = $5
+				$lpsTrapViolationTypelook = "lpsTrapViolationType." + $6
+				$lpsTrapViolationType = lookup($lpsTrapViolationTypelook,VarbindValTable)
+				if(match($lpsTrapViolationType,"UNKNOWN")) {
+					$lpsTrapViolationType = $6
+				} else {
+					$lpsTrapViolationType = $lpsTrapViolationType + " ( " + $6 + " )"
+				}
+			$systemServicesDate = $7
+			$systemServicesTime = $8
+			@AlertGroup = "lpsViolationTrap"
+			@Agent = "ALCATEL-IND1-LPS-MIB"
+			@Summary = "lpsViolationTrap " + $lpsTrapViolationType + " " + $lpsTrapSwitchName + $lpsTrapSwitchIpAddr + $lpsTrapSwitchSlice + $lpsTrapSwitchPort + $lpsTrapViolatingMac + $lpsTrapViolationType + $systemServicesDate + $systemServicesTime
+			@Severity = 1
+			#@Type = 0
+			@Type = 13
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			#details($lpsTrapSwitchName,$lpsTrapSwitchIpAddr,$lpsTrapSwitchSlice,$lpsTrapSwitchPort,$lpsTrapViolatingMac,$lpsTrapViolationType,$systemServicesDate,$systemServicesTime)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.4.1.6486.800.1.3.2.10.1": # - slbTrapsDesc
+	switch($specific-trap) {
+		case "1": ### - slbTrapException
+			# SNMPv2
+			# Software exception in SLB module.
+			$slbTrapInfoException = $1
+			@AlertGroup = "slbTrapException"
+			@Agent = "ALCATEL-IND1-SLB-MIB"
+			@Summary = "slbTrapException" + $slbTrapInfoException
+			@Severity = 1
+			#@Type = 0
+			@Type = 13
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			#details($slbTrapInfoException)
+
+		case "2": ### - slbTrapConfigChanged
+			# SNMPv2
+			# A change occured in SLB configuration.
+				$slbTrapInfoEntityGrouplook = "slbTrapInfoEntityGroup." + $1
+				$slbTrapInfoEntityGroup = lookup($slbTrapInfoEntityGrouplook,VarbindValTable)
+				if(match($slbTrapInfoEntityGroup,"UNKNOWN")) {
+					$slbTrapInfoEntityGroup = $1
+				} else {
+					$slbTrapInfoEntityGroup = $slbTrapInfoEntityGroup + " ( " + $1 + " )"
+				}
+			$slbTrapInfoClusterName = $2
+			$slbTrapInfoServerIpAddr = $3
+			@AlertGroup = "slbTrapConfigChanged"
+			@Agent = "ALCATEL-IND1-SLB-MIB"
+			@Summary = "slbTrapConfigChanged "   
+			@Severity = 1
+			#@Type = 0
+			@Type = 13
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			#details($slbTrapInfoEntityGroup,$slbTrapInfoClusterName,$slbTrapInfoServerIpAddr)
+
+		case "3": ### - slbTrapOperStatus
+			# SNMPv2
+			# A change occured in the operational status of a slb entity.
+				$slbTrapInfoEntityGrouplook = "slbTrapInfoEntityGroup." + $1
+				$slbTrapInfoEntityGroup = lookup($slbTrapInfoEntityGrouplook,VarbindValTable)
+				if(match($slbTrapInfoEntityGroup,"UNKNOWN")) {
+					$slbTrapInfoEntityGroup = $1
+				} else {
+					$slbTrapInfoEntityGroup = $slbTrapInfoEntityGroup + " ( " + $1 + " )"
+				}
+			$slbTrapInfoOperStatus = $2
+			$slbTrapInfoClusterName = $3
+			$slbTrapInfoServerIpAddr = $4
+			@AlertGroup = "slbTrapOperStatus"
+			@Agent = "ALCATEL-IND1-SLB-MIB"
+			@Summary = "slbTrapOperStatus on group" + $slbTrapInfoEntityGroup +  " status " + $slbTrapInfoOperStatus
+			@Severity = 1
+			#@Type = 0
+			@Type = 13
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			#details($slbTrapInfoEntityGroup,$slbTrapInfoOperStatus,$slbTrapInfoClusterName,$slbTrapInfoServerIpAddr)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.4.1.6486.800.1.3.2.11.1": # - switchMgtTrapsDesc
+	switch($specific-trap) {
+		case "1": ### - sessionAuthenticationTrap
+			# SNMPv2
+			# Authentication Failure Trap is sent each time a user
+			# authentication is refused.
+				$sessionAccessTypelook = "sessionAccessType." + $1
+				$sessionAccessType = lookup($sessionAccessTypelook,VarbindValTable)
+				if(match($sessionAccessType,"UNKNOWN")) {
+					$sessionAccessType = $1
+				} else {
+					$sessionAccessType = $sessionAccessType + " ( " + $1 + " )"
+				}
+			$sessionUserName = $2
+			$sessionUserIpAddress = $3
+				$sessionAuthFailurelook = "sessionAuthFailure." + $4
+				$sessionAuthFailure = lookup($sessionAuthFailurelook,VarbindValTable)
+				if(match($sessionAuthFailure,"UNKNOWN")) {
+					$sessionAuthFailure = $4
+				} else {
+					$sessionAuthFailure = $sessionAuthFailure + " ( " + $4 + " )"
+				}
+			@AlertGroup = "sessionAuthenticationTrap"
+			@Agent = "ALCATEL-IND1-SESSION-MGR-MIB"
+			@Summary = "sessionAuthenticationTrap"
+			@Summary = "sessionAuthenticationTrap  access type " + $sessionAccessType + " user: " + $sessionUserName + " user ip" + $sessionUserIpAddress + " " + $sessionAuthFailure
+			@Severity = 1
+			#@Type = 0
+			@Type = 1
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			#details($sessionAccessType,$sessionUserName,$sessionUserIpAddress,$sessionAuthFailure)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.4.1.6486.800.1.3.2.11.3": # - webMgtTrapsDesc
+	switch($specific-trap) {
+		case "1": ### - httpServerDoSAttackTrap
+			# SNMPv2
+			# This trap is sent to management station(s) when the 
+			# HTTP server is under Denial of Service attack. The HTTP
+			# and HTTPS connections are sampled at a 15 second
+			# interval. This trap is sent every 1 minute while the HTTP
+			# server detects it is under attack.
+			$httpConnectionStats = $1
+			$httpsConnectionStats = $2
+			@AlertGroup = "httpServerDoSAttackTrap"
+			@Agent = "ALCATEL-IND1-WEBMGT-MIB"
+			@Summary = "httpServerDoSAttackTrap"
+			@Severity = 1
+			#@Type = 0
+			@Type = 13
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			#details($httpConnectionStats,$httpsConnectionStats)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.4.1.6486.800.1.3.2.12": # - trapMgrTraps
+	switch($specific-trap) {
+		case "1": ### - trapAbsorptionTrap
+			# SNMPv2
+			# The absorption Trap is sent when a trap has been
+			# absorbed at least once.
+			$trapAbsorStamp = $1
+			$trapAbsorTrapId = $2
+log(DEBUG,"######################*****************"+$2)			
+$trapAbsorCounter = $3
+			$trapAbsorTime = $4
+			@AlertGroup = "trapAbsorptionTrap"
+			@Agent = "ALCATEL-IND1-TRAP-MGR-MIB"
+			@Summary = "trapAbsorptionTrap"  + $2
+			@Severity = 1
+			#@Type = 0
+			@Type = 13
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			#details($trapAbsorStamp,$trapAbsorTrapId,$trapAbsorCounter,$trapAbsorTime)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.4.1.6486.800.1.3.2.13.1": # - groupmobilityTrapsDesc
+	switch($specific-trap) {
+		case "1": ### - gmBindRuleViolation
+			# SNMPv2
+			# A bind-violation trap occurs whenever
+			# a binding rule which has been configured gets violated.
+				$gmBindRuleTypelook = "gmBindRuleType." + $1
+				$gmBindRuleType = lookup($gmBindRuleTypelook,VarbindValTable)
+				if(match($gmBindRuleType,"UNKNOWN")) {
+					$gmBindRuleType = $1
+				} else {
+					$gmBindRuleType = $gmBindRuleType + " ( " + $1 + " )"
+				}
+			$gmBindRuleVlanId = $2
+			$gmBindRuleIPAddress = $3
+			$gmBindRuleMacAddress = $4
+			$gmBindRulePortIfIndex = $5
+				$gmBindRuleProtoClasslook = "gmBindRuleProtoClass." + $6
+				$gmBindRuleProtoClass = lookup($gmBindRuleProtoClasslook,VarbindValTable)
+				if(match($gmBindRuleProtoClass,"UNKNOWN")) {
+					$gmBindRuleProtoClass = $6
+				} else {
+					$gmBindRuleProtoClass = $gmBindRuleProtoClass + " ( " + $6 + " )"
+				}
+			$gmBindRuleEthertype = $7
+			$gmBindRuleDsapSsap = $8
+			@AlertGroup = "gmBindRuleViolation"
+			@Agent = "ALCATEL-IND1-GROUP-MOBILITY-MIB"
+			@Summary = "gmBindRuleViolation"
+			@Severity = 1
+			#@Type = 0
+			@Type = 13
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			#details($gmBindRuleType,$gmBindRuleVlanId,$gmBindRuleIPAddress,$gmBindRuleMacAddress,$gmBindRulePortIfIndex,$gmBindRuleProtoClass,$gmBindRuleEthertype,$gmBindRuleDsapSsap)
+
+		case "2": ### - gmHwVlanRuleTableOverloadAlert
+			# SNMPv2
+			# An overload trap occurs whenever
+			# a new entry to the HW vlan rule table gets dropped
+			# due to the overload of the table.
+				$gmOverloadRuleTablelook = "gmOverloadRuleTable." + $1
+				$gmOverloadRuleTable = lookup($gmOverloadRuleTablelook,VarbindValTable)
+				if(match($gmOverloadRuleTable,"UNKNOWN")) {
+					$gmOverloadRuleTable = $1
+				} else {
+					$gmOverloadRuleTable = $gmOverloadRuleTable + " ( " + $1 + " )"
+				}
+				$gmOverloadRuleTypelook = "gmOverloadRuleType." + $2
+				$gmOverloadRuleType = lookup($gmOverloadRuleTypelook,VarbindValTable)
+				if(match($gmOverloadRuleType,"UNKNOWN")) {
+					$gmOverloadRuleType = $2
+				} else {
+					$gmOverloadRuleType = $gmOverloadRuleType + " ( " + $2 + " )"
+				}
+			$gmOverloadRuleVlanId = $3
+			$gmOverloadRuleMacAddress = $4
+			$gmOverloadRuleIpAddress = $5
+				$gmOverloadRuleProtocollook = "gmOverloadRuleProtocol." + $6
+				$gmOverloadRuleProtocol = lookup($gmOverloadRuleProtocollook,VarbindValTable)
+				if(match($gmOverloadRuleProtocol,"UNKNOWN")) {
+					$gmOverloadRuleProtocol = $6
+				} else {
+					$gmOverloadRuleProtocol = $gmOverloadRuleProtocol + " ( " + $6 + " )"
+				}
+			$gmOverloadRuleIpxNetwork = $7
+			@AlertGroup = "gmHwVlanRuleTableOverloadAlert"
+			@Agent = "ALCATEL-IND1-GROUP-MOBILITY-MIB"
+			@Summary = "gmHwVlanRuleTableOverloadAlert"
+			@Severity = 1
+			#@Type = 0
+			@Type = 1
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			#details($gmOverloadRuleTable,$gmOverloadRuleType,$gmOverloadRuleVlanId,$gmOverloadRuleMacAddress,$gmOverloadRuleIpAddress,$gmOverloadRuleProtocol,$gmOverloadRuleIpxNetwork)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+case ".1.3.6.1.4.1.6486.800.1.3.2.14": # - lnkaggTraps
+	switch($specific-trap) {
+		case "1": ### - lnkaggAggUp
+			# SNMPv2
+			# The Link Aggregation  is  active .
+			# This trap is sent when any one port of the link aggregation 
+			# goes to attached state.
+			$traplnkaggAggId = $1
+			$traplnkaggPortIfIndex = $2
+			@AlertGroup = "lnkaggAggUp"
+			@AlertKey = $traplnkaggAggId 
+                        @PhysicalCard = $traplnkaggAggId
+			@Agent = "ALCATEL-IND1-LAG-MIB"
+			@Summary = "lnkaggAggUp " + $traplnkaggAggId + ", port " + $traplnkaggPortIfIndex
+			@Severity = 1
+			@Type = 2
+			@Identifier = @Node + @Summary
+			#details($traplnkaggAggId,$traplnkaggPortIfIndex)
+
+		case "2": ### - lnkaggAggDown
+			# SNMPv2
+			# The Link Aggregation  is  not active .
+			# This trap is sent when all  ports of the link aggregation 
+			# goes out of attached state.
+			$traplnkaggAggId = $1
+			$traplnkaggPortIfIndex = $2
+			@AlertGroup = "lnkaggAggDown"
+			@Agent = "ALCATEL-IND1-LAG-MIB"
+			@AlertKey = $traplnkaggAggId 
+                        @PhysicalCard = $traplnkaggAggId
+			@Summary = "lnkaggAggDown " + $traplnkaggAggId + ", port " + $traplnkaggPortIfIndex
+			@Severity = 1
+			@Type = 1
+			@Identifier = @Node + @Summary
+			#details($traplnkaggAggId,$traplnkaggPortIfIndex)
+
+		case "3": ### - lnkaggPortJoin
+			# SNMPv2
+			# The Link Aggregation port  joins  the aggregate .
+			# This trap is sent when given  port of the link aggregation 
+			# goes to attached state.
+			$traplnkaggAggId = $1
+			$traplnkaggPortIfIndex = $2
+			@AlertGroup = "lnkaggPortJoin"
+			@AlertKey = $traplnkaggAggId 
+			@Agent = "ALCATEL-IND1-LAG-MIB"
+                        @PhysicalCard = $traplnkaggAggId
+			@Summary = "lnkaggPortJoin " + $traplnkaggAggId + ", port " + $traplnkaggPortIfIndex
+			@Severity = 1
+			#@Type = 0
+			@Type = 1
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			#details($traplnkaggAggId,$traplnkaggPortIfIndex)
+
+		case "4": ### - lnkaggPortLeave
+			# SNMPv2
+			# The Link Aggregation port  leaves  the aggregate .
+			# This trap is sent when given  port of the link aggregation 
+			# goes out of  attached state.
+			$traplnkaggAggId = $1
+			$traplnkaggPortIfIndex = $2
+			@AlertGroup = "lnkaggPortLeave"
+			@PhysicalCard = $traplnkaggAggId
+			@Agent = "ALCATEL-IND1-LAG-MIB"
+			@Summary = "lnkaggPortLeave " + $traplnkaggAggId + ", port " + $traplnkaggPortIfIndex
+			@Severity = 1
+			#@Type = 0
+			@Type = 1
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			#details($traplnkaggAggId,$traplnkaggPortIfIndex)
+
+		case "5": ### - lnkaggPortRemove
+			# SNMPv2
+			# The Link Aggregation port removed from the aggregate  .
+			# This trap is sent when given  port of the link aggregation 
+			# removed due to invalid configuration .
+			$traplnkaggAggId = $1
+			$traplnkaggPortIfIndex = $2
+			@AlertGroup = "lnkaggPortRemove"
+			@PhysicalCard = $traplnkaggAggId
+			@Agent = "ALCATEL-IND1-LAG-MIB"
+			@Summary = "lnkaggPortRemove link agg id " + $traplnkaggAggId + ", port " + $traplnkaggPortIfIndex
+			@Severity = 1
+			#@Type = 0
+			@Type = 1
+			@ExpireTime = 900
+			@Identifier = @Node + @Summary
+			#details($traplnkaggAggId,$traplnkaggPortIfIndex)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+			@Type = 0
+	}
+
+case ".1.3.6.1.4.1.6486.800.1.3.2.15.1": # - trafficEvents
+	switch($specific-trap) {
+		case "1": ### - pktDrop
+			# SNMPv2
+			# The pktDrop trap indicates that the sending agent
+			# has dropped certain packets (to blocked IP ports,
+			# from spoofed addresses, etc).
+				$pktDropTypelook = "pktDropType." + $1
+				$pktDropType = lookup($pktDropTypelook,VarbindValTable)
+				if(match($pktDropType,"UNKNOWN")) {
+					$pktDropType = $1
+				} else {
+					$pktDropType = $pktDropType + " ( " + $1 + " )"
+				}
+			$pktDropIfIndex = $2
+			$pktDropCount = $3
+			$pktDropFrag = $4
+			@AlertGroup = "pktDrop"
+			@Agent = "ALCATEL-IND1-IP-MIB"
+			@Summary = "pktDrop type" + $pktDropType
+			@Severity = 1
+			#@Type = 0
+			@Type = 1
+			@Identifier = @Node + @Summary
+			#details($pktDropType,$pktDropIfIndex,$pktDropCount,$pktDropFrag)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			#details($*)
+	}
+
+### New Omnivista Traps ... added 11 apr 2007
+
+case ".1.3.6.1.4.1.6486.800.1.3.2.19.1.1.2":  ### - omniVistaTraps (from ALCATEL-IND1-NMS-MIB)
+	$specific-trap = extract($2,".1.3.6.1.4.1.6486.800.1.3.2.19.1.1.2.0.([0-9])")
+	switch($specific-trap) {
+		case "1": ### - alaOvNormalTrapAbsorbed
+			#######################
+			# The normal absorption Trap is sent when a normal trap has been
+			# absorbed at least once.
+			#######################
+			$alaOvTrapAbsorOrigName = $1
+			$alaOvTrapAbsorOrigOID = $2
+			$alaOvTrapAbsorOrigStamp = $3
+			$alaOvTrapAbsorOrigSummary = $4
+			$alaOvTrapAbsorCounter = $5
+			$alaOvTrapAbsorTime = $6
+
+			$OS_EventId = "SNMPTRAP-omniVistaTraps-ALCATEL-IND1-NMS-MIB-alaOvNormalTrapAbsorbed"
+
+			@Agent = "ALCATEL-IND1-NMS-MIB"
+			@AlertGroup = "alaOvNormalTrapAbsorbed"
+			@AlertKey = $alaOvTrapAbsorOrigName+$alaOvTrapAbsorOrigOID+$alaOvTrapAbsorOrigStamp+$alaOvTrapAbsorOrigSummary+$alaOvTrapAbsorCounter+$alaOvTrapAbsorTime
+			@Severity = 1
+                        @Type = 13
+                        @ExpireTime = 900
+
+			@Summary = "alaOvNormalTrapAbsorbed (see details)"
+
+			@Identifier = @Node + " " + @AlertKey + " " + @AlertGroup + " " + $DEFAULT_Type + " " + @Agent + " " + @Manager + " " + $specific-trap
+			#details($alaOvTrapAbsorOrigName,$alaOvTrapAbsorOrigOID,$alaOvTrapAbsorOrigStamp,$alaOvTrapAbsorOrigSummary,$alaOvTrapAbsorCounter,$alaOvTrapAbsorTime)
+
+
+		case "2": ### - alaOvWarningTrapAbsorbed
+			#######################
+			# The warning absorption Trap is sent when a warning trap has been
+			# absorbed at least once.
+			#######################
+			$alaOvTrapAbsorOrigName = $1
+			$alaOvTrapAbsorOrigOID = $2
+			$alaOvTrapAbsorOrigStamp = $3
+			$alaOvTrapAbsorOrigSummary = $4
+			$alaOvTrapAbsorCounter = $5
+			$alaOvTrapAbsorTime = $6
+
+			$OS_EventId = "SNMPTRAP-omniVistaTraps-ALCATEL-IND1-NMS-MIB-alaOvWarningTrapAbsorbed"
+
+			@Agent = "ALCATEL-IND1-NMS-MIB"
+			@AlertGroup = "alaOvWarningTrapAbsorbed"
+			@AlertKey = $alaOvTrapAbsorOrigName+$alaOvTrapAbsorOrigOID+$alaOvTrapAbsorOrigStamp+$alaOvTrapAbsorOrigSummary+$alaOvTrapAbsorCounter+$alaOvTrapAbsorTime
+			@Severity = 2
+                        @Type = 13
+                        @ExpireTime = 900
+			@Summary = "alaOvWarningTrapAbsorbed (see details)"
+
+			@Identifier = @Node + " " + @AlertKey + " " + @AlertGroup + " " + $DEFAULT_Type + " " + @Agent + " " + @Manager + " " + $specific-trap
+			#details($alaOvTrapAbsorOrigName,$alaOvTrapAbsorOrigOID,$alaOvTrapAbsorOrigStamp,$alaOvTrapAbsorOrigSummary,$alaOvTrapAbsorCounter,$alaOvTrapAbsorTime)
+
+
+		case "3": ### - alaOvMinorTrapAbsorbed
+			#######################
+			# The minor absorption Trap is sent when a minor trap has been
+			# absorbed at least once.
+			#######################
+			$alaOvTrapAbsorOrigName = $1
+			$alaOvTrapAbsorOrigOID = $2
+			$alaOvTrapAbsorOrigStamp = $3
+			$alaOvTrapAbsorOrigSummary = $4
+			$alaOvTrapAbsorCounter = $5
+			$alaOvTrapAbsorTime = $6
+
+			$OS_EventId = "SNMPTRAP-omniVistaTraps-ALCATEL-IND1-NMS-MIB-alaOvMinorTrapAbsorbed"
+
+			@Agent = "ALCATEL-IND1-NMS-MIB"
+			@AlertGroup = "alaOvMinorTrapAbsorbed"
+			@AlertKey = $alaOvTrapAbsorOrigName+$alaOvTrapAbsorOrigOID+$alaOvTrapAbsorOrigStamp+$alaOvTrapAbsorOrigSummary+$alaOvTrapAbsorCounter+$alaOvTrapAbsorTime
+			@Severity = 3
+                        @Type = 13
+                        @ExpireTime = 900
+			@Summary = "alaOvMinorTrapAbsorbed (see details)"
+
+			@Identifier = @Node + " " + @AlertKey + " " + @AlertGroup + " " + $DEFAULT_Type + " " + @Agent + " " + @Manager + " " + $specific-trap
+			#details($alaOvTrapAbsorOrigName,$alaOvTrapAbsorOrigOID,$alaOvTrapAbsorOrigStamp,$alaOvTrapAbsorOrigSummary,$alaOvTrapAbsorCounter,$alaOvTrapAbsorTime)
+
+
+		case "4": ### - alaOvMajorTrapAbsorbed
+			#######################
+			# The major absorption Trap is sent when a major trap has been
+			# absorbed at least once.
+			#######################
+			$alaOvTrapAbsorOrigName = $1
+			$alaOvTrapAbsorOrigOID = $2
+			$alaOvTrapAbsorOrigStamp = $3
+			$alaOvTrapAbsorOrigSummary = $4
+			$alaOvTrapAbsorCounter = $5
+			$alaOvTrapAbsorTime = $6
+
+			$OS_EventId = "SNMPTRAP-omniVistaTraps-ALCATEL-IND1-NMS-MIB-alaOvMajorTrapAbsorbed"
+
+			@Agent = "ALCATEL-IND1-NMS-MIB"
+			@AlertGroup = "alaOvMajorTrapAbsorbed"
+			@AlertKey = $alaOvTrapAbsorOrigName+$alaOvTrapAbsorOrigOID+$alaOvTrapAbsorOrigStamp+$alaOvTrapAbsorOrigSummary+$alaOvTrapAbsorCounter+$alaOvTrapAbsorTime
+			@Severity = 4
+                        @Type = 1
+			@Summary = "alaOvMajorTrapAbsorbed (see details)"
+
+			@Identifier = @Node + " " + @AlertKey + " " + @AlertGroup + " " + $DEFAULT_Type + " " + @Agent + " " + @Manager + " " + $specific-trap
+			#details($alaOvTrapAbsorOrigName,$alaOvTrapAbsorOrigOID,$alaOvTrapAbsorOrigStamp,$alaOvTrapAbsorOrigSummary,$alaOvTrapAbsorCounter,$alaOvTrapAbsorTime)
+
+
+		case "5": ### - alaOvCriticalTrapAbsorbed
+			#######################
+			# The critical absorption Trap is sent when a critical trap has been
+			# absorbed at least once.
+			#######################
+			$alaOvTrapAbsorOrigName = $1
+			$alaOvTrapAbsorOrigOID = $2
+			$alaOvTrapAbsorOrigStamp = $3
+			$alaOvTrapAbsorOrigSummary = $4
+			$alaOvTrapAbsorCounter = $5
+			$alaOvTrapAbsorTime = $6
+
+			$OS_EventId = "SNMPTRAP-omniVistaTraps-ALCATEL-IND1-NMS-MIB-alaOvCriticalTrapAbsorbed"
+
+			@Agent = "ALCATEL-IND1-NMS-MIB"
+			@AlertGroup = "alaOvCriticalTrapAbsorbed"
+			@AlertKey = $alaOvTrapAbsorOrigName+$alaOvTrapAbsorOrigOID+$alaOvTrapAbsorOrigStamp+$alaOvTrapAbsorOrigSummary+$alaOvTrapAbsorCounter+$alaOvTrapAbsorTime
+			@Severity = 5
+                        @Type = 1
+			@Summary = "alaOvCriticalTrapAbsorbed (see details)"
+
+			@Identifier = @Node + " " + @AlertKey + " " + @AlertGroup + " " + $DEFAULT_Type + " " + @Agent + " " + @Manager + " " + $specific-trap
+			#details($alaOvTrapAbsorOrigName,$alaOvTrapAbsorOrigOID,$alaOvTrapAbsorOrigStamp,$alaOvTrapAbsorOrigSummary,$alaOvTrapAbsorCounter,$alaOvTrapAbsorTime)
+
+
+		case "6": ### - alaOvSwitchDown
+			#######################
+			# The Switch Down Trap is sent when a switch stops responding to OmniVista management requests.
+			#######################
+			$alaOvSwitchLastUpTime = $1
+			$alaOvSwitchLastPollTime = $2
+			$alaOvSwitchStateChangeReason = $3
+			$alaOvSwitchStateChangeToken4 = $4
+			log(WARN,"CK1_4_1>token 1 $alaOvSwitchLastUpTime="+$alaOvSwitchLastUpTime)
+			log(WARN,"CK1_4_1>token 2 $alaOvSwitchLastPollTime="+$alaOvSwitchLastPollTime)
+			log(WARN,"CK1_4_1>token 3 $alaOvSwitchStateChangeReason="+$alaOvSwitchStateChangeReason)
+			log(WARN,"CK1_4_1>token 4 $alaOvSwitchStateChangeToken4="+$alaOvSwitchStateChangeToken4)
+
+
+			#$OS_EventId = "SNMPTRAP-omniVistaTraps-ALCATEL-IND1-NMS-MIB-alaOvSwitchDown"
+
+			@Agent = $Node 
+			#@AlertGroup = "alaOvSwitchUpDown"  JF Sept 2010
+			@AlertGroup = "alaOvSwitchDown"
+			@AlertKey = $IPaddress
+			@Type = 1
+			@ServiceAffecting = 1
+			@Summary = "Switch  " + $IPaddress + " has stopped responding to OMNIVISTA: Could not send SNMP message (Time out...)"
+			@Severity = 5
+
+			@Identifier = @Node + " " + @AlertKey + " " + @AlertGroup + " " + @Agent + " " + @Manager + " " + $specific-trap
+
+
+		case "7": ### - alaOvSwitchUp
+			#######################
+			# The Switch Up Trap is sent when a switch resumes responding to OmniVista management requests.
+			#######################
+			$alaOvSwitchLastUpTime = $1
+			$alaOvSwitchLastPollTime = $2
+			$alaOvSwitchStateChangeReason = $3
+			$alaOvSwitchStateChangeToken4 = $4
+			log(WARN,"CK1_4_1>token 1 $alaOvSwitchLastUpTime="+$alaOvSwitchLastUpTime)
+			log(WARN,"CK1_4_1>token 2 $alaOvSwitchLastPollTime="+$alaOvSwitchLastPollTime)
+			log(WARN,"CK1_4_1>token 3 $alaOvSwitchStateChangeReason="+$alaOvSwitchStateChangeReason)
+			log(WARN,"CK1_4_1>token 4 $alaOvSwitchStateChangeToken4="+$alaOvSwitchStateChangeToken4)
+
+			#$OS_EventId = "SNMPTRAP-omniVistaTraps-ALCATEL-IND1-NMS-MIB-alaOvSwitchUp"
+
+			@Agent = $Node 
+			#@AlertGroup = "alaOvSwitchUpDown"  JF Sept 2010
+			@AlertGroup = "alaOvSwitchUp"
+			@AlertKey = $IPaddress
+			@Type = 2
+			@Severity = 1
+			@Summary = "Switch  " + $IPaddress + " is responding to OMNIVISTA"
+
+			@Identifier = @Node + " " + @AlertKey + " " + @AlertGroup + " " + @Agent + " " +
+@Manager + " " + $specific-trap
+
+
+		default:
+			@Summary = "Unknown Specific Trap Number (" + $specific-trap + ") Received for Enterprise " + $enterprise
+			@Severity = 1
+			@Identifier = @Node + " " + @Agent + " " + @Manager + " " + $enterprise + " " + $generic-trap + " " + $specific-trap
+			#details($*)
+	}
+log(DEBUG,'*************************'+$2)

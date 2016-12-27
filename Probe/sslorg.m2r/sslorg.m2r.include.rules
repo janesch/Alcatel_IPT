@@ -1,0 +1,1641 @@
+######
+# sslorg include file
+######
+case ".1.3.6.1.4.1.36974.2.10.1": # - categoryBoot
+	switch($specific-trap) {
+		case "1": ### - trBootSuccess
+			# SNMPv2
+			# Initialisation Completed Successfully. IPT in Normal Mode.
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trBootSuccess: Initialisation Completed Successfully. IPT in Normal Mode."
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+		case "2": ### - trBootFail
+			# SNMPv2
+			# Boot Failure
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trBootFail: Boot Failure"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+		case "3": ### - trShutdown
+			# SNMPv2
+			# IPT Shutdown at Operator's Request
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trShutdown: IPT Shutdown at Operator's Request"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+		case "4": ### - trRestart
+			# SNMPv2
+			# IPT Reboot
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trRestart: IPT Reboot"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+			
+			default:			
+}
+			
+case ".1.3.6.1.4.1.36974.2.10.2": # - categoryBulkConfig
+	switch($specific-trap) {
+		case "1": ### - trImgSuccDwnld
+			# SNMPv2
+			# Configuration Image Downloaded & Validated
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trImgSuccDwnld: Configuration Image Downloaded & Validated"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+		case "2": ### - trImgFailDwnld
+			# SNMPv2
+			# Configuration Image Download Failed
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trImgFailDwnld: Configuration Image Download Failed"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+			default:			
+			}
+			
+case ".1.3.6.1.4.1.36974.2.10.3": # - categoryFirmware
+	switch($specific-trap) {
+		case "1": ### - trSuccFwDwnld
+			# SNMPv2
+			# Firmware Image Downloaded & Validated
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trSuccFwDwnld: Firmware Image Downloaded & Validated"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+		case "2": ### - trFailFwDwnld
+			# SNMPv2
+			# Firmware Image Download Failed
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trFailFwDwnld: Firmware Image Download Failed"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+			default:						
+			}
+
+case ".1.3.6.1.4.1.36974.2.10.4": # - categoryLocalConfig
+	switch($specific-trap) {
+		case "2": ### - trCfgChg
+			# SNMPv2
+			# A Configuration Parameter was Successfully Changed
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trCfgChg: A Configuration Parameter was Successfully Changed"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+		case "3": ### - trSCEthPort
+			# SNMPv2
+			# A Terminal has been Connected to the Local Ethernet LAN
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trSCEthPort: A Terminal has been Connected to the Local Ethernet LAN"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+		case "4": ### - trSC485Port
+			# SNMPv2
+			# RS485 Port Enabled/Disabled
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trSC485Port: RS485 Port Enabled/Disabled"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+		case "5": ### - trConfChgHw
+			# SNMPv2
+			# IPT Equipment Component Change
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trConfChgHw: IPT Equipment Component Change"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+		case "7": ### - trECPChanged
+			# SNMPv2
+			# IPT Equipment Configuration Plug Changed - IPT Configuration Data Erased
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trECPChanged: IPT Equipment Configuration Plug Changed - IPT Configuration Data Erased"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+			default:						
+			}
+			
+case ".1.3.6.1.4.1.36974.2.10.5": # - categoryHardwareFailures
+	switch($specific-trap) {
+		case "1": ### - trHwFail
+			# SNMPv2
+			# Hardware Component Failure
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trHwFail: Hardware Component Failure"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+		case "3": ### - trPowerFail
+			# SNMPv2
+			# Power Failure
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trPowerFail: Power Failure"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+		case "5": ### - trTemperature
+			# SNMPv2
+			# Temperature Alarm
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trTemperature: Temperature Alarm"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+		case "7": ### - trBatteryFail
+			# SNMPv2
+			# Battery Failure
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trBatteryFail: Battery Failure"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+		case "9": ### - trChargerFail
+			# SNMPv2
+			# Charger Failure
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trChargerFail: Charger Failure"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+		case "11": ### - trRTCBatteryFail
+			# SNMPv2
+			# Charger Failure
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trRTCBatteryFail: Charger Failure"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+			default:						
+			}
+
+case ".1.3.6.1.4.1.36974.2.10.6": # - categoryDiscovery
+	switch($specific-trap) {
+		case "1": ### - trDiscovery
+			# SNMPv2
+			# IPT Commissioned
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trDiscovery: IPT Commissioned"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+			default:						
+}
+
+case ".1.3.6.1.4.1.36974.2.10.7": # - categoryTcpIp
+	switch($specific-trap) {
+		case "1": ### - trNTPFail
+			# SNMPv2
+			# NTP Server Not Responding
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trNTPFail: NTP Server Not Responding"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+		case "3": ### - trLCCUnobtain
+			# SNMPv2
+			# LCC Unobtainable
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trLCCUnobtain: LCC Unobtainable"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+			default:			
+			}
+
+case ".1.3.6.1.4.1.36974.2.10.8": # - categoryEndDevices
+	switch($specific-trap) {
+		case "1": ### - trEDUnobtain
+			# SNMPv2
+			# End Device/Outstation Unobtainable
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trEDUnobtain: End Device/Outstation Unobtainable"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+		case "3": ### - trEDUnidentified
+			# SNMPv2
+			# Device Found that is not Present in Configuration Data
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trEDUnidentified: Device Found that is not Present in Configuration Data"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+		case "4": ### - trMIDPowerFail
+			# SNMPv2
+			# MIDAS Outstation Reports Mains Failure
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trMIDPowerFail: MIDAS Outstation Reports Mains Failure"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+		case "5": ### - trOverlongOccupation
+			# SNMPv2
+			# MIDAS T1' Timer Expired
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trOverlongOccupation: MIDAS T1' Timer Expired"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+			default:						
+			}
+
+case ".1.3.6.1.4.1.36974.2.10.9": # - categoryRS485
+	switch($specific-trap) {
+		case "1": ### - tr485LinkDown
+			# SNMPv2
+			# All Devices on RS485 Link Unobtainable
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "tr485LinkDown: All Devices on RS485 Link Unobtainable"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+			default:						
+			}
+
+case ".1.3.6.1.4.1.36974.2.10.10": # - categoryEthernet
+	switch($specific-trap) {
+		case "1": ### - trEthLinkDown
+			# SNMPv2
+			# Ethernet Cable Disconnected
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trEthLinkDown: Ethernet Cable Disconnected"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+			default:						
+			}
+
+case ".1.3.6.1.4.1.36974.2.10.11": # - categoryThreshold
+	switch($specific-trap) {
+		case "1": ### - trThreshTCP
+			# SNMPv2
+			# Number of TCP Disconnections Exceeded Limit Per Period
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trThreshTCP: Number of TCP Disconnections Exceeded Limit Per Period"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+		case "3": ### - trThreshVoltageAlarm
+			# SNMPv2
+			# Voltage Alarm Threshold
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trThreshVoltageAlarm: Voltage Alarm Threshold"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+		case "5": ### - trThreshELIMO
+			# SNMPv2
+			# ELIMO Alarm Threshold
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trThreshELIMO: ELIMO Alarm Threshold"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+		case "7": ### - trThreshHighAlarmRate
+			# SNMPv2
+			# High Alarm Rate
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trThreshHighAlarmRate: High Alarm Rate"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+			default:						
+			}
+
+case ".1.3.6.1.4.1.36974.2.10.12": # - categorySecurity
+	switch($specific-trap) {
+		case "2": ### - trLogin
+			# SNMPv2
+			# Login Attempt (Successful or Failed)
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trLogin: Login Attempt (Successful or Failed)"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+		case "3": ### - trLoginFail
+			# SNMPv2
+			# User Locked Out After 3 Failed Login Attempts
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trLoginFail: User Locked Out After 3 Failed Login Attempts"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+			default:						
+			}
+
+case ".1.3.6.1.4.1.36974.2.10.13": # - categoryDryContactAlarm
+	switch($specific-trap) {
+		case "1": ### - trDryContactAlarm
+			# SNMPv2
+			# Spare Dry Contact in Alarm State
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trDryContactAlarm: Spare Dry Contact in Alarm State"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+			default:						
+			}
+
+case ".1.3.6.1.4.1.36974.2.10.14": # - categoryIPTNEM
+	switch($specific-trap) {
+		case "1": ### - trSCTopology
+			# SNMPv2
+			# IPT Removed from Topology Tree
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trSCTopology: IPT Removed from Topology Tree"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+		case "2": ### - trIPTIsolation
+			# SNMPv2
+			# IPT Isolated from IPTNEM
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trIPTIsolation: IPT Isolated from IPTNEM"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+		case "3": ### - trIPTMismatch
+			# SNMPv2
+			# IPT Configuration or Firmware Mismatch
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trIPTMismatch: IPT Configuration or Firmware Mismatch"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+		case "4": ### - trMultipleUnobtainAlarm
+			# SNMPv2
+			# Multiple Unobtainable Devices on Link
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trMultipleUnobtainAlarm: Multiple Unobtainable Devices on Link"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+		case "5": ### - trMultipleRetryAlarm
+			# SNMPv2
+			# High Retry Rate to Multiple Devices on Link
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trMultipleRetryAlarm: High Retry Rate to Multiple Devices on Link"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+		case "6": ### - trResourceThreshAlarm
+			# SNMPv2
+			# Resource Threshold Exceeded
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trResourceThreshAlarm: Resource Threshold Exceeded"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+		case "7": ### - trNetConnLost
+			# SNMPv2
+			# Network Connectivity to External System Lost
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trNetConnLost: Network Connectivity to External System Lost"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+		case "8": ### - trIPTNEMStartup
+			# SNMPv2
+			# IPTNEM Startup Notification
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trIPTNEMStartup: IPTNEM Startup Notification"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+		case "9": ### - trIPTNEMShutdown
+			# SNMPv2
+			# IPTNEM Shutdown Notification
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trIPTNEMShutdown: IPTNEM Shutdown Notification"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+		case "10": ### - trMODSChange
+			# SNMPv2
+			# End Device MODS Change
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trMODSChange: End Device MODS Change"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+		case "11": ### - trSWException
+			# SNMPv2
+			# IPTNEM Internal Software Exception
+			$sequenceNumber = $1
+			$trapOID = $2
+			$managedObject = $3
+			$reasonCode = $4
+			$eventTimestamp = $5
+			$receiptTimestamp = $6
+				$severitylook = "severity." + $7
+				$severity = lookup($severitylook,VarbindValTable)
+				if(match($severity,"UNKNOWN")) {
+					$severity = $7
+				} else {
+					$severity = $severity + " ( " + $7 + " )"
+				}
+			$probableCause = $8
+			$acknowledged = $9
+			$acknowledgementTime = $10
+			$acknowledgementSource = $11
+			$cleared = $12
+			$manualClear = $13
+			$clearanceTime = $14
+			$clearanceSource = $15
+			$geogAddr = $16
+			$remarks = $17
+			@AlertGroup = ""
+			@Agent = "IPTNEMMANAGEMENT-MIB"
+			@Summary = "trSWException: IPTNEM Internal Software Exception"
+			@Severity = 1
+			@Type = 0
+			@Identifier = @Node + @Summary
+			details($sequenceNumber,$trapOID,$managedObject,$reasonCode,$eventTimestamp,$receiptTimestamp,$severity,$probableCause,$acknowledged,$acknowledgementTime,$acknowledgementSource,$cleared,$manualClear,$clearanceTime,$clearanceSource,$geogAddr,$remarks)
+
+		default:
+			@Summary = "Unknown specific trap number (" + $specific-trap + ") received for enterprise " + $enterprise
+			@Identifier = @Node + $enterprise + $generic-trap + $specific-trap + @Agent + @Manager
+			@Severity = 1
+			details($*)
+	}
+

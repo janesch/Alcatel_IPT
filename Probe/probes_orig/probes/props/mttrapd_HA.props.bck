@@ -1,0 +1,112 @@
+#######################################################################
+#
+#       Copyright (C) 2002 Micromuse Ltd. All rights reserved.
+
+#       All Rights Reserved
+#
+#       RESTRICTED RIGHTS:
+#
+#       This file may have been supplied under a license.
+#       It may be used, disclosed, and/or copied only as permitted
+#       under such license agreement.  Any copy must contain the
+#       above copyright notice and this restricted rights notice.
+#       Use, copying, and/or disclosure of the file is strictly
+#       prohibited unless otherwise provided in the license agreement.
+#
+#
+# Ident: $Id: mkprops 1.21 2003/08/20 15:29:09 csmith Development $
+#
+#######################################################################
+
+#######################################################################
+#
+# Property Name					Default
+#
+# Generic Properties
+#
+# AuthPassword          	: ''
+# AuthUserName          	: ''
+# AutoSAF               	: 0
+# Buffering             	: 0
+# BufferingTimeout      	: 10
+# BufferSize            	: 10
+# Help                  	: 0
+# LookupTableMode       	: 3
+# Manager               	: 'mttrapd'
+# MaxLogFileSize        	: 1048576
+# MaxRawFileSize        	: -1
+# MaxSAFFileSize        	: 1048576
+# MessageLevel          	: 'warn'
+# MessageLog            	: '$OMNIHOME/log/mttrapd.log'
+# MsgDailyLog           	: 0
+# MsgTimeLog            	: '0000'
+# Name                  	: 'mttrapd'
+# NetworkTimeout        	: 0
+# PollServer            	: 0
+# PropsFile             	: '$OMNIHOME/probes/<arch>/mttrapd.props'
+RawCapture            	: 1 
+RawCaptureFile        	: '/opt/IBM/tivoli/netcool/omnibus/var/mttrapd.cap'
+RawCaptureFileAppend  	:1 
+# RawCaptureFileBackup  	: 0
+# RetryConnectionCount  	: 15
+# RetryConnectionTimeOut	: 30
+# RulesFile             	: '$OMNIHOME/probes/<arch>/mttrapd.rules'
+# SAFFileName           	: ''
+# Server                	: 'NCOMS'
+# ServerBackup          	: ''
+# StoreAndForward       	: 1
+# Version               	: 0
+#
+# Specific Properties
+#
+# ConfPath              	: '$OMNIHOME/probes/<arch>:/releasebuild/nextstep/build/2004_03_19/production/archangel/omnihome/var'
+# Forwarding            	: 0
+# MIBDirs               	: '$OMNIHOME/common/mibs'
+# MIBFile               	: '$OMNIHOME/probes/<arch>/mib.txt'
+# MIBs                  	: 'ALL'
+# NoNameResolution      	: 0
+# Optimize              	: 0
+# PersistentDir         	: '$OMNIHOME/var'
+# Port                  	: 162
+# Props.CheckNames      	: TRUE
+# Protocol              	: 'UDP'
+# QuietOutput           	: 1
+# ReadBuffer            	: 6500
+# Realfast              	: 0
+# SleepTime             	: 1
+# SocketSize            	: 8192
+# ThreadQueueSize       	: 10000
+# TrapQueueMax          	: 0
+#
+#######################################################################
+
+#######################################################################
+#
+# Add your settings here
+#
+#######################################################################
+
+# Connection Properties
+Server                  : 'NCOMS_V'
+PropsFile             	: '$NCHOME/custom/probes/props/mttrapd_HA.props'
+RulesFile             	: '$NCHOME/custom/probes/rules/mttrapd/mttrapd_HA.rules'
+
+# Logfile Properties
+MessageLog            	: '$OMNIHOME/log/mttrapd_HA.log'
+MessageLevel          	: 'debug'
+MaxLogFileSize        	: 100048576
+
+# SAF Properties
+#AutoSAF               	: 1
+#SAFFileName           	: '/data/SAF/mttrapd.store'
+#MaxSAFFileSize        	: 100048576
+
+# Peer Properties
+Mode                    : 'master'
+PeerHost                : 'nv3d'
+PeerPort                : 4600
+
+# Socket Properties
+Port                  	: 162
+Protocol              	: 'UDP'
+SocketSize            	: 131072

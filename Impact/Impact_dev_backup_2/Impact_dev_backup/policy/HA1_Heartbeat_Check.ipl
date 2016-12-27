@@ -1,0 +1,99 @@
+Log( "Heartbeat_Check : started" );
+/*
+Policy : Heartbeat_Check
+Desc   : The policy checks the heartbeat data every 5 minutes
+Input  : Policy Activator every 5 minutes
+*/
+
+// Retrieve any active heartbeat filters that should have been processed by now or that are in a failed state...
+Filter = "(Active = 1) and ((Status = 1) or (NextTime < " + GetDate() + "))";
+DataType = "OS_Heartbeat";
+Heartbeats = GetByFilter( DataType, Filter, False );
+
+If ( Num > 0 ) {
+	    // Found some matching filters - so process them...
+
+        NumHeartbeat = Num;
+        Log( "Heartbeat_Check : Processing " + NumHeartbeat + " heartbeat definitions...");
+        CurrentHeartbeat = 0;
+        DataType = "ha_ncoms_impact_events";
+
+        While ( CurrentHeartbeat < NumHeartbeat ) {
+
+                // Convert the Period to seconds...
+                Period = Heartbeats[CurrentHeartbeat].Period * 60;
+
+                // Build the heartbeat filter...
+                Filter = "(LastOccurrence > " + Heartbeats[CurrentHeartbeat].LastTime + ") and " + Heartbeats[CurrentHeartbeat].Definition;
+
+                If ( Heartbeats[CurrentHeartbeat].LastTime == 0 ) {
+                        // If this is the first time make sure we only check for events in the last period...
+                        Filter = "(LastOccurrence > (getdate - " + Period + ")) and " + Heartbeats[CurrentHeartbeat].Definition;
+                }
+
+                // Check if we have had any events matching the heartbeat filter on the ObjectServer since we last checked...
+                GetByFilter( DataType, Filter, True );
+
+                // Set the Identifier for the heartbeat alarm
+                Identifier = "Heartbeat for " + Heartbeats[CurrentHeartbeat].Identifier + ":" + Heartbeats[CurrentHeartbeat].FilterName;
+
+                If ( Num > 0 ) {
+                        // Found matching hearbeat events - update heartbeat event if it exists...
+                        Log( "Heartbeat_Check : Heartbeat " + CurrentHeartbeat + " found matching events...");
+
+                        // Try and locate the heartbeat alarm on the ObjectServer...
+                        Filter = "Identifier = '" + Identifier + "'";
+                        HeartbeatEvent = GetByFilter( DataType, Filter, False );
+                        If ( Num > 0 ) {
+                                // Alarm exists so update it...
+                                HeartbeatEvent[0].Summary = "alarms from " + Heartbeats[CurrentHeartbeat].FilterName + " in last " + Heartbeats[CurrentHeartbeat].Period + " minutes";
+                                HeartbeatEvent[0].Severity = 0;
+                                HeartbeatEvent[0].LastRaiseTime = GetDate();
+                                HeartbeatEvent[0].LastOccurrence = GetDate();
+                        }
+
+                        // Set the status of the heartbeat to 0 = success
+                        Heartbeats[CurrentHeartbeat].Status = 0;
+                }
+                Else {
+                        // No matching heartbeat events - generate a heartbeat failure event...
+                        Log( "Heartbeat_Check : Heartbeat " + CurrentHeartbeat + " no matching events...");
+
+                        // Initialise a new event object...
+                        NewEvent = NewObject();
+                        NewEvent.Manager = Heartbeats[CurrentHeartbeat].Manager;
+                        NewEvent.Agent = Heartbeats[CurrentHeartbeat].Agent;
+                        NewEvent.Node = Heartbeats[CurrentHeartbeat].Node;
+                        NewEvent.AlertGroup = Heartbeats[CurrentHeartbeat].AlertGroup;
+                        NewEvent.AlertKey = Heartbeats[CurrentHeartbeat].AlertKey;
+                        NewEvent.OwnerGID=0;
+                        NewEvent.OwnerUID=65534;
+                        NewEvent.LastOccurrence = GetDate();
+                        NewEvent.FirstOccurrence = GetDate();
+                        NewEvent.LastRaiseTime = GetDate();
+                        NewEvent.FirstRaiseTime = GetDate();
+                        NewEvent.Identifier = Identifier;
+                        NewEvent.Summary = "NO alarms from " + Heartbeats[CurrentHeartbeat].FilterName + " in last " + Heartbeats[CurrentHeartbeat].Period + " minutes";
+                        NewEvent.Severity = 5;
+                        NewEvent.Type = 1;
+
+                        // Add the event to the ObjectServer...
+                        AddDataItem( DataType, NewEvent );
+
+                        // Set the status of the heartbeat to 1 = failed
+                        Heartbeats[CurrentHeartbeat].Status = 1;
+                }
+
+                // Update the LastTime and NextTime for the heartbeat filter...
+                Heartbeats[CurrentHeartbeat].LastTime = GetDate();
+                Heartbeats[CurrentHeartbeat].NextTime = GetDate() + Period;
+                CurrentHeartbeat = CurrentHeartbeat + 1;
+        }
+}
+Else {
+        // No matching filters...
+        Log( "Heartbeat_Check : No filters, sleeping..." );
+}
+Log( "Heartbeat_Check : stopped" );
+
+

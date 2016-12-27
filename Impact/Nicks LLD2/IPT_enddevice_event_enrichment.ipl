@@ -1,0 +1,299 @@
+// Policy Name: IPT_enddevice_event_enrichment
+// 
+// Version	Date        Name        Description
+// 0.1      06-03-2012    Nick Evans  BaseLine: WP190 End Device STI Calculation policy
+//
+//
+//This policy sets Calculates STI outages for WP190 requirements and raises Synthetic Events if trMultipleUnobtainableAalarm
+//is raised and all enddevices on a rs485 port are down
+Log("Starting IPT_end_event_enrichment: "+@Node+":"+@AlarmClass+":"+@Summary);
+PhysicalCardArray = Split(@Node, "/");
+Node = PhysicalCardArray[0];
+RS = PhysicalCardArray[1];
+TPRPort = PhysicalCardArray[2];
+EndDeviceNumber = PhysicalCardArray[3];
+PhysicalCard = RS+"/"+TPRPort;
+numPhysicalCard = Length(PhysicalCard);
+Log("Node:"+Node+":PhysicalCard:"+PhysicalCard);
+if(numPhysicalCard > 0 ){
+Filter = "((L1_SYSNAME='"+@NodeAlias+"' and L2_SYSNAME='"+Node+"' and L2_IF_ID like '"+PhysicalCard+"%' and L2_IF_ID not like '%ETH%') or (L2_SYSNAME='"+@NodeAlias+"' and L1_SYSNAME='"+Node+"' and L1_IF_ID like '"+PhysicalCard+"%' and L1_IF_ID not like '%ETH%'))";
+}else{
+Filter = "((L1_SYSNAME='"+@NodeAlias+"' and L2_IF_ID not like '%ETH%') or (L2_SYSNAME='"+@NodeAlias+"' and L1_IF_ID not like '%ETH%'))";
+}
+Log("Lookup STI Values Netcool_L1_L2 with Filter:"+Filter);
+a = 0;
+STIArray = {};
+STIHAImpactArray = {};
+// Find All STIs for End Device by Interface & Node or Node from circee Netcool_l1_l2 table
+STIRefOrgNodes = GetByFilter('Circee_Interface_Table', Filter, false);
+numSTIRefOrgNodes = Length(STIRefOrgNodes);
+Log("Netcool_L1_L2 "+Filter+" STI Lookup Count:"+numSTIRefOrgNodes+" Filter:"+Filter);
+if(numSTIRefOrgNodes > 0){
+while ( a < numSTIRefOrgNodes){
+TPRDevice = STIRefOrgNodes[a].L1_SYSNAME;
+if(TPRDevice = Node){
+STIArray = STIArray + STIRefOrgNodes[a].L2_STI_ID;
+STIHAImpact = STIRefOrgNodes[a].L2_STI_HA_IMPACT;
+if(Length(STIHAImpact) > 0){
+STIHAImpactArray = STIHAImpactArray + STIHAImpact;
+}else{
+STIHAImpactArray = STIHAImpactArray + "1";
+}
+Log(@Node+" L2_STIRef:"+STIRef+":"+STIArray+":"+STIRefOrgNodes[a].L2_SYSNAME);
+}if(TPRDevice != Node){
+STIArray = STIArray + STIRefOrgNodes[a].L1_STI_ID;
+STIHAImpact = STIRefOrgNodes[a].L1_STI_HA_IMPACT;
+if(Length(STIHAImpact) > 0){
+STIHAImpactArray = STIHAImpactArray + STIHAImpact;
+}else{
+STIHAImpactArray = STIHAImpactArray + "1";
+}
+Log(@Node+" L1_STIRef:"+STIArray);
+}
+a = a + 1;
+}
+numSTIArray = Length(STIArray);
+@STINum = numSTIArray;
+STIArray = Distinct(STIArray);
+Log("STI Lookup Count:"+numSTIRefOrgNodes+" Filter:"+Filter+":STINum:"+numSTIArray+":"+STIHAImpactArray);
+}if(numSTIRefOrgNodes = 0){
+@STIRef = '';
+}
+if(numPhysicalCard > 0 ){
+Filter = "((L1_SYSNAME='"+@NodeAlias+"' and L2_SYSNAME='"+Node+"' and L2_IF_ID like '"+PhysicalCard+"%') or (L2_SYSNAME='"+@NodeAlias+"' and L1_SYSNAME='"+Node+"' and L1_IF_ID like '"+PhysicalCard+"%'))";
+}else{
+Filter = "((L1_SYSNAME='"+@NodeAlias+"' and L2_SYSNAME='"+Node+"' and L2_IF_ID not like '%ETH%') or (L2_SYSNAME='"+@NodeAlias+"' and L1_SYSNAME='"+Node+"' and L1_IF_ID not like '%ETH%'))";
+}
+Log("Lookup Device Values Netcool_L1_L2 with Filter:"+Filter);
+a = 0;
+// Find All STIs for End Device by Interface & Node or Node from circee Netcool_l1_l2 table
+DeviceRefOrgNodes = GetByFilter('Circee_Interface_Table', Filter, false);
+numDeviceRefOrgNodes = Length(DeviceRefOrgNodes);
+Log("Netcool_L1_L2 "+Filter+" Device Lookup Count:"+numDeviceRefOrgNodes+" Filter:"+Filter);
+if(numDeviceRefOrgNodes > 0){
+while ( a < numDeviceRefOrgNodes){
+TPRDevice = DeviceRefOrgNodes[a].L1_SYSNAME;
+if(TPRDevice = Node){
+@STIRef = DeviceRefOrgNodes[a].L2_STI_ID;
+@RemoteNode = DeviceRefOrgNodes[a].L1_SYSNAME;
+@RemoteCard = DeviceRefOrgNodes[a].L1_IF_ID;
+Log(@Node+" L2_STIRef:"+STIRef+":"+@RemoteNode+":"+DeviceRefOrgNodes[a].L2_SYSNAME);
+}if(TPRDevice != Node){
+@STIRef = DeviceRefOrgNodes[a].L1_STI_ID;
+@RemoteNode = DeviceRefOrgNodes[a].L2_SYSNAME;
+@RemoteCard = DeviceRefOrgNodes[a].L2_IF_ID;
+Log(@Node+" L1_STIRef:"+@STIRef+":"+@RemoteNode+":"+@RemoteCard);
+}
+a = a + 1;
+}
+}
+Filter = "(L1_STI_ID like '"+@STIRef+"%' or L2_STI_ID like '"+@STIRef+"%')";
+EndDevicesBySTIOrgNodes = GetByFilter('Circee_Interface_Table', Filter, false);
+numEndDevicesBySTIOrgNodes = Length(EndDevicesBySTIOrgNodes);
+@STIEDNum = numEndDevicesBySTIOrgNodes;
+Log("numEndDevicesBySTIOrgNodes="+numEndDevicesBySTIOrgNodes+":"+@STIEDNum);
+if(numPhysicalCard > 0 ){
+Filter = "(Node='"+Node+"' and PhysicalCard like '"+PhysicalCard+".*')";
+}else{
+Filter = "(Node='"+Node+"')";
+}
+TPRDeviceEventsOrgNodes = GetByFilter('ha_ncoms_impact_events', Filter, false);
+
+// Find TPR Device Events from ObjectServer with TPR as Node
+
+numTPRDeviceEventsOrgNodes = Length(TPRDeviceEventsOrgNodes);
+Log("Netcool TPR Device Lookup from alerts.status Count:"+numTPRDeviceEventsOrgNodes+" Filter:"+Filter);
+b = 0;
+probableSythentic = 0;
+while ( b < numTPRDeviceEventsOrgNodes ){
+    if(TPRDeviceEventsOrgNodes[b].AlarmClass = 'trMultipleUnobtainAlarm.None' and TPRDeviceEventsOrgNodes[b].Type = 1 and TPRDeviceEventsOrgNodes[b].Severity > 1){
+
+        //If this alarm is a trMultipleUnobtainableAlarm and not clearing event set probableSythentic
+
+        probableSythentic = 1;
+        Log(@Node+":"+@AlarmClass+":"+probableSythentic);
+
+    }else{
+
+        //Sythentic Event not Required
+
+        probableSythentic = 0;
+        Log(@Node+":"+@AlarmClass+":"+probableSythentic);
+
+    }
+    b = b + 1;
+}
+if(@STIEDNum = 1){
+        probableSythentic = 1;
+        Log(@Node+":"+@AlarmClass+":"+probableSythentic);
+}
+w = 0;
+EndDeviceSTIArray = {};
+ChildIDSTIArray = {};
+SyntheticEventRaised = 0;
+ChildID = @Serial;
+Log("ChildID="+ChildID);
+if(@AlarmClass like 'trEDUnobtain.*'){
+while(w < numSTIArray)
+{
+Filter = "(RemoteNode='"+Node+"' and STIRef='"+STIArray[w]+"' and AlarmClass like 'trEDUnobtain.*')";
+    STIEndDeviceNumOrgNodes = GetByFilter('ha_ncoms_impact_events', Filter, false);
+    numSTIEndDeviceNumOrgNodes = Length(STIEndDeviceNumOrgNodes);
+    Log("EndDeviceCountbySTI"+STIArray[w]+":"+numSTIEndDeviceNumOrgNodes+":"+Filter);
+    Log("STIEDNum:"+@STIEDNum+":"+Filter);
+      STIRef = STIArray[w];
+     u = 0;
+       while( u < numSTIEndDeviceNumOrgNodes )
+        {
+         if( u = 0 )
+           {
+            ChildID = ChildID+", "+STIEndDeviceNumOrgNodes[u].Serial;
+            Log("ChildID="+ChildID);
+        }if( u > 0 ){
+            ChildID = ChildID+", "+STIEndDeviceNumOrgNodes[u].Serial;
+            Log("ChildID="+ChildID);
+           }
+          u = u + 1;
+        }
+        numSTIEndDeviceNumOrgNodes = numSTIEndDeviceNumOrgNodes + 1;
+       Log("EndDeviceCountbySTI:"+STIRefArray[w]+":"+numSTIEndDeviceNumOrgNodes+"="+numEndDevicesBySTIOrgNodes+":"+SyntheticEventRaised+":"+probableSythentic);
+       if( (numEndDevicesBySTIOrgNodes = numSTIEndDeviceNumOrgNodes) and (numEndDevicesBySTIOrgNodes = 1)){
+          if(SyntheticEventRaised = 0){
+             if(probableSythentic = 1){
+            //Raise Trouble Ticket Sythentic Event
+
+           Log("Creating A TT Sythetic Event Because All EndDevices are down and IPT reported trMultipleUnobtainableAlarm");
+
+               objNewEvent = NewObject();
+               objNewEvent.ClearTime = 0;
+               objNewEvent.FirstRaiseTime = GetDate();
+               objNewEvent.LastRaiseTime = GetDate();
+               objNewEvent.ParentChildTime = GetDate();
+               objNewEvent.Manager = 'Netcool Impact';
+               objNewEvent.Severity = 5;
+               objNewEvent.FirstOccurrence = GetDate();
+               objNewEvent.LastOccurrence = GetDate();
+               objNewEvent.Type = 1;
+               objNewEvent.ParentChildFlag = 8;
+               objNewEvent.ImpactFlag = 1;
+               objNewEvent.STIRef = STIRef;
+               objNewEvent.STINum = 1;
+               objNewEvent.ChildID = ChildID;
+               objNewEvent.Node = Node+":IPT Service";
+               objNewEvent.OwnerUID = 65534;
+               objNewEvent.TTFlag = 0;
+               objNewEvent.ActionRequired = 1;
+               objNewEvent.ServiceAffecting = 1;
+               objNewEvent.ResilienceAffecting = 2;
+               objNewEvent.AlertKey = STIRef;
+               objNewEvent.InServiceStatus = "In Service";
+               objNewEvent.AlertGroup = "IPT Service";
+               objNewEvent.Identifier = Node+STIRef+"1";
+               objNewEvent.Summary = "Service "+STIRef+" has been impacted by end device alarms";
+               objMyEvent = AddDataItem('ha_ncoms_impact_events', objNewEvent);
+               }if(probableSythentic = 0){
+            //Raise Trouble Ticket Sythentic Event
+
+           Log("Creating A Non TT Sythetic Event Because All EndDevices are down and IPT reported trMultipleUnobtainableAlarm");
+
+               objNewEvent = NewObject();
+               objNewEvent.ClearTime = 0;
+               objNewEvent.FirstRaiseTime = GetDate();
+               objNewEvent.LastRaiseTime = GetDate();
+               objNewEvent.ParentChildTime = GetDate();
+               objNewEvent.Manager = 'Netcool Impact';
+               objNewEvent.Severity = 5;
+               objNewEvent.FirstOccurrence = GetDate();
+               objNewEvent.LastOccurrence = GetDate();
+               objNewEvent.Type = 1;
+               objNewEvent.ParentChildFlag = 8;
+               objNewEvent.ImpactFlag = 1;
+               objNewEvent.STIRef = STIRef;
+               objNewEvent.STINum = 1;
+               objNewEvent.ChildID = ChildID;
+               objNewEvent.Node = Node+":IPT Service";
+               objNewEvent.OwnerUID = 65534;
+               objNewEvent.TTFlag = 0;
+               objNewEvent.ActionRequired = 0;
+               objNewEvent.ServiceAffecting = 2;
+               objNewEvent.ResilienceAffecting = 2;
+               objNewEvent.AlertKey = STIRef;
+               objNewEvent.InServiceStatus = "In Service";
+               objNewEvent.AlertGroup = "IPT Service";
+               objNewEvent.Identifier = Node+STIRef+"1";
+               objNewEvent.Summary = "Service "+STIRef+" has been impacted by end device alarms";
+               objMyEvent = AddDataItem('ha_ncoms_impact_events', objNewEvent);
+               }
+             }
+            }if((numEndDevicesBySTIOrgNodes = numSTIEndDeviceNumOrgNodes) and (numEndDevicesBySTIOrgNodes > 1)){
+            //Raise Non Trouble Ticket Sythentic Event
+                if(probableSythentic = 0){
+           Log("Creating A Non TT Sythetic Event Because All EndDevices are down and IPT not reported trMultipleUnobtainableAlarm");
+
+               objNewEvent = NewObject();
+               objNewEvent.ClearTime = 0;
+               objNewEvent.FirstRaiseTime = GetDate();
+               objNewEvent.LastRaiseTime = GetDate();
+               objNewEvent.ParentChildTime = GetDate();
+               objNewEvent.Manager = 'Netcool Impact';
+               objNewEvent.Severity = 5;
+               objNewEvent.FirstOccurrence = GetDate();
+               objNewEvent.LastOccurrence = GetDate();
+               objNewEvent.Type = 1;
+               objNewEvent.ParentChildFlag = 8;
+               objNewEvent.ImpactFlag = 1;
+               objNewEvent.STIRef = STIRef;
+               objNewEvent.STINum = 1;
+               objNewEvent.ChildID = ChildID;
+               objNewEvent.Node = Node+":IPT Service";
+               objNewEvent.OwnerUID = 65534;
+               objNewEvent.TTFlag = 0;
+               objNewEvent.ActionRequired = 0;
+               objNewEvent.ServiceAffecting = 2;
+               objNewEvent.ResilienceAffecting = 2;
+               objNewEvent.AlertKey = STIRef;
+               objNewEvent.InServiceStatus = "In Service";
+               objNewEvent.AlertGroup = "IPT Service";
+               objNewEvent.Identifier = Node+STIRef+"1";
+               objNewEvent.Summary = "Service "+STIRef+" has been impacted by end device alarms";
+               objMyEvent = AddDataItem('ha_ncoms_impact_events', objNewEvent);
+                }
+              }
+
+       w = w + 1;
+}
+}
+//Calculate STI_HA_impact 
+STIHAImpactArray = Distinct(STIHAImpactArray);
+numSTIHAImpactArray = Length(STIHAImpactArray);
+log("IPT_enddevice_event_enrichment : STI_HA_Impact: Found:"+numSTIHAImpactArray+":"+STIHAImpactArray);
+if(numSTIHAImpactArray > 0)
+{
+    while( c < numSTIHAImpactArray )
+    {
+     STIHAImpact = STIHAImpactArray[c];
+    log("STIHAImpact="+STIHAImpactArray[c]);
+    if(STIHAImpact > highestSTI)
+     {
+           highestSTI = STIHAImpact;
+           log("highestSTI="+highestSTI);
+     }    
+      c = c + 1;
+    }
+if(Length(highestSTI) > 0){
+@STI_HA_Impact = Int(highestSTI);
+}if(Length(highestSTI) = 0){
+@STI_HA_Impact = 1;
+}
+log("IPT_enddevice_event_enrichment : STI_HA_Impact:"+@STI_HA_Impact);
+}else{
+    Log("IPT_enddevice_event_enrichment : STIRef Not Found");
+        if(@STIRef = '')
+        {
+        @STIRef = 'Not found';
+        @STINum = 0;
+        @STI_HA_Impact = 1;
+        }
+}
+
+

@@ -1,0 +1,15 @@
+# The wsadmin username
+wsadmin.username=wasadmin
+
+# The encrypted wsadmin password
+wsadmin.password={aes}55A496B539DBC26480C52FC114C54393
+
+# The hostname
+wsadmin.host=172.20.174.68
+
+# The RMI connector port
+wsadmin.bootstrapAddressPort=2809
+
+# Additional wsadmin command line options
+wsadmin.args=-conntype SOAP -port 8880 -host 172.20.174.68 -lang jython
+

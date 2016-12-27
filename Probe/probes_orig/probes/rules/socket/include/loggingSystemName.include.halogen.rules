@@ -1,0 +1,79 @@
+if ( regmatch ( $line_00, "loggingSystemName" ) ) { 
+$loggingSystemName= extract($line_00, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_01, "loggingSystemName" ) ) { 
+$loggingSystemName= extract($line_01, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_02, "loggingSystemName" ) ) { 
+$loggingSystemName= extract($line_02, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_03, "loggingSystemName" ) ) { 
+$loggingSystemName= extract($line_03, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_04, "loggingSystemName" ) ) { 
+$loggingSystemName= extract($line_04, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_05, "loggingSystemName" ) ) { 
+$loggingSystemName= extract($line_05, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_06, "loggingSystemName" ) ) { 
+$loggingSystemName= extract($line_06, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_07, "loggingSystemName" ) ) { 
+$loggingSystemName= extract($line_07, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_08, "loggingSystemName" ) ) { 
+$loggingSystemName= extract($line_08, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_09, "loggingSystemName" ) ) { 
+$loggingSystemName= extract($line_09, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_10, "loggingSystemName" ) ) { 
+$loggingSystemName= extract($line_10, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_11, "loggingSystemName" ) ) { 
+$loggingSystemName= extract($line_11, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_12, "loggingSystemName" ) ) { 
+$loggingSystemName= extract($line_12, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_13, "loggingSystemName" ) ) { 
+$loggingSystemName= extract($line_13, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_14, "loggingSystemName" ) ) { 
+$loggingSystemName= extract($line_14, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_15, "loggingSystemName" ) ) { 
+$loggingSystemName= extract($line_15, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_16, "loggingSystemName" ) ) { 
+$loggingSystemName= extract($line_16, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_17, "loggingSystemName" ) ) { 
+$loggingSystemName= extract($line_17, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_18, "loggingSystemName" ) ) { 
+$loggingSystemName= extract($line_18, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_19, "loggingSystemName" ) ) { 
+$loggingSystemName= extract($line_19, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_20, "loggingSystemName" ) ) { 
+$loggingSystemName= extract($line_20, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_21, "loggingSystemName" ) ) { 
+$loggingSystemName= extract($line_21, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_22, "loggingSystemName" ) ) { 
+$loggingSystemName= extract($line_22, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_23, "loggingSystemName" ) ) { 
+$loggingSystemName= extract($line_23, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_24, "loggingSystemName" ) ) { 
+$loggingSystemName= extract($line_24, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_25, "loggingSystemName" ) ) { 
+$loggingSystemName= extract($line_25, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_26, "loggingSystemName" ) ) {
+$loggingSystemName= extract($line_26, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_27, "loggingSystemName" ) ) {
+$loggingSystemName= extract($line_27, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_28, "loggingSystemName" ) ) {
+$loggingSystemName= extract($line_28, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_29, "loggingSystemName" ) ) {
+$loggingSystemName= extract($line_29, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_30, "loggingSystemName" ) ) {
+$loggingSystemName= extract($line_30, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_31, "loggingSystemName" ) ) {
+$loggingSystemName= extract($line_31, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_32, "loggingSystemName" ) ) {
+$loggingSystemName= extract($line_32, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_33, "loggingSystemName" ) ) {
+$loggingSystemName= extract($line_33, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_34, "loggingSystemName" ) ) {
+$loggingSystemName= extract($line_34, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_35, "loggingSystemName" ) ) {
+$loggingSystemName= extract($line_35, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_36, "loggingSystemName" ) ) {
+$loggingSystemName= extract($line_36, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_37, "loggingSystemName" ) ) {
+$loggingSystemName= extract($line_37, "loggingSystemName=(.*)")
+} else if ( regmatch ( $line_38, "loggingSystemName" ) ) {
+$loggingSystemName= extract($line_38, "loggingSystemName=(.*)")
+}   

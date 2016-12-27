@@ -1,0 +1,83 @@
+#######################################################################
+#
+#       Copyright (C) 2002 Micromuse Ltd. All rights reserved.
+
+#       All Rights Reserved
+#
+#       RESTRICTED RIGHTS:
+#
+#       This file may have been supplied under a license.
+#       It may be used, disclosed, and/or copied only as permitted
+#       under such license agreement.  Any copy must contain the
+#       above copyright notice and this restricted rights notice.
+#       Use, copying, and/or disclosure of the file is strictly
+#       prohibited unless otherwise provided in the license agreement.
+#
+#
+# Ident: $Id: mkprops 1.21 2003/08/20 15:29:09 csmith Development $
+#
+#######################################################################
+
+#######################################################################
+#
+# Property Name					Default
+#
+# Generic Properties
+#
+# AuthPassword          	: ''
+# AuthUserName          	: ''
+# AutoSAF               	: 0
+# Buffering             	: 0
+# BufferSize            	: 10
+# Help                  	: 0
+# LookupTableMode       	: 3
+# Manager               	: 'Generic Log File'
+# MaxLogFileSize        	: 1048576
+# MaxRawFileSize        	: -1
+# MaxSAFFileSize        	: 1048576
+# MessageLevel          	: 'warn'
+# MessageLog            	: '$OMNIHOME/log/glf.log'
+# MsgDailyLog           	: 0
+# MsgTimeLog            	: '0000'
+# Name                  	: 'glf'
+# NetworkTimeout        	: 0
+# PollServer            	: 0
+# PropsFile             	: '$OMNIHOME/probes/<arch>/glf.props'
+# RawCapture            	: 0
+# RawCaptureFile        	: '$OMNIHOME/var/glf.cap'
+# RawCaptureFileAppend  	: 0
+# RawCaptureFileBackup  	: 0
+# RetryConnectionCount  	: 15
+# RetryConnectionTimeOut	: 30
+# RulesFile             	: '$OMNIHOME/probes/<arch>/glf.rules'
+# SAFFileName           	: ''
+# Server                	: 'NCOMS'
+# ServerBackup          	: ''
+# StoreAndForward       	: 1
+# Version               	: 0
+#
+# Specific Properties
+#
+# CleanStart            	: 0
+# IgnoreNullFields      	: 1
+# LineSeparator         	: '\n'
+# LogFileName           	: ''
+# Props.CheckNames      	: TRUE
+# QuoteCharacter        	: 34
+# RecoveryFile          	: '$OMNIHOME/var/glf.reco'
+# ReplayFile            	: 0
+# ValueSeparator        	: ' '
+#
+#######################################################################
+
+#######################################################################
+#
+# Add your settings here
+#
+#######################################################################
+Server                	: 'NCOMS_P'
+PropsFile             	: '$NCHOME/custom/probes/props/glf_HA.props'
+RulesFile             	: '$NCHOME/custom/probes/rules/glf/glf_HA.rules'
+
+LogFileName           	: '/opt/netcool/omnibus/log/log.txt'
+CleanStart              : 2

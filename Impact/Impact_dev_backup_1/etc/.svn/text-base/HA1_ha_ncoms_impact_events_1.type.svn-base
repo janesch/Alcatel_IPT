@@ -1,0 +1,20 @@
+#This file was written by Impact Server.
+#Thu Feb 24 10:34:24 GMT 2011
+ha_ncoms_impact_events_1.SQL.CACHEINVALIDATION=0
+ha_ncoms_impact_events_1.SQL.INCLUDE_ROOT=true
+ha_ncoms_impact_events_1.SQL.TABLENAME=alerts.status
+ha_ncoms_impact_events_1.SQL.DYNAMICLINKINFOSET={}
+ha_ncoms_impact_events_1.SQL.QUERYCACHEINVALIDATION=0
+ha_ncoms_impact_events_1.SQL.DISPLAYNAMEFIELD=ServerName
+ha_ncoms_impact_events_1.SQL.DATASOURCENUM=9
+ha_ncoms_impact_events_1.SQL.QUERYINTERVALFORDATATYPESTATS=0
+ha_ncoms_impact_events_1.SQL.TIMEINTERVLAFORDATATYPESTATS=0
+ha_ncoms_impact_events_1.SQL.COUNTCACHEINVALIDATION=0
+ha_ncoms_impact_events_1.SQL.QUERYCACHESIZE=0
+ha_ncoms_impact_events_1.SQL.RESTRICTWHERECLAUSE=
+ha_ncoms_impact_events_1.SQL.ENABLED=true
+ha_ncoms_impact_events_1.SQL.ORDERBY=
+ha_ncoms_impact_events_1.SQL.CACHESIZE=0
+ha_ncoms_impact_events_1.SQL.KEYFIELDS.2=ServerSerial
+ha_ncoms_impact_events_1.SQL.USERPARAMETERS=\ WITHDEFAULTS{{'ServerName', LONG_STRING, 'ServerName', 'ServerName', 'ServerName', 'true', '', '', FALSE, TRUE}, {'ServerSerial', INTEGER, 'ServerSerial', 'ServerSerial', 'ServerSerial', 'true', '', '', FALSE, FALSE}}
+ha_ncoms_impact_events_1.SQL.KEYFIELDS.1=ServerName

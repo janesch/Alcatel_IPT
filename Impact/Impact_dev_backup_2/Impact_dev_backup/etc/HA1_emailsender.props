@@ -1,0 +1,8 @@
+## default email sender service properties
+impact.emailsender.autostartup=false
+impact.emailsender.classname=com.micromuse.response.email.EmailSenderService
+impact.emailsender.logtofile=false
+impact.emailsender.description=No description yet
+impact.emailsender.smtphost=$NCI0_SMTPHOST$
+impact.emailsender.senderaddress=Impact
+

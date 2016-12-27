@@ -1,0 +1,7 @@
+#This file was written by Impact Server.
+#Fri May 30 17:27:26 EDT 2003
+FailedEvent.INTERNALSTORED.DISPLAYNAMEFIELD=KEY
+FailedEvent.INTERNALSTORED.DYNAMICLINKINFOSET={}
+FailedEvent.INTERNALSTORED.INCLUDE_ROOT=true
+FailedEvent.INTERNALSTORED.PERSISTENT=true
+FailedEvent.INTERNALSTORED.USERPARAMETERS=\ WITHDEFAULTS{{'EventContainerString', STRING, 'EventContainerString', '', 'EventContainerString', 'true', '', '', FALSE, FALSE}, {'PolicyName', STRING, 'PolicyName', '', 'PolicyName', 'true', '', '', FALSE, FALSE}, {'EventReaderName', STRING, 'EventReaderName', '', 'EventReaderName', 'true', '', '', FALSE, FALSE}}

@@ -1,0 +1,223 @@
+// Policy Name: Multiple_Link_Alarms
+// 
+// Version	Date        Name        Description
+// 1.0        14-09-10    -        Baseline
+// 1.1        14-09-10    Tony Nisbet    Capture ServerSerial with logging (patch 4.22)
+// 1.2        20-04-10     Nick Evans    Wp150 if lookup events > 0 severity = 5 on trap alarm 
+
+log("Multiple_Link_Alarms: Start ........");
+log("Multiple_Link_Alarms: IQLOGSTART: ServerSerial=" + @ServerSerial + " EventId=" + @EventId);
+
+// Policy to generate a synthetic event when 3 link utilisation or link down alarms
+// are received within the same RCC.
+
+// Events from each RCC go to a different trap destination
+
+// Triggering events are link downs from a 7750 going to a 1692, and link utilisation errors from Proviso
+
+// Trap Variable 1 - Severity (0=clear, 1=indeterminate, 2=warning, 3=minor, 4=major, 5=critical)
+// Trap Variable 2 - RCC area
+// Trap Variable 3 - Summary text
+
+// Default trap generation variables
+
+trapCommunityName = "private";
+trapSenderOID = "1.3.6.1.4.1.2854";
+trapGenericType = "6";
+trapSpecificType = "1";
+
+// 7750 link down event = where Node like "^.*[s|S][r|R][01|12].*$" + RemoteNode like "^[a-zA-Z]+[m|M][s|S][e|E][c|C|e|E][0-9][0-9].*$" + EventId = '5620SAM_004'
+// 7750 link utilisation event = where Node like "^.*[s|S][r|R][01|12].*$" + RemoteNode like "^[a-zA-Z]+[m|M][s|S][e|E][c|C|e|E][0-9][0-9].*$"" + AlarmClass = 'Utilization threshold' + Manager = 'PROVISO'
+
+
+log("Multiple_Link_Alarms: Event query is (Type = 1) and (Severity > 0) and (RCCArea = '"+@RCCArea+"') and ((EventId = '5620SAM_004') or ((Manager = 'PROVISO') and (AlarmClass = 'Utilization threshold')) and (Node like '^.*[s|S][r|R][01|12].*$') and (RemoteNode like '^[a-zA-Z]+[m|M][s|S][e|E][c|C|e|E][0-9][0-9].*$'))");
+//Changed by TA on 23 June 2009 under Patch 3.109
+//probEvents = GetByFilter('ha_ncoms_impact_events',"(Type = 1) and (Severity > 0) and (RCCArea = '"+@RCCArea+"') and ((EventId = '5620SAM_004') or ((Manager = 'PROVISO') and (AlarmClass = 'Utilization threshold')) and (Node like '^.*[s|S][r|R][01|12].*$') and (RemoteNode like '^[a-zA-Z]+[m|M][s|S][e|E][c|C|e|E][0-9][0-9].*$')",false);
+probEvents = GetByFilter('ha_ncoms_impact_events',"(Type = 1) and (Severity > 0) and (RCCArea = '"+@RCCArea+"') and ((EventId = '5620SAM_004') or ((Manager = 'PROVISO') and (AlarmClass like 'Inbound Utilization')) and (Node like '^.*[s|S][r|R][01|12].*$') and (RemoteNode like '^[a-zA-Z0-9]+[m|M][s|S][e|E][c|C|e|E][0-9][0-9].*$' or RemoteNode like '.*96C.*'))",false);
+numProbEvents = length(probEvents);
+log("numProbEvents:"+numProbEvents+" RemoteNode:"+@RemoteNode);
+
+// if number of event found =1 then raise a minor severity trap to the appropriate trap destination for the RCC area
+// if number of event found =2 then raise a major severity trap to the appropriate trap destination for the RCC area
+// if number of event found >2 then raise a critical severity trap to the appropriate trap destination for the RCC area
+
+
+trapVarbindOID_1 = "1.3.6.1.4.1.2854.0.1";
+trapVarbindType_1 = "INTEGER";
+
+// Nick Evans 20-04-11 Edited as part of WP150 
+if(numProbEvents > 0 AND @RemoteNode LIKE ".*96C.*")
+    {
+    trapVarbindValue_1 = 5;
+    }
+if(numProbEvents > 0 AND @RemoteNode LIKE "^[a-zA-Z0-9]+[m|M][s|S][e|E][c|C|e|E][0-9][0-9].*")
+    {
+       if(numProbEvents = 1)
+              {
+        trapVarbindValue_1 = 3;
+        }
+    if(numProbEvents = 2)
+        {
+        trapVarbindValue_1 = 4;
+        }
+    if(numProbEvents > 2)
+        {
+        trapVarbindValue_1 = 5;
+        }
+        
+      }
+      if(numProbEvents = 0 AND(@RemoteNode LIKE ".*96C.*" OR @RemoteNode LIKE "^[a-zA-Z0-9]+[m|M][s|S][e|E][c|C|e|E][0-9][0-9].*"))
+            {
+            trapVarbindValue_1 = 0;
+            }
+        //}
+    //}
+
+    
+log("Multiple_Link_Alarms: Trap Varbind_1 = " + trapVarbindOID_1 + " " + trapVarbindType_1 + " " + trapVarbindValue_1);
+
+
+// Determine the trap destination addresses from the RCC Area value of the triggering event
+// Each RCC Area has two trap destinations
+
+if(@RCCArea = "EMRCC")
+    {
+    trapDest1 = "10.55.34.82";
+    trapDest2 = "10.55.34.83";
+    }
+else
+    {
+    if(@RCCArea = "ERCC")
+        {
+        trapDest1 = "10.53.34.82";
+        trapDest2 = "10.53.34.83";
+        }
+    else
+        {
+        if(@RCCArea = "LSRCC")
+            {
+            trapDest1 = "Not found";
+            trapDest2 = "Not found";
+            }
+        else
+            {
+            if(@RCCArea = "NERCC")
+                {
+                trapDest1 = "10.51.34.82";
+                trapDest2 = "10.51.34.83";
+                }
+            else
+                {
+                if(@RCCArea = "NWRCC")
+                    {
+                    trapDest1 = "10.52.34.82";
+                    trapDest2 = "10.52.34.83";
+                    }
+                else
+                    {
+                    if(@RCCArea = "SERCC")
+                        {
+                        trapDest1 = "10.57.34.82";
+                        trapDest2 = "10.57.34.83";
+                        }
+                    else
+                        {
+                        if(@RCCArea = "SWRCC")
+                            {
+                            trapDest1 = "10.56.34.82";
+                            trapDest2 = "10.56.34.83";
+                            }
+                        else
+                            {
+                            if(@RCCArea = "WMRCC")
+                                {
+                                trapDest1 = "10.54.34.82";
+                                trapDest2 = "10.54.34.83";
+                                }
+                            else
+                                {
+                                if(@RCCArea = "Not found")
+                                    {
+                                    trapDest1 = "Not found";
+                                    trapDest2 = "Not found";
+                                    }
+                                else
+                                    {
+                                    trapDest1 = "Not found";
+                                    trapDest2 = "Not found";
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+log("Multiple_Link_Alarms: RCC Area: " + @RCCArea + ", Trap destination: " + trapDest1);
+log("Multiple_Link_Alarms: RCC Area: " + @RCCArea + ", Trap destination: " + trapDest2);
+
+log("Multiple_Link_Alarms: Formatting SNMP trap");
+
+// Set the RCC Area varbind value
+
+trapVarbindOID_2 = "1.3.6.1.4.1.2854.0.2";
+trapVarbindType_2 = "STRING";
+trapVarbindValue_2 = @RCCArea;
+log("Multiple_Link_Alarms: Trap Varbind_2 = " + trapVarbindOID_2 + " " + trapVarbindType_2 + " " + trapVarbindValue_2);
+
+// Set the event text varbind value
+
+trapVarbindOID_3 = "1.3.6.1.4.1.2854.0.3";
+trapVarbindType_3 = "STRING";
+if(numProbEvents > 0)
+    {
+    trapVarbindValue_3 = "7750 Link events for RCC Area: " + @RCCArea + ", Number of events: " + numProbEvents;
+    a = 0;
+    while(a < numProbEvents)
+        {
+        b = a + 1;
+        trapVarbindValue_3 = trapVarbindValue_3 + ", Node " + b + ": " + probEvents[a].Node + ", IF-ID " + b + ": " + probEvents[a].PhysicalCard; 
+        a = a + 1;
+        }
+    }
+
+log("Multiple_Link_Alarms: Trap Varbind_3 = " + trapVarbindOID_3 + " " + trapVarbindType_3 + " " + trapVarbindValue_3);
+
+trapExecutable = "/opt/IBM/tivoli/netcool/impact/trapgen/trapgen";
+trapParameters1 = {"-d",trapDest1,"-c",trapCommunityName,"-o",trapSenderOID,"-g",trapGenericType,"-s",trapSpecificType,"-v",trapVarbindOID_1,trapVarbindType_1,trapVarbindValue_1,"-v",trapVarbindOID_2,trapVarbindType_2,trapVarbindValue_2,"-v",trapVarbindOID_3,trapVarbindType_3,trapVarbindValue_3};
+trapParameters2 = {"-d",trapDest2,"-c",trapCommunityName,"-o",trapSenderOID,"-g",trapGenericType,"-s",trapSpecificType,"-v",trapVarbindOID_1,trapVarbindType_1,trapVarbindValue_1,"-v",trapVarbindOID_2,trapVarbindType_2,trapVarbindValue_2,"-v",trapVarbindOID_3,trapVarbindType_3,trapVarbindValue_3};
+trapTimeout = 2;
+
+log("Multiple_Link_Alarms: Sending trap");
+//Send the trap to both destinations
+if(trapDest1 != "Not found")
+    {
+    JRExecAction(trapExecutable, trapParameters1, false, trapTimeout);
+    JRExecAction(trapExecutable, trapParameters2, false, trapTimeout);
+    }
+
+log("Multiple_Link_Alarms: IQLOGFINISH: ServerSerial=" + @ServerSerial + " EventId=" + @EventId);
+log("Multiple_Link_Alarms: End");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

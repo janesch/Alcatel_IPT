@@ -1,0 +1,79 @@
+if ( regmatch ( $line_00, "dateReceived" ) ) { 
+$dateReceived= extract($line_00, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_01, "dateReceived" ) ) { 
+$dateReceived= extract($line_01, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_02, "dateReceived" ) ) { 
+$dateReceived= extract($line_02, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_03, "dateReceived" ) ) { 
+$dateReceived= extract($line_03, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_04, "dateReceived" ) ) { 
+$dateReceived= extract($line_04, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_05, "dateReceived" ) ) { 
+$dateReceived= extract($line_05, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_06, "dateReceived" ) ) { 
+$dateReceived= extract($line_06, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_07, "dateReceived" ) ) { 
+$dateReceived= extract($line_07, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_08, "dateReceived" ) ) { 
+$dateReceived= extract($line_08, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_09, "dateReceived" ) ) { 
+$dateReceived= extract($line_09, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_10, "dateReceived" ) ) { 
+$dateReceived= extract($line_10, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_11, "dateReceived" ) ) { 
+$dateReceived= extract($line_11, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_12, "dateReceived" ) ) { 
+$dateReceived= extract($line_12, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_13, "dateReceived" ) ) { 
+$dateReceived= extract($line_13, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_14, "dateReceived" ) ) { 
+$dateReceived= extract($line_14, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_15, "dateReceived" ) ) { 
+$dateReceived= extract($line_15, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_16, "dateReceived" ) ) { 
+$dateReceived= extract($line_16, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_17, "dateReceived" ) ) { 
+$dateReceived= extract($line_17, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_18, "dateReceived" ) ) { 
+$dateReceived= extract($line_18, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_19, "dateReceived" ) ) { 
+$dateReceived= extract($line_19, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_20, "dateReceived" ) ) { 
+$dateReceived= extract($line_20, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_21, "dateReceived" ) ) { 
+$dateReceived= extract($line_21, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_22, "dateReceived" ) ) { 
+$dateReceived= extract($line_22, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_23, "dateReceived" ) ) { 
+$dateReceived= extract($line_23, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_24, "dateReceived" ) ) { 
+$dateReceived= extract($line_24, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_25, "dateReceived" ) ) { 
+$dateReceived= extract($line_25, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_26, "dateReceived" ) ) {
+$dateReceived= extract($line_26, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_27, "dateReceived" ) ) {
+$dateReceived= extract($line_27, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_28, "dateReceived" ) ) {
+$dateReceived= extract($line_28, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_29, "dateReceived" ) ) {
+$dateReceived= extract($line_29, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_30, "dateReceived" ) ) {
+$dateReceived= extract($line_30, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_31, "dateReceived" ) ) {
+$dateReceived= extract($line_31, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_32, "dateReceived" ) ) {
+$dateReceived= extract($line_32, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_33, "dateReceived" ) ) {
+$dateReceived= extract($line_33, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_34, "dateReceived" ) ) {
+$dateReceived= extract($line_34, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_35, "dateReceived" ) ) {
+$dateReceived= extract($line_35, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_36, "dateReceived" ) ) {
+$dateReceived= extract($line_36, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_37, "dateReceived" ) ) {
+$dateReceived= extract($line_37, "dateReceived=(.*)\.[0-9]+$")
+} else if ( regmatch ( $line_38, "dateReceived" ) ) {
+$dateReceived= extract($line_38, "dateReceived=(.*)\.[0-9]+$")
+}   

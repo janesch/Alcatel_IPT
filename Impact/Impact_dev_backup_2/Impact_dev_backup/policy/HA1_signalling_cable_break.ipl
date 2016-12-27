@@ -1,0 +1,609 @@
+// Policy Name: signalling_cable_break
+//
+// The purpose of this policy is to implement the following logic
+// This translates to 
+// what is my span chain number?
+// are there other  faults on my span?
+// If yes
+//     are all devices to end of cable unobtainable?
+//     If yes
+//     Find highest faulty spanchain number and first working t/r location
+//     raise potential cable break alarm and suppress t/r alarms
+//     If no
+//    /end/ update impact flag
+// If no
+// /end/ update impact flag.
+//
+// Version    Date        Name        Description
+// 1.0        14-09-10    -        Baseline
+// 1.1        14-09-10    Tony Nisbet    Capture ServerSerial with logging (patch 4.22)
+// 
+
+log ("signalling_cable_break: Start. Serial=" + @Serial + " TTFlag=" + @TTFlag + " LocalChain value set to: " +  @LocalChain + " equipment type set to " + @EquipmentType + " Node is " + @Node);
+log("signalling_cable_break: IQLOGSTART: ServerSerial=" + @ServerSerial + " EventId=" + @EventId);
+
+DataType = "ha_ncoms_impact_events";
+Filter = "ServerSerial = " +  @ServerSerial;
+UpdateExpression = "ImpactFlag = 4";
+BatchUpdate(DataType, Filter, UpdateExpression);
+
+//determine if triggering events is a problem or a resolution
+
+if(EventContainer.Type = 1)
+    {
+
+    spanc = rextract(EventContainer.AssetElectronicAddress,"(.*)..$");
+    log("spanc = " + spanc);
+    portnumber = rextract(spanc,".*(.)$");
+    //log("portnumber is = " + portnumber);
+    //TPRNode = rextract(spanc,"(.*).$") + "000";
+    //log("TPRNode = " + TPRNode);
+    TPRNode = spanc + "00 Port";
+    SpanPort = GetByFilter('spanview', "(Type = 1) and (Severity > 0) and (AssetElectronicAddress like '" + spanc  + "') and (Manager='Halogen')",false);
+	   NumDevPort = length(SpanPort); 
+    log("NumDevPort = " + NumDevPort);
+    Filter = "ELECTRONIC_ADDRESS like '"+spanc+"%'";
+       spanOrgNodesPort = GetByFilter('Reporter_LocalSpan', Filter, false);
+    NumSpanPort = length(spanOrgNodesPort);
+    log("NumSpanPort = " + NumSpanPort);
+    if (NumDevPort == NumSpanPort) 
+    {
+    log("All Port devices are down");
+    synthIdentifierPort = 'Impact SIG cable event ' + @TSA + spanc;
+    log("Port synthIdentifierPort = " + synthIdentifierPort);
+    existSynthEvent=GetByFilter('ha_ncoms_impact_events',"(Identifier='" + synthIdentifierPort + "') and (Severity  > 2)",false);
+    numSynthEvent = Length(existSynthEvent);
+    y=0;
+
+    if(numSynthEvent=0)
+    {
+    log("Inserting port cable break event first time");
+    NewEvent = NewObject();
+    NewEvent.Identifier = synthIdentifierPort;
+    NewEvent.OwnerUID = 65534;    
+    //NewEvent.Node = @Node;
+    //NewEvent.Node = TPRNode + " Port " + portnumber;
+    NewEvent.Node = TPRNode;
+    NewEvent.AlertGroup = "Port Cable Break Event: SIG";
+    NewEvent.AlertKey = "Port SIG cable event";
+    NewEvent.LastOccurrence = getdate();
+    NewEvent.Severity = 5;
+    NewEvent.Type = 1;
+    NewEvent.Manager = "Netcool Impact";
+    NewEvent.Agent = "Halogen";
+    NewEvent.AssetElectronicAddress= @AssetElectronicAddress;
+    NewEvent.TPRLocation = @TPRLocation;
+    NewEvent.ImpactFlag=2;
+    NewEvent.EventId = "IMP_004";
+    NewEvent.ParentChildFlag = 8;
+    NewEvent.ActionRequired = 1;
+    NewEvent.InServiceStatus = @InServiceStatus;
+    NewEvent.FirstOccurrence=getdate();
+    NewEvent.FirstRaiseTime=getdate();
+    NewEvent.DateGenerated = getdate();
+    NewEvent.ClearTime = 0;
+    NewEvent.LastRaiseTime=getdate();
+    NewEvent.RCCArea = @RCCArea;
+    NewEvent.EquipmentType = @EquipmentType;
+    NewEvent.ServiceAffecting= 1;
+    NewEvent.TSA = @TSA;
+    NewEvent.HalStatus = @HalStatus;
+    NewEvent.LocalRootObj = @LocalRootObj;
+    NewEvent.SDPLocation = @SDPLocation;
+    NewEvent.LocalChain = @LocalChain;
+    NewEvent.ServiceType = @ServiceType;
+    NewEvent.TTFlag = 4;
+    NewEvent.AssetMotorway=@AssetMotorway;
+    NewEvent.AssetGeographicAddress=@AssetGeographicAddress;
+    GetByFilter('Circee_TS_Table',"TRANSMISSION_STATION = '"+ NewEvent.TSA+"' and MOTORWAY_REF =  '"+NewEvent.AssetMotorway+"'",False);
+    if (Num > 0) {
+        NewEvent.RemoteNode=OrgNode.GEOG_ADDRESS;
+            }
+
+    //Filter = "ELECTRONIC_ADDRESS like '"+spanc+"%' and Local_Span = -1";
+    Filter = "ELECTRONIC_ADDRESS like '" + spanc + "%' and Local_Span like '-%' order by SDP_Location desc";
+    spanOrgNodesNegative = GetByFilter('Reporter_LocalSpan', Filter, false);
+    //FirstSpan = spanOrgNodesNegative[0].SDP_Location;
+    NegativeSpan = spanOrgNodesNegative[0].SDP_Location;
+    NegativeTPR = spanOrgNodesNegative[0].TPR_Location;
+    log("NegativeSpan =" + NegativeSpan);
+    log("NegativeTPR = " + NegativeTPR);
+
+    //Filter = "ELECTRONIC_ADDRESS like '"+spanc+"%' and Local_Span = 1";
+    Filter = "ELECTRONIC_ADDRESS like '"+spanc+"%' and Local_Span not like '-%' order by SDP_Location desc";
+    spanOrgNodesPositive = GetByFilter('Reporter_LocalSpan', Filter, false);
+    //LastSpan = spanOrgNodesPositive[0].SDP_Location;
+    PositiveSpan = spanOrgNodesPositive[0].SDP_Location;
+    PositiveTPR = spanOrgNodesPositive[0].TPR_Location;
+    log("PositiveSpan = " + PositiveSpan);
+    log("PositiveTPR = " + PositiveTPR);
+    //If end device exist only in postive direction
+    if (NegativeSpan = NULL and  PositiveSpan <> NULL)
+    {
+    //NewEvent.Summary = "All " + NumDevPort + " devices down from " + PositiveSpan + " to TS " + @TSA + " off  subgroup " + spanc + "00";
+    //NewEvent.Summary = "All " + NumDevPort + " devices down from TPR " + NegativeTPR + " to " + PositiveSpan + "  off subgroup " + spanc + "00";
+    NewEvent.Summary = "All " + NumDevPort + " devices off TPR Port " + portnumber +  " at " + PositiveTPR + "  down (nb: 1st device at " + PositiveSpan + ")";
+    }
+    //If end device exist only in negative direction
+    elseif (NegativeSpan <> NULL and PositiveSpan = NULL)
+    {
+    //NewEvent.Summary = "All " + NumDevPort + " devices down from TPR " + PositiveTPR + " to " + NegativeSpan + "  off subgroup " + spanc + "00";
+    NewEvent.Summary = "All " + NumDevPort + " devices off TPR Port " + portnumber +  " at " + NegativeTPR + "  down (nb: 1st device at " + NegativeSpan + ")";
+    }
+    //If end devices exist both i.e. negative and postive direction
+    else
+    {
+        PositiveSDP = int(RExtract(PositiveSpan, '.*/([0-9]+).*'));
+        NegativeSDP = int(RExtract(NegativeSpan, '.*/([0-9]+).*'));
+        TPRSDP = int(RExtract(NegativeTPR, '.*/([0-9]+).*'));
+        log("PositiveSDP = " + PositiveSDP);
+        log("NegativeSDP = " + NegativeSDP);
+        log("TPRSDP = " + TPRSDP);
+
+        if((PositiveSDP-TPRSDP) >= (TPRSDP-NegativeSDP))
+        {
+        //NewEvent.Summary = "All " + NumDevPort + " devices down from TS " + @TSA + " off subgroup " + spanc  + "00";
+        //NewEvent.Summary = "All " + NumDevPort + " devices down from TPR " + NegativeTPR + " to " +  NegativeSpan + " off subgroup " + spanc + "00";
+        NewEvent.Summary = "All " + NumDevPort + " devices off TPR Port " + portnumber +  " at " + NegativeTPR  + " down (nb: 1st device at " + NegativeSpan + ")";
+        }
+        else
+        {
+        //NewEvent.Summary = "All " + NumDevPort + " devices down from TS " + @TSA + " off subgroup " + spanc  + "00";
+        //NewEvent.Summary = "All " + NumDevPort + " devices down from TPR " + PositiveTPR + " to " +  PositiveSpan + " off subgroup " + spanc + "00";
+        NewEvent.Summary = "All " + NumDevPort + " devices off TPR Port " + portnumber +  " at " + PositiveTPR  + " down (nb: 1st device at " + PositiveSpan + ")";
+        }
+
+    }
+    //NewEvent.Summary = "All " + NumDevPort + " devices down from " + FirstSpan + " to " + LastSpan + " off  subgroup " + spanc + "00";
+
+    NewEvent.EndDeviceNum = NumDevPort;
+
+    Type = 'ha_ncoms_impact_events';
+    AddDataItem(Type,NewEvent);
+    }
+    childId = '';    // starts blank
+    
+    SpanSyn = GetByFilter('spanview', "(Type = 1) and (Severity > 0) and (AssetElectronicAddress like '" + spanc +  "') and ((AlertKey = 'SIG cable event') or (AlertKey = 'MSS_SIG event'))",false);
+    NumDevSyn = length(SpanSyn);
+    log("NumDevSyn = " + NumDevSyn);
+    counter = 0;
+    TotalSTIRefPort = '';
+    while ( counter < NumDevSyn )
+    {
+    if (counter > 0) {
+        childId = childId + ',' + SpanSyn[counter].Serial;
+        //TotalEndDevNumPort  = TotalEndDevNumPort  + SpanPort[counter].EndDeviceNum;
+        TotalSTIRefPort = TotalSTIRefPort + ',' + SpanSyn[counter].STIRef;
+        log("TotalSTIRefPort =" + TotalSTIRefPort);
+    } else {
+        childId = SpanSyn[0].Serial;
+        //childId = string(SpanSyn[0].Serial);
+        //TotalEndDevNumPort = SpanPort[0].EndDeviceNum;
+        TotalSTIRefPort = SpanSyn[0].STIRef;
+        log("TotalSTIRefPort =" + TotalSTIRefPort);
+        }
+    counter = counter + 1;
+       }
+
+    log("Port synthIdentifier = " + synthIdentifierPort);
+    theSynthEvent=GetByFilter('ha_ncoms_impact_events',"(Identifier='"+synthIdentifierPort+"' and (Severity >  2))",false);
+    //Filter = "ELECTRONIC_ADDRESS like '"+spanc+"%' and Local_Span = -1";
+    //spanOrgNodesNegative = GetByFilter('Reporter_LocalSpan', Filter, false);
+    //FirstSpan = spanOrgNodesNegative[0].SDP_Location;
+
+    //Filter = "ELECTRONIC_ADDRESS like '"+spanc+"%' and Local_Span = 1";
+    //spanOrgNodesPositive = GetByFilter('Reporter_LocalSpan', Filter, false);
+    //LastSpan = spanOrgNodesPositive[0].SDP_Location;
+
+    //theSynthEvent[0].Summary = "All " + NumDevPort + " devices down from " + FirstSpan + " to " + LastSpan + "  off subgroup " + spanc + "00";
+    //theSynthEvent[0].ChildID = childId;
+     //theSynthEvent[0].EndDeviceNum = NumDevPort;
+
+    //theSynthEvent[0].Severity = 5;
+
+    DataType = "spanview";
+    Filter = "Serial in (" + childId + ")";    
+    UpdateExpression = "ParentServerName = '" + theSynthEvent[0].ServerName + "', ParentServerSerial = '" +  string(theSynthEvent[0].ServerSerial) + "', SuppressEscl = 4, SuppressCause = 'Suppressed by signalling_cable_break  Impact policy'";
+    BatchUpdate(DataType, Filter, UpdateExpression);
+    
+    InterfaceSTIArray = Split(TotalSTIRefPort, ",");
+    log("InterfaceSTIArray = " + InterfaceSTIArray);
+    DistinctSTIs = distinct(InterfaceSTIArray);
+    NumDistinct = length(DistinctSTIs);
+    log("NumDistinct = " + NumDistinct);
+    log("DistinctSTIs[0] = " + DistinctSTIs);
+    //theSynthEvent[0].STINum = NumDistinct;
+    //theSynthEvent[0].STIRef = '' + DistinctSTIs[0];
+    STIRefList = '' + DistinctSTIs[0];
+    a = 1;
+    while (a < NumDistinct)
+    {
+        //theSynthEvent[0].STIRef = theSynthEvent[0].STIRef + "," + DistinctSTIs[a];
+        STIRefList = STIRefList + "," + DistinctSTIs[a];
+        a = a + 1;
+    }
+
+    log("STIRefList = " + STIRefList);
+    DataType = "spanview";
+    Filter = "Identifier='" + synthIdentifierPort + "' and Severity > 2";    
+    UpdateExpression = "STINum = " + NumDistinct + ", STIRef = '" + STIRefList + "', ChildID = '" + childId + "',  Severity = 5";
+    BatchUpdate(DataType, Filter, UpdateExpression);
+
+    } //end of port clause if statement
+
+    else
+    {
+    LocalChainSymbol = rextract( EventContainer.LocalChain,"^(.).*");
+    if(LocalChainSymbol='-')
+        {
+        plusMinusFilter = '^-[0-9]+';
+        }
+    else
+        {
+        LocalChainSymbol='+';
+        plusMinusFilter = '^[0-9]+';
+        }
+
+    log("signalling_cable_break: using the following:- " + spanc  );
+    log("signalling_cable_break: Local Chain Filter:- " + plusMinusFilter  );
+    //Span = GetByFilter('spanview', "(Type = 1) and (EndDeviceNum = 0) and (Severity > 0) and  (AssetElectronicAddress like'"+spanc+"')", false);
+       //Span = GetByFilter('spanview', "(Type = 1) and (Severity > 0) and (AssetElectronicAddress like '" + spanc +  "') and (AlertKey <> 'SIG cable event')",false);
+       Span = GetByFilter('spanview', "(Type = 1) and (Severity > 0) and (AssetElectronicAddress like '" + spanc + "')  and (AlertKey = 'MSS_SIG event') and (LocalChain like '"+plusMinusFilter+"')",false);
+    
+    NumDev = length(Span); 
+    log("signalling_cable_break: GetByFilter successful. Found "+NumDev+" dataItem(s)."); 
+    
+    if (NumDev > 0) 
+        {
+        log("signalling_cable_break: lookup successful");
+        if (NumDev > 1) 
+            {
+        log("other SIG devices down on the same span!");
+        synthIdentifier = 'Impact SIG cable event ' + @TSA + spanc + LocalChainSymbol;
+        existSynthEvent=GetByFilter('ha_ncoms_impact_events',"(Identifier='"+synthIdentifier+"') and (Severity  > 2)",false);
+        numSynthEvent = Length(existSynthEvent);
+        if(numSynthEvent=0)
+        {
+        x = 0;
+        while(x<NumDev)
+        {
+        z=1;
+        LocalChainArray = "";
+        //CurrentLocalChain = @LocalChain;
+        CurrentLocalChain = Span[x].LocalChain;
+        LocalChainArray = LocalChainArray + "'" + CurrentLocalChain  + "'";
+        //localChainValueTemp = int(Strip(@LocalChain,"-"));
+        localChainValueTemp = int(Strip(Span[x].LocalChain,"-"));
+        while (z < localChainValueTemp)
+        {
+            if(LocalChainSymbol='-')
+            {
+                CurrentLocalChain = int(CurrentLocalChain) + 1;
+            }
+            else
+            {
+                CurrentLocalChain = int(CurrentLocalChain) - 1;
+            }
+        LocalChainArray = LocalChainArray + ",'" + CurrentLocalChain  + "'";
+        z = z + 1;
+        }
+    log("LocalChainArray  is = " + LocalChainArray );
+//    SpanDown = GetByFilter('spanview', "(Type = 1) and (Severity > 0) and (AssetElectronicAddress like '" + spanc  + "') and (AlertKey <> 'SIG cable event') and (AlertKey = 'MSS_SIG event') and (LocalChain in (" + LocalChainArray +  "))",false);
+    SpanDown = GetByFilter('spanview', "(Type = 1) and (Severity > 0) and (AssetElectronicAddress like '" + spanc  + "') and (AlertKey = 'MSS_SIG event') and (LocalChain in (" + LocalChainArray + "))",false);
+    numSpanDown = Length(SpanDown);
+    log("numSpanDown = " + numSpanDown);
+    log("localChainValueTemp = " + localChainValueTemp);
+    if ((numSpanDown = localChainValueTemp) and (localChainValueTemp <> 1))
+    {        
+    localChainValue = localChainValueTemp;
+    log("signalling_cable_break: all devices down along cable upto " + @NodeAlias );
+    
+    log("Inserting cable break event first time");
+    NewEvent = NewObject();
+    NewEvent.Identifier = synthIdentifier;
+       NewEvent.OwnerUID = 65534;    
+    NewEvent.Node = Span[x].Node;
+    NewEvent.AlertGroup = "Cable Break Event: SIG";
+    NewEvent.AlertKey = "SIG cable event";
+    NewEvent.LastOccurrence = getdate();
+    NewEvent.Severity = 5;
+    NewEvent.Type = 1;
+    NewEvent.Manager = "Netcool Impact";
+    NewEvent.Agent = "Halogen";
+    NewEvent.AssetElectronicAddress= Span[x].AssetElectronicAddress;
+    NewEvent.ImpactFlag=2;
+    NewEvent.EventId = "IMP_004";
+    // DB 100807 - Set ActionRequired to 1 for TT creation
+        NewEvent.ActionRequired = 1;
+    // DB 100907 - Start
+    NewEvent.InServiceStatus = Span[x].InServiceStatus;
+    NewEvent.FirstOccurrence=getdate();
+    NewEvent.FirstRaiseTime=getdate();
+    NewEvent.DateGenerated = getdate();
+    NewEvent.ClearTime = 0;
+       // Added by SK on 19092008
+       NewEvent.LastRaiseTime=getdate();
+    // TA 04 Aug 2008 HED-9 HED-10
+    //NewEvent.STINum = @STINum;
+    //NewEvent.STIRef = @STIRef;
+    // TA 04 Aug 2008 HED-9 HED-10
+    NewEvent.RCCArea = Span[x].RCCArea;
+    NewEvent.EquipmentType = Span[x].EquipmentType;
+    // DB 100907 - End
+    NewEvent.ServiceAffecting= 1;
+    NewEvent.TSA = Span[x].TSA;
+    NewEvent.HalStatus = Span[x].HalStatus;
+    NewEvent.LocalRootObj = Span[x].LocalRootObj;
+    NewEvent.SDPLocation = Span[x].SDPLocation;
+    NewEvent.LocalChain = Span[x].LocalChain;
+    NewEvent.ServiceType = Span[x].ServiceType;
+    NewEvent.ParentChildFlag = 8;
+    //TA - Start - 18July 2008
+    NewEvent.TTFlag = 4;
+    // TA - Start - 18July 2008
+    // TA 04 Aug 2008 HED 13
+    NewEvent.AssetMotorway=Span[x].AssetMotorway;
+    NewEvent.AssetGeographicAddress=Span[x].AssetGeographicAddress;
+    NewEvent.TPRLocation = Span[x].TPRLocation;
+    // Lookup the geographical address of the TSA...
+    GetByFilter('Circee_TS_Table',"TRANSMISSION_STATION = '"+ NewEvent.TSA+"' and MOTORWAY_REF =  '"+NewEvent.AssetMotorway+"'",False);
+    if (Num > 0) {
+            NewEvent.RemoteNode=OrgNode.GEOG_ADDRESS;
+            }
+    // Use the AddDataItem function to add the event to the Object Server. 
+    Type = 'ha_ncoms_impact_events';
+    AddDataItem(Type,NewEvent);
+    
+    } //end of if statement numSpanDown
+
+    x = x + 1;               
+    } //end of while loop
+    }
+    else
+    {
+        existSynthEvent[0].Severity = 5;
+        existSynthEvent[0].LastOccurrence = getdate();
+        existSynthEvent[0].TTFlag = 4;
+        existSynthEvent[0].ClearTime = ParseDate('01/01/1970', "MM/dd/yy");
+        existSynthEvent[0].SuppressCause = "";
+        existSynthEvent[0].SuppressEscl = 0;
+    }
+
+    // DB 100907 - read the synthetic event as we'll need its ServerName and ServerSerial
+    //        to put into each child event
+
+    theSynthEvent=GetByFilter('ha_ncoms_impact_events',"(Identifier='"+synthIdentifier+"' and (Severity >  2))",false);
+    numSynthEvent = Length(theSynthEvent);
+    if(numSynthEvent > 0)
+    {
+    childId = '';    // starts blank
+    counter = 0;
+    TotalEndDevNum = 0;
+                    
+    TotalSTIRef = '';
+    while (counter < NumDev)
+    {
+    mylocalChainValueTemp = int(Strip(Span[counter].LocalChain,"-"));
+    // DB 100907 - build list of comma separated child serial numbers
+    if (counter > 0) {
+        childId = childId + ',' + Span[counter].Serial;
+        TotalEndDevNum  = TotalEndDevNum  + Span[counter].EndDeviceNum;
+        TotalSTIRef = TotalSTIRef + ',' + Span[counter].STIRef;
+        log("TotalSTIRef =" + TotalSTIRef);
+        if (mylocalChainValueTemp > mylocalChainValue)
+        {
+          mylocalChainValue = mylocalChainValueTemp;
+        }
+
+    } else {
+        //TA 01May2008 - Integer to string conversion
+        childId = Span[0].Serial;
+        TotalEndDevNum = Span[0].EndDeviceNum;
+        TotalSTIRef = Span[0].STIRef;
+        log("TotalSTIRef =" + TotalSTIRef);
+        //TA 01May2008
+        mylocalChainValue = mylocalChainValueTemp;
+        }
+    // DB 100907 - end
+    
+    counter = counter + 1;
+       }
+
+    log("mylocalChainValue Max is = " + mylocalChainValue);
+    
+    DataType = "spanview";
+    //Filter = "(Type = 1) and (Severity > 0) and (AssetElectronicAddress like '" + spanc + "') and (AlertKey =  'MSS_SIG event') and (LocalChain like '"+plusMinusFilter+"')";
+    Filter = "Serial in (" + childId + ")";    
+    UpdateExpression = "ParentServerName = '" + theSynthEvent[0].ServerName + "', ParentServerSerial = '" +  string(theSynthEvent[0].ServerSerial) + "', SuppressEscl = 4, SuppressCause = 'Suppressed by signalling_cable_break  Impact policy'";
+    BatchUpdate(DataType, Filter, UpdateExpression);
+                    
+    // DB 100907 - Put comma separated list into the synthetic event.
+    theSynthEvent[0].ChildID = childId;
+       // DB 100907 - end
+    // TA 04 Aug 08 - HED-9 issue
+    theSynthEvent[0].EndDeviceNum = TotalEndDevNum;
+    theSynthEvent[0].AssetGeographicAddress=@AssetGeographicAddress;
+
+    if(LocalChainSymbol='-')
+    {
+        //LocalSpanValue = int(Span[NumDev-1].LocalChain);
+        //LocalSpanReporterValue = LocalSpanValue - 1;
+        LocalSpanReporterValue = mylocalChainValue - 2*mylocalChainValue;
+    }
+    else
+    {
+        //LocalSpanValue = int(Span[NumDev-1].LocalChain);
+         //LocalSpanReporterValue = LocalSpanValue + 1;
+        LocalSpanReporterValue = mylocalChainValue + 1;
+    }
+
+    log("LocalSpanReporterValue = " + LocalSpanReporterValue);
+    LocalSpanReporterValue1 = int(LocalSpanReporterValue) - 1;
+    log("LocalSpanReporterValue1 = " + LocalSpanReporterValue1);
+    //Filter = "ELECTRONIC_ADDRESS like '"+spanc+"%' and Local_Span = " + LocalSpanReporterValue;
+    FilterSecondLast = "ELECTRONIC_ADDRESS like '"+spanc+"%' and Local_Span = " + LocalSpanReporterValue;
+    FilterLast = "ELECTRONIC_ADDRESS like '"+spanc+"%' and Local_Span = " + LocalSpanReporterValue1;
+
+    spanOrgNodesLast = GetByFilter('Reporter_LocalSpan', FilterLast, false);
+    spanOrgNodesSecondLast = GetByFilter('Reporter_LocalSpan', FilterSecondLast, false);
+    numSpanLast = length(spanOrgNodesLast);
+    numSpanSecondLast = length(spanOrgNodesSecondLast);
+
+    if (numSpanLast > 0)
+    {
+        theSynthEvent[0].Summary = "Cable Break Indicated between " + spanOrgNodesSecondLast[0].SDP_Location +  " & " + spanOrgNodesLast[0].SDP_Location + ". " + TotalEndDevNum +  " Devices UNOB off subgroup " + spanc + "00";
+    }
+    else
+    {
+        theSynthEvent[0].Summary = "Cable Break Indicated between " +  spanOrgNodesSecondLast[0].SDP_Location  + " & TS " + spanOrgNodesSecondLast[0].TPR_Location + ". " + TotalEndDevNum +  " Devices UNOB off subgroup " + spanc +  "00";
+    }
+
+    InterfaceSTIArray = Split(TotalSTIRef, ",");
+    DistinctSTIs = distinct(InterfaceSTIArray);
+    NumDistinct = length(DistinctSTIs);
+    theSynthEvent[0].STINum = NumDistinct;
+    theSynthEvent[0].STIRef = '' + DistinctSTIs[0];
+    a = 1;
+    while (a < NumDistinct)
+    {
+        theSynthEvent[0].STIRef = theSynthEvent[0].STIRef + "," + DistinctSTIs[a];
+        a = a + 1;
+    }
+    } // new if statement to know cable event exist then update childid
+    else
+    {
+        @TTFlag=4;
+        if (@Summary not like 'only')
+        {
+            @Summary = @Summary + " only";
+        }
+    }
+    }else
+    {
+        log("signalling_cable_break: probably a local fault");
+        @TTFlag=4;
+        if (@Summary not like 'only')
+        {
+            @Summary = @Summary + " only";
+        }
+    } //endif NumDev > 1
+
+    } //endif NumDev > 0
+
+    } // end of else statement for Port cable break
+
+    // Set impact flag = 3
+
+    EventContainer.ImpactFlag = 3;
+    ReturnEvent(EventContainer);
+    log("ReturnEvent successful");
+}
+    else
+    {
+    // event is a resolution event
+    if(EventContainer.Type = 2)
+    {
+    log("Processing resolution alarm");
+    spanc = rextract( EventContainer.AssetElectronicAddress,"(.*)..$");
+
+    synthProbCableDownsPort = GetByFilter('ha_ncoms_impact_events', "(Type = 1) and (Severity > 1) and (Agent =  'Halogen') and (Manager='Netcool Impact') and (AssetElectronicAddress like '" + spanc + "') and (AlertGroup = 'Port  Cable Break Event: SIG')",false);
+    numSynthEventsPort = Length(synthProbCableDownsPort);
+    log("numSynthEventsPort = " + numSynthEventsPort);
+    if(numSynthEventsPort > 0)
+    {
+        synthProbCableDownsPort[0].Severity = 0;
+        synthProbCableDownsPort[0].ClearTime = getdate();
+        DataType = "spanview";
+        Filter = "(SuppressEscl = 4) and (Type = 1) and ((AlertKey = 'SIG cable event') or (AlertKey =  'MSS_SIG event')) and (Severity > 1) and (AssetElectronicAddress like '" + spanc + "')";
+        UpdateExpression = "ParentServerName = '', ParentServerSerial = '', SuppressEscl = 0, SuppressCause =  '', ImpactFlag=2";
+        BatchUpdate(DataType, Filter, UpdateExpression);
+    }
+    //else
+    //{
+        LocalChainSymbol = rextract( EventContainer.LocalChain,"^(.).*");
+        if(LocalChainSymbol='-')
+        {
+        plusMinusFilter = '^-[0-9]+';
+        }
+        else
+        {
+        LocalChainSymbol='+';
+        plusMinusFilter = '^[0-9]+';
+        }
+        // check for existence of prob cable down event
+        //synthProbCableDowns=GetByFilter('ha_ncoms_impact_events', "(Type = 1) and (Severity > 1) and (Agent  = 'Halogen') and (Manager='Netcool Impact') and (AssetElectronicAddress like '" + spanc + "') and (ServiceType = '" +  @ServiceType + "') and (AlertGroup = 'Cable Break Event: SIG')",false);
+
+        synthProbCableDowns=GetByFilter('ha_ncoms_impact_events', "(Type = 1) and (Severity > 1) and (Agent =  'Halogen') and (Manager='Netcool Impact') and (AssetElectronicAddress like '" + spanc + "') and (ServiceType = '" +  @ServiceType + "') and (AlertGroup = 'Cable Break Event: SIG') and (LocalChain like '"+plusMinusFilter+ "')",false);
+
+        numSynthEvents=Length(synthProbCableDowns);
+        log("signalling_cable_break: Num Synthetic events = " + numSynthEvents);
+        //z=1;
+        //LocalChainArray = "";
+        //CurrentLocalChain = @LocalChain;
+        //LocalChainArray = LocalChainArray + "'" + CurrentLocalChain  + "'";
+        //localChainValueTemp = int(Strip(@LocalChain,"-"));
+        //while (z < localChainValueTemp)
+        //{
+            //if(LocalChainSymbol='-')
+            //{
+                //CurrentLocalChain = int(CurrentLocalChain) + 1;
+            //}
+            //else
+            //{
+                //CurrentLocalChain = int(CurrentLocalChain) - 1;
+            //}
+        //LocalChainArray = LocalChainArray + ",'" + CurrentLocalChain  + "'";
+        //z = z + 1;
+        //}
+
+        if(numSynthEvents > 0)
+            {
+
+            synthProbCableDowns[0].Severity = 0;
+
+            // found a matching synthetic event for which we should raise a clearing event.
+            NewEvent = NewObject();
+            //NewEvent.Identifier = "Clear - Impact SIG cable event " + @TSA + @TSB + @SDPLocation;
+            //NewEvent.Identifier = "Clear - Impact SIG cable event " + @TSA + @SDPLocation + spanc +  LocalChainSymbol;            
+            NewEvent.Identifier = "Clear - Impact SIG cable event " + @TSA + spanc + LocalChainSymbol;             
+            NewEvent.OwnerUID = 65534;
+            NewEvent.Node = synthProbCableDowns[0].Node;
+            NewEvent.AlertGroup = "Cable Break Event: SIG";
+            NewEvent.AlertKey = "SIG cable event";
+            NewEvent.LastOccurrence = getdate();
+                    // Added following 4 lines by SK on 19092008
+                    NewEvent.FirstOccurrence=getdate();
+              NewEvent.FirstRaiseTime=getdate();
+              NewEvent.LastRaiseTime=getdate();
+              NewEvent.DateGenerated = getdate();
+            NewEvent.ClearTime = getdate();
+            NewEvent.Summary = "Potential cable break clear";
+            NewEvent.Severity = 2;
+            NewEvent.Type = 2;
+            NewEvent.ServiceType = @ServiceType;
+            NewEvent.Manager = "Netcool Impact";
+            NewEvent.Agent = "Halogen";
+            NewEvent.SDPLocation = synthProbCableDowns[0].Node;
+            NewEvent.ServiceType = @ServiceType;
+            NewEvent.HalStatus = @HalStatus;
+            NewEvent.LocalRootObj = @LocalRootObj;
+            NewEvent.AssetElectronicAddress = @AssetElectronicAddress;
+            NewEvent.LocalChain = @LocalChain;
+            // Use the AddDataItem function to add the event to the Object Server. 
+            Type = 'ha_ncoms_impact_events';
+            AddDataItem(Type,NewEvent);
+                
+            // We must now unsupress any suppressed synthetic events
+            DataType = "spanview";
+            Filter = "(SuppressEscl = 4) and (Type = 1) and (AlertKey = 'MSS_SIG event') and  (AssetElectronicAddress like '" + spanc + "') and (LocalChain like '"+plusMinusFilter+ "')";
+            UpdateExpression = "ParentServerName = '', ParentServerSerial = '', SuppressEscl = 0,  SuppressCause = '', ImpactFlag=2";
+            BatchUpdate(DataType, Filter, UpdateExpression);
+
+        }
+        //}
+    }
+}
+
+log("signalling_cable_break: IQLOGFINISH: ServerSerial=" + @ServerSerial + " EventId=" + @EventId);
+log("signalling_cable_break: stop.");
+

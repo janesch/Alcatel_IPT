@@ -1,0 +1,139 @@
+########################################################################
+#
+#       Licensed Materials - Property of IBM
+#       
+#       
+#       
+#       (C) Copyright IBM Corp. 2006, 2009. All Rights Reserved
+#       
+#       US Government Users Restricted Rights - Use, duplication
+#       or disclosure restricted by GSA ADP Schedule Contract
+#       with IBM Corp.
+#
+#
+#
+#
+#######################################################################
+
+#######################################################################
+#
+# Property Name					Default
+#
+# Generic Properties
+# 
+# AuthPassword: ''
+# AuthUserName: ''
+# AutoSAF: 0
+# BeatInterval: 2
+# Buffering: 0
+# BufferSize: 10
+# Help: 0
+# LookupTableMode: 3
+# Manager: 'alcatelSAM'
+# MaxLogFileSize: 1048576
+# MaxRawFileSize: -1
+# MaxSAFFileSize: 1048576
+# MessageLevel: 'warn'
+# MessageLog: '$OMNIHOME/log/alcatel_5620_sam_v7.log'
+# Mode: 'standard'
+# MsgDailyLog: 0
+# MsgTimeLog: '0000'
+# Name: 'alcatelSAM'
+# NetworkTimeout: 0
+# OplDetailsTableName: 'alerts.details'
+# OplDumpProps: 0
+# OplPacketSize: 512
+# OplPaID: 0
+# OplPaName: ''
+# OplStatusTableName: 'alerts.status'
+# PeerHost: 'localhost'
+# PeerPort: 9999
+# PidFile: '$OMNIHOME/var/alcatelSAM'
+# PollServer: 0
+# Props.CheckNames: TRUE
+# PropsFile: '$OMNIHOME/probes/solaris2/alcatel_5620_sam_v7.props'
+# RawCapture: 0
+# RawCaptureFile: '$OMNIHOME/var/alcatel_5620_sam_v7.cap'
+# RawCaptureFileAppend: 0
+# RawCaptureFileBackup: 0
+# RetryConnectionCount: 15
+# RetryConnectionTimeOut: 30
+# RulesFile: '$OMNIHOME/probes/solaris2/alcatel_5620_sam_v7.rules'
+# SAFFileName: ''
+# SecureLogin: 0
+# Server: 'NCOMS'
+# ServerBackup: ''
+# StoreAndForward: 1
+# Version: 0
+# 
+# Specific Properties
+# 
+# AliveTimeout: 180
+# ClearClientRemovedAlarm: 1
+# EJBPort: 1099
+# Host: "localhost"
+# HTTPPort: 8080
+# JMSAcknowledgeMode: "AUTO_ACKNOWLEDGE"
+# JmsFilter: "ALA_clientId in ('netcool@127.0.0.1','') and ALA_category not in ('STATISTICS', 'ACCOUNTING')"
+# JmsTopic: "5620-SAM-topic-xml"
+# MaxEventQueueSize: 10000
+# NbEventsStoreRecovery: 100
+# Optimize: 1
+# ParseSaxDebug: 0
+# PersistentJmsId : "netcool@127.0.0.1"
+# ReconnectionAttempts: -1
+# ReconnectionInterval: 300
+# RecoveryFile: "$OMNIHOME/var/AlcatelSamRecovery"
+# SamServerPassword: ""
+# SamServerUserName: ""
+# SizeBlockRead: 50
+# StoreEvents: 1
+# SAMVersion: "V7"
+# XMLFile: ""
+# XMLFileRead: 0
+# XMLretrieve: 1
+# XMLretrieveUseInService: 0
+# 
+#######################################################################
+
+#######################################################################
+#
+# Add your settings here
+#
+#######################################################################
+
+#######################################################################
+#
+# Properties found when installing patch probe-nco-p-alcatel-5620-sam-v7-1 (rev 0)
+#
+#######################################################################
+#
+# Warning:                    : Unable to open message catalog file.
+# Warning:                    : Unable to open message catalog file.
+# Warning:                    : Unable to open message catalog file.
+# Warning:                    : Unable to open message catalog file.
+#
+#######################################################################
+
+# Netcool Properties
+Server: 'NCOMS_P'
+PropsFile: '$NCHOME/custom/probes/props/alcatel_5620_sam_v7_HA.props'
+RulesFile: '$NCHOME/custom/probes/rules/5620-sam-v7/alcatel_5620_sam_v5_HA.rules'
+
+Host: '10.0.113.17'
+#Host: '10.0.111.17'
+SamServerUserName: 'SAMOClient'
+SamServerPassword: 'kU5upHa7'
+JmsTopic: '5620-SAM-topic-xml-fault'
+XMLretrieve: 1
+MaxLogFileSize: 10048576
+MaxSAFFileSize: 100048576
+
+# Logfiles
+MessageLevel: 'debug'
+MessageLog: '$NCHOME/omnibus/log/alcatel_5620_sam.log'
+
+RawCapture: 1
+RawCaptureFile: '/export/home/netcool/wp160/5620sam.cap'
+RawCaptureFileAppend: 1
+

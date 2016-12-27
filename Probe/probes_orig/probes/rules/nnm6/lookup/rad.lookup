@@ -1,0 +1,94 @@
+Alarm Code	Alm 	Sev	AlmNam	AlmCaus	AlmCl	SiteVisEvnt	SrvAffEvnt	ResAffEvent	CorEvnt
+111	Master CLK Not Connected	2	MASTER CLOCK NOT CONNECTED	Clock state <> CONNECTED	Unknown	3	3	2	0
+112	Fallback CLK Not Connected	2	FALLBACK CLOCK NOT CONNECTED	Clock state <> CONNECTED	Unknown	3	3	2	0
+001	D/B controlled by Craft	2	DB CONTROL WAS TAKEN BY TERM MMI	Craft editing D/B from terminal	Unknown	2	2	2	0
+019	D/B Controlled by SNMP	2	DB CONTROL WAS TAKEN BY SNMP MMI	SNMP manager editing D/B	Unknown	2	2	2	0
+003	D/B Switchover	2	SWITCH OF DB OCCURRED	Active database changeover	Unknown	2	2	2	0
+004	Loss of Alarm Data	2	LOSS OF ALMS FROM HISTORY BUFFER	"Alarm buffer not read, new alarms overwriting previous"	Unknown	2	2	2	0
+010	CLK Switched to Master	2	CLK CHANGED TO MASTER CLK SRC	Clock source change	Unknown	2	2	2	0
+011	CLK Switched to Fallback	2	CLK CHANGED TO FALLBACK CLK SRC	Clock source change	Unknown	2	2	2	0
+012	CLK Switched to Internal	2	CLK CHANGED TO INTERNAL CLK SRC	Clock source change	Unknown	3	3	2	0
+018	D/B Update Occurred	2	DB UPDATE OCCURRED	DB UPD command	Unknown	2	2	2	0
+020	Internal Error	2	INTERNAL ERROR	Module internal error	Unknown	2	2	2	0
+021	Module Removed	2	MODULE WAS REMOVED	Module removed from slot	Unknown	1	3	2	0
+022	Module Inserted	2	MODULE WAS INSERTED	Module inserted in slot	Unknown	1	2	2	0
+023	Reset Occurred	4	RESET OCCURRED	Module reset	Unknown	3	1	3	0
+030	Bus Error	2	BUS ERROR	Bus error	Unknown	3	3	3	0
+031	Communication Failure	2	COMMUNICATION FAILURE	CL can't communicate with module	Unknown	3	3	3	0
+036	SW Download Started	2	SOFTWARE LOADING STARTED	TFTP download started	Unknown	2	2	2	0
+037	SW Download Complete	2	SOFTWARE LOADING COMPLETED	TFTP download complete	Unknown	2	2	2	0
+038	SW Download Aborted	2	ABORT SOFTWARE LOADING	TFTP download aborted	Unknown	2	2	2	0
+050	CL Changeover	2	CL FLIP OCCURRED	CL switched over	Unknown	2	2	3	0
+052	TFTP Software Mismatch	2	DB SENT BY TFTP/SW VER MISMATCH	CL S/W in TFTP block doesn't match local CL	Unknown	2	2	2	0
+053	TFTP Data Corrupt	2	DB SENT BY TFTP IS CORRUPTED	TFTP datablock corrupt	Unknown	2	2	2	0
+060	Default D/B Loaded	2	DEFAULT DB LOADED ON STARTUP	Empty or corrupt D/B	Unknown	2	2	2	0
+065	Save to NVRAM Fail	2	SAVE TO NVRAM FAIL	Modified D/B could not be saved	Unknown	3	2	2	0
+068	D/B Copy Complete	2	COPY DB'S TO RDN CL COMPLETE	Active D/B successfully copied to slave CL	Unknown	2	2	2	0
+080	E1 Frame Slip	2	T1/E1 FRAME SLIP HAS OCCURRED	Frame slip (poss incorrect clk source)	Unknown	2	3	2	0
+081	BPV Error	2	BPV ERROR HAS OCCURRED	Bipolar violation on E1 link	Unknown	3	1	2	0
+094	CRC Error	2	CRC ERROR	CRC-4 error detected	Unknown	3	1	2	0
+"096, 120"	FIFO Error	2	FIFO BUFFER OVERFLOW/UNDERFLOW	FIFO buffer over or underflow	Unknown	2	3	2	0
+098	Internal Clock Selected	2	LOCAL SWITCH FROM LBT TO INTERN CLK	MP switched to internal clock	Unknown	3	3	2	0
+099	Frame/Multiframe Resync	2	FRAME/MULTIFRAME CLK RESYNC	Frame and/or multiframe resync	Unknown	2	2	2	0
+581	Sequence Error	2	SEQUENCE ERROR	Packets out of sequence	Unknown	2	3	2	0
+583	Jitter Buffer Error	2	JITTER BUFFER OVERFLOW/UNDERFLOW	Frames lost due to jitter buffer under/overflow	Unknown	3	1	2	0
+005	Alarm Trace Overflow	4	NO MEM LEFT FOR TRACING NEW ALMS	Lack of memory to allocate	Management	2	2	2	0
+007	CL Software Mismatch	4	CL-A & CL-B HAVE DIFF PROGRAM	Differing SW versions on CLs	Equipment	2	2	2	0
+009	Master CLK Failure	4	CLK IS DIFFERENT FROM MASTER CLK SRC	Master clock failure	Equipment	3	3	2	0
+013	Duplicate IP Address	4	AGENT WITH SAME IP IN NET	Duplicate IP address in network	Equipment	3	2	2	0
+015	External Clock Fail	4	BAD EXTERNAL TDM CLOCK	External clock source failed	Equipment	3	2	2	0
+016	Invalid Chassis Type	4	INVALID CHASSIS TYPE	Incorrect CL for this chassis	Configuration	1	2	2	0
+024	Init Fail	4	HARDWARE/INIT FAILURE	Error during POST or init	Equipment	1	1	1	0
+026	Module Mismatch	4	MODULE TYPE MISMATCH	Inserted module doesn't match planned module in D/B	Equipment	1	2	2	0
+027	Config Mismatch	4	MODULE SEMI ID MISMATCH	One or more modules inserted do not match planned D/B	Configuration	1	2	2	0
+028	HW/SW Mismatch	4	HARDWARE/SOFTWARE MISMATCH	Invalid module configuration attempted	Configuration	3	3	3	0
+029	Unsupported Software	4	NOT SUPPORTED SOFTWARE VER	Module SW version not supported by CL	Configuration	2	3	3	0
+032	Local Mgmt Loopback	4	LOOP ON MANAGEMENT PORT	Mgmt port is looped back	Configuration	2	2	2	0
+033	Management Link Down	4	MANAGEMENT LINK IS DOWN	CL can't talk IP to far end	Management	3	2	2	0
+034	HW Not Supported	4	NOT SUPPORTED HARDWARE	Module HW variant not supported by CL	Configuration	1	2	2	0
+035	Module(s) Alarmed	4	ALARMS EXIST IN MODULES' CHANNELS	Notification to RADView	Equipment	3	3	3	0
+040	+5V Fail	4	+5V POWER SUPPLY FAILURE	+5V supply failure	Equipment	1	3	3	0
+041	-5V Fail	4	-5V POWER SUPPLY FAILURE	-5V supply failure	Equipment	1	3	3	0
+042	12V Fail	4	12V POWER SUPPLY FAILURE	12V supply failure	Equipment	1	3	3	0
+043	Fan Fail	4	POWER SUPPLY'S FAN FAILURE	PSU fan failure	Equipment	1	2	1	0
+061	D/B Checksum Error	4	DATABASE CHECKSUM ERROR	Error sending D/B to redundant CL	Configuration	2	2	1	0
+062	D/B Checksum Mismatch	4	CL-A & CL-B HAVE DIFF DB CKSUM	CL-A and CL-B D/B checksums don't match	Configuration	2	2	1	0
+064	DIP Switch On	4	DIP SWITCH IS ON STATE	Any or all of CL DIP switch 1-5 set to ON	Equipment	1	2	2	0
+066	NVRAM Almost Full	4	NVRAM ALMOST FULL	NVRAM almost full	Equipment	2	2	2	0
+082	BPV Threshold Exceeded	4	EXCESSIVE BIPOLAR VIOLATION	BPV rate > 1E-6 for 1000 consecutive seconds	Unknown	2	3	2	0
+083	Sync Threshold Exceeded	4	EXCESSIVE ERROR RATIO	Frame sync bit errors > G.732 threshold	Unknown	2	3	2	0
+084	AIS	4	ALARM INDICATION SIGNAL	AIS received	Unknown	2	4	2	0
+085	AIS Red	4	AIS RED ALARM	Frame sync lost due to received AIS	Unknown	2	4	2	0
+086	Local Sync Loss	4	LOC SYNC LOSS	Local sync to incoming stream lost	Unknown	1	1	2	0
+087	Remote Sync Loss	4	REM SYNC LOSS	Remote sync to incoming stream lost	Unknown	2	4	2	0
+090	Loss of Signal	4	LOST SIGNAL ON E1/T1 LINK	No signal	Equipment	1	1	2	0
+091	Driver Failure	4	T1/E1 DRIVER FAILURE	Transmit line driver HW failure	Equipment	1	1	2	0
+095	AIS	4	AIS WAS DETECTED	AIS received	Unknown	2	4	2	0
+"097, 121"	Rate Gen Failure	4	INTERNAL RATE GENERATOR FAILURE	Possible HW failure	Equipment	1	3	2	0
+100	Transmit Clock Error	4	TCLK MON SYNC ERROR	Transmit clock sync error	Unknown	3	3	2	0
+103	Remote Mgmt Loopback	4	LOOP ON MANAGEMENT PORT AT REM SITE	Remote end loopback	Unknown				0
+104	Invalid RX Clock	4	INVALID RX CLOCK	RX clock cannot be selected as timing source	Unknown	2	2	2	0
+107	Set User Failed	4	USER USED/HW ML VERSION MISMATCH	Params for SET USER invalid for this variant	Unknown	2	2	2	0
+109	Port Deactivated	4	PORT DEACTIVATED	Admin command	Unknown	2	2	2	0
+110	Slot Deactivated	4	SLOT DEACTIVATED	Admin command	Unknown	2	2	2	0
+580	No Carrier	4	NO CARRIER SENSE	No carrier sense at Eth port	Equipment	1	1	1	0
+582	Loss of Sync	4	SYNC LOSS	Loss of sync	Unknown	1	1	2	0
+584	IN1 Sync Loss	4	IN1 ALL BUNDLES SYNC LOSS	Sync loss on all bundles on internal port IN1	Unknown				0
+585	IN2 Sync Loss	4	IN2 ALL BUNDLES SYNC LOSS	Sync loss on all bundles on internal port IN2	Unknown				0
+588	Bundle Not Connected	4	BND IS NOT CONNECTED TO TS	Bundle not connected to internal port timeslot	Unknown	2	2	2	0
+589	Timeslot Not Connected	4	TS IS NOT CONNECTED TO BND	Internal port timeslot not connected to bundle	Unknown	2	2	2	0
+"592, 593"	Echo Cancel Unsupported	4	"IN1 ECHO CANCELER NOT SUPPORTED, IN2 ECHO CANCELER NOT SUPPORTED"	Echo cancelling unsupported on this internal port	Unknown	2	2	2	0
+620	Satellite FIFO Error	4	SATELLITE FIFO BUFFER OVERFLOW/UNDERFLOW	Overflow/underflow of satellite FIFO buffer	Unknown	2	2	2	0
+621	RX Rate Unsupported	4	RECEIVED RATE IS UNSUPPORTED	Automatic rate detected not supported	Unknown	2	2	2	0
+622	RX Rate Exceeds TS	4	RCV RATE EXCEEDS ASSIGNED TS	Automatic rate detected exceeds number of assigned timeslots	Unknown	2	2	2	0
+623	Illegal Clock Source	4	ILLEGAL CLOCK SOURCE	AMI port not selected EXT DTE timing	Unknown	2	2	2	0
+626	RX Rate Less Than TS	4	RCV RATE LESS THAN ASSIGNED TS	Automatic rate detected less than number of assigned timeslots	Unknown	2	2	2	0
+627	Illegal Clock Mode	4	ILLEGAL CLOCK MODE	AMI port not selected EXT DTE timing	Unknown	2	2	2	0
+014	Duplicate Node Name	3	AGENT WITH SAME NAME IN NET	Duplicate node name in N/W	Unknown	2	2	2	0
+025	Unplanned Module	3	NOT PROGRAMMED MODULE	Inserted module not planned in D/B	Unknown	3	2	2	0
+067	D/B Copy In Progress	3	COPY DB'S TO RDN CL IN PROCESS	Active D/B being copied to slave CL	Unknown	2	2	2	0
+088	Local Multiframe Sync Loss	3	E1 MULTIFRAME LOCAL SYNC LOSS	Local Multiframe Sync Loss	Unknown	3	3	2	0
+089	Remote Multiframe Sync Loss	3	E1 MULTIFRAME REMOTE SYNC LOSS	Remote Multiframe Sync Loss	Unknown	2	4	2	0
+105	Test Mode Active	3	TEST MODE (TM) IS ACTIVE	Port looped back	Unknown	2	2	2	0
+122	RTS/CI Off	3	RTS IS OFF	RTS (CI for X.21) = off	Unknown	3	1	2	0
+123	FT1 Inband Loopback	3	FT1 LB IS ACTIVE	Remote FT1 inband loopback	Unknown	2	2	2	0

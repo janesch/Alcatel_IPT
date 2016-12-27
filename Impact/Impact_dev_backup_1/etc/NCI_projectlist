@@ -1,0 +1,13 @@
+#This file was written by Impact Server.
+#Mon Aug 21 21:35:12 EDT 2006
+impact.projects.numprojs=10
+impact.projects.1.name=Default
+impact.projects.2.name=Reports
+impact.projects.3.name=Socket
+impact.projects.4.name=SNMP
+impact.projects.5.name=ITNM
+impact.projects.6.name=XML
+impact.projects.7.name=WebTop
+impact.projects.8.name=TEC
+impact.projects.9.name=ITM
+impact.projects.10.name=MWM
